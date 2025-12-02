@@ -1,13 +1,13 @@
-// app/simulador/simulador-client.tsx - ARGENTINA 2025 CON CUOTAS
+// app/simulador/simulador-client.tsx - CORREGIDO CON COMA
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { 
   ArrowLeft, ArrowRight, Check, Sparkles, Brain, 
-  Shield, Truck, Star, Zap, Award, CreditCard, MapPin
+  Shield, Truck, Star, Award, CreditCard, MapPin
 } from 'lucide-react'
 import { getTopRecommendations } from '@/lib/matching-algorithm'
 import { SIMULATOR_STEPS } from './simulator-config'
@@ -23,6 +23,7 @@ interface SimulatorData {
   weight: string
   firmness: string
   budget: string
+  size: string
 }
 
 export default function SimuladorClient({ products }: SimulatorClientProps) {
@@ -31,16 +32,119 @@ export default function SimuladorClient({ products }: SimulatorClientProps) {
     position: '',
     weight: '',
     firmness: '',
-    budget: ''
+    budget: '',
+    size: '' // ⬅️ COMA AGREGADA EN LÍNEA 35
   })
   const [showResults, setShowResults] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [recommendations, setRecommendations] = useState<any[]>([])
+  
+  const questionRef = useRef<HTMLDivElement>(null)
 
-  console.log('🧠 [SimuladorClient] Products received:', products?.length || 0)
+  // ✅ FILTRAR COLCHONES PIERO Y NATURAL SOFT (ADULTOS)
+  const mattressProducts = useMemo(() => {
+    console.log('🔍 [SimuladorClient] Starting product filter')
+    console.log('📦 [SimuladorClient] Total products received:', products?.length || 0)
+    
+    if (!products || !Array.isArray(products)) {
+      console.error('❌ [SimuladorClient] Invalid products array')
+      return []
+    }
+    
+    const filtered = products.filter(product => {
+      const name = (product.name || '').toLowerCase()
+      const category = (product.category || '').toLowerCase()
+      const slug = (product.slug || '').toLowerCase()
+      
+      // ❌ EXCLUIR EXPLÍCITAMENTE (accesorios y productos no-colchón)
+      const excludeKeywords = [
+        'cuna', 'bebe', 'bebé', 'baby', 'infantil', 'niño', 'niña', 'kid', 'mickey',
+        'almohada', 'pillow', 'protector', 'sabana', 'sábana', 'sheet', 'cover', 'cubre',
+        'topper', 'base', 'sommier', 'box', 'accesorio', 'outlet',
+        'funda', 'colcha', 'edredón', 'cobertor', 'respaldo', 'mesa', 'juego'
+      ]
+      
+      const hasExcludedKeyword = excludeKeywords.some(keyword => 
+        name.includes(keyword) || category.includes(keyword) || slug.includes(keyword)
+      )
+      
+      if (hasExcludedKeyword) {
+        console.log('❌ [SimuladorClient] EXCLUDED (accessory/non-mattress):', product.name)
+        return false
+      }
+      
+      // ✅ DEBE SER COLCHÓN (altura > 15cm si está definida)
+      const height = product.height || 0
+      if (height > 0 && height <= 15) {
+        console.log('❌ [SimuladorClient] EXCLUDED (too thin):', product.name, '| Height:', height, 'cm')
+        return false
+      }
+      
+      // ✅ DEBE CONTENER PALABRA CLAVE DE COLCHÓN O MODELO CONOCIDO
+      const hasCorrectKeyword = 
+        name.includes('colchón') || 
+        name.includes('colchon') ||
+        name.includes('mattress') ||
+        name.includes('matress') ||
+        // Modelos Piero comunes
+        name.includes('sonno') ||
+        name.includes('meditare') ||
+        name.includes('foam') ||
+        name.includes('gravita') ||
+        name.includes('nirvana') ||
+        name.includes('namaste') ||
+        name.includes('montreux') ||
+        name.includes('regno') ||
+        name.includes('spring') ||
+        // Modelos Natural Soft (NS)
+        /\bns[a-z]+\d+/.test(name) || // NSCONFORT, NSVIRTUS, NSRELAX
+        /\bns\s/.test(name) || // NS seguido de espacio
+        slug.includes('-ns') ||
+        slug.startsWith('ns') ||
+        // Modelos con códigos
+        /relax\d+/.test(name) ||
+        /virtus\d+/.test(name) ||
+        /confort\d+/.test(name) ||
+        /confobox/.test(name) ||
+        /funcional/.test(name)
+      
+      if (!hasCorrectKeyword) {
+        console.log('❌ [SimuladorClient] EXCLUDED (no mattress keyword):', product.name)
+        return false
+      }
+      
+      // ✅ DEBE ESTAR EN STOCK
+      if (product.inStock === false) {
+        console.log('❌ [SimuladorClient] EXCLUDED (out of stock):', product.name)
+        return false
+      }
+      
+      console.log('✅ [SimuladorClient] INCLUDED:', product.name, '| Height:', height, 'cm | Price:', product.price)
+      return true
+    })
+    
+    console.log('📊 [SimuladorClient] Filter results:')
+    console.log('  - Total input:', products.length)
+    console.log('  - Valid mattresses:', filtered.length)
+    console.log('  - Product names:', filtered.map(p => p.name))
+    
+    return filtered
+  }, [products])
+
+  // Auto-scroll suave
+  useEffect(() => {
+    if (questionRef.current && !showResults && !isAnalyzing) {
+      setTimeout(() => {
+        questionRef.current?.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'center'
+        })
+      }, 100)
+    }
+  }, [currentStep, showResults, isAnalyzing])
 
   // Validación de productos
-  if (!products || products.length === 0) {
+  if (!mattressProducts || mattressProducts.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center px-4">
         <div className="text-center max-w-md">
@@ -48,9 +152,17 @@ export default function SimuladorClient({ products }: SimulatorClientProps) {
             <Brain className="w-10 h-10 text-white" />
           </div>
           <h2 className="text-3xl md:text-4xl font-black text-white mb-3">
-            Error al cargar productos
+            No hay colchones disponibles
           </h2>
-          <p className="text-zinc-400 text-base">Por favor, recargá la página</p>
+          <p className="text-zinc-400 text-base mb-4">
+            No se encontraron colchones en stock para recomendar
+          </p>
+          <Link
+            href="/catalogo"
+            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors"
+          >
+            Ver catálogo completo
+          </Link>
         </div>
       </div>
     )
@@ -65,28 +177,33 @@ export default function SimuladorClient({ products }: SimulatorClientProps) {
     console.log('📊 [SimuladorClient] Current data:', newData)
     
     if (currentStep < SIMULATOR_STEPS.length - 1) {
-      setTimeout(() => setCurrentStep(currentStep + 1), 300)
+      setTimeout(() => setCurrentStep(currentStep + 1), 400)
     } else {
       console.log('🎯 [SimuladorClient] Final step - generating recommendations')
       console.log('👤 [SimuladorClient] Profile:', newData)
-      console.log('🛏️ [SimuladorClient] Products to analyze:', products.length)
+      console.log('🛏️ [SimuladorClient] Mattresses to analyze:', mattressProducts.length)
       
       setIsAnalyzing(true)
       
       setTimeout(() => {
         try {
           console.log('🔄 [SimuladorClient] Calling getTopRecommendations...')
-          const topProducts = getTopRecommendations(products, newData, 3)
+          const topProducts = getTopRecommendations(mattressProducts, newData, 3)
           
           console.log('✅ [SimuladorClient] Recommendations received:', topProducts.length)
           
           if (!topProducts || topProducts.length === 0) {
             console.warn('⚠️ [SimuladorClient] No recommendations, using fallback')
-            const fallbackRecs = products.slice(0, 3).map((p, i) => ({
+            const fallbackRecs = mattressProducts.slice(0, 3).map((p, i) => ({
               ...p,
-              matchScore: 85 - i * 5,
-              matchPercentage: 95 - i * 3,
-              matchReasons: ['Excelente opción', 'Calidad garantizada', 'Alta satisfacción']
+              matchScore: 90 - i * 5,
+              matchPercentage: 96 - i * 2,
+              matchReasons: [
+                'Excelente calidad garantizada',
+                'Garantía de 5 años',
+                'Alta satisfacción de clientes',
+                'Envío gratis Villa María'
+              ]
             }))
             setRecommendations(fallbackRecs)
           } else {
@@ -95,11 +212,15 @@ export default function SimuladorClient({ products }: SimulatorClientProps) {
           }
         } catch (error) {
           console.error('❌ [SimuladorClient] Error generating recommendations:', error)
-          const fallbackRecs = products.slice(0, 3).map((p, i) => ({
+          const fallbackRecs = mattressProducts.slice(0, 3).map((p, i) => ({
             ...p,
-            matchScore: 85 - i * 5,
-            matchPercentage: 95 - i * 3,
-            matchReasons: ['Excelente opción', 'Calidad garantizada']
+            matchScore: 90 - i * 5,
+            matchPercentage: 96 - i * 2,
+            matchReasons: [
+              'Excelente calidad garantizada',
+              'Garantía de 5 años',
+              'Alta satisfacción de clientes'
+            ]
           }))
           setRecommendations(fallbackRecs)
         }
@@ -121,7 +242,13 @@ export default function SimuladorClient({ products }: SimulatorClientProps) {
     setCurrentStep(0)
     setShowResults(false)
     setIsAnalyzing(false)
-    setData({ position: '', weight: '', firmness: '', budget: '' })
+    setData({ 
+      position: '', 
+      weight: '', 
+      firmness: '', 
+      budget: '',
+      size: ''
+    })
     setRecommendations([])
     console.log('🔄 [SimuladorClient] Test restarted')
   }
@@ -148,6 +275,7 @@ export default function SimuladorClient({ products }: SimulatorClientProps) {
       data={data}
       onSelect={handleSelect}
       onBack={handleBack}
+      questionRef={questionRef}
     />
   )
 }
@@ -158,7 +286,6 @@ export default function SimuladorClient({ products }: SimulatorClientProps) {
 function AnalyzingScreen() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center px-4 py-8 relative overflow-hidden">
-      {/* Animated background blobs */}
       <div className="absolute inset-0 opacity-20">
         <motion.div
           animate={{ 
@@ -185,7 +312,6 @@ function AnalyzingScreen() {
         animate={{ opacity: 1, scale: 1 }}
         className="text-center z-10 max-w-lg mx-auto"
       >
-        {/* Rotating brain icon */}
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
@@ -194,17 +320,15 @@ function AnalyzingScreen() {
           <Brain className="w-full h-full text-cyan-400 drop-shadow-2xl" />
         </motion.div>
         
-        {/* Title */}
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 md:mb-8 leading-tight">
           Analizando con IA
         </h2>
         
-        {/* Progress steps */}
         <div className="space-y-3 md:space-y-4 mb-8">
           {[
-            { text: 'Procesando posición de sueño', delay: 0.3 },
-            { text: 'Calculando distribución de presión', delay: 0.8 },
-            { text: 'Optimizando recomendación', delay: 1.3 }
+            { text: 'Procesando tu perfil de sueño', delay: 0.3 },
+            { text: 'Calculando compatibilidad', delay: 0.8 },
+            { text: 'Seleccionando tu match perfecto', delay: 1.3 }
           ].map((step, i) => (
             <motion.div
               key={i}
@@ -221,7 +345,6 @@ function AnalyzingScreen() {
           ))}
         </div>
 
-        {/* Animated progress bar */}
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
@@ -239,11 +362,9 @@ function AnalyzingScreen() {
 function ResultsScreen({ recommendations, onRestart }: any) {
   const topMatch = recommendations[0]
   
-  // ✅ Calcular cuotas
   const mejorCuota = useMemo(() => getMejorCuota(topMatch.price), [topMatch.price])
   const todasLasCuotas = useMemo(() => calcularTodasLasCuotas(topMatch.price), [topMatch.price])
 
-  // Helper para obtener features de forma segura
   const getDisplayFeatures = (product: any): string[] => {
     if (product.matchReasons?.length > 0) {
       return product.matchReasons.slice(0, 4)
@@ -256,35 +377,32 @@ function ResultsScreen({ recommendations, onRestart }: any) {
     }
     
     const fallback = []
-    if (product.warranty >= 10) fallback.push(`${product.warranty} años de garantía`)
+    if (product.warranty >= 5) fallback.push(`${product.warranty} años de garantía`)
     if (product.cooling) fallback.push('Sistema de refrigeración avanzado')
-    if (product.hypoallergenic) fallback.push('Materiales hipoalergénicos')
-      if (product.isEco) fallback.push('Certificación ecológica')
+    if (product.hypoallergenic) fallback.push('Materiales hipoalergénicos certificados')
+    if (product.isEco) fallback.push('Certificación ecológica')
     
     return fallback.length > 0 ? fallback : [
       'Excelente relación calidad-precio',
       'Materiales premium certificados',
       'Soporte ergonómico óptimo',
-      'Diseñado para tu máxima comodidad'
+      'Diseñado para tu máximo confort'
     ]
   }
 
-  // Helper para obtener imagen válida
   const getProductImage = (product: any): string => {
-    if (product.images?.[0]) return product.images[0]
+    if (Array.isArray(product.images) && product.images[0]) return product.images[0]
     return '/placeholder-mattress.jpg'
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 py-8 md:py-12 px-4 relative overflow-hidden">
-      {/* Background effects */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 left-0 w-72 md:w-96 h-72 md:h-96 bg-blue-500 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-0 right-0 w-72 md:w-96 h-72 md:h-96 bg-cyan-500 rounded-full blur-3xl animate-pulse" />
       </div>
 
       <div className="max-w-5xl mx-auto relative z-10">
-        {/* Success header */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -311,7 +429,6 @@ function ResultsScreen({ recommendations, onRestart }: any) {
           </p>
         </motion.div>
 
-        {/* Main recommendation card */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -321,13 +438,11 @@ function ResultsScreen({ recommendations, onRestart }: any) {
           <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-full blur-3xl" />
           
           <div className="relative">
-            {/* Best match badge */}
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold mb-4 md:mb-6 shadow-lg">
               <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
               MEJOR MATCH
             </div>
 
-            {/* Product image */}
             <div className="relative w-full aspect-[4/3] md:aspect-[16/9] rounded-xl md:rounded-2xl overflow-hidden mb-6 bg-white/5 border border-blue-500/20">
               <Image
                 src={getProductImage(topMatch)}
@@ -338,7 +453,6 @@ function ResultsScreen({ recommendations, onRestart }: any) {
                 priority
               />
               
-              {/* Badge cuotas en imagen */}
               <div className="absolute top-3 left-3">
                 <div className="bg-emerald-500/90 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg text-xs md:text-sm font-bold flex items-center gap-1 shadow-lg">
                   <CreditCard className="w-3 h-3 md:w-4 md:h-4" />
@@ -347,14 +461,12 @@ function ResultsScreen({ recommendations, onRestart }: any) {
               </div>
             </div>
 
-            {/* Product info */}
             <div className="space-y-4 md:space-y-6">
               <div>
                 <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 md:mb-4 leading-tight">
                   {topMatch.name}
                 </h3>
                 
-                {/* Rating */}
                 <div className="flex items-center gap-2 md:gap-3 mb-4">
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
@@ -368,18 +480,16 @@ function ResultsScreen({ recommendations, onRestart }: any) {
                     {(topMatch.rating || 4.8).toFixed(1)}
                   </span>
                   <span className="text-zinc-400 text-sm md:text-base">
-                    ({topMatch.reviewCount || 0})
+                    ({topMatch.reviewCount || 0} opiniones)
                   </span>
                 </div>
 
-                {/* Firmness badge */}
                 <div className="inline-block bg-blue-500/20 border border-blue-500/30 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-blue-300 font-semibold text-sm md:text-base mb-4 md:mb-6">
                   Firmeza: {topMatch.firmness || 'Media'}
                 </div>
 
-                {/* Price con cuotas */}
                 <div className="space-y-3 mb-6 md:mb-8">
-                  <div className="flex items-baseline gap-2 md:gap-3">
+                  <div className="flex items-baseline gap-2 md:gap-3 flex-wrap">
                     <span className="text-4xl md:text-5xl lg:text-6xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                       {formatARS(topMatch.price)}
                     </span>
@@ -395,14 +505,12 @@ function ResultsScreen({ recommendations, onRestart }: any) {
                     )}
                   </div>
                   
-                  {/* Mejor cuota */}
                   <div className="inline-block bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-4 py-2 rounded-xl font-bold text-sm md:text-base">
                     {mejorCuota.cuotas}x {mejorCuota.formatted.precioCuota} sin recargo
                   </div>
                   
-                  {/* Otras opciones de cuotas */}
                   <div className="flex flex-wrap gap-2 text-xs md:text-sm text-zinc-400">
-                    {todasLasCuotas.slice(1).map((cuota) => (
+                    {todasLasCuotas.slice(1, 4).map((cuota) => (
                       <span key={cuota.cuotas}>
                         {cuota.cuotas}x {cuota.formatted.precioCuota} <span className="text-orange-400">({cuota.recargoPercentage})</span>
                       </span>
@@ -411,7 +519,6 @@ function ResultsScreen({ recommendations, onRestart }: any) {
                 </div>
               </div>
 
-              {/* Features */}
               <div className="space-y-2.5 md:space-y-3">
                 {getDisplayFeatures(topMatch).map((feature: string, i: number) => (
                   <motion.div
@@ -434,7 +541,6 @@ function ResultsScreen({ recommendations, onRestart }: any) {
           </div>
         </motion.div>
 
-        {/* Benefits - ARGENTINIZADOS */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
           {[
             { icon: Shield, title: '5 Años Garantía', desc: 'Piero Argentina' },
@@ -461,7 +567,6 @@ function ResultsScreen({ recommendations, onRestart }: any) {
           ))}
         </div>
 
-        {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -485,7 +590,6 @@ function ResultsScreen({ recommendations, onRestart }: any) {
           </button>
         </motion.div>
 
-        {/* Location badge */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -505,19 +609,17 @@ function ResultsScreen({ recommendations, onRestart }: any) {
 // ============================================================================
 // QUESTIONS SCREEN
 // ============================================================================
-function QuestionsScreen({ currentStep, progress, data, onSelect, onBack }: any) {
+function QuestionsScreen({ currentStep, progress, data, onSelect, onBack, questionRef }: any) {
   const currentStepData = SIMULATOR_STEPS[currentStep]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 py-8 md:py-12 px-4 relative overflow-hidden">
-      {/* Background blobs */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute top-10 md:top-20 left-10 md:left-20 w-64 md:w-96 h-64 md:h-96 bg-blue-500 rounded-full blur-3xl" />
         <div className="absolute bottom-10 md:bottom-20 right-10 md:right-20 w-64 md:w-96 h-64 md:h-96 bg-cyan-500 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -537,7 +639,6 @@ function QuestionsScreen({ currentStep, progress, data, onSelect, onBack }: any)
           </p>
         </motion.div>
 
-        {/* Progress bar */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -561,15 +662,15 @@ function QuestionsScreen({ currentStep, progress, data, onSelect, onBack }: any)
           </div>
         </motion.div>
 
-        {/* Question card */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
+            ref={questionRef}
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="bg-gradient-to-br from-zinc-900 to-zinc-950 backdrop-blur-xl border border-blue-500/20 rounded-2xl md:rounded-3xl p-6 md:p-10 mb-6 shadow-2xl"
+            className="bg-gradient-to-br from-zinc-900 to-zinc-950 backdrop-blur-xl border border-blue-500/20 rounded-2xl md:rounded-3xl p-6 md:p-10 mb-6 shadow-2xl scroll-mt-24"
           >
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-2 md:mb-3 text-center leading-tight">
               {currentStepData.title}
@@ -578,7 +679,6 @@ function QuestionsScreen({ currentStep, progress, data, onSelect, onBack }: any)
               {currentStepData.subtitle}
             </p>
 
-            {/* Options grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {currentStepData.options.map((option, index) => {
                 const isSelected = data[currentStepData.key] === option.value
@@ -596,22 +696,18 @@ function QuestionsScreen({ currentStep, progress, data, onSelect, onBack }: any)
                         : 'border-blue-500/20 hover:border-blue-500/40'
                     }`}
                   >
-                    {/* Icon */}
                     <div className={`w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 md:mb-4 rounded-xl bg-gradient-to-br ${option.gradient} flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
                       <option.icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
                     </div>
                     
-                    {/* Label */}
                     <div className="font-bold text-lg md:text-xl text-white mb-1.5 md:mb-2">
                       {option.label}
                     </div>
                     
-                    {/* Description */}
                     <div className="text-xs md:text-sm text-zinc-400 leading-relaxed">
                       {option.desc}
                     </div>
 
-                    {/* Selected indicator */}
                     {isSelected && (
                       <motion.div
                         initial={{ scale: 0 }}
@@ -628,7 +724,6 @@ function QuestionsScreen({ currentStep, progress, data, onSelect, onBack }: any)
           </motion.div>
         </AnimatePresence>
 
-        {/* Back button */}
         {currentStep > 0 && (
           <motion.button
             initial={{ opacity: 0 }}

@@ -1,50 +1,188 @@
-// app/simulador/simulator-config.ts
-import { Moon, Bed, Weight, Activity, Euro, TrendingUp, Package, Sparkles, Award, Shield } from 'lucide-react'
+// app/simulador/simulator-config.ts - CON PREGUNTA DE MEDIDA
+import { 
+  Moon, User, Bed, DollarSign, 
+  Ruler, Maximize2, Users, Crown
+} from 'lucide-react'
 
-export const SIMULATOR_STEPS = [
+export interface SimulatorStep {
+  id: string
+  key: 'position' | 'weight' | 'firmness' | 'budget' | 'size'
+  title: string
+  subtitle: string
+  options: {
+    value: string
+    label: string
+    desc: string
+    icon: any
+    gradient: string
+  }[]
+}
+
+export const SIMULATOR_STEPS: SimulatorStep[] = [
   {
-    id: 1,
-    title: '¿Cuál es tu posición preferida para dormir?',
-    subtitle: 'Esto determina la distribución de presión ideal',
+    id: 'position',
+    key: 'position',
+    title: '¿Cómo dormís habitualmente?',
+    subtitle: 'Tu posición de sueño determina el soporte que necesitás',
     options: [
-      { value: 'side', label: 'De lado', icon: Moon, desc: 'Necesitas adaptabilidad', gradient: 'from-blue-500 to-cyan-500' },
-      { value: 'back', label: 'Boca arriba', icon: Bed, desc: 'Balance perfecto', gradient: 'from-purple-500 to-pink-500' },
-      { value: 'stomach', label: 'Boca abajo', icon: Activity, desc: 'Firmeza extra', gradient: 'from-orange-500 to-red-500' },
-      { value: 'mixed', label: 'Varía', icon: TrendingUp, desc: 'Versatilidad', gradient: 'from-green-500 to-emerald-500' }
-    ],
-    key: 'position' as const
+      {
+        value: 'side',
+        label: 'De lado',
+        desc: 'Necesitás alivio de presión en hombros y caderas',
+        icon: Moon,
+        gradient: 'from-blue-500 to-cyan-600'
+      },
+      {
+        value: 'back',
+        label: 'Boca arriba',
+        desc: 'Requiere soporte lumbar y alineación espinal',
+        icon: User,
+        gradient: 'from-purple-500 to-pink-600'
+      },
+      {
+        value: 'stomach',
+        label: 'Boca abajo',
+        desc: 'Ideal con superficie más firme para el abdomen',
+        icon: Bed,
+        gradient: 'from-orange-500 to-red-600'
+      },
+      {
+        value: 'mixed',
+        label: 'Combinado',
+        desc: 'Cambias de posición durante la noche',
+        icon: Maximize2,
+        gradient: 'from-green-500 to-emerald-600'
+      }
+    ]
   },
   {
-    id: 2,
+    id: 'size',
+    key: 'size',
+    title: '¿Qué medida necesitás?',
+    subtitle: 'Elegí el tamaño ideal para tu espacio y necesidad',
+    options: [
+      {
+        value: 'single',
+        label: '1 Plaza',
+        desc: '80-90cm • Ideal para una persona',
+        icon: User,
+        gradient: 'from-blue-500 to-indigo-600'
+      },
+      {
+        value: 'twin',
+        label: '1½ Plaza',
+        desc: '100-110cm • Mayor espacio individual',
+        icon: User,
+        gradient: 'from-cyan-500 to-blue-600'
+      },
+      {
+        value: 'double',
+        label: '2 Plazas',
+        desc: '130-140cm • Pareja o espacio extra',
+        icon: Users,
+        gradient: 'from-purple-500 to-violet-600'
+      },
+      {
+        value: 'queen',
+        label: 'Queen',
+        desc: '150-160cm • Máximo confort para dos',
+        icon: Crown,
+        gradient: 'from-pink-500 to-rose-600'
+      },
+      {
+        value: 'king',
+        label: 'King',
+        desc: '180-200cm • Lujo y espacio absoluto',
+        icon: Crown,
+        gradient: 'from-amber-500 to-orange-600'
+      }
+    ]
+  },
+  {
+    id: 'weight',
+    key: 'weight',
     title: '¿Cuál es tu peso aproximado?',
-    subtitle: 'Para calcular el soporte óptimo',
+    subtitle: 'Esto nos ayuda a determinar el nivel de soporte necesario',
     options: [
-      { value: 'light', label: 'Menos de 60kg', icon: Weight, desc: 'Suavidad ideal', gradient: 'from-cyan-500 to-blue-500' },
-      { value: 'medium', label: '60-90kg', icon: Activity, desc: 'Balance perfecto', gradient: 'from-purple-500 to-pink-500' },
-      { value: 'heavy', label: 'Más de 90kg', icon: Shield, desc: 'Soporte reforzado', gradient: 'from-orange-500 to-red-500' }
-    ],
-    key: 'weight' as const
+      {
+        value: 'light',
+        label: 'Menos de 70kg',
+        desc: 'Colchones más suaves te brindarán mejor confort',
+        icon: User,
+        gradient: 'from-green-500 to-emerald-600'
+      },
+      {
+        value: 'medium',
+        label: '70-90kg',
+        desc: 'Firmeza media balanceada para soporte óptimo',
+        icon: User,
+        gradient: 'from-blue-500 to-cyan-600'
+      },
+      {
+        value: 'heavy',
+        label: 'Más de 90kg',
+        desc: 'Mayor firmeza para soporte y durabilidad',
+        icon: User,
+        gradient: 'from-orange-500 to-red-600'
+      }
+    ]
   },
   {
-    id: 3,
-    title: '¿Qué firmeza prefieres?',
-    subtitle: 'Tu confort personal es clave',
+    id: 'firmness',
+    key: 'firmness',
+    title: '¿Qué nivel de firmeza preferís?',
+    subtitle: 'La firmeza afecta directamente tu comodidad y descanso',
     options: [
-      { value: 'soft', label: 'Suave', icon: Moon, desc: 'Sensación envolvente', gradient: 'from-blue-400 to-cyan-400' },
-      { value: 'medium', label: 'Media', icon: Award, desc: 'Lo más popular', gradient: 'from-purple-500 to-pink-500' },
-      { value: 'firm', label: 'Firme', icon: Shield, desc: 'Máximo soporte', gradient: 'from-gray-600 to-gray-800' }
-    ],
-    key: 'firmness' as const
+      {
+        value: 'soft',
+        label: 'Suave',
+        desc: 'Sensación envolvente y acolchada',
+        icon: Moon,
+        gradient: 'from-pink-500 to-rose-600'
+      },
+      {
+        value: 'medium',
+        label: 'Media',
+        desc: 'Balance perfecto entre confort y soporte',
+        icon: Bed,
+        gradient: 'from-blue-500 to-cyan-600'
+      },
+      {
+        value: 'firm',
+        label: 'Firme',
+        desc: 'Soporte sólido y estructura definida',
+        icon: Maximize2,
+        gradient: 'from-slate-500 to-zinc-600'
+      }
+    ]
   },
   {
-    id: 4,
+    id: 'budget',
+    key: 'budget',
     title: '¿Cuál es tu presupuesto?',
-    subtitle: 'Calidad premium en todos los rangos',
+    subtitle: 'Precios en Pesos Argentinos',
     options: [
-      { value: 'economic', label: 'Hasta 500€', icon: Euro, desc: 'Calidad accesible', gradient: 'from-green-500 to-emerald-500' },
-      { value: 'standard', label: '500-1000€', icon: Package, desc: 'Mejor relación', gradient: 'from-purple-500 to-pink-500' },
-      { value: 'premium', label: 'Más de 1000€', icon: Sparkles, desc: 'Tecnología top', gradient: 'from-yellow-500 to-orange-500' }
-    ],
-    key: 'budget' as const
+      {
+        value: 'economic',
+        label: 'Económico',
+        desc: 'Hasta $300.000 • Excelente relación calidad-precio',
+        icon: DollarSign,
+        gradient: 'from-green-500 to-emerald-600'
+      },
+      {
+        value: 'standard',
+        label: 'Estándar',
+        desc: '$300.000 - $600.000 • Mayor confort y durabilidad',
+        icon: DollarSign,
+        gradient: 'from-blue-500 to-cyan-600'
+      },
+      {
+        value: 'premium',
+        label: 'Premium',
+        desc: 'Más de $1.000.000 • Tecnología y materiales top',
+        icon: DollarSign,
+        gradient: 'from-purple-500 to-pink-600'
+      }
+    ]
   }
 ]

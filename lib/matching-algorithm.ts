@@ -1,389 +1,318 @@
-// lib/matching-algorithm.ts
-interface UserProfile {
-    position: string
-    weight: string
-    firmness: string
-    budget: string
+// lib/matching-algorithm.ts - CON FILTRO DE TAMAÑO
+interface UserPreferences {
+  position: string
+  weight: string
+  firmness: string
+  budget: string
+  size: string
+}
+
+interface Product {
+  id: string
+  name: string
+  slug: string
+  price: number
+  originalPrice?: number | null
+  firmness?: string
+  height?: number
+  cooling?: boolean
+  hypoallergenic?: boolean
+  isEco?: boolean
+  warranty?: number
+  rating?: number
+  reviewCount?: number
+  isBestSeller?: boolean
+  width?: number
+  length?: number
+  features?: string[]
+  highlights?: string[]
+  breathability?: string
+  inStock?: boolean
+}
+
+interface ScoredProduct extends Product {
+  matchScore: number
+  matchPercentage: number
+  matchReasons: string[]
+}
+
+function getBudgetRange(budget: string): { min: number; max: number } {
+  switch (budget) {
+    case 'economic':
+      return { min: 0, max: 300000 }
+    case 'standard':
+      return { min: 300000, max: 600000 }
+    case 'premium':
+      return { min: 1000000, max: 99999999 }
+    default:
+      return { min: 0, max: 99999999 }
+  }
+}
+
+function getIdealFirmness(position: string, weight: string, firmnessPreference: string): number {
+  let base = 6
+
+  // Ajustar por posición
+  switch (position) {
+    case 'side':
+      base = 5
+      break
+    case 'back':
+      base = 6
+      break
+    case 'stomach':
+      base = 8
+      break
+    case 'mixed':
+      base = 6
+      break
+  }
+
+  // Ajustar por peso
+  switch (weight) {
+    case 'light':
+      base -= 1
+      break
+    case 'heavy':
+      base += 1
+      break
+  }
+
+  // Ajustar por preferencia
+  switch (firmnessPreference) {
+    case 'soft':
+      base -= 2
+      break
+    case 'firm':
+      base += 2
+      break
+  }
+
+  return Math.max(1, Math.min(10, base))
+}
+
+function mapFirmnessToNumber(firmness?: string): number {
+  if (!firmness) return 6
+
+  const lower = firmness.toLowerCase()
+  
+  if (lower.includes('suave') || lower.includes('soft') || lower.includes('blanda')) return 4
+  if (lower.includes('medio suave') || lower.includes('medium soft')) return 5
+  if (lower.includes('media') || lower.includes('medium') || lower.includes('equilibrada')) return 6
+  if (lower.includes('medio firme') || lower.includes('medium firm')) return 7
+  if (lower.includes('firme') || lower.includes('firm') || lower.includes('dura')) return 8
+  if (lower.includes('extra firme') || lower.includes('extra firm')) return 9
+  
+  return 6
+}
+
+function getSizeCategory(width?: number, name?: string): string {
+  const nameLower = (name || '').toLowerCase()
+  
+  // Detectar por nombre
+  if (nameLower.includes('king') && !nameLower.includes('super')) return 'king'
+  if (nameLower.includes('super king')) return 'king'
+  if (nameLower.includes('queen')) return 'queen'
+  if (nameLower.includes('2 plazas') || nameLower.includes('doble')) return 'double'
+  if (nameLower.includes('1½') || nameLower.includes('plaza y media')) return 'twin'
+  if (nameLower.includes('1 plaza') || nameLower.includes('individual')) return 'single'
+  
+  // Detectar por ancho (si está disponible)
+  if (width) {
+    if (width >= 180) return 'king'
+    if (width >= 150) return 'queen'
+    if (width >= 130) return 'double'
+    if (width >= 100) return 'twin'
+    return 'single'
   }
   
-  interface Product {
-    id: string
-    name: string
-    slug: string
-    price: number
-    originalPrice?: number | null
-    firmnessValue: number
-    transpirability: number
-    height: number
-    rating: number
-    reviewCount: number
-    cooling?: boolean
-    eco?: boolean
-    isEco?: boolean
-    hypoallergenic?: boolean
-    washable?: boolean
-    isBestSeller?: boolean
-    isNew?: boolean
-    satisfaction?: number
-    features?: string[]
-    highlights?: string[]
-    inStock?: boolean
-    warranty?: number
-    trialNights?: number
-    [key: string]: any
-  }
+  return 'unknown'
+}
+
+function matchesSize(product: Product, requestedSize: string): boolean {
+  const productSize = getSizeCategory(product.width, product.name)
   
-  interface ScoredProduct extends Product {
-    matchScore: number
-    matchPercentage: number
-    matchReasons: string[]
-  }
+  // Si no se pudo determinar el tamaño, incluirlo (mejor mostrar más que menos)
+  if (productSize === 'unknown') return true
   
-  // ============================================================================
-  // CÁLCULO DE FIRMEZA IDEAL
-  // ============================================================================
-  function getIdealFirmness(position: string, weight: string, preference: string): number {
-    let base = 65
-  
-    // Ajuste por posición de sueño
-    switch (position) {
-      case 'side': 
-        base = 50  // Lado necesita más suavidad
-        break
-      case 'back': 
-        base = 65  // Espalda necesita balance
-        break
-      case 'stomach': 
-        base = 75  // Boca abajo necesita firmeza
-        break
-      case 'mixed': 
-        base = 60  // Versátil
-        break
+  return productSize === requestedSize
+}
+
+export function getTopRecommendations(
+  products: Product[],
+  preferences: UserPreferences,
+  topN: number = 3
+): ScoredProduct[] {
+  console.log('🎯 [MatchingAlgorithm] Starting recommendations')
+  console.log('📊 [MatchingAlgorithm] Products received:', products.length)
+  console.log('👤 [MatchingAlgorithm] User preferences:', preferences)
+
+  // Filtrar productos válidos
+  const validProducts = products.filter(p => {
+    const isValid = p.id && p.name && p.slug && p.price > 0 && p.inStock !== false
+    if (!isValid) {
+      console.log('⚠️ [MatchingAlgorithm] Invalid product filtered out:', p.name)
     }
-  
-    // Ajuste por peso
-    switch (weight) {
-      case 'light': 
-        base -= 10  // Personas ligeras prefieren más suave
-        break
-      case 'heavy': 
-        base += 12  // Personas pesadas necesitan más soporte
-        break
-      // 'medium' no ajusta
-    }
-  
-    // Ajuste por preferencia personal
-    switch (preference) {
-      case 'soft': 
-        base -= 15
-        break
-      case 'firm': 
-        base += 15
-        break
-      // 'medium' no ajusta
-    }
-  
-    // Mantener dentro del rango 30-95
-    return Math.max(30, Math.min(95, base))
+    return isValid
+  })
+
+  console.log('✅ [MatchingAlgorithm] Valid products:', validProducts.length)
+
+  // Filtrar por tamaño si está especificado
+  const sizeFilteredProducts = preferences.size 
+    ? validProducts.filter(p => matchesSize(p, preferences.size))
+    : validProducts
+
+  console.log(`🔍 [MatchingAlgorithm] Products matching size "${preferences.size}":`, sizeFilteredProducts.length)
+
+  if (sizeFilteredProducts.length === 0) {
+    console.warn('⚠️ [MatchingAlgorithm] No products match the requested size, using all products')
+    // Si no hay productos del tamaño exacto, usar todos
+    return scoreProducts(validProducts, preferences, topN)
   }
-  
-  // ============================================================================
-  // RANGOS DE PRESUPUESTO
-  // ============================================================================
-  function getBudgetRange(budget: string): { min: number; max: number } {
-    switch (budget) {
-      case 'economic': 
-        return { min: 0, max: 500 }
-      case 'standard': 
-        return { min: 500, max: 1000 }
-      case 'premium': 
-        return { min: 1000, max: 99999 }
-      default: 
-        return { min: 0, max: 99999 }
-    }
-  }
-  
-  // ============================================================================
-  // PENALIZACIÓN POR DIFERENCIA DE FIRMEZA
-  // ============================================================================
-  function calculateFirmnessPenalty(idealFirmness: number, productFirmness: number): number {
-    const diff = Math.abs(idealFirmness - productFirmness)
-    
-    if (diff <= 5) return 0        // Perfecta coincidencia
-    if (diff <= 10) return diff * 0.5   // Muy buena
-    if (diff <= 20) return diff * 1.0   // Buena
-    return diff * 1.5                   // Regular
-  }
-  
-  // ============================================================================
-  // CÁLCULO DE SCORE DEL PRODUCTO
-  // ============================================================================
-  export function calculateProductScore(
-    product: Product,
-    profile: UserProfile
-  ): { score: number; reasons: string[] } {
+
+  return scoreProducts(sizeFilteredProducts, preferences, topN)
+}
+
+function scoreProducts(
+  products: Product[],
+  preferences: UserPreferences,
+  topN: number
+): ScoredProduct[] {
+  const budgetRange = getBudgetRange(preferences.budget)
+  const idealFirmness = getIdealFirmness(
+    preferences.position,
+    preferences.weight,
+    preferences.firmness
+  )
+
+  console.log('🎯 [MatchingAlgorithm] Ideal firmness:', idealFirmness)
+  console.log('💰 [MatchingAlgorithm] Budget range:', budgetRange)
+
+  const scoredProducts = products.map(product => {
     let score = 0
     const reasons: string[] = []
-  
-    // ===== 1. FIRMEZA (40 puntos max) =====
-    const idealFirmness = getIdealFirmness(profile.position, profile.weight, profile.firmness)
-    const productFirmness = product.firmnessValue || 70 // Fallback si no existe
-    const firmnessPenalty = calculateFirmnessPenalty(idealFirmness, productFirmness)
-    const firmnessScore = Math.max(0, 40 - firmnessPenalty)
+
+    // 1. FIRMEZA (35 puntos)
+    const productFirmness = mapFirmnessToNumber(product.firmness)
+    const firmnessDiff = Math.abs(idealFirmness - productFirmness)
+    const firmnessScore = Math.max(0, 35 - firmnessDiff * 7)
     score += firmnessScore
-  
-    if (firmnessScore >= 35) {
-      reasons.push('Firmeza perfecta para ti')
-    } else if (firmnessScore >= 25) {
-      reasons.push('Firmeza muy compatible')
-    } else if (firmnessScore >= 15) {
-      reasons.push('Firmeza compatible')
+
+    if (firmnessScore > 25) {
+      reasons.push(`Firmeza ${product.firmness || 'media'} perfecta para tu perfil`)
     }
-  
-    // ===== 2. PRESUPUESTO (25 puntos max) =====
-    const budgetRange = getBudgetRange(profile.budget)
+
+    // 2. PRESUPUESTO (30 puntos)
     let budgetScore = 0
-  
     if (product.price >= budgetRange.min && product.price <= budgetRange.max) {
-      budgetScore = 25
-      
-      // Bonus si está en el centro del rango
-      const midBudget = (budgetRange.min + budgetRange.max) / 2
-      const distanceFromMid = Math.abs(product.price - midBudget) / (budgetRange.max - budgetRange.min)
-      
-      if (distanceFromMid < 0.3) {
-        budgetScore += 2
-        reasons.push('Precio óptimo en tu rango')
-      } else {
-        reasons.push('Dentro de tu presupuesto')
-      }
+      const rangeCenter = (budgetRange.min + budgetRange.max) / 2
+      const distanceFromCenter = Math.abs(product.price - rangeCenter)
+      const rangeSize = budgetRange.max - budgetRange.min
+      budgetScore = 30 - (distanceFromCenter / rangeSize) * 15
+      reasons.push('Se ajusta perfectamente a tu presupuesto')
+    } else if (product.price < budgetRange.min) {
+      budgetScore = 20
+      reasons.push('Excelente precio por debajo de tu presupuesto')
     } else {
-      // Penalización gradual si está fuera del rango
-      const priceDiff = Math.min(
-        Math.abs(product.price - budgetRange.min),
-        Math.abs(product.price - budgetRange.max)
-      )
-      budgetScore = Math.max(0, 25 - priceDiff / 50)
+      budgetScore = 5
     }
-  
     score += budgetScore
-  
-    // ===== 3. CARACTERÍSTICAS ESPECÍFICAS (20 puntos max) =====
-    let featuresScore = 0
-  
-    // Bonus por posición de sueño específica
-    if (profile.position === 'side' && productFirmness >= 45 && productFirmness <= 65) {
-      featuresScore += 5
-      reasons.push('Ideal para dormir de lado')
+
+    // 3. POSICIÓN DE SUEÑO (15 puntos)
+    let positionScore = 10
+    if (preferences.position === 'side' && productFirmness <= 6) {
+      positionScore = 15
+      reasons.push('Suavidad ideal para dormir de lado')
+    } else if (preferences.position === 'back' && productFirmness >= 5 && productFirmness <= 7) {
+      positionScore = 15
+      reasons.push('Soporte lumbar óptimo para dormir boca arriba')
+    } else if (preferences.position === 'stomach' && productFirmness >= 7) {
+      positionScore = 15
+      reasons.push('Firmeza perfecta para dormir boca abajo')
+    } else if (preferences.position === 'mixed') {
+      positionScore = 15
+      reasons.push('Versatilidad para todas las posiciones')
     }
-  
-    if (profile.position === 'back' && productFirmness >= 60 && productFirmness <= 75) {
-      featuresScore += 5
-      reasons.push('Perfecto para dormir boca arriba')
+    score += positionScore
+
+    // 4. PESO (10 puntos)
+    let weightScore = 5
+    if (preferences.weight === 'light' && productFirmness <= 6) {
+      weightScore = 10
+      reasons.push('Adaptabilidad perfecta para tu peso')
+    } else if (preferences.weight === 'medium' && productFirmness >= 5 && productFirmness <= 7) {
+      weightScore = 10
+      reasons.push('Soporte equilibrado para tu peso')
+    } else if (preferences.weight === 'heavy' && productFirmness >= 7) {
+      weightScore = 10
+      reasons.push('Soporte reforzado ideal para tu peso')
     }
-  
-    if (profile.position === 'stomach' && productFirmness >= 70) {
-      featuresScore += 5
-      reasons.push('Firmeza ideal para boca abajo')
-    }
-  
-    // Bonus por peso específico
-    if (profile.weight === 'heavy' && productFirmness >= 70) {
-      featuresScore += 4
-      reasons.push('Soporte reforzado para tu peso')
-    }
-  
-    if (profile.weight === 'light' && productFirmness <= 60) {
-      featuresScore += 4
-      reasons.push('Adaptabilidad perfecta')
-    }
-  
-    // Bonus por características premium
+    score += weightScore
+
+    // 5. CARACTERÍSTICAS PREMIUM (10 puntos)
+    let premiumScore = 0
     if (product.cooling) {
-      featuresScore += 2
-      reasons.push('Sistema de refrigeración')
+      premiumScore += 2
+      reasons.push('Tecnología de refrigeración para noches frescas')
     }
-  
     if (product.isEco) {
-      featuresScore += 2
-      reasons.push('Materiales ecológicos')
+      premiumScore += 2
+      reasons.push('Materiales ecológicos certificados')
     }
-  
     if (product.hypoallergenic) {
-      featuresScore += 1
-      reasons.push('Hipoalergénico')
+      premiumScore += 2
+      reasons.push('Hipoalergénico para máxima salud')
     }
-  
-    if (product.washable) {
-      featuresScore += 1
+    if (product.height && product.height >= 25) {
+      premiumScore += 2
+      reasons.push(`Altura premium de ${product.height}cm`)
     }
-  
-    // Bonus por altura premium
-    if (product.height >= 28) {
-      featuresScore += 2
-      reasons.push('Altura premium')
+    if (product.breathability === 'high' || product.breathability === 'excellent') {
+      premiumScore += 2
+      reasons.push('Excelente transpirabilidad')
     }
-  
-    // Bonus por alta transpirabilidad
-    if (product.transpirability >= 85) {
-      featuresScore += 2
-      reasons.push('Alta transpirabilidad')
-    }
-  
-    score += Math.min(20, featuresScore)
-  
-    // ===== 4. SOCIAL PROOF (15 puntos max) =====
-    let socialProofScore = 0
-  
-    // Rating (0-10 puntos)
-    const ratingScore = (product.rating / 5) * 10
-    socialProofScore += ratingScore
-  
-    // Número de reviews (0-5 puntos)
-    const reviewsScore = Math.min(5, product.reviewCount / 200)
-    socialProofScore += reviewsScore
-  
-    // Best seller bonus
+    score += Math.min(10, premiumScore)
+
+    // 6. SOCIAL PROOF (bonus hasta 10 puntos)
     if (product.isBestSeller) {
-      socialProofScore += 2
-      reasons.push('Más vendido')
+      score += 5
+      reasons.push('Bestseller en Villa María')
     }
-  
-    // Alta satisfacción
-    if (product.satisfaction && product.satisfaction >= 95) {
-      socialProofScore += 1
-      reasons.push('Alta satisfacción')
+    if (product.rating && product.rating >= 4.5) {
+      score += 3
+      reasons.push(`Calificación ${product.rating.toFixed(1)}⭐ de clientes`)
     }
-  
-    score += Math.min(15, socialProofScore)
-  
-    // Limitar a top 5 razones más relevantes
+    if (product.reviewCount && product.reviewCount > 50) {
+      score += 2
+      reasons.push(`${product.reviewCount}+ opiniones verificadas`)
+    }
+
+    // Normalizar score (0-100)
+    const normalizedScore = Math.min(100, Math.max(0, score))
+    
+    // Convertir a porcentaje de match (85-99%)
+    const matchPercentage = Math.round(85 + (normalizedScore / 100) * 14)
+
+    console.log(`📊 [MatchingAlgorithm] ${product.name}: ${normalizedScore.toFixed(1)} points (${matchPercentage}% match)`)
+
     return {
-      score: Math.round(score),
-      reasons: reasons.slice(0, 5)
+      ...product,
+      matchScore: normalizedScore,
+      matchPercentage,
+      matchReasons: reasons.slice(0, 4)
     }
-  }
-  
-  // ============================================================================
-  // OBTENER TOP RECOMENDACIONES
-  // ============================================================================
-  export function getTopRecommendations(
-    products: Product[] | null | undefined,
-    profile: UserProfile,
-    limit: number = 3
-  ): ScoredProduct[] {
-    console.log('🔍 getTopRecommendations called')
-    console.log('  - Products:', products?.length || 0)
-    console.log('  - Profile:', profile)
-  
-    // Validación: productos existen
-    if (!products || !Array.isArray(products) || products.length === 0) {
-      console.warn('⚠️ No products available')
-      return []
-    }
-  
-    // Validación: perfil completo
-    if (!profile || !profile.position || !profile.weight || !profile.firmness || !profile.budget) {
-      console.warn('⚠️ Invalid profile:', profile)
-      return []
-    }
-  
-    try {
-      // Filtrar productos válidos
-      const validProducts = products.filter(p => {
-        const isValid = (
-          p &&
-          typeof p === 'object' &&
-          p.id &&
-          p.name &&
-          p.slug &&
-          typeof p.price === 'number' &&
-          p.price > 0 &&
-          p.inStock !== false
-        )
-        
-        if (!isValid) {
-          console.warn('⚠️ Invalid product filtered out:', p?.name || 'Unknown')
-        }
-        
-        return isValid
-      })
-  
-      console.log('✅ Valid products:', validProducts.length)
-  
-      if (validProducts.length === 0) {
-        console.warn('⚠️ No valid products after filtering')
-        return []
-      }
-  
-      // Calcular scores y ordenar
-      const scoredProducts = validProducts
-        .map(product => {
-          const { score, reasons } = calculateProductScore(product, profile)
-          
-          return {
-            ...product,
-            matchScore: score,
-            matchPercentage: calculateMatchPercentage(score),
-            matchReasons: reasons
-          }
-        })
-        .sort((a, b) => b.matchScore - a.matchScore)
-        .slice(0, limit)
-  
-      console.log('🎯 Top recommendations generated:', scoredProducts.length)
-      console.log('  - Top match:', scoredProducts[0]?.name, `(${scoredProducts[0]?.matchPercentage}%)`)
-  
-      return scoredProducts
-  
-    } catch (error) {
-      console.error('❌ Error in getTopRecommendations:', error)
-      return []
-    }
-  }
-  
-  // ============================================================================
-  // CALCULAR PORCENTAJE DE MATCH (85-99%)
-  // ============================================================================
-  function calculateMatchPercentage(score: number): number {
-    const minPercentage = 85
-    const maxPercentage = 99
-    const range = maxPercentage - minPercentage
-    
-    // Score máximo es 100, convertir a porcentaje 85-99
-    const percentage = minPercentage + (score / 100) * range
-    
-    return Math.round(Math.min(maxPercentage, Math.max(minPercentage, percentage)))
-  }
-  
-  // ============================================================================
-  // RESUMEN DEL PERFIL DEL USUARIO
-  // ============================================================================
-  export function getProfileSummary(profile: UserProfile): string {
-    const positionText: Record<string, string> = {
-      side: 'de lado',
-      back: 'boca arriba',
-      stomach: 'boca abajo',
-      mixed: 'variada'
-    }
-  
-    const weightText: Record<string, string> = {
-      light: 'ligero',
-      medium: 'medio',
-      heavy: 'pesado'
-    }
-  
-    const firmnessText: Record<string, string> = {
-      soft: 'suave',
-      medium: 'media',
-      firm: 'firme'
-    }
-  
-    const budgetText: Record<string, string> = {
-      economic: 'hasta 500€',
-      standard: '500-1000€',
-      premium: 'más de 1000€'
-    }
-  
-    return `Duermes ${positionText[profile.position] || 'variada'}, peso ${weightText[profile.weight] || 'medio'}, prefieres firmeza ${firmnessText[profile.firmness] || 'media'}, presupuesto ${budgetText[profile.budget] || 'flexible'}`
-  }
+  })
+
+  // Ordenar por score descendente
+  scoredProducts.sort((a, b) => b.matchScore - a.matchScore)
+
+  const topRecommendations = scoredProducts.slice(0, topN)
+
+  console.log('🏆 [MatchingAlgorithm] Top recommendations:')
+  topRecommendations.forEach((p, i) => {
+    console.log(`  ${i + 1}. ${p.name} - ${p.matchPercentage}% match (${p.matchScore.toFixed(1)} points)`)
+  })
+
+  return topRecommendations
+}

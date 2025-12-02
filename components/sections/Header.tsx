@@ -398,7 +398,7 @@ export default function Header() {
               ) : (
                 <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
                   <Icons.CreditCard className="w-4 h-4 text-cyan-200" />
-                  <span className="text-sm font-black text-white">12 Cuotas Sin Interés</span>
+                  <span className="text-sm font-black text-white">Mercado Pago</span>
                 </div>
               )}
               
