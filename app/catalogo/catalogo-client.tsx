@@ -19,12 +19,13 @@ export default function CatalogoClient({
   initialProducts,
   totalProducts = 0 
 }: CatalogoClientProps) {
-  // ✅ Debug: Log productos recibidos
+  // ============================================================================
+  // DEBUG Y NORMALIZACIÓN DE PRODUCTOS
+  // ============================================================================
   console.log('🛍️ CatalogoClient mounted')
   console.log('📦 Initial products received:', initialProducts?.length || 0)
   console.log('📊 Total products:', totalProducts)
   
-  // Manejo de la potencial prop undefined/null
   const productsToFilter: NormalizedProduct[] = useMemo(() => {
     const products = initialProducts || []
     console.log('🔄 Products to filter:', products.length)
@@ -41,65 +42,37 @@ export default function CatalogoClient({
     return products
   }, [initialProducts])
   
-  // 1. Estados
+  // ============================================================================
+  // ESTADOS
+  // ============================================================================
   const [searchTerm, setSearchTerm] = useState('')
-  const [favorites, setFavorites] = useState<string[]>([])
   const [sortBy, setSortBy] = useState('featured')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]) // Para FilterDrawer
-  const [activeCategory, setActiveCategory] = useState('todos') // Para CategoryTabs
   
-  // ✅ CORREGIDO: Rango de precio que incluya todos los productos ($0 - $2.000.000)
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000000])
+  // ✅ Estados de filtrado sincronizados
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [activeCategory, setActiveCategory] = useState('todos')
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000000]) // $0 - $2M en centavos
   const [minRating, setMinRating] = useState(0)
   
-  // 2. Refs y Framer Motion
+  // ============================================================================
+  // REFS Y FRAMER MOTION
+  // ============================================================================
   const heroRef = useRef<HTMLDivElement>(null)
   const productsRef = useRef<HTMLDivElement>(null)
   
-  // Hook de scroll
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
   })
   
-  // Transformaciones de motion
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']) as MotionValue<string>
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]) as MotionValue<number>
   const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]) as MotionValue<number>
 
-  // 3. Handlers
-  const toggleFavorite = useCallback((id: string) => {
-    setFavorites(prev => 
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
-    )
-  }, [])
-
-  const clearFilters = useCallback(() => {
-    setSearchTerm('')
-    setSortBy('featured')
-    setSelectedCategories([])
-    setActiveCategory('todos') // Reset category tab
-    setPriceRange([0, 2000000]) // ✅ CORREGIDO
-    setMinRating(0)
-  }, [])
-
-  const scrollToProducts = useCallback(() => {
-    productsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [])
-
-  // Handler para cambio de categoría desde tabs
-  const handleCategoryChange = useCallback((categoryId: string) => {
-    setActiveCategory(categoryId)
-    // Sincronizar con selectedCategories del drawer
-    if (categoryId === 'todos') {
-      setSelectedCategories([])
-    } else {
-      setSelectedCategories([categoryId])
-    }
-  }, [])
-
-  // 4. ✅ Categorías únicas disponibles (usando campo category)
+  // ============================================================================
+  // CATEGORÍAS DISPONIBLES
+  // ============================================================================
   const availableCategories = useMemo(() => {
     const categories = new Set<string>()
     
@@ -114,7 +87,6 @@ export default function CatalogoClient({
     return cats
   }, [productsToFilter])
 
-  // 5. ✅ Categorías con contador para CategoryTabs
   const categoriesWithCount = useMemo(() => {
     const CATEGORY_CONFIG = [
       { id: 'todos', name: 'Todos', icon: '🏠' },
@@ -130,114 +102,194 @@ export default function CatalogoClient({
     return CATEGORY_CONFIG.map(cat => ({
       ...cat,
       count: cat.id === 'todos' 
-        ? productsToFilter.length 
-        : productsToFilter.filter(p => p.category === cat.id).length
-    })).filter(cat => cat.count > 0) // Solo mostrar categorías con productos
+        ? productsToFilter.filter(p => p.isActive !== false).length
+        : productsToFilter.filter(p => p.category === cat.id && p.isActive !== false).length
+    })).filter(cat => cat.count > 0)
   }, [productsToFilter])
 
-  // 6. ✅ Lógica de Filtrado y Ordenamiento - CORREGIDA
+  // ============================================================================
+  // HANDLERS
+  // ============================================================================
+  const clearFilters = useCallback(() => {
+    console.log('🧹 Clearing all filters')
+    setSearchTerm('')
+    setSortBy('featured')
+    setSelectedCategories([])
+    setActiveCategory('todos')
+    setPriceRange([0, 200000000])
+    setMinRating(0)
+  }, [])
+
+  const scrollToProducts = useCallback(() => {
+    productsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+
+  // ✅ Handler para cambio de categoría (sincroniza tabs con drawer)
+  const handleCategoryChange = useCallback((categoryId: string) => {
+    console.log('🔄 Category changed to:', categoryId)
+    setActiveCategory(categoryId)
+    
+    // Sincronizar con selectedCategories del drawer
+    if (categoryId === 'todos') {
+      setSelectedCategories([])
+    } else {
+      setSelectedCategories([categoryId])
+    }
+  }, [])
+
+  // ✅ Handler para cambio desde drawer (sincroniza drawer con tabs)
+  const handleDrawerCategoryChange = useCallback((categories: string[] | ((prev: string[]) => string[])) => {
+    const newCategories = typeof categories === 'function' 
+      ? categories(selectedCategories)
+      : categories
+    
+    console.log('🔄 Drawer categories changed to:', newCategories)
+    setSelectedCategories(newCategories)
+    
+    // Sincronizar con activeCategory
+    if (newCategories.length === 0) {
+      setActiveCategory('todos')
+    } else if (newCategories.length === 1) {
+      setActiveCategory(newCategories[0])
+    } else {
+      // Multiple categories selected - keep 'todos' active
+      setActiveCategory('todos')
+    }
+  }, [selectedCategories])
+
+  // ============================================================================
+  // LÓGICA DE FILTRADO Y ORDENAMIENTO
+  // ============================================================================
   const filteredProducts = useMemo(() => {
     console.log('🔍 Filtering products...')
-    console.log('  - Active category:', activeCategory)
-    console.log('  - Search term:', searchTerm)
-    console.log('  - Sort by:', sortBy)
-    console.log('  - Selected categories (drawer):', selectedCategories)
-    console.log('  - Price range:', priceRange)
-    console.log('  - Min rating:', minRating)
+    console.log('  📊 Total products:', productsToFilter.length)
+    console.log('  🏷️ Active category:', activeCategory)
+    console.log('  🔍 Search term:', searchTerm)
+    console.log('  🔢 Sort by:', sortBy)
+    console.log('  📁 Selected categories (drawer):', selectedCategories)
+    console.log('  💰 Price range (centavos):', priceRange)
+    console.log('  ⭐ Min rating:', minRating)
     
     if (!productsToFilter.length) {
       console.log('⚠️ No products to filter!')
       return []
     }
     
+    // Convertir precio range de centavos a pesos para comparación
+    const minPricePesos = priceRange[0] / 100
+    const maxPricePesos = priceRange[1] / 100
+    console.log('  💰 Price range in pesos:', minPricePesos, '-', maxPricePesos)
+    
     const filtered = productsToFilter.filter(product => {
-      // ✅ AGREGADO: Verificar que el producto esté activo
+      // 1. ✅ Verificar que esté activo
       if (product.isActive === false) {
-        console.log(`  ❌ Product ${product.name} is inactive`)
         return false
       }
       
-      // Category from tabs (priority)
-      const matchesTabCategory = activeCategory === 'todos' || 
-        (product.category && product.category === activeCategory)
+      // 2. ✅ Filtro de categoría (prioridad a tabs)
+      let matchesCategory = true
       
-      if (!matchesTabCategory) {
-        console.log(`  ❌ Product ${product.name} doesn't match category filter`)
-        return false
+      if (activeCategory !== 'todos') {
+        matchesCategory = product.category === activeCategory
+      } else if (selectedCategories.length > 0) {
+        // Si hay categorías seleccionadas en drawer pero tab es 'todos'
+        matchesCategory = selectedCategories.includes(product.category || '')
       }
       
-      // Search
-      const matchesSearch = !searchTerm || 
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.subtitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      if (!matchesCategory) return false
       
-      if (!matchesSearch) {
-        console.log(`  ❌ Product ${product.name} doesn't match search`)
-        return false
+      // 3. ✅ Búsqueda de texto
+      if (searchTerm) {
+        const search = searchTerm.toLowerCase()
+        const matchesSearch = 
+          product.name.toLowerCase().includes(search) ||
+          product.subtitle?.toLowerCase().includes(search) ||
+          product.description?.toLowerCase().includes(search) ||
+          product.category?.toLowerCase().includes(search)
+        
+        if (!matchesSearch) return false
       }
       
-      // Price
-      const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
+      // 4. ✅ Rango de precio (los productos ya vienen en pesos)
+      const matchesPrice = product.price >= minPricePesos && product.price <= maxPricePesos
       
       if (!matchesPrice) {
-        console.log(`  ❌ Product ${product.name} (${product.price}) out of price range ${priceRange[0]}-${priceRange[1]}`)
+        console.log(`  ❌ ${product.name}: price ${product.price} pesos out of range ${minPricePesos}-${maxPricePesos} pesos`)
         return false
       }
       
-      // Rating
-      const matchesRating = product.rating >= minRating
-      
-      if (!matchesRating) {
-        console.log(`  ❌ Product ${product.name} rating ${product.rating} below min ${minRating}`)
-        return false
+      // 5. ✅ Rating mínimo
+      if (minRating > 0) {
+        const matchesRating = (product.rating || 0) >= minRating
+        if (!matchesRating) return false
       }
       
       return true
-    }).sort((a, b) => {
-      // Sorting
-      if (sortBy === 'price-asc') return a.price - b.price
-      if (sortBy === 'price-desc') return b.price - a.price
-      if (sortBy === 'rating') return b.rating - a.rating
-      if (sortBy === 'newest') {
-        if (a.isNew && !b.isNew) return -1
-        if (!a.isNew && b.isNew) return 1
-      }
-      // Featured (default)
-      if (a.isBestSeller && !b.isBestSeller) return -1
-      if (!a.isBestSeller && b.isBestSeller) return 1
-      if (a.isNew && !b.isNew) return -1
-      if (!a.isNew && b.isNew) return 1
-      return b.rating - a.rating
     })
     
-    console.log('✅ Filtered products:', filtered.length)
-    if (filtered.length === 0 && productsToFilter.length > 0) {
-      console.log('⚠️ All products were filtered out! Check filter conditions.')
+    // ✅ Ordenamiento
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'price-asc':
+          return a.price - b.price
+        case 'price-desc':
+          return b.price - a.price
+        case 'rating':
+          return (b.rating || 0) - (a.rating || 0)
+        case 'newest':
+          if (a.isNew && !b.isNew) return -1
+          if (!a.isNew && b.isNew) return 1
+          return 0
+        case 'featured':
+        default:
+          // Featured: BestSeller > New > Rating
+          if (a.isBestSeller && !b.isBestSeller) return -1
+          if (!a.isBestSeller && b.isBestSeller) return 1
+          if (a.isNew && !b.isNew) return -1
+          if (!a.isNew && b.isNew) return 1
+          return (b.rating || 0) - (a.rating || 0)
+      }
+    })
+    
+    console.log('✅ Filtered products:', sorted.length)
+    
+    if (sorted.length === 0 && productsToFilter.length > 0) {
+      console.log('⚠️ All products filtered out!')
+      console.log('  Check filters:')
+      console.log('    - Category:', activeCategory)
+      console.log('    - Price range (pesos):', minPricePesos, '-', maxPricePesos)
+      console.log('    - Rating:', minRating)
+      console.log('    - Search:', searchTerm)
     }
-    return filtered
-  }, [productsToFilter, activeCategory, searchTerm, sortBy, priceRange, minRating])
+    
+    return sorted
+  }, [productsToFilter, activeCategory, selectedCategories, searchTerm, sortBy, priceRange, minRating])
 
-  // 7. Cálculos derivados
+  // ============================================================================
+  // CÁLCULOS DERIVADOS
+  // ============================================================================
   const avgPrice = useMemo(() => {
     if (!productsToFilter.length) return 300000
-    const avg = productsToFilter.reduce((acc, p) => acc + p.price, 0) / productsToFilter.length
-    console.log('💰 Average price:', avg)
+    const activeProducts = productsToFilter.filter(p => p.isActive !== false)
+    if (!activeProducts.length) return 300000
+    const avg = activeProducts.reduce((acc, p) => acc + p.price, 0) / activeProducts.length
+    console.log('📊 Average price:', avg, 'pesos')
     return avg
   }, [productsToFilter])
 
-  // 8. Contador de filtros activos
   const activeFiltersCount = useMemo(() => {
     let count = 0
-    if (activeCategory !== 'todos') count++ // Categoría activa
-    if (priceRange[0] > 0 || priceRange[1] < 2000000) count++
+    if (activeCategory !== 'todos') count++
+    if (selectedCategories.length > 0 && activeCategory === 'todos') count += selectedCategories.length
+    if (priceRange[0] > 0 || priceRange[1] < 200000000) count++
     if (minRating > 0) count++
     if (searchTerm) count++
-    console.log('🎯 Active filters count:', count)
     return count
-  }, [activeCategory, priceRange, minRating, searchTerm])
+  }, [activeCategory, selectedCategories, priceRange, minRating, searchTerm])
 
-  // ✅ Early return si no hay productos
+  // ============================================================================
+  // EARLY RETURN - NO HAY PRODUCTOS
+  // ============================================================================
   if (productsToFilter.length === 0) {
     console.log('❌ No products available - showing empty state')
     return (
@@ -258,7 +310,9 @@ export default function CatalogoClient({
     )
   }
 
-  // 9. Renderizado (Composición)
+  // ============================================================================
+  // RENDERIZADO
+  // ============================================================================
   console.log('🎨 Rendering catalog with', filteredProducts.length, 'products')
   
   return (
@@ -286,7 +340,7 @@ export default function CatalogoClient({
         filteredProductsLength={filteredProducts.length}
       />
 
-      {/* ⭐ NUEVO: Category Tabs - Integrado entre StickyBar y productos */}
+      {/* Category Tabs - Sticky below StickyBar */}
       <div className="sticky top-16 z-30 bg-white/95 backdrop-blur-md border-b border-zinc-200 py-4">
         <div className="container mx-auto px-4">
           <CategoryTabs
@@ -297,12 +351,12 @@ export default function CatalogoClient({
         </div>
       </div>
 
-      {/* Drawer de filtros */}
+      {/* ✅ FilterDrawer CORRECTAMENTE CONECTADO */}
       <FilterDrawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
         selectedCategories={selectedCategories}
-        onCategoryChange={setSelectedCategories}
+        onCategoryChange={handleDrawerCategoryChange}
         priceRange={priceRange}
         onPriceRangeChange={setPriceRange}
         minRating={minRating}
@@ -316,7 +370,7 @@ export default function CatalogoClient({
         <AnimatePresence mode="wait">
           {filteredProducts.length > 0 ? (
             <motion.div
-              key={activeCategory} // Re-render en cambio de categoría
+              key={`${activeCategory}-${selectedCategories.join('-')}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -329,8 +383,6 @@ export default function CatalogoClient({
                   key={product.id}
                   product={product}
                   index={index}
-                  isFavorite={favorites.includes(product.id)}
-                  onToggleFavorite={() => toggleFavorite(product.id)}
                   avgPrice={avgPrice}
                 />
               ))}

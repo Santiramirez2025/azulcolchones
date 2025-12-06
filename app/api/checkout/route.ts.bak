@@ -185,45 +185,29 @@ export async function POST(request: NextRequest) {
     
     const { subtotal, discount, shipping, total } = calculateTotals(items, coupon)
     
-    // ✅ Generar orderNumber único
-    const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`
-    
     // ✅ SIMPLIFICADO: Solo los campos que existen en el schema
     const fullAddress = shippingAddress?.address && shippingAddress?.addressNumber
       ? `${shippingAddress.address} ${shippingAddress.addressNumber}, ${shippingAddress.city || ''}, ${shippingAddress.province || ''} ${shippingAddress.postalCode || ''}`
       : shippingAddress?.address || ''
     
-    // ✅ Preparar shippingAddress como JSON (según schema)
-    const shippingAddressJson = {
-      fullAddress,
-      address: shippingAddress?.address || '',
-      addressNumber: shippingAddress?.addressNumber || '',
-      city: shippingAddress?.city || '',
-      province: shippingAddress?.province || '',
-      postalCode: shippingAddress?.postalCode || ''
-    }
-    
     const order = await prisma.order.create({
       data: {
-        orderNumber,
-        userId: userId || 'guest', // ✅ userId requerido según schema
         customerName: shippingAddress?.firstName && shippingAddress?.lastName
           ? `${shippingAddress.firstName} ${shippingAddress.lastName}`
           : shippingAddress?.name || 'Cliente',
         customerEmail: userEmail,
         customerPhone: shippingAddress?.phone || '',
         
-        // ✅ shippingAddress como Json según schema
-        shippingAddress: shippingAddressJson,
+        // ✅ Todo en un solo campo shippingAddress
+        shippingAddress: fullAddress,
         
         paymentMethod: paymentMethod || 'mercadopago',
         paymentStatus: 'pending',
         
-        // ✅ Precios en CENTAVOS según schema
-        subtotal: Math.round(subtotal * 100),
-        shipping: Math.round(shipping * 100),
-        discount: Math.round(discount * 100),
-        total: Math.round(total * 100),
+        subtotal,
+        shipping,
+        discount,
+        total,
         
         status: 'pending',
         
@@ -288,7 +272,6 @@ export async function POST(request: NextRequest) {
         id: 'shipping',
         title: 'Envío a domicilio',
         description: 'Entrega en 3-6 días hábiles',
-        picture_url: undefined,
         category_id: 'shipping',
         quantity: 1,
         unit_price: shipping,
@@ -303,7 +286,6 @@ export async function POST(request: NextRequest) {
         description: coupon.type === 'percentage'
           ? `${coupon.discount}% OFF`
           : `$${coupon.discount} ARS OFF`,
-        picture_url: undefined,
         category_id: 'discount',
         quantity: 1,
         unit_price: -discount,
@@ -363,7 +345,7 @@ export async function POST(request: NextRequest) {
     await prisma.order.update({
       where: { id: order.id },
       data: {
-        paymentId: response.id  // ✅ paymentId existe en el schema
+        mercadoPagoPreferenceId: response.id
       }
     })
     
@@ -397,7 +379,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Datos inválidos',
-          details: error.issues.map(e => ({
+          details: error.errors.map(e => ({
             field: e.path.join('.'),
             message: e.message
           }))

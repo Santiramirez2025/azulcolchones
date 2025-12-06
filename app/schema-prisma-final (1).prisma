@@ -202,7 +202,7 @@ model ProductVariant {
   @@index([size])                                  // Filtrar por tamaño
   @@index([stock])                                 // Filtrar por stock
   @@index([isActive])                              // Solo activas
-  @@unique([productId, dimensions, height])  // ⭐ Agregar height al unique
+  @@unique([productId, dimensions])                // No duplicar medidas por producto
 }
 
 // ============================================================================

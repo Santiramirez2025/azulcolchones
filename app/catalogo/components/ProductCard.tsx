@@ -1,23 +1,36 @@
-// app/catalogo/components/ProductCard.tsx - ✅ REVISADO Y CORREGIDO
+// app/catalogo/components/ProductCard.tsx - ✅ HOOKS CORREGIDOS
 'use client'
 
-import { useState, useEffect, useRef, useMemo } from 'react'
-import { Star, Heart, TrendingUp, Sparkles, Zap, Award, ShoppingBag, Info, X, CreditCard } from 'lucide-react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import { Star, Heart, TrendingUp, Sparkles, ShoppingBag, Zap, Package, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import { formatARS } from '@/lib/utils/currency'
-import { getMejorCuota, calcularTodasLasCuotas } from '@/lib/utils/pricing'
+import { getMejorCuota } from '@/lib/utils/pricing'
+import { useCartStore } from '@/lib/store/cart-store'
 
 // ============================================================================
 // TYPES
 // ============================================================================
+interface ProductVariant {
+  id: string
+  productId: string
+  size: string
+  dimensions: string
+  price: number
+  stock: number
+  sku: string | null
+  isActive: boolean
+  originalPrice?: number | null
+}
+
 interface ProductCardProps {
   product: {
     id: string
     name: string
     subtitle?: string | null
-    price: number // Ya en pesos (no centavos)
+    price: number
     originalPrice?: number | null
-    compareAtPrice?: number | null
     discount?: number | null
     rating: number
     reviewCount: number
@@ -27,65 +40,46 @@ interface ProductCardProps {
     isBestSeller?: boolean | null
     isNew?: boolean | null
     isPremium?: boolean | null
-    isEco?: boolean | null
-    antiMite?: boolean | null
-    pillowTop?: boolean | null
-    includesBase?: boolean | null
-    techFeatures?: string | string[] | null
     mainColor?: string | null
-    category?: string | null
+    variants?: ProductVariant[] | null
   }
   index?: number
-  isFavorite?: boolean
-  onToggleFavorite?: (id: string) => void
   avgPrice?: number
 }
 
 // ============================================================================
-// HELPERS
+// CONFIGURACIÓN
 // ============================================================================
-function parseArrayField(field: string | string[] | null | undefined): string[] {
-  if (!field) return []
-  if (Array.isArray(field)) return field.filter(Boolean)
-  
-  if (typeof field === 'string') {
-    if (field.includes('\n')) {
-      return field.split('\n').filter(Boolean)
-    }
-    try {
-      const parsed = JSON.parse(field)
-      return Array.isArray(parsed) ? parsed : [field]
-    } catch {
-      return [field]
-    }
-  }
-  
-  return []
+const SIZE_LABELS: Record<string, string> = {
+  '1 plaza': '🛏️ 1 Plaza',
+  '1 plaza grande': '🛏️ 1 Plaza XL',
+  '2 plazas': '🛏️🛏️ 2 Plazas',
+  'Matrimonial chico': '👫 Matrimonial',
+  'Matrimonial': '👫 Matrimonial',
+  'Queen': '👑 Queen',
+  'Super King': '♛ Super King',
+  'King': '♛ King'
 }
 
-// Hook para persistencia de favoritos
+// ============================================================================
+// HOOKS
+// ============================================================================
 function useFavorites() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
   
   useEffect(() => {
     try {
       const stored = localStorage.getItem('product-favorites')
-      if (stored) {
-        setFavorites(new Set(JSON.parse(stored)))
-      }
+      if (stored) setFavorites(new Set(JSON.parse(stored)))
     } catch (error) {
       console.error('Error loading favorites:', error)
     }
   }, [])
   
-  const toggleFavorite = (id: string) => {
+  const toggleFavorite = useCallback((id: string) => {
     setFavorites(prev => {
       const next = new Set(prev)
-      if (next.has(id)) {
-        next.delete(id)
-      } else {
-        next.add(id)
-      }
+      next.has(id) ? next.delete(id) : next.add(id)
       try {
         localStorage.setItem('product-favorites', JSON.stringify([...next]))
       } catch (error) {
@@ -93,121 +87,204 @@ function useFavorites() {
       }
       return next
     })
-  }
+  }, [])
   
   return { favorites, toggleFavorite }
 }
 
-// Hook para detección de tema
-function useTheme() {
-  const [isDark, setIsDark] = useState(false)
+// ============================================================================
+// SELECTOR DE MEDIDAS - ✅ HOOKS CORREGIDOS
+// ============================================================================
+function SizeSelector({ 
+  variants, 
+  selectedVariant, 
+  onSelectVariant 
+}: { 
+  variants: ProductVariant[]
+  selectedVariant: ProductVariant | null
+  onSelectVariant: (variant: ProductVariant) => void
+}) {
+  const available = useMemo(
+    () => variants.filter(v => v.isActive && v.stock > 0),
+    [variants]
+  )
   
+  // ✅ CRÍTICO: useEffect ANTES de TODOS los returns
   useEffect(() => {
-    // ✅ Forzar modo claro para el catálogo
-    setIsDark(false)
-  }, [])
+    if (available.length === 1 && !selectedVariant) {
+      onSelectVariant(available[0])
+    }
+  }, [available, selectedVariant, onSelectVariant])
   
-  return isDark
-}
-
-// Generar descripción con IA (mock)
-function generateAIDescription(product: any): string {
-  const descriptions = [
-    `Diseñado con tecnología de vanguardia para el descanso perfecto`,
-    `La elección inteligente para quienes buscan confort premium`,
-    `Innovación y calidad unidas en cada detalle`,
-    `Experiencia de descanso de nivel superior`,
-    `Tecnología adaptativa para tu mejor descanso`
-  ]
-  return descriptions[Math.floor(Math.random() * descriptions.length)]
-}
-
-// Formatear cantidad de reviews
-function formatReviews(count: number): string {
-  if (count >= 1000) return `${(count / 1000).toFixed(1)}k`
-  return count.toString()
+  // ✅ AHORA SÍ los returns condicionales
+  if (available.length === 0) {
+    return (
+      <div className="p-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-2">
+        <AlertCircle className="w-4 h-4 text-red-600" />
+        <p className="text-xs font-semibold text-red-900">Sin stock disponible</p>
+      </div>
+    )
+  }
+  
+  if (available.length === 1) {
+    return (
+      <div className="flex items-center gap-2 p-2 rounded-lg bg-blue-50 border border-blue-200">
+        <Package className="w-4 h-4 text-blue-600" />
+        <span className="text-xs font-semibold text-blue-900">
+          {SIZE_LABELS[available[0].size] || available[0].size}
+        </span>
+      </div>
+    )
+  }
+  
+  return (
+    <div className="space-y-2">
+      <p className="text-xs font-semibold text-gray-700">Elegí tu medida:</p>
+      
+      <div className="grid grid-cols-2 gap-2">
+        {available.map(variant => {
+          const isSelected = selectedVariant?.id === variant.id
+          const label = SIZE_LABELS[variant.size] || variant.size
+          const lowStock = variant.stock <= 5
+          
+          return (
+            <div key={variant.id} className="relative">
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onSelectVariant(variant)}
+                className={`
+                  w-full p-2.5 rounded-lg text-xs font-semibold transition-all
+                  ${isSelected
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-900 border border-gray-200 hover:border-blue-300'
+                  }
+                `}
+              >
+                <div className="flex flex-col items-center gap-0.5">
+                  <span className="leading-tight">{label}</span>
+                  {lowStock && (
+                    <span className={`text-[9px] font-bold leading-none ${
+                      isSelected ? 'text-blue-100' : 'text-orange-600'
+                    }`}>
+                      {variant.stock === 1 ? '¡Último!' : `${variant.stock} disponibles`}
+                    </span>
+                  )}
+                </div>
+              </motion.button>
+              
+              {lowStock && (
+                <div className="absolute -top-2 -right-2 z-10 pointer-events-none">
+                  <div className="w-6 h-6 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-[10px] font-black text-white">
+                      {variant.stock}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 
 // ============================================================================
-// MAIN COMPONENT
+// COMPONENTE PRINCIPAL
 // ============================================================================
 export default function ProductCard({ 
   product, 
   index = 0,
-  onToggleFavorite,
-  avgPrice = 30000
+  avgPrice = 300000
 }: ProductCardProps) {
-  const isDark = useTheme()
-  const { favorites, toggleFavorite: localToggleFavorite } = useFavorites()
+  const router = useRouter()
+  const { favorites, toggleFavorite } = useFavorites()
+  
+  const addItem = useCartStore(state => state.addItem)
+  
   const isFavorite = favorites.has(product.id)
   
-  // Estado local
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
-  const [showQuickView, setShowQuickView] = useState(false)
-  const [showCuotasDetail, setShowCuotasDetail] = useState(false)
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null)
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number}>>([])
+  const [addedToCart, setAddedToCart] = useState(false)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
   
-  // Refs
   const cardRef = useRef<HTMLDivElement>(null)
   const particleIdRef = useRef(0)
   
-  // Motion values para efecto 3D
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
-  
-  // Spring suave para rotación 3D
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [3, -3]), {
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [2, -2]), {
     stiffness: 150,
     damping: 20
   })
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-3, 3]), {
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-2, 2]), {
     stiffness: 150,
     damping: 20
   })
   
-  // ✅ Calcular cuotas
-  const mejorCuota = useMemo(() => getMejorCuota(product.price), [product.price])
-  const todasLasCuotas = useMemo(() => calcularTodasLasCuotas(product.price), [product.price])
+  const variants = useMemo(() => product.variants || [], [product.variants])
   
-  // ✅ Manejar imagen (puede ser string o array)
+  const hasStock = useMemo(() => {
+    return variants.some(v => v.isActive && v.stock > 0)
+  }, [variants])
+  
+  useEffect(() => {
+    if (!selectedVariant && variants.length > 0) {
+      const available = variants
+        .filter(v => v.isActive && v.stock > 0)
+        .sort((a, b) => b.stock - a.stock)
+      
+      if (available.length > 0) {
+        setSelectedVariant(available[0])
+      }
+    }
+  }, [variants, selectedVariant])
+  
+  const finalPrice = useMemo(() => {
+    return selectedVariant?.price || product.price
+  }, [selectedVariant, product.price])
+  
+  const originalPrice = useMemo(() => {
+    const variantOriginal = selectedVariant?.originalPrice
+    if (variantOriginal && variantOriginal > finalPrice) {
+      return variantOriginal
+    }
+    if (product.originalPrice && product.originalPrice > finalPrice) {
+      return product.originalPrice
+    }
+    return null
+  }, [selectedVariant, product.originalPrice, finalPrice])
+  
+  const mejorCuota = useMemo(() => getMejorCuota(finalPrice), [finalPrice])
+  
   const productImage = useMemo(() => {
+    if (imageError) return '/images/placeholder-colchon.jpg'
     if (!product.images) return '/images/placeholder-colchon.jpg'
     if (typeof product.images === 'string') return product.images
-    if (Array.isArray(product.images) && product.images.length > 0) {
-      return product.images[0]
-    }
+    if (Array.isArray(product.images) && product.images[0]) return product.images[0]
     return '/images/placeholder-colchon.jpg'
-  }, [product.images])
+  }, [product.images, imageError])
   
-  // Parsear features
-  const techFeatures = useMemo(() => {
-    const features = parseArrayField(product.techFeatures)
-    return features.length > 0 ? features : ['Confort garantizado', 'Calidad premium', 'Fabricación nacional']
-  }, [product.techFeatures])
-  
-  // Cálculos
   const discountPercentage = useMemo(() => {
-    if (product.originalPrice && product.originalPrice > 0 && product.originalPrice > product.price) {
-      return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    if (originalPrice && originalPrice > finalPrice) {
+      return Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
     }
     return product.discount || 0
-  }, [product.originalPrice, product.price, product.discount])
+  }, [originalPrice, finalPrice, product.discount])
   
-  const firmnessLevels = ['EXTRA_BLANDO', 'BLANDO', 'MEDIO', 'FIRME', 'MEDIO_FIRME', 'EXTRA_FIRME']
-  const firmnessIndex = product.firmness ? firmnessLevels.indexOf(product.firmness.toUpperCase()) : 2
-  const firmnessLevel = Math.max(1, Math.min(5, firmnessIndex >= 0 ? firmnessIndex + 1 : 3))
-  const isGoodValue = product.rating >= 4.7 && product.price < avgPrice
+  const savings = useMemo(() => {
+    if (originalPrice && originalPrice > finalPrice) {
+      return originalPrice - finalPrice
+    }
+    return 0
+  }, [originalPrice, finalPrice])
   
-  // AI Description
-  const aiDescription = useMemo(() => generateAIDescription(product), [product.id])
-  
-  // Color principal
-  const mainColor = product.mainColor || '#3b82f6' // blue-500 por defecto
-  
-  // Handlers
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current || window.innerWidth < 768) return
     
     const rect = cardRef.current.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width - 0.5
@@ -215,21 +292,20 @@ export default function ProductCard({
     
     mouseX.set(x)
     mouseY.set(y)
-  }
+  }, [mouseX, mouseY])
   
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     mouseX.set(0)
     mouseY.set(0)
-  }
+  }, [mouseX, mouseY])
   
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+  const handleFavoriteClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     
-    // Crear partículas
     const rect = cardRef.current?.getBoundingClientRect()
     if (rect) {
-      const newParticles = Array.from({ length: 8 }, () => ({
+      const newParticles = Array.from({ length: 6 }, () => ({
         id: particleIdRef.current++,
         x: rect.right - 50,
         y: rect.top + 30
@@ -241,22 +317,80 @@ export default function ProductCard({
       }, 1000)
     }
     
-    if (onToggleFavorite) {
-      onToggleFavorite(product.id)
-    } else {
-      localToggleFavorite(product.id)
-    }
-  }
+    toggleFavorite(product.id)
+  }, [toggleFavorite, product.id])
   
-  // ✅ MODO CLARO FORZADO
-  const bgClass = 'bg-white'
-  const textClass = 'text-gray-900'
-  const textSecondaryClass = 'text-gray-600'
-  const borderClass = 'border-gray-200'
+  const handleAddToCart = useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    if (!selectedVariant) {
+      alert('Por favor seleccioná una medida')
+      return
+    }
+    
+    if (isAddingToCart) return
+    
+    setIsAddingToCart(true)
+    
+    try {
+      addItem({
+        productId: product.id,
+        name: product.name,
+        size: selectedVariant.size,
+        price: finalPrice,
+        originalPrice: originalPrice || undefined,
+        quantity: 1,
+        image: productImage,
+        slug: product.slug,
+        variant: selectedVariant.size
+      })
+      
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'add_to_cart', {
+          currency: 'ARS',
+          value: finalPrice,
+          items: [{
+            item_id: product.id,
+            item_name: product.name,
+            item_variant: selectedVariant.size,
+            price: finalPrice,
+            quantity: 1
+          }]
+        })
+      }
+      
+      setAddedToCart(true)
+      
+      setTimeout(() => {
+        router.push('/carrito')
+      }, 1500)
+      
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      alert('Error al agregar al carrito. Intentá de nuevo.')
+      setIsAddingToCart(false)
+      setAddedToCart(false)
+    }
+  }, [
+    selectedVariant, 
+    isAddingToCart, 
+    product, 
+    finalPrice, 
+    originalPrice, 
+    productImage, 
+    addItem, 
+    router
+  ])
+  
+  const handleImageError = useCallback(() => {
+    console.warn(`Image load error for product: ${product.id}`)
+    setImageError(true)
+    setImageLoaded(true)
+  }, [product.id])
   
   return (
     <>
-      {/* Partículas de favorito */}
       <AnimatePresence>
         {particles.map(particle => (
           <motion.div
@@ -278,71 +412,12 @@ export default function ProductCard({
         ))}
       </AnimatePresence>
       
-      {/* Quick View Modal */}
-      <AnimatePresence>
-        {showQuickView && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowQuickView(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={e => e.stopPropagation()}
-              className="bg-white max-w-2xl w-full rounded-3xl p-8 border border-gray-200 shadow-2xl relative"
-            >
-              <button
-                onClick={() => setShowQuickView(false)}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-500 flex items-center justify-center transition-colors"
-                aria-label="Cerrar vista rápida"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              
-              <h3 className="text-2xl font-black text-gray-900 mb-4">
-                Especificaciones Técnicas
-              </h3>
-              
-              <div className="space-y-3">
-                {techFeatures.map((feature, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-gray-50"
-                  >
-                    <Zap className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-900">{feature}</span>
-                  </motion.div>
-                ))}
-              </div>
-              
-              <div className="mt-6 p-4 rounded-xl bg-blue-50 border border-blue-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-blue-500" />
-                  <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
-                    Recomendación IA
-                  </span>
-                </div>
-                <p className="text-sm text-gray-900">{aiDescription}</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      {/* Main Card */}
       <motion.div
         ref={cardRef}
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
-          duration: 0.5,
+          duration: 0.4,
           delay: index * 0.05,
           type: 'spring',
           stiffness: 100
@@ -357,27 +432,57 @@ export default function ProductCard({
         className="w-full group"
       >
         <div className="relative">
-          {/* Glow Effect */}
-          <motion.div
-            className="absolute inset-0 -z-10 rounded-3xl blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700"
-            style={{
-              background: `radial-gradient(circle at center, ${mainColor}, transparent 70%)`
-            }}
-          />
-          
-          {/* Card Container */}
-          <div className="relative bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-lg transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-blue-500/10">
+          <div className={`relative bg-white rounded-2xl sm:rounded-3xl overflow-hidden border shadow-md transition-all duration-300 ${
+            hasStock 
+              ? 'border-gray-200 group-hover:shadow-xl group-hover:border-blue-300' 
+              : 'border-gray-300 opacity-75'
+          }`}>
             
-            {/* Badges Container */}
-            <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+            {!hasStock && (
+              <div className="absolute inset-0 bg-white/90 z-30 flex items-center justify-center backdrop-blur-sm">
+                <div className="text-center p-6">
+                  <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-lg font-black text-gray-900">Agotado</p>
+                  <p className="text-sm text-gray-600 mt-1">Consultá disponibilidad</p>
+                </div>
+              </div>
+            )}
+            
+            <AnimatePresence>
+              {addedToCart && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="absolute inset-0 bg-emerald-500/95 z-40 flex flex-col items-center justify-center backdrop-blur-sm"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.1, type: 'spring' }}
+                  >
+                    <CheckCircle2 className="w-16 h-16 text-white mb-4" />
+                  </motion.div>
+                  <p className="text-xl font-black text-white mb-2">¡Agregado al carrito!</p>
+                  <p className="text-sm text-white/90">Redirigiendo...</p>
+                  <div className="mt-4 flex gap-1">
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            
+            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 flex flex-col gap-1 sm:gap-2">
               {product.isBestSeller && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full text-white text-[10px] font-black tracking-wider flex items-center gap-1.5 shadow-lg"
+                  className="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full text-white text-[9px] sm:text-[10px] font-black flex items-center gap-1 shadow-lg"
                 >
-                  <TrendingUp className="w-3 h-3" />
-                  <span>TOP VENTAS</span>
+                  <TrendingUp className="w-2.5 h-2.5" />
+                  <span>TOP</span>
                 </motion.div>
               )}
               
@@ -385,10 +490,11 @@ export default function ProductCard({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="px-3 py-1.5 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full text-white text-[10px] font-black tracking-wider flex items-center gap-1.5 shadow-lg"
+                  transition={{ delay: 0.1 }}
+                  className="px-2 py-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full text-white text-[9px] sm:text-[10px] font-black flex items-center gap-1 shadow-lg"
                 >
-                  <Sparkles className="w-3 h-3" />
-                  <span>NUEVO 2025</span>
+                  <Sparkles className="w-2.5 h-2.5" />
+                  <span>NUEVO</span>
                 </motion.div>
               )}
               
@@ -396,22 +502,24 @@ export default function ProductCard({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="px-3 py-1.5 bg-gradient-to-r from-red-500 to-pink-600 rounded-full text-white text-[10px] font-black tracking-wider shadow-lg"
+                  transition={{ delay: 0.2 }}
+                  className="px-2 py-1 bg-gradient-to-r from-red-500 to-pink-600 rounded-full text-white text-[9px] sm:text-[10px] font-black shadow-lg"
                 >
-                  <span>-{discountPercentage}%</span>
+                  -{discountPercentage}%
                 </motion.div>
               )}
             </div>
             
-            {/* Favorite Button */}
             <motion.button
               onClick={handleFavoriteClick}
               whileTap={{ scale: 0.9 }}
-              className={`absolute top-4 right-4 z-20 w-11 h-11 rounded-xl backdrop-blur-md border flex items-center justify-center shadow-lg transition-all ${
+              whileHover={{ scale: 1.1 }}
+              className={`absolute top-2 right-2 sm:top-4 sm:right-4 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-xl backdrop-blur-md border flex items-center justify-center shadow-lg transition-all ${
                 isFavorite 
                   ? 'bg-red-500 border-red-400' 
-                  : 'bg-white/90 border-gray-200 hover:bg-gray-50'
+                  : 'bg-white/90 border-gray-200 hover:border-red-400'
               }`}
+              aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
             >
               <Heart 
                 className={`w-5 h-5 transition-all ${
@@ -420,59 +528,37 @@ export default function ProductCard({
               />
             </motion.button>
             
-            {/* Quick View Button */}
-            <motion.button
-              onClick={(e) => {
-                e.preventDefault()
-                setShowQuickView(true)
-              }}
-              whileTap={{ scale: 0.9 }}
-              className="absolute top-16 right-4 z-20 opacity-0 group-hover:opacity-100 w-11 h-11 rounded-xl backdrop-blur-md bg-white/90 border border-gray-200 flex items-center justify-center shadow-lg transition-all hover:bg-gray-50"
-            >
-              <Info className="w-5 h-5 text-gray-700" />
-            </motion.button>
-            
-            {/* Image Container */}
-            <div className="relative h-80 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-              {!imageLoaded && !imageError && (
-                <div className="absolute inset-0 animate-pulse bg-gray-200" />
+            <div className="relative h-64 sm:h-80 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+              {!imageLoaded && (
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-gray-200 via-gray-100 to-gray-200" />
               )}
               
-              <motion.img
+              <img
                 src={productImage}
-                alt={product.name}
+                alt={`${product.name} - Colchón premium Villa María`}
                 loading="lazy"
+                decoding="async"
                 onLoad={() => setImageLoaded(true)}
-                onError={() => {
-                  setImageError(true)
-                  setImageLoaded(true)
-                }}
-                initial={{ opacity: 0, scale: 1.1 }}
-                animate={imageLoaded ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.5 }}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                onError={handleImageError}
+                className={`w-full h-full object-cover transition-all duration-500 ${
+                  imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
+                } ${hasStock ? 'group-hover:scale-110' : ''}`}
               />
               
-              {/* Good Value Badge */}
-              {isGoodValue && (
-                <div className="absolute bottom-4 left-4">
-                  <div className="px-3 py-1.5 bg-emerald-500 rounded-xl text-white text-xs font-black shadow-lg flex items-center gap-1.5">
-                    <Award className="w-3 h-3" />
-                    <span>MEJOR PRECIO</span>
-                  </div>
+              {imageError && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Package className="w-16 h-16 text-gray-300" />
                 </div>
               )}
             </div>
             
-            {/* Content Section */}
-            <div className="p-6 space-y-4 bg-white">
-              {/* Rating */}
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4 bg-white">
               <div className="flex items-center gap-2">
                 <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-4 h-4 ${
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
                         i < Math.floor(product.rating)
                           ? 'fill-amber-400 text-amber-400'
                           : 'text-gray-300'
@@ -480,146 +566,131 @@ export default function ProductCard({
                     />
                   ))}
                 </div>
-                <span className="text-sm font-bold text-gray-900">
+                <span className="text-xs sm:text-sm font-bold text-gray-900">
                   {product.rating.toFixed(1)}
                 </span>
-                <span className="text-xs text-gray-500">
-                  ({formatReviews(product.reviewCount)})
+                <span className="text-[10px] sm:text-xs text-gray-500">
+                  ({product.reviewCount > 1000 ? `${(product.reviewCount / 1000).toFixed(1)}k` : product.reviewCount})
                 </span>
               </div>
               
-              {/* Product Name */}
               <div>
-                <h3 className="text-xl font-black text-gray-900 mb-1 leading-tight group-hover:text-blue-600 transition-colors">
+                <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-1 leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors">
                   {product.name}
                 </h3>
-                <p className="text-sm text-gray-600 line-clamp-2">
-                  {product.subtitle || 'Confort y calidad garantizados'}
-                </p>
+                {product.subtitle && (
+                  <p className="text-xs sm:text-sm text-gray-600 line-clamp-1">
+                    {product.subtitle}
+                  </p>
+                )}
               </div>
               
-              {/* Firmness */}
-              {product.firmness && (
-                <div className="inline-flex items-center gap-3 px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-1.5 h-5 rounded-sm ${
-                          i < firmnessLevel
-                            ? 'bg-gradient-to-t from-blue-600 to-blue-400'
-                            : 'bg-gray-300'
-                        }`}
-                      />
-                    ))}
+              {hasStock && (
+                <SizeSelector
+                  variants={variants}
+                  selectedVariant={selectedVariant}
+                  onSelectVariant={setSelectedVariant}
+                />
+              )}
+              
+              {hasStock && (
+                <div className="space-y-2 pt-2">
+                  <div>
+                    {originalPrice && originalPrice > finalPrice && (
+                      <div className="flex items-baseline gap-2 mb-1">
+                        <span className="text-sm text-gray-400 line-through">
+                          {formatARS(originalPrice)}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-gray-900">
+                        {formatARS(finalPrice)}
+                      </span>
+                      {discountPercentage > 0 && (
+                        <span className="text-xs text-red-600 font-bold">
+                          -{discountPercentage}%
+                        </span>
+                      )}
+                    </div>
+                    {savings > 0 && (
+                      <p className="text-xs text-emerald-600 font-semibold mt-0.5">
+                        Ahorrás {formatARS(savings)}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2 text-[10px] sm:text-xs mt-1">
+                      <span className="text-emerald-600 font-bold">
+                        💳 Efectivo/Transferencia
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-xs font-bold text-gray-700">
-                    {product.firmness}
-                  </span>
+                  
+                  <div className="p-3 rounded-xl bg-blue-50 border border-blue-200">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-[10px] text-blue-600 font-semibold mb-0.5">
+                          Hasta {mejorCuota.cuotas} cuotas sin interés
+                        </div>
+                        <div className="text-sm font-black text-gray-900">
+                          {mejorCuota.formatted.precioCuota}
+                        </div>
+                      </div>
+                      <Zap className="w-5 h-5 text-blue-600" />
+                    </div>
+                  </div>
                 </div>
               )}
               
-              {/* ✅ PRECIO CON CUOTAS */}
-              <div className="space-y-3 pt-2">
-                {/* Precio original */}
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500 line-through">
-                      {formatARS(product.originalPrice)}
-                    </span>
-                    <span className="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-bold rounded">
-                      AHORRÁS {formatARS(product.originalPrice - product.price)}
-                    </span>
-                  </div>
-                )}
-                
-                {/* Precio de contado */}
-                <div>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-3xl font-black text-gray-900">
-                      {formatARS(product.price)}
-                    </span>
-                  </div>
-                  <span className="text-xs text-emerald-600 font-bold">
-                    CONTADO • Transferencia • Débito
-                  </span>
-                </div>
-                
-                {/* Mejor cuota */}
-                <motion.button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setShowCuotasDetail(!showCuotasDetail)
-                  }}
-                  className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-all"
+              <div className={`grid gap-2 pt-2 ${hasStock ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                <motion.a
+                  href={`/producto/${product.slug}${selectedVariant ? `?variant=${selectedVariant.id}` : ''}`}
+                  whileTap={{ scale: 0.97 }}
+                  className={`py-3 rounded-xl font-bold text-xs sm:text-sm text-center border-2 transition-all ${
+                    hasStock
+                      ? 'text-blue-600 border-blue-600 hover:bg-blue-50'
+                      : 'text-gray-900 border-gray-900 hover:bg-gray-50'
+                  }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-blue-600" />
-                    <div className="text-left">
-                      <div className="text-xs text-blue-600 font-semibold">
-                        Hasta {mejorCuota.cuotas} cuotas
-                      </div>
-                      <div className="text-sm font-black text-gray-900">
-                        {mejorCuota.formatted.precioCuota}
-                      </div>
-                    </div>
-                  </div>
-                  <motion.div
-                    animate={{ rotate: showCuotasDetail ? 180 : 0 }}
-                    className="text-blue-600"
-                  >
-                    ▼
-                  </motion.div>
-                </motion.button>
+                  Ver detalles
+                </motion.a>
                 
-                {/* Dropdown cuotas */}
-                <AnimatePresence>
-                  {showCuotasDetail && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="bg-gray-50 rounded-xl p-3 space-y-2">
-                        {todasLasCuotas.map((cuota) => (
-                          <div
-                            key={cuota.cuotas}
-                            className="flex items-center justify-between p-2 rounded-lg bg-white"
+                {hasStock && (
+                  <motion.button
+                    onClick={handleAddToCart}
+                    whileTap={{ scale: 0.97 }}
+                    disabled={!selectedVariant || isAddingToCart || addedToCart}
+                    className={`py-3 rounded-xl font-bold text-white text-xs sm:text-sm text-center transition-all ${
+                      selectedVariant && !isAddingToCart && !addedToCart
+                        ? 'bg-gradient-to-r from-blue-600 to-cyan-600 shadow-md hover:shadow-lg hover:from-blue-700 hover:to-cyan-700'
+                        : 'bg-gray-300 cursor-not-allowed'
+                    }`}
+                  >
+                    <span className="flex items-center justify-center gap-1.5">
+                      {isAddingToCart ? (
+                        <>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                           >
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
-                                <span className="text-xs font-bold text-blue-600">
-                                  {cuota.cuotas}
-                                </span>
-                              </div>
-                              <span className="text-xs font-semibold text-gray-900">
-                                {cuota.formatted.precioCuota}
-                              </span>
-                            </div>
-                            <span className="text-[10px] text-gray-500">
-                              {cuota.formatted.precioTotal}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                            <Package className="w-4 h-4" />
+                          </motion.div>
+                          <span>Agregando...</span>
+                        </>
+                      ) : addedToCart ? (
+                        <>
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>¡Agregado!</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingBag className="w-4 h-4" />
+                          <span>Agregar</span>
+                        </>
+                      )}
+                    </span>
+                  </motion.button>
+                )}
               </div>
-              
-              {/* CTA Button */}
-              <motion.a
-                href={`/producto/${product.slug}`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="block w-full py-4 rounded-2xl font-black text-white text-sm tracking-wide text-center bg-gradient-to-r from-blue-600 to-cyan-600 shadow-lg hover:shadow-xl transition-all"
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <ShoppingBag className="w-5 h-5" />
-                  <span>VER PRODUCTO</span>
-                </span>
-              </motion.a>
             </div>
           </div>
         </div>

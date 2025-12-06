@@ -1,4 +1,4 @@
-// app/catalogo/page.tsx
+// app/catalogo/page.tsx - ✅ VERSIÓN COMPLETA Y CORRECTA
 import { Suspense } from 'react'
 import { getProducts } from '@/lib/api/products'
 import { centavosToARS } from '@/lib/utils/currency'
@@ -152,14 +152,39 @@ export default async function CatalogoPage() {
     )
   }
 
-  // ✅ CONVERTIR PRECIOS DE CENTAVOS A PESOS con tipado correcto
-  const productsWithPrices: NormalizedProduct[] = (products as any[]).map((product: any) => ({
-    ...product,
-    price: centavosToARS(product.price),
-    originalPrice: product.originalPrice ? centavosToARS(product.originalPrice) : null,
-    compareAtPrice: product.compareAtPrice ? centavosToARS(product.compareAtPrice) : null,
-    shippingCost: centavosToARS(product.shippingCost || 0),
-  }))
+  // ✅ CONVERSIÓN COMPLETA DE PRECIOS (PRODUCTO + VARIANTS)
+  console.log('🔄 Converting prices for', products.length, 'products')
+  
+  const productsWithPrices: NormalizedProduct[] = (products as any[]).map((product: any) => {
+    console.log(`  📦 ${product.name}`)
+    console.log(`    - Product price (centavos): ${product.price}`)
+    
+    return {
+      ...product,
+      // ✅ Convertir precios del producto principal
+      price: centavosToARS(product.price),
+      originalPrice: product.originalPrice ? centavosToARS(product.originalPrice) : null,
+      compareAtPrice: product.compareAtPrice ? centavosToARS(product.compareAtPrice) : null,
+      shippingCost: centavosToARS(product.shippingCost || 0),
+      
+      // ✅ Convertir precios de variants SI EXISTEN
+      ...(product.variants && product.variants.length > 0 && {
+        variants: product.variants.map((variant: any) => ({
+          ...variant,
+          price: centavosToARS(variant.price),
+          originalPrice: variant.originalPrice ? centavosToARS(variant.originalPrice) : null,
+        }))
+      })
+    }
+  })
+
+  console.log('✅ Products with converted prices:', productsWithPrices.length)
+  if (productsWithPrices.length > 0) {
+    console.log('✅ Sample product:', {
+      name: productsWithPrices[0].name,
+      price: productsWithPrices[0].price
+    })
+  }
 
   return (
     <Suspense fallback={<CatalogoLoading />}>
