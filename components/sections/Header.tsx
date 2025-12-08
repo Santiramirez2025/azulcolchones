@@ -413,7 +413,7 @@ export default function Header() {
             <div className="flex items-center gap-3">
               <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-white">
                 <Icons.Truck className="w-4 h-4 text-cyan-200" />
-                <span>Envío <span className="text-cyan-200">GRATIS</span> Villa María</span>
+                <span>Envío <span className="text-cyan-200">GRATIS</span></span>
               </div>
               
               <a 

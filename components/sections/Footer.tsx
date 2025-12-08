@@ -146,7 +146,7 @@ const campaign = getCurrentCampaign()
 
 const SITE_CONFIG = {
   phone: '+5493534017332',
-  phoneDisplay: '353 4525774',
+  phoneDisplay: '3534017332',
   whatsappNumber: '5493534017332',
   email: 'info@azulcolchones.com.ar',
   brandName: 'Azul Colchones',
