@@ -1,4 +1,4 @@
-// app/page.tsx - Homepage OPTIMIZADA PARA BUILD ✅
+// app/page.tsx - PRODUCTION READY ✅
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
@@ -9,25 +9,38 @@ import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { homeMetadata, getAllStructuredData } from '@/lib/metadata'
 import { getFeaturedProducts } from '@/lib/api/products'
 
+// ============================================================================
+// METADATA & CONFIG
+// ============================================================================
 export const metadata: Metadata = homeMetadata
 
-// ✅ CONFIGURACIÓN: ISR con revalidación cada hora
+// ISR Configuration: Revalidate every hour
 export const revalidate = 3600
-export const dynamic = 'force-dynamic'
 
-// ✅ Lazy loading de componentes no críticos
-const BenefitsSection = dynamic(() => 
-  import('@/components/home/BenefitsSection').then(mod => mod.BenefitsSection),
-  { loading: () => <BenefitsSkeleton />, ssr: true }
+// Dynamic rendering for real-time data
+export const dynamicParams = true
+
+// ============================================================================
+// DYNAMIC IMPORTS - Lazy loading non-critical components
+// ============================================================================
+const BenefitsSection = dynamic(
+  () => import('@/components/home/BenefitsSection').then(mod => ({ default: mod.BenefitsSection })),
+  { 
+    loading: () => <BenefitsSkeleton />, 
+    ssr: true 
+  }
 )
 
-const CTASection = dynamic(() => 
-  import('@/components/home/CTASection').then(mod => mod.CTASection),
-  { loading: () => <CTASkeleton />, ssr: true }
+const CTASection = dynamic(
+  () => import('@/components/home/CTASection').then(mod => ({ default: mod.CTASection })),
+  { 
+    loading: () => <CTASkeleton />, 
+    ssr: true 
+  }
 )
 
 // ============================================================================
-// SKELETONS
+// LOADING SKELETONS
 // ============================================================================
 function BenefitsSkeleton() {
   return (
@@ -83,27 +96,33 @@ function CTASkeleton() {
 }
 
 // ============================================================================
-// PÁGINA PRINCIPAL
+// MAIN PAGE COMPONENT
 // ============================================================================
 export default async function Home() {
+  // Generate all structured data schemas for SEO
   const structuredDataSchemas = getAllStructuredData()
   
-  // ✅ Error handling con fallback - NO rompe el build
+  // Fetch featured products with error handling
   let featuredProducts: Awaited<ReturnType<typeof getFeaturedProducts>> = []
   
   try {
     featuredProducts = await getFeaturedProducts(6)
-    console.log(`✅ [HOME] Loaded ${featuredProducts.length} featured products`)
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`✅ [HOME] Loaded ${featuredProducts.length} featured products`)
+    }
   } catch (error) {
-    console.error('❌ [HOME] Failed to fetch featured products:', error)
-    // En build, esto no rompe el sitio - simplemente no muestra productos
-    // El sitio sigue funcionando y mostrará productos cuando la DB esté disponible
+    // Graceful degradation: Site works without products during build
+    console.error('⚠️ [HOME] Failed to fetch featured products:', error)
+    
+    // In production, this allows the build to succeed even if DB is unavailable
+    // Products will be loaded when the database connection is restored
   }
 
   return (
     <>
       {/* ============================================================================ */}
-      {/* STRUCTURED DATA - SEO */}
+      {/* STRUCTURED DATA - SEO OPTIMIZATION */}
       {/* ============================================================================ */}
       {structuredDataSchemas.map((schema, index) => (
         <script
@@ -114,30 +133,34 @@ export default async function Home() {
       ))}
 
       {/* ============================================================================ */}
-      {/* PRECONNECT - Performance */}
+      {/* PRECONNECT HINTS - PERFORMANCE OPTIMIZATION */}
       {/* ============================================================================ */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://www.googletagmanager.com" />
       <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       <link rel="dns-prefetch" href="https://images.unsplash.com" />
 
+      {/* ============================================================================ */}
+      {/* MAIN CONTAINER */}
+      {/* ============================================================================ */}
       <div className="min-h-screen w-full bg-zinc-950 overflow-x-hidden scroll-smooth antialiased">
-        {/* ============================================================================ */}
-        {/* FIXED ELEMENTS */}
-        {/* ============================================================================ */}
+        
+        {/* ================================================================ */}
+        {/* FIXED UI ELEMENTS */}
+        {/* ================================================================ */}
         <ScrollProgressBar />
         <TrustBar />
         
-        {/* ============================================================================ */}
+        {/* ================================================================ */}
         {/* HERO SECTION */}
-        {/* ============================================================================ */}
+        {/* ================================================================ */}
         <section className="w-full" aria-label="Sección principal">
           <HeroSection />
         </section>
         
-        {/* ============================================================================ */}
+        {/* ================================================================ */}
         {/* BENEFITS SECTION */}
-        {/* ============================================================================ */}
+        {/* ================================================================ */}
         <section className="w-full" aria-labelledby="benefits-heading">
           <Suspense fallback={<BenefitsSkeleton />}>
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -146,9 +169,9 @@ export default async function Home() {
           </Suspense>
         </section>
         
-        {/* ============================================================================ */}
+        {/* ================================================================ */}
         {/* FEATURED PRODUCTS SECTION */}
-        {/* ============================================================================ */}
+        {/* ================================================================ */}
         {featuredProducts.length > 0 && (
           <section 
             className="w-full border-t border-zinc-800/50" 
@@ -162,9 +185,9 @@ export default async function Home() {
           </section>
         )}
         
-        {/* ============================================================================ */}
-        {/* CTA SECTION */}
-        {/* ============================================================================ */}
+        {/* ================================================================ */}
+        {/* CALL TO ACTION SECTION */}
+        {/* ================================================================ */}
         <section 
           className="w-full border-t border-zinc-800/50"
           aria-labelledby="cta-heading"
