@@ -81,7 +81,7 @@
     "glob": "^11.0.3",
     "lucide-react": "^0.445.0",
     "mercadopago": "^2.11.0",
-    "next": "^15.0.3",
+    "next": "15.0.5",
     "next-auth": "^5.0.0-beta.30",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -95,7 +95,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^15.0.3",
+    "@next/bundle-analyzer": "15.0.5",
     "@playwright/test": "^1.56.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -115,7 +115,7 @@
     "cross-env": "^7.0.3",
     "dotenv-cli": "^10.0.0",
     "eslint": "^8.57.1",
-    "eslint-config-next": "^15.0.3",
+    "eslint-config-next": "15.0.5",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "happy-dom": "^20.0.10",
@@ -135,10 +135,10 @@
     "vitest": "^4.0.8"
   },
   "optionalDependencies": {
-    "@next/swc-darwin-arm64": "^15.0.3",
-    "@next/swc-darwin-x64": "^15.0.3",
-    "@next/swc-linux-x64-gnu": "^15.0.3",
-    "@next/swc-win32-x64-msvc": "^15.0.3"
+    "@next/swc-darwin-arm64": "15.0.5",
+    "@next/swc-darwin-x64": "15.0.5",
+    "@next/swc-linux-x64-gnu": "15.0.5",
+    "@next/swc-win32-x64-msvc": "15.0.5"
   },
   "packageManager": "npm@10.2.3",
   "browserslist": {
