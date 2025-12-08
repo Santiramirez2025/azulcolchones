@@ -152,13 +152,13 @@ export default function TerminosPage() {
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a 
-              href="https://wa.me/5493531234567"
+              href="https://wa.me/5493534017332"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg shadow-emerald-500/30"
             >
               <MessageCircle className="w-5 h-5" />
-              WhatsApp: 353 123-4567
+              WhatsApp: 3534017332
             </a>
             <a 
               href="mailto:info@azulcolchones.com"
@@ -230,7 +230,7 @@ export default function TerminosPage() {
               <p className="text-blue-100 text-xs">Consultanos sin cargo</p>
             </div>
             <a
-              href="https://wa.me/5493531234567"
+              href="https://wa.me/5493534017332"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-shrink-0 bg-white text-blue-600 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-blue-50 transition-all flex items-center gap-2"

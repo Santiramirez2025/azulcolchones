@@ -22,9 +22,9 @@ export const SITE_CONFIG = {
   
   // Contacto
   phone: {
-    number: '+5493531234567', // TODO: Reemplazar con número real
+    number: '+5493534017332', // TODO: Reemplazar con número real
     display: '353 123-4567',
-    whatsapp: '5493531234567'
+    whatsapp: '5493534017332'
   },
   email: 'info@azulcolchones.com',
   
@@ -32,7 +32,7 @@ export const SITE_CONFIG = {
   social: {
     facebook: 'https://facebook.com/azulcolchones',
     instagram: 'https://instagram.com/azulcolchones',
-    whatsapp: 'https://wa.me/5493531234567'
+    whatsapp: 'https://wa.me/5493534017332'
   },
   
   // Branding

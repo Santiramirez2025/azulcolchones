@@ -347,7 +347,7 @@ function SuccessContent() {
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <span>Si tenés alguna duda, contactanos por WhatsApp al 353-123-4567</span>
+                <span>Si tenés alguna duda, contactanos por WhatsApp al 3534017332</span>
               </li>
             </ul>
           </motion.div>

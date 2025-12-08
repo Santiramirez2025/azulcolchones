@@ -311,7 +311,7 @@ export default function ContactoPage() {
                   Escribinos por WhatsApp
                 </p>
                 <a
-                  href="https://wa.me/54935XXXXXXXX"
+                  href="https://wa.me/5493534017332"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white px-6 py-3 rounded-xl font-bold transition-all"

@@ -145,9 +145,9 @@ const getCurrentCampaign = () => {
 const campaign = getCurrentCampaign()
 
 const SITE_CONFIG = {
-  phone: '+5493531234567',
-  phoneDisplay: '353 123-4567',
-  whatsappNumber: '5493531234567',
+  phone: '+5493534017332',
+  phoneDisplay: '353 4525774',
+  whatsappNumber: '5493534017332',
   email: 'info@azulcolchones.com.ar',
   brandName: 'Azul Colchones',
   location: 'Villa María, Córdoba',

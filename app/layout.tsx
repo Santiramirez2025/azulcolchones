@@ -540,7 +540,7 @@ export default function RootLayout({
 
           {/* WhatsApp flotante */}
           <WhatsAppButton 
-            phoneNumber="5493531234567"
+            phoneNumber="3534017332"
             message="¡Hola! Me interesa conocer más sobre los colchones de Azul Colchones"
             position="right"
             showTooltip={true}

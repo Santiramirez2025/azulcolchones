@@ -8,6 +8,7 @@ CREATE TABLE "Product" (
     "price" INTEGER NOT NULL,
     "originalPrice" INTEGER,
     "compareAtPrice" INTEGER,
+    "discount" INTEGER,
     "stock" INTEGER NOT NULL DEFAULT 0,
     "inStock" BOOLEAN NOT NULL DEFAULT true,
     "lowStockAlert" INTEGER NOT NULL DEFAULT 5,
@@ -15,6 +16,7 @@ CREATE TABLE "Product" (
     "subcategory" TEXT,
     "tags" TEXT[],
     "images" TEXT[],
+    "image" TEXT,
     "firmness" TEXT,
     "firmnessValue" INTEGER NOT NULL DEFAULT 70,
     "height" INTEGER NOT NULL DEFAULT 25,
@@ -27,6 +29,7 @@ CREATE TABLE "Product" (
     "materials" TEXT[],
     "layers" JSONB,
     "certifications" TEXT[],
+    "story" TEXT,
     "cooling" BOOLEAN NOT NULL DEFAULT false,
     "isEco" BOOLEAN NOT NULL DEFAULT false,
     "hypoallergenic" BOOLEAN NOT NULL DEFAULT true,
@@ -43,9 +46,11 @@ CREATE TABLE "Product" (
     "isFeatured" BOOLEAN NOT NULL DEFAULT false,
     "isBestSeller" BOOLEAN NOT NULL DEFAULT false,
     "isNew" BOOLEAN NOT NULL DEFAULT false,
+    "badge" TEXT,
     "shippingCost" INTEGER NOT NULL DEFAULT 0,
     "sku" TEXT,
     "mainColor" TEXT DEFAULT '#3b82f6',
+    "gradient" TEXT,
     "metaTitle" TEXT,
     "metaDescription" TEXT,
     "metaKeywords" TEXT[],
@@ -65,11 +70,12 @@ CREATE TABLE "ProductVariant" (
     "width" INTEGER NOT NULL,
     "length" INTEGER NOT NULL,
     "height" INTEGER NOT NULL,
+    "weight" INTEGER,
     "price" INTEGER NOT NULL,
     "originalPrice" INTEGER,
     "stock" INTEGER NOT NULL DEFAULT 0,
     "inStock" BOOLEAN NOT NULL DEFAULT true,
-    "weight" INTEGER,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "isDefault" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -128,6 +134,7 @@ CREATE TABLE "OrderItem" (
     "id" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
+    "variantId" TEXT,
     "quantity" INTEGER NOT NULL,
     "price" INTEGER NOT NULL,
     "size" TEXT,
@@ -151,6 +158,7 @@ CREATE TABLE "CartItem" (
     "id" TEXT NOT NULL,
     "cartId" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
+    "variantId" TEXT,
     "quantity" INTEGER NOT NULL DEFAULT 1,
     "size" TEXT,
     "color" TEXT,
@@ -245,6 +253,15 @@ CREATE INDEX "ProductVariant_sku_idx" ON "ProductVariant"("sku");
 CREATE INDEX "ProductVariant_size_idx" ON "ProductVariant"("size");
 
 -- CreateIndex
+CREATE INDEX "ProductVariant_stock_idx" ON "ProductVariant"("stock");
+
+-- CreateIndex
+CREATE INDEX "ProductVariant_isActive_idx" ON "ProductVariant"("isActive");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProductVariant_productId_dimensions_key" ON "ProductVariant"("productId", "dimensions");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
@@ -272,6 +289,9 @@ CREATE INDEX "OrderItem_orderId_idx" ON "OrderItem"("orderId");
 CREATE INDEX "OrderItem_productId_idx" ON "OrderItem"("productId");
 
 -- CreateIndex
+CREATE INDEX "OrderItem_variantId_idx" ON "OrderItem"("variantId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Cart_userId_key" ON "Cart"("userId");
 
 -- CreateIndex
@@ -284,7 +304,10 @@ CREATE INDEX "CartItem_cartId_idx" ON "CartItem"("cartId");
 CREATE INDEX "CartItem_productId_idx" ON "CartItem"("productId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CartItem_cartId_productId_size_color_key" ON "CartItem"("cartId", "productId", "size", "color");
+CREATE INDEX "CartItem_variantId_idx" ON "CartItem"("variantId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CartItem_cartId_productId_variantId_key" ON "CartItem"("cartId", "productId", "variantId");
 
 -- CreateIndex
 CREATE INDEX "Review_productId_idx" ON "Review"("productId");
@@ -326,6 +349,9 @@ ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("or
 ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_variantId_fkey" FOREIGN KEY ("variantId") REFERENCES "ProductVariant"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -335,7 +361,11 @@ ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_cartId_fkey" FOREIGN KEY ("cartI
 ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_variantId_fkey" FOREIGN KEY ("variantId") REFERENCES "ProductVariant"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Review" ADD CONSTRAINT "Review_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

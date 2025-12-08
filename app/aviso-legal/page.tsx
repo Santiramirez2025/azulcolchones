@@ -17,8 +17,8 @@ export default function AvisoLegalPage() {
       title: 'Contacto',
       items: [
         'Email: info@tiendacolchon.com.ar',
-        'Teléfono: +54 11 4000-0000',
-        'WhatsApp: +54 9 11 5000-0000',
+        'Teléfono: +54 3534017332',
+        'WhatsApp: +54 9 3534017332',
         'Horario: Lunes a Viernes de 9:00 a 18:00hs'
       ]
     },

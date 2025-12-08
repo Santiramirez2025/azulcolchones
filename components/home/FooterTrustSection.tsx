@@ -115,7 +115,7 @@ export function FooterTrustSection() {
           }}
         >
           <p className="text-slate-500 text-sm">
-            ¿Tenés dudas? <a href="https://wa.me/5493531234567" className="text-blue-400 hover:text-blue-300 font-semibold underline transition-colors">Hablá con nosotros por WhatsApp</a>
+            ¿Tenés dudas? <a href="https://wa.me/5493534017332" className="text-blue-400 hover:text-blue-300 font-semibold underline transition-colors">Hablá con nosotros por WhatsApp</a>
           </p>
         </div>
       </div>

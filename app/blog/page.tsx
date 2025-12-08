@@ -266,7 +266,7 @@ export default function BlogPage() {
                 <Moon className="w-6 h-6 text-zinc-300" />
               </div>
               <div>
-                <h2 className="text-3xl font-bold text-white">Tu ritual del descanso</h2>
+                <h2 className="text-3xl font-bold text-white">Tu momento del descanso</h2>
                 <p className="text-sm text-zinc-400 mt-1">Completa los pasos para un sueño perfecto</p>
               </div>
             </div>

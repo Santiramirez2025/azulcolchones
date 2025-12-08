@@ -174,9 +174,9 @@ const getCurrentCampaign = () => {
 const campaign = getCurrentCampaign()
 
 const SITE_CONFIG = {
-  phone: '+5493531234567', // TODO: Reemplazar con tu número real
+  phone: '+5493534017332', // TODO: Reemplazar con tu número real
   phoneDisplay: '353 123-4567',
-  whatsappNumber: '5493531234567',
+  whatsappNumber: '5493534017332',
   brandName: 'Azul Colchones',
   location: 'Villa María, Córdoba',
   tagline: campaign.tagline,
@@ -398,7 +398,7 @@ export default function Header() {
               ) : (
                 <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
                   <Icons.CreditCard className="w-4 h-4 text-cyan-200" />
-                  <span className="text-sm font-black text-white">Mercado Pago</span>
+                  <span className="text-sm font-black text-white">📍 Balerdi 855</span>
                 </div>
               )}
               

@@ -187,7 +187,7 @@ export function CTASection() {
             className="flex justify-center"
           >
             <Link
-              href="https://wa.me/5493531234567?text=Hola!%20Quiero%20saber%20más%20sobre%20colchones"
+              href="https://wa.me/5493534017332?text=Hola!%20Quiero%20saber%20más%20sobre%20colchones"
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-2 text-white/90 hover:text-white font-semibold text-sm sm:text-base transition-all"
