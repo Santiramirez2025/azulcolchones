@@ -1,5 +1,4 @@
-// app/producto/[slug]/page.tsx - ARGENTINA 2025 ✅ VERSIÓN FINAL
-// ✅ OpenGraph corregido | SEO completo | Performance | Sin errores
+// app/producto/[slug]/page.tsx - BUILD OPTIMIZADO ✅
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
@@ -17,17 +16,15 @@ import ProductClient from './product-client'
 type Params = Promise<{ slug: string }>
 
 // ============================================================================
-// CONFIGURACIÓN DE OPTIMIZACIÓN
+// ✅ CONFIGURACIÓN PARA VERCEL BUILD - CRÍTICO
 // ============================================================================
-
-export const revalidate = 300
-export const dynamic = 'force-static'
-export const dynamicParams = true
+export const revalidate = 3600 // ISR cada 1 hora
+export const dynamic = 'force-dynamic' // ✅ Evita errores de DB en build
+export const dynamicParams = true // ✅ Permite rutas no pre-generadas
 
 // ============================================================================
 // HELPER: CONVERTIR PRECIOS
 // ============================================================================
-
 function convertirPreciosProducto(product: any) {
   if (!product) return null
   
@@ -46,23 +43,25 @@ function convertirPreciosProducto(product: any) {
 }
 
 // ============================================================================
-// STATIC GENERATION
+// ✅ STATIC GENERATION - DESHABILITADO PARA BUILD
 // ============================================================================
-
+// NOTA: Comentado para evitar conexión a DB durante build en Vercel
+// Una vez que el sitio esté live, puedes descomentar esto para mejor performance
+/*
 export async function generateStaticParams() {
   try {
-    const products = await getPopularProducts(100)
+    const products = await getPopularProducts(10) // Solo los 10 más populares
     return products.map((product) => ({ slug: product.slug }))
   } catch (error) {
-    console.error('Failed to generate static params:', error)
+    console.warn('⚠️ generateStaticParams skipped:', error)
     return []
   }
 }
+*/
 
 // ============================================================================
 // METADATA GENERATION - SEO OPTIMIZADO
 // ============================================================================
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   try {
     const { slug } = await params
@@ -165,7 +164,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       },
     }
   } catch (error) {
-    console.error('Error generating metadata:', error)
+    console.error('❌ Error generating metadata:', error)
     return {
       title: 'Error | Azul Colchones',
       description: 'Ha ocurrido un error',
@@ -177,11 +176,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 // ============================================================================
 // SCHEMAS JSON-LD
 // ============================================================================
-
 function generateProductSchema(product: any) {
   const images = Array.isArray(product.images) ? product.images : []
   const pricePesos = centavosToARS(product.price)
-  const originalPricePesos = product.originalPrice ? centavosToARS(product.originalPrice) : null
 
   return {
     '@context': 'https://schema.org',
@@ -225,7 +222,6 @@ function generateBreadcrumbSchema(product: any) {
 // ============================================================================
 // SKELETON
 // ============================================================================
-
 function ProductPageSkeleton() {
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 overflow-x-hidden antialiased">
@@ -271,7 +267,6 @@ function ProductPageSkeleton() {
 // ============================================================================
 // MAIN PAGE
 // ============================================================================
-
 export default async function ProductPage({ params }: { params: Params }) {
   try {
     const { slug } = await params

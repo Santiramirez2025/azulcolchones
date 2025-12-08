@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next'
 import { prisma } from '@/lib/prisma'
 
 const BASE_URL = 'https://azulcolchones.com'
-export const revalidate = 3600 // Regenerar cada hora
+export const dynamic = 'force-dynamic'; // Regenerar cada hora
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {

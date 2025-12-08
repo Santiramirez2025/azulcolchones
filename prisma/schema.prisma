@@ -1,11 +1,5 @@
 // ============================================================================
-// PRISMA SCHEMA - AZUL COLCHONES ✅ OPTIMIZADO CON STOCK REAL
-// ============================================================================
-// 🆕 MEJORAS:
-// - ProductVariant con isActive para control de disponibilidad
-// - Relación bidireccional Product <-> ProductVariant
-// - Índices optimizados para queries de stock
-// - Campo stock en variantes para control individual
+// PRISMA SCHEMA - AZUL COLCHONES ✅ CORREGIDO
 // ============================================================================
 
 generator client {
@@ -19,7 +13,7 @@ datasource db {
 }
 
 // ============================================================================
-// PRODUCT MODEL - ✅ COMPLETO
+// PRODUCT MODEL
 // ============================================================================
 model Product {
   id              String            @id @default(cuid())
@@ -28,124 +22,91 @@ model Product {
   subtitle        String
   description     String
   
-  // ============================================================================
-  // PRICING - Todos los precios en CENTAVOS (multiplicar por 100)
-  // ============================================================================
-  price           Int                              // Precio base en centavos
-  originalPrice   Int?                             // Precio antes de descuento
-  compareAtPrice  Int?                             // Precio de comparación
-  discount        Int?                             // Porcentaje de descuento (0-100)
+  // Pricing (en centavos)
+  price           Int
+  originalPrice   Int?
+  compareAtPrice  Int?
+  discount        Int?
   
-  // ============================================================================
-  // INVENTORY & STOCK
-  // ============================================================================
-  stock           Int               @default(0)    // Stock total (calculado desde variantes)
+  // Inventory
+  stock           Int               @default(0)
   inStock         Boolean           @default(true)
   lowStockAlert   Int               @default(5)
   
-  // ============================================================================
-  // CATEGORIZATION
-  // ============================================================================
+  // Categorization
   category        String
   subcategory     String?
   tags            String[]
   
-  // ============================================================================
-  // MEDIA
-  // ============================================================================
-  images          String[]                         // Array de URLs de imágenes
-  image           String?                          // Imagen principal (para compatibilidad)
+  // Media
+  images          String[]
+  image           String?
   
-  // ============================================================================
-  // PRODUCT SPECIFICATIONS
-  // ============================================================================
-  firmness        String?                          // BLANDO, MEDIO, FIRME, etc.
-  firmnessValue   Int               @default(70)   // 0-100 (para ordenamiento)
-  height          Int               @default(25)   // Altura en cm
-  weight          Int?                             // Peso en kg
+  // Specifications
+  firmness        String?
+  firmnessValue   Int               @default(70)
+  height          Int               @default(25)
+  weight          Int?
   
-  // ============================================================================
-  // COMMERCIAL TERMS
-  // ============================================================================
-  warranty        Int               @default(5)    // Años de garantía
-  trialNights     Int               @default(100)  // Noches de prueba
+  // Commercial terms
+  warranty        Int               @default(5)
+  trialNights     Int               @default(100)
   
-  // ============================================================================
-  // FEATURES & DESCRIPTIONS
-  // ============================================================================
-  features        String[]                         // Características principales
-  techFeatures    String[]                         // Características técnicas
-  highlights      String[]                         // Puntos destacados
-  materials       String[]                         // Materiales utilizados
-  layers          Json?                            // Estructura de capas (JSON)
-  certifications  String[]                         // Certificaciones
-  story           String?                          // Historia/descripción del producto
+  // Features
+  features        String[]
+  techFeatures    String[]
+  highlights      String[]
+  materials       String[]
+  layers          Json?
+  certifications  String[]
+  story           String?
   
-  // ============================================================================
-  // PRODUCT ATTRIBUTES - BOOLEAN FLAGS
-  // ============================================================================
-  cooling         Boolean           @default(false) // Sistema de enfriamiento
-  isEco           Boolean           @default(false) // Producto ecológico
-  hypoallergenic  Boolean           @default(true)  // Hipoalergénico
-  washable        Boolean           @default(false) // Lavable
-  includesBase    Boolean           @default(false) // Incluye base/sommier
-  isPremium       Boolean           @default(false) // Producto premium
-  antiMite        Boolean           @default(false) // Anti-ácaros
-  pillowTop       Boolean           @default(false) // Pillow top
+  // Attributes
+  cooling         Boolean           @default(false)
+  isEco           Boolean           @default(false)
+  hypoallergenic  Boolean           @default(true)
+  washable        Boolean           @default(false)
+  includesBase    Boolean           @default(false)
+  isPremium       Boolean           @default(false)
+  antiMite        Boolean           @default(false)
+  pillowTop       Boolean           @default(false)
   
-  // ============================================================================
-  // RATINGS & REVIEWS
-  // ============================================================================
-  transpirability Int               @default(80)    // 0-100
-  satisfaction    Int               @default(95)    // 0-100
-  rating          Float             @default(4.8)   // 0-5
+  // Ratings
+  transpirability Int               @default(80)
+  satisfaction    Int               @default(95)
+  rating          Float             @default(4.8)
   reviewCount     Int               @default(0)
   
-  // ============================================================================
-  // PRODUCT STATUS FLAGS
-  // ============================================================================
+  // Status
   isActive        Boolean           @default(true)
   isFeatured      Boolean           @default(false)
   isBestSeller    Boolean           @default(false)
   isNew           Boolean           @default(false)
-  badge           String?                          // Badge del producto (NUEVO, BESTSELLER, etc)
+  badge           String?
   
-  // ============================================================================
-  // LOGISTICS & SHIPPING
-  // ============================================================================
-  shippingCost    Int               @default(0)     // Costo envío en centavos
-  sku             String?           @unique         // SKU del producto principal
+  // Logistics
+  shippingCost    Int               @default(0)
+  sku             String?           @unique
   
-  // ============================================================================
-  // DISPLAY & DESIGN
-  // ============================================================================
-  mainColor       String?           @default("#3b82f6") // Color principal (hex)
-  gradient        String?                          // Gradiente para el card
+  // Display
+  mainColor       String?           @default("#3b82f6")
+  gradient        String?
   
-  // ============================================================================
-  // SEO METADATA
-  // ============================================================================
+  // SEO
   metaTitle       String?
   metaDescription String?
   metaKeywords    String[]
   
-  // ============================================================================
-  // TIMESTAMPS
-  // ============================================================================
+  // Timestamps
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   
-  // ============================================================================
-  // RELATIONS
-  // ============================================================================
+  // Relations
   cartItems       CartItem[]
   orderItems      OrderItem[]
   reviews         Review[]
-  variants        ProductVariant[]  // ⭐ Relación con variantes
+  variants        ProductVariant[]
 
-  // ============================================================================
-  // INDEXES - Optimización de queries
-  // ============================================================================
   @@index([slug])
   @@index([category])
   @@index([isActive])
@@ -156,53 +117,53 @@ model Product {
 }
 
 // ============================================================================
-// PRODUCT VARIANT MODEL - ✅ OPTIMIZADO PARA STOCK REAL
+// PRODUCT VARIANT MODEL - ✅ CORREGIDO
 // ============================================================================
 model ProductVariant {
   id            String   @id @default(cuid())
   
-  // ⭐ RELACIÓN CON PRODUCTO
+  // Relación
   productId     String
   product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   
-  // ⭐ IDENTIFICACIÓN
+  // Identificación
   sku           String   @unique
   
-  // ⭐ MEDIDAS
-  size          String                             // "1 plaza", "2 plazas", "Queen", "King"
-  dimensions    String                             // "190x80", "190x140", "200x160", etc.
-  width         Int                                // Ancho en cm
-  length        Int                                // Largo en cm
-  height        Int                                // Alto en cm
-  weight        Int?                               // Peso en kg
+  // Medidas
+  size          String
+  dimensions    String
+  width         Int
+  length        Int
+  height        Int
+  weight        Int?
   
-  // ⭐ PRICING - En centavos
-  price         Int                                // Precio específico de esta variante
-  originalPrice Int?                               // Precio original en centavos
+  // Pricing (en centavos)
+  price         Int
+  originalPrice Int?
   
-  // ⭐ STOCK - CRÍTICO PARA EL SELECTOR
-  stock         Int      @default(0)               // Stock individual de esta medida
-  inStock       Boolean  @default(true)            // Flag de disponibilidad
+  // Stock
+  stock         Int      @default(0)
+  inStock       Boolean  @default(true)
   
-  // ⭐ CONTROL DE DISPONIBILIDAD
-  isActive      Boolean  @default(true)            // Si está disponible para venta
-  isDefault     Boolean  @default(false)           // Variante por defecto (se muestra primero)
+  // Control
+  isActive      Boolean  @default(true)
+  isDefault     Boolean  @default(false)
   
-  // ⭐ TIMESTAMPS
+  // Timestamps
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
-  // ⭐ RELACIONES
+  // Relations
   cartItems     CartItem[]
   orderItems    OrderItem[]
 
-  // ⭐ INDEXES - Para queries optimizadas
-  @@index([productId])                             // Buscar por producto
-  @@index([sku])                                   // Buscar por SKU
-  @@index([size])                                  // Filtrar por tamaño
-  @@index([stock])                                 // Filtrar por stock
-  @@index([isActive])                              // Solo activas
-  @@unique([productId, dimensions, height])  // ⭐ Agregar height al unique
+  // ✅ CORREGIDO: Solo un unique constraint
+  @@unique([productId, dimensions])
+  @@index([productId])
+  @@index([sku])
+  @@index([size])
+  @@index([stock])
+  @@index([isActive])
 }
 
 // ============================================================================
@@ -244,10 +205,10 @@ model Order {
   paymentMethod   String
   paymentStatus   String      @default("pending")
   paymentId       String?
-  subtotal        Int                              // En centavos
-  discount        Int         @default(0)          // En centavos
-  shipping        Int         @default(0)          // En centavos
-  total           Int                              // En centavos
+  subtotal        Int
+  discount        Int         @default(0)
+  shipping        Int         @default(0)
+  total           Int
   status          String      @default("pending")
   trackingNumber  String?
   carrier         String?
@@ -264,16 +225,16 @@ model Order {
 }
 
 // ============================================================================
-// ORDER ITEM MODEL - ⭐ ACTUALIZADO CON VARIANTE
+// ORDER ITEM MODEL
 // ============================================================================
 model OrderItem {
   id         String          @id @default(cuid())
   orderId    String
   productId  String
-  variantId  String?                              // ⭐ Referencia a la variante comprada
+  variantId  String?
   quantity   Int
-  price      Int                                  // Precio en centavos
-  size       String?                              // Medida comprada
+  price      Int
+  size       String?
   color      String?
   order      Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product    Product         @relation(fields: [productId], references: [id])
@@ -281,7 +242,7 @@ model OrderItem {
 
   @@index([orderId])
   @@index([productId])
-  @@index([variantId])                           // ⭐ Índice para variante
+  @@index([variantId])
 }
 
 // ============================================================================
@@ -299,13 +260,13 @@ model Cart {
 }
 
 // ============================================================================
-// CART ITEM MODEL - ⭐ ACTUALIZADO CON VARIANTE
+// CART ITEM MODEL
 // ============================================================================
 model CartItem {
   id        String          @id @default(cuid())
   cartId    String
   productId String
-  variantId String?                              // ⭐ Referencia a la variante
+  variantId String?
   quantity  Int             @default(1)
   size      String?
   color     String?
@@ -315,10 +276,10 @@ model CartItem {
   product   Product         @relation(fields: [productId], references: [id])
   variant   ProductVariant? @relation(fields: [variantId], references: [id])
 
-  @@unique([cartId, productId, variantId])       // ⭐ Unique por variante
+  @@unique([cartId, productId, variantId])
   @@index([cartId])
   @@index([productId])
-  @@index([variantId])                           // ⭐ Índice para variante
+  @@index([variantId])
 }
 
 // ============================================================================
@@ -328,10 +289,10 @@ model Review {
   id        String   @id @default(cuid())
   productId String
   userId    String
-  rating    Int                                    // 1-5
+  rating    Int
   title     String?
   comment   String
-  verified  Boolean  @default(false)              // Compra verificada
+  verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -350,9 +311,9 @@ model Coupon {
   id          String    @id @default(cuid())
   code        String    @unique
   description String?
-  type        String                               // percentage, fixed
-  value       Int                                  // Porcentaje o monto en centavos
-  minPurchase Int?                                 // Compra mínima en centavos
+  type        String
+  value       Int
+  minPurchase Int?
   maxUses     Int?
   usedCount   Int       @default(0)
   isActive    Boolean   @default(true)
@@ -377,39 +338,3 @@ model Newsletter {
 
   @@index([email])
 }
-
-// ============================================================================
-// NOTAS IMPORTANTES PARA MIGRACIÓN
-// ============================================================================
-/*
-
-CAMBIOS PRINCIPALES vs SCHEMA ANTERIOR:
-
-1. ✅ ProductVariant.isActive agregado
-   - Permite activar/desactivar variantes sin borrarlas
-   - Útil para productos temporalmente agotados
-
-2. ✅ CartItem y OrderItem con variantId
-   - Ahora se guarda exactamente qué variante se compró/agregó
-   - Permite tracking preciso de ventas por medida
-
-3. ✅ Índices optimizados
-   - @@index([stock]) en ProductVariant
-   - @@index([isActive]) en ProductVariant
-   - @@index([variantId]) en CartItem y OrderItem
-
-4. ✅ Unique constraint mejorado
-   - @@unique([productId, dimensions]) evita duplicados
-   - @@unique([cartId, productId, variantId]) en CartItem
-
-PARA MIGRAR DESDE TU SCHEMA ACTUAL:
-
-npx prisma migrate dev --name add-variant-tracking
-
-Esto creará la migración que:
-- Agrega isActive a ProductVariant
-- Agrega variantId a CartItem y OrderItem
-- Crea los índices nuevos
-- Actualiza constraints
-
-*/

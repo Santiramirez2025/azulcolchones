@@ -10,7 +10,7 @@ export const metadata = {
   description: 'Descubrí nuestra colección exclusiva de colchones premium. Tecnología de última generación, envío gratis en Villa María. 12 cuotas sin interés.',
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic';
 
 // ✅ Iconos inline SVG optimizados
 const Icons = {

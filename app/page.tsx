@@ -1,3 +1,4 @@
+// app/page.tsx - Homepage OPTIMIZADA PARA BUILD ✅
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
@@ -9,19 +10,25 @@ import { homeMetadata, getAllStructuredData } from '@/lib/metadata'
 import { getFeaturedProducts } from '@/lib/api/products'
 
 export const metadata: Metadata = homeMetadata
-export const revalidate = 3600
 
-// Preload critical components
+// ✅ CONFIGURACIÓN: ISR con revalidación cada hora
+export const revalidate = 3600
+export const dynamic = 'force-dynamic'
+
+// ✅ Lazy loading de componentes no críticos
 const BenefitsSection = dynamic(() => 
   import('@/components/home/BenefitsSection').then(mod => mod.BenefitsSection),
-  { loading: () => <BenefitsSkeleton /> }
-)
-const CTASection = dynamic(() => 
-  import('@/components/home/CTASection').then(mod => mod.CTASection),
-  { loading: () => <CTASkeleton /> }
+  { loading: () => <BenefitsSkeleton />, ssr: true }
 )
 
-// Optimized skeletons con mejor UX
+const CTASection = dynamic(() => 
+  import('@/components/home/CTASection').then(mod => mod.CTASection),
+  { loading: () => <CTASkeleton />, ssr: true }
+)
+
+// ============================================================================
+// SKELETONS
+// ============================================================================
 function BenefitsSkeleton() {
   return (
     <div className="w-full bg-zinc-950" role="status" aria-label="Cargando beneficios">
@@ -36,7 +43,6 @@ function BenefitsSkeleton() {
           </div>
         </div>
       </div>
-      <span className="sr-only">Cargando beneficios...</span>
     </div>
   )
 }
@@ -58,7 +64,6 @@ function ProductsSkeleton() {
           </div>
         </div>
       </div>
-      <span className="sr-only">Cargando productos destacados...</span>
     </div>
   )
 }
@@ -73,24 +78,33 @@ function CTASkeleton() {
           <div className="h-12 bg-zinc-800/40 rounded-lg w-48 mx-auto mt-8" />
         </div>
       </div>
-      <span className="sr-only">Cargando oferta especial...</span>
     </div>
   )
 }
 
+// ============================================================================
+// PÁGINA PRINCIPAL
+// ============================================================================
 export default async function Home() {
   const structuredDataSchemas = getAllStructuredData()
   
-  // Error handling mejorado con logging
-  const featuredProducts = await getFeaturedProducts(6).catch((error) => {
-    console.error('[HOME] Failed to fetch featured products:', error)
-    // Opcionalmente reportar a servicio de logging (Sentry, LogRocket, etc)
-    return []
-  })
+  // ✅ Error handling con fallback - NO rompe el build
+  let featuredProducts: Awaited<ReturnType<typeof getFeaturedProducts>> = []
+  
+  try {
+    featuredProducts = await getFeaturedProducts(6)
+    console.log(`✅ [HOME] Loaded ${featuredProducts.length} featured products`)
+  } catch (error) {
+    console.error('❌ [HOME] Failed to fetch featured products:', error)
+    // En build, esto no rompe el sitio - simplemente no muestra productos
+    // El sitio sigue funcionando y mostrará productos cuando la DB esté disponible
+  }
 
   return (
     <>
-      {/* Structured Data para SEO */}
+      {/* ============================================================================ */}
+      {/* STRUCTURED DATA - SEO */}
+      {/* ============================================================================ */}
       {structuredDataSchemas.map((schema, index) => (
         <script
           key={`schema-${index}`}
@@ -99,22 +113,31 @@ export default async function Home() {
         />
       ))}
 
-      {/* Preconnect a dominios externos críticos */}
+      {/* ============================================================================ */}
+      {/* PRECONNECT - Performance */}
+      {/* ============================================================================ */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://www.googletagmanager.com" />
       <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+      <link rel="dns-prefetch" href="https://images.unsplash.com" />
 
       <div className="min-h-screen w-full bg-zinc-950 overflow-x-hidden scroll-smooth antialiased">
-        {/* Fixed elements */}
+        {/* ============================================================================ */}
+        {/* FIXED ELEMENTS */}
+        {/* ============================================================================ */}
         <ScrollProgressBar />
         <TrustBar />
         
-        {/* Hero Section - Above the fold */}
+        {/* ============================================================================ */}
+        {/* HERO SECTION */}
+        {/* ============================================================================ */}
         <section className="w-full" aria-label="Sección principal">
           <HeroSection />
         </section>
         
-        {/* Benefits Section */}
+        {/* ============================================================================ */}
+        {/* BENEFITS SECTION */}
+        {/* ============================================================================ */}
         <section className="w-full" aria-labelledby="benefits-heading">
           <Suspense fallback={<BenefitsSkeleton />}>
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -123,7 +146,9 @@ export default async function Home() {
           </Suspense>
         </section>
         
-        {/* Featured Products Section */}
+        {/* ============================================================================ */}
+        {/* FEATURED PRODUCTS SECTION */}
+        {/* ============================================================================ */}
         {featuredProducts.length > 0 && (
           <section 
             className="w-full border-t border-zinc-800/50" 
@@ -137,7 +162,9 @@ export default async function Home() {
           </section>
         )}
         
-        {/* CTA Section */}
+        {/* ============================================================================ */}
+        {/* CTA SECTION */}
+        {/* ============================================================================ */}
         <section 
           className="w-full border-t border-zinc-800/50"
           aria-labelledby="cta-heading"

@@ -13,7 +13,7 @@ export const metadata = {
   keywords: 'simulador colchones, test sueño, IA colchones, Villa María, Córdoba',
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic';
 
 const IS_DEBUG = process.env.NODE_ENV === 'development'
 
