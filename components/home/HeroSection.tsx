@@ -12,7 +12,7 @@ const CAROUSEL_IMAGES = [
     url: '/images/piero-spring-1.jpg',
     alt: 'Colchón Piero Spring',
     title: 'Piero Spring',
-    subtitle: 'Resortes Pocket',
+    subtitle: 'Resortes Ultra Coil',
     fallback: '/images/products/piero-spring.jpg'
   },
   {

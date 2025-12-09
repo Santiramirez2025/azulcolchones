@@ -105,7 +105,7 @@ export function BenefitsSection() {
             id="benefits-heading"
             className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 sm:mb-4 leading-tight"
           >
-            <span className="block">¿Cómo querés pagar?</span>
+            <span className="block">Conocé nuestras formas de pago</span>
             <span className="block bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mt-1">
               Elegí tu opción
             </span>

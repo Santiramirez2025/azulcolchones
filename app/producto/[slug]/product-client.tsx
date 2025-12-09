@@ -1,5 +1,5 @@
-// app/producto/[slug]/product-client.tsx - OPTIMIZADO COMPLETO 2025
-// ✅ Performance | Accessibility | Conversion | Analytics | UX
+// app/producto/[slug]/product-client.tsx - ULTRA OPTIMIZADO MOBILE-FIRST 2025
+// ✅ Performance | Accessibility | Conversion | Analytics | UX | Responsive
 'use client'
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
@@ -242,7 +242,9 @@ export default function ProductClient({
         ].slice(0, 10)
         localStorage.setItem(RECENT_VIEWS_KEY, JSON.stringify(updatedViews))
       } catch (e) {
-        console.error('Error storing recent view:', e)
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error storing recent view:', e)
+        }
       }
       
       impressionTracked.current = true
@@ -411,7 +413,7 @@ export default function ProductClient({
   // ✅ SHARE HANDLER CON ANALYTICS
   const handleShare = useCallback(async (platform?: string) => {
     const url = window.location.href
-    const text = `${product.name} - ${product.subtitle || ''} | Azul Colchones`
+    const text = `${product.name} - ${product.subtitle || ''} | Azul Colchones Villa María`
     
     if (platform === 'copy') {
       try {
@@ -447,7 +449,9 @@ export default function ProductClient({
         }
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
-          console.error('Share error:', error)
+          if (process.env.NODE_ENV === 'development') {
+            console.error('Share error:', error)
+          }
         }
       }
       return
@@ -495,57 +499,57 @@ export default function ProductClient({
   }, [])
 
   // ============================================================================
-  // RENDER
+  // RENDER - MOBILE OPTIMIZED
   // ============================================================================
   
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 overflow-x-hidden scroll-smooth antialiased">
-      {/* Background effects */}
-      <div className="fixed inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" />
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" />
+      {/* Background effects - SOLO DESKTOP */}
+      <div className="hidden md:block fixed inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
+      <div className="hidden md:block fixed inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" aria-hidden="true" />
 
       {/* ✅ ACCESSIBILITY - Skip to content */}
       <a 
         href="#product-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:font-semibold"
       >
         Saltar al contenido principal
       </a>
 
-      {/* ✅ TOAST NOTIFICATION - Enhanced */}
+      {/* ✅ TOAST NOTIFICATION - MOBILE OPTIMIZED */}
       <AnimatePresence>
         {toast.show && (
           <motion.div
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className={`fixed top-24 left-1/2 -translate-x-1/2 z-50 px-6 py-4 rounded-2xl shadow-2xl border ${
+            className={`fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 z-50 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow-2xl border ${
               toast.type === 'success'
                 ? 'bg-gradient-to-r from-emerald-600 to-green-600 border-emerald-400/20'
                 : toast.type === 'info'
                 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 border-blue-400/20'
                 : 'bg-gradient-to-r from-red-600 to-rose-600 border-red-400/20'
-            } text-white max-w-md w-[calc(100vw-2rem)] sm:w-full backdrop-blur-sm`}
+            } text-white max-w-[calc(100vw-2rem)] sm:max-w-md w-full backdrop-blur-sm`}
             role="alert"
             aria-live="polite"
           >
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-2 sm:gap-3">
               {toast.type === 'success' ? (
-                <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 mt-0.5" aria-hidden="true" />
               ) : toast.type === 'info' ? (
-                <TrendingUp className="w-6 h-6 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 mt-0.5" aria-hidden="true" />
               ) : (
-                <AlertCircle className="w-6 h-6 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 mt-0.5" aria-hidden="true" />
               )}
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-base">{toast.message}</p>
+                <p className="font-bold text-sm sm:text-base">{toast.message}</p>
                 {toast.description && (
-                  <p className="text-sm opacity-90 mt-0.5">{toast.description}</p>
+                  <p className="text-xs sm:text-sm opacity-90 mt-0.5">{toast.description}</p>
                 )}
                 {toast.action && (
                   <button
                     onClick={toast.action.onClick}
-                    className="mt-2 text-sm font-semibold underline hover:no-underline inline-flex items-center gap-1 transition-transform hover:translate-x-1"
+                    className="mt-2 text-xs sm:text-sm font-semibold underline hover:no-underline inline-flex items-center gap-1 transition-transform hover:translate-x-1"
                   >
                     {toast.action.label} →
                   </button>
@@ -572,32 +576,33 @@ export default function ProductClient({
 
       <div 
         id="product-content"
-        className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10" 
+        className="max-w-screen-2xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12 relative z-10" 
         ref={productRef}
       >
-        {/* ✅ SOCIAL PROOF BANNER */}
+        {/* ✅ SOCIAL PROOF BANNER - MOBILE OPTIMIZED */}
         {(recentViewers > 0 || isLowStock) && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 flex flex-wrap gap-3 justify-center"
+            className="mb-4 sm:mb-6 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 justify-center"
           >
             {recentViewers > 0 && (
-              <div className="bg-blue-600/10 border border-blue-500/20 text-blue-400 px-4 py-2 rounded-full text-sm flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" aria-hidden="true" />
+              <div className="bg-blue-600/10 border border-blue-500/20 text-blue-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2">
+                <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
                 <span>{recentViewers} personas viendo este producto</span>
               </div>
             )}
             {isLowStock && (
-              <div className="bg-orange-600/10 border border-orange-500/20 text-orange-400 px-4 py-2 rounded-full text-sm flex items-center gap-2 animate-pulse">
-                <Clock className="w-4 h-4" aria-hidden="true" />
+              <div className="bg-orange-600/10 border border-orange-500/20 text-orange-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 animate-pulse">
+                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
                 <span>¡Solo quedan {currentStock} unidades!</span>
               </div>
             )}
           </motion.div>
         )}
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 mb-16 md:mb-24">
+        {/* Main Grid - MOBILE OPTIMIZED */}
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16 md:mb-24">
           <ImageGallery
             images={images}
             currentImage={currentImage}
@@ -637,8 +642,8 @@ export default function ProductClient({
           />
         </div>
 
-        {/* Tabs Section */}
-        <section className="border-t border-white/10 py-16 md:py-24">
+        {/* Tabs Section - MOBILE OPTIMIZED */}
+        <section className="border-t border-white/10 py-12 sm:py-16 md:py-24">
           <TabsSection
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -651,10 +656,10 @@ export default function ProductClient({
           />
         </section>
 
-        {/* Related Products */}
+        {/* Related Products - MOBILE OPTIMIZED */}
         {relatedProducts.length > 0 && (
           <section 
-            className="border-t border-white/10 py-16 md:py-24"
+            className="border-t border-white/10 py-12 sm:py-16 md:py-24"
             data-related-products
           >
             <RelatedProducts 
@@ -664,53 +669,56 @@ export default function ProductClient({
           </section>
         )}
 
-        {/* ✅ FINAL CTA SECTION - Conversion optimized */}
+        {/* ✅ FINAL CTA SECTION - MOBILE OPTIMIZED */}
         {!isOutOfStock && (
           <motion.section 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="border-t border-white/10 py-16 md:py-24"
+            className="border-t border-white/10 py-12 sm:py-16 md:py-24"
           >
-            <div className="max-w-3xl mx-auto text-center space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <div className="max-w-3xl mx-auto text-center space-y-4 sm:space-y-5 md:space-y-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4 px-4">
                 ¿Listo para mejorar tu descanso?
               </h2>
-              <p className="text-zinc-400 text-lg mb-6">
-                Envío gratis · {product.warranty || 5} años de garantía · Compra segura
+              <p className="text-zinc-400 text-base sm:text-lg mb-4 sm:mb-6 px-4">
+                Envío gratis Villa María · {product.warranty || 5} años de garantía · Compra segura
               </p>
               
-              <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-zinc-400 mb-8">
-                <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                  <CreditCard className="w-4 h-4" aria-hidden="true" />
+              {/* Trust Badges - MOBILE STACK */}
+              <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-zinc-400 mb-6 sm:mb-8 px-4">
+                <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg w-full sm:w-auto justify-center">
+                  <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
                   <span>Hasta 12 cuotas sin interés</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-                  <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+                <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg w-full sm:w-auto justify-center">
+                  <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
                   <span>{product.trialNights || 100} noches de prueba</span>
                 </div>
               </div>
               
-              <div className="space-y-4">
+              {/* CTA Button - MOBILE FULL WIDTH */}
+              <div className="space-y-3 sm:space-y-4 px-4">
                 <button
                   onClick={handleAddToCart}
                   disabled={isAddingToCart}
-                  className="w-full max-w-md mx-auto px-8 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold text-lg rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-blue-500/25 flex items-center justify-center gap-3"
+                  className="w-full sm:max-w-md sm:mx-auto px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold text-base sm:text-lg rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-blue-500/25 flex items-center justify-center gap-2 sm:gap-3"
                 >
-                  <ShoppingCart className="w-6 h-6" aria-hidden="true" />
+                  <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" aria-hidden="true" />
                   <span>Agregar al carrito</span>
                 </button>
                 
-                <div className="text-center space-y-1">
-                  <p className="text-3xl font-black text-white">
+                {/* Price Display - MOBILE OPTIMIZED */}
+                <div className="text-center space-y-0.5 sm:space-y-1">
+                  <p className="text-2xl sm:text-3xl font-black text-white">
                     {formatARS(currentPrice * quantity)}
                   </p>
                   {cuotaSeleccionada ? (
-                    <p className="text-sm text-zinc-400">
+                    <p className="text-xs sm:text-sm text-zinc-400">
                       {cuotaSeleccionada.cuotas} cuotas de {cuotaSeleccionada.formatted.precioCuota}
                     </p>
                   ) : (
-                    <p className="text-sm text-emerald-400 font-semibold">
+                    <p className="text-xs sm:text-sm text-emerald-400 font-semibold">
                       Precio de contado · {getTextoPromocional(basePrice)}
                     </p>
                   )}

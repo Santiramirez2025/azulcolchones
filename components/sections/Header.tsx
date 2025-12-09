@@ -25,110 +25,85 @@ type SearchProduct = {
 // ✅ Iconos inline SVG optimizados
 const Icons = {
   ShoppingCart: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
     </svg>
   ),
   Menu: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   ),
   X: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
     </svg>
   ),
-  Phone: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-    </svg>
-  ),
   WhatsApp: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
     </svg>
   ),
   User: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
     </svg>
   ),
   Sparkles: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
     </svg>
   ),
-  Brain: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-    </svg>
-  ),
-  Zap: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-    </svg>
-  ),
-  Tag: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-    </svg>
-  ),
-  Clock: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  ),
   Moon: ({ className = "w-6 h-6" }: { className?: string }) => (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M21.64 13a1 1 0 00-1.05-.14 8.05 8.05 0 01-3.37.73 8.15 8.15 0 01-8.14-8.1 8.59 8.59 0 01.25-2A1 1 0 008 2.36a10.14 10.14 0 1014 11.69 1 1 0 00-.36-1.05z" />
     </svg>
   ),
   Search: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
   ),
-  TrendingUp: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-    </svg>
-  ),
   Loader: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" viewBox="0 0 24 24">
+    <svg className={className} fill="none" viewBox="0 0 24 24" aria-hidden="true">
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
     </svg>
   ),
   Star: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="currentColor" viewBox="0 0 20 20">
+    <svg className={className} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
     </svg>
   ),
   Fire: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 23a7.5 7.5 0 01-5.138-12.963C8.204 8.774 11.5 6.5 11 1.5c6 4 9 8 3 14 1 0 2.5 0 5-2.47.27.773.5 1.604.5 2.47A7.5 7.5 0 0112 23z" />
     </svg>
   ),
-  Gift: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-    </svg>
-  ),
   Truck: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
     </svg>
   ),
   CreditCard: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
     </svg>
   ),
   MapPin: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
+  TrendingUp: ({ className = "w-4 h-4" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+    </svg>
+  ),
+  Tag: ({ className = "w-4 h-4" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
     </svg>
   ),
 }
@@ -139,7 +114,6 @@ const getCurrentCampaign = () => {
   const month = now.getMonth() + 1
   const day = now.getDate()
   
-  // Hot Sale Argentina (Mayo)
   if (month === 5 && day >= 20 && day <= 31) {
     return {
       tagline: 'HOT SALE -40%',
@@ -150,7 +124,6 @@ const getCurrentCampaign = () => {
     }
   }
   
-  // Cyber Monday Argentina (Noviembre)
   if (month === 11 && day >= 1 && day <= 10) {
     return {
       tagline: 'CYBER -45%',
@@ -161,7 +134,6 @@ const getCurrentCampaign = () => {
     }
   }
   
-  // Campaña permanente
   return {
     tagline: '12 CUOTAS SIN INTERÉS',
     code: 'VILLAMARIA',
@@ -174,7 +146,7 @@ const getCurrentCampaign = () => {
 const campaign = getCurrentCampaign()
 
 const SITE_CONFIG = {
-  phone: '+5493534017332', // TODO: Reemplazar con tu número real
+  phone: '+5493534017332',
   phoneDisplay: '353 123-4567',
   whatsappNumber: '5493534017332',
   brandName: 'Azul Colchones',
@@ -184,7 +156,7 @@ const SITE_CONFIG = {
   showCountdown: campaign.showCountdown,
   endDate: campaign.endDate,
   theme: campaign.theme,
-}
+} as const
 
 const POPULAR_SEARCHES = [
   'Ofertas del mes', 
@@ -192,12 +164,12 @@ const POPULAR_SEARCHES = [
   'Viscoelástico', 
   'Sommier 2 plazas', 
   'Memory foam'
-]
+] as const
 
 export default function Header() {
   const pathname = usePathname()
   
-  // ✅ TODOS los hooks PRIMERO
+  // Estados
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [cartCount] = useState(0)
   const [scrolled, setScrolled] = useState(false)
@@ -211,13 +183,13 @@ export default function Header() {
 
   const debouncedSearchQuery = useDebounce(searchQuery, 300)
 
+  // Countdown effect
   useEffect(() => {
     if (!SITE_CONFIG.showCountdown || !SITE_CONFIG.endDate) return
     
     const calculateCountdown = () => {
       const now = new Date()
       const endDate = SITE_CONFIG.endDate as Date
-      
       const diff = endDate.getTime() - now.getTime()
       
       if (diff <= 0) {
@@ -237,14 +209,17 @@ export default function Header() {
     return () => clearInterval(interval)
   }, [])
 
+  // Scroll handler
   const handleScroll = useCallback(() => {
     const isScrolled = window.scrollY > 20
     if (isScrolled !== scrolled) setScrolled(isScrolled)
   }, [scrolled])
 
+  // Menu handlers
   const toggleMenu = useCallback(() => setIsMenuOpen(prev => !prev), [])
   const closeMenu = useCallback(() => setIsMenuOpen(false), [])
 
+  // Search effect
   useEffect(() => {
     const performSearch = async () => {
       const trimmedQuery = debouncedSearchQuery.trim()
@@ -278,6 +253,7 @@ export default function Header() {
     performSearch()
   }, [debouncedSearchQuery])
 
+  // Click outside search
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
@@ -290,12 +266,14 @@ export default function Header() {
     }
   }, [isSearchOpen])
 
+  // Focus search input
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
       searchInputRef.current.focus()
     }
   }, [isSearchOpen])
 
+  // Scroll listener
   useEffect(() => {
     let ticking = false
     const onScroll = () => {
@@ -311,17 +289,20 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [handleScroll])
 
+  // Body scroll lock
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset'
     return () => { document.body.style.overflow = 'unset' }
   }, [isMenuOpen])
 
+  // Nav links memoized
   const navLinks = useMemo(() => [
     { href: '/catalogo', label: 'Ver Ofertas', icon: 'catalog', featured: true },
     { href: '/simulador', label: 'Test IA', icon: 'ai', special: true },
     { href: '/blog', label: 'Guía de Sueño', icon: 'blog' },
   ], [])
 
+  // Search handlers
   const handleSearchClick = (slug: string) => {
     window.location.href = `/producto/${slug}`
     setIsSearchOpen(false)
@@ -333,6 +314,7 @@ export default function Header() {
     setIsSearchOpen(true)
   }
 
+  // Format price
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
@@ -342,6 +324,7 @@ export default function Header() {
     }).format(price)
   }
 
+  // Product badges
   const renderProductBadges = (product: SearchProduct) => {
     const badges = []
     
@@ -370,92 +353,96 @@ export default function Header() {
     return badges
   }
 
-  // 🚫 Return condicional AL FINAL
+  // Early return para admin
   if (pathname?.startsWith('/admin')) {
     return null
   }
 
-  // ✅ Renderizar Header
   return (
     <>
-      {/* TOP BAR - ARGENTINA 🇦🇷 */}
+      {/* TOP BAR - ARGENTINA 🇦🇷 - MOBILE OPTIMIZED */}
       <div className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.15)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-shimmer" />
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.15)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-shimmer" aria-hidden="true" />
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-3">
+        <div className="container mx-auto px-3 sm:px-4 relative z-10">
+          <div className="flex items-center justify-between py-1.5 sm:py-2 gap-2">
+            {/* Left side - COMPACTO MOBILE */}
+            <div className="flex items-center gap-1.5 sm:gap-3 overflow-hidden">
               {SITE_CONFIG.showCountdown && countdown ? (
-                <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                  <Icons.Fire className="w-4 h-4 text-yellow-300 animate-pulse" />
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-black text-yellow-300 uppercase hidden sm:inline">Termina en</span>
-                    <span className="text-sm font-black text-white tabular-nums">{countdown}</span>
+                <div className="flex items-center gap-1 sm:gap-2 bg-black/30 backdrop-blur-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex-shrink-0">
+                  <Icons.Fire className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-300 animate-pulse" />
+                  <div className="flex items-center gap-1">
+                    <span className="text-[10px] sm:text-xs font-black text-yellow-300 uppercase hidden xs:inline">Termina</span>
+                    <span className="text-xs sm:text-sm font-black text-white tabular-nums">{countdown}</span>
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                  <Icons.CreditCard className="w-4 h-4 text-cyan-200" />
-                  <span className="text-sm font-black text-white">📍 Balerdi 855</span>
+                <div className="flex items-center gap-1 sm:gap-2 bg-black/30 backdrop-blur-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex-shrink-0">
+                  <Icons.CreditCard className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-200" />
+                  <span className="text-[10px] sm:text-sm font-black text-white truncate">📍 Balerdi 855</span>
                 </div>
               )}
               
-              <div className="hidden md:flex items-center gap-2 bg-black/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                <Icons.MapPin className="w-4 h-4 text-cyan-200" />
-                <span className="text-xs font-bold text-white">
+              <div className="hidden md:flex items-center gap-1.5 sm:gap-2 bg-black/20 backdrop-blur-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex-shrink-0">
+                <Icons.MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-200" />
+                <span className="text-[10px] sm:text-xs font-bold text-white">
                   <span className="text-cyan-200">{SITE_CONFIG.location}</span>
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-white">
-                <Icons.Truck className="w-4 h-4 text-cyan-200" />
-                <span>Envío <span className="text-cyan-200">GRATIS</span></span>
+            {/* Right side - COMPACTO MOBILE */}
+            <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+              <div className="hidden xs:flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs font-bold text-white">
+                <Icons.Truck className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-200" />
+                <span className="hidden sm:inline">Envío <span className="text-cyan-200">GRATIS</span></span>
+                <span className="sm:hidden text-cyan-200">Gratis</span>
               </div>
               
               <a 
                 href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent('¡Hola! Me interesa conocer más sobre los colchones')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 bg-emerald-500/90 hover:bg-emerald-500 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-white transition-all shadow-lg"
+                aria-label="Contactar por WhatsApp"
+                className="flex items-center gap-1 sm:gap-1.5 bg-emerald-500/90 hover:bg-emerald-500 backdrop-blur-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold text-white transition-all shadow-lg"
               >
-                <Icons.WhatsApp className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">WhatsApp</span>
-                <span className="sm:hidden">Consultar</span>
+                <Icons.WhatsApp className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
+                <span className="hidden xs:inline">WhatsApp</span>
+                <span className="xs:hidden">WA</span>
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      {/* HEADER PRINCIPAL */}
+      {/* HEADER PRINCIPAL - MOBILE OPTIMIZED */}
       <header className={`sticky top-0 z-50 backdrop-blur-xl transition-all duration-300 ${
         scrolled 
           ? 'bg-zinc-950/95 border-b border-blue-500/20 shadow-2xl shadow-blue-500/10' 
           : 'bg-zinc-950/90 border-b border-blue-500/10'
       }`}>
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent pointer-events-none" aria-hidden="true" />
 
-        <nav className="container mx-auto px-4 relative z-10">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            <Link href="/" className="group relative flex-shrink-0 z-50">
-              <div className="flex items-center gap-2.5 md:gap-3 transition-transform group-hover:scale-[1.02]">
+        <nav className="container mx-auto px-3 sm:px-4 relative z-10" role="navigation" aria-label="Principal">
+          <div className="flex items-center justify-between h-14 sm:h-16 md:h-20 gap-2">
+            {/* LOGO - COMPACTO MOBILE */}
+            <Link href="/" className="group relative flex-shrink-0 z-50" aria-label="Ir a inicio">
+              <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 transition-transform group-hover:scale-[1.02]">
                 <div className="relative">
-                  <div className="w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/50">
-                    <Icons.Moon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/50">
+                    <Icons.Moon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                   </div>
-                  <div className="absolute inset-0 rounded-xl bg-blue-400/30 blur-md -z-10 animate-pulse-glow" />
+                  <div className="absolute inset-0 rounded-lg sm:rounded-xl bg-blue-400/30 blur-md -z-10 animate-pulse-glow" aria-hidden="true" />
                 </div>
                 
                 <div className="flex flex-col">
-                  <div className="text-lg md:text-xl font-black leading-none tracking-tight">
+                  <div className="text-base sm:text-lg md:text-xl font-black leading-none tracking-tight">
                     <span className="text-white">Azul</span>
                     <span className="text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text">Colchones</span>
                   </div>
-                  <div className="text-[9px] md:text-[10px] font-black tracking-wider uppercase mt-0.5">
+                  <div className="text-[8px] sm:text-[9px] md:text-[10px] font-black tracking-wider uppercase mt-0.5">
                     <span className="text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text">
                       {SITE_CONFIG.location}
                     </span>
@@ -464,7 +451,7 @@ export default function Header() {
               </div>
             </Link>
 
-            {/* BUSCADOR CENTRAL - DESKTOP */}
+            {/* BUSCADOR CENTRAL - DESKTOP ONLY */}
             <div ref={searchContainerRef} className="hidden lg:flex flex-1 max-w-2xl mx-8 relative">
               <div className="relative w-full">
                 <div className="relative">
@@ -476,6 +463,7 @@ export default function Header() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onFocus={() => setIsSearchOpen(true)}
                     placeholder="🔥 Buscá colchones, sommiers y ofertas..."
+                    aria-label="Buscar productos"
                     className="w-full pl-12 pr-12 py-3 bg-white/5 border border-blue-500/20 rounded-xl text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
                   />
                   {isSearching && (
@@ -487,12 +475,14 @@ export default function Header() {
                     <button
                       onClick={() => { setSearchQuery(''); setSearchResults([]) }}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
+                      aria-label="Limpiar búsqueda"
                     >
                       <Icons.X className="w-4 h-4" />
                     </button>
                   )}
                 </div>
 
+                {/* Search Results Dropdown - DESKTOP */}
                 {isSearchOpen && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-900/98 backdrop-blur-xl border border-blue-500/20 rounded-xl shadow-2xl shadow-black/50 max-h-[500px] overflow-y-auto animate-slide-down">
                     {searchQuery.trim().length === 0 ? (
@@ -608,11 +598,12 @@ export default function Header() {
             </div>
 
             {/* DESKTOP NAV */}
-            <ul className="hidden lg:flex items-center gap-1">
+            <ul className="hidden lg:flex items-center gap-1" role="menubar">
               {navLinks.map((link) => (
-                <li key={link.href}>
+                <li key={link.href} role="none">
                   <Link 
-                    href={link.href} 
+                    href={link.href}
+                    role="menuitem"
                     className={`relative group px-4 py-2.5 rounded-lg transition-all ${
                       link.featured
                         ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30' 
@@ -642,40 +633,47 @@ export default function Header() {
                     )}
                     <span className={`absolute bottom-0 left-0 w-0 h-0.5 rounded-full transition-all duration-300 group-hover:w-full ${
                       link.featured ? 'bg-gradient-to-r from-blue-400 to-cyan-400' : 'bg-gradient-to-r from-violet-400 to-fuchsia-400'
-                    }`} />
+                    }`} aria-hidden="true" />
                   </Link>
                 </li>
               ))}
             </ul>
 
-            {/* ACTIONS */}
-            <div className="flex items-center gap-2">
+            {/* ACTIONS - MOBILE OPTIMIZED */}
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              {/* Search button mobile */}
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-blue-500/20 transition-all"
+                className="lg:hidden flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/5 hover:bg-white/10 border border-blue-500/20 transition-all"
+                aria-label="Buscar"
               >
-                <Icons.Search className="w-5 h-5 text-blue-300" />
+                <Icons.Search className="w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
               </button>
 
+              {/* User - HIDDEN ON SMALL MOBILE */}
               <Link 
                 href="/mi-cuenta" 
-                className="hidden md:flex items-center justify-center w-10 h-10 md:w-11 md:h-11 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
+                className="hidden sm:flex items-center justify-center w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
+                aria-label="Mi cuenta"
               >
                 <Icons.User className="w-4 h-4 md:w-5 md:h-5 text-zinc-300 group-hover:text-white transition-colors" />
               </Link>
 
+              {/* Cart */}
               <Link 
                 href="/carrito" 
-                className="relative flex items-center justify-center w-10 h-10 md:w-11 md:h-11 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
+                className="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
+                aria-label={`Carrito de compras${cartCount > 0 ? ` (${cartCount} productos)` : ''}`}
               >
                 <Icons.ShoppingCart className="w-4 h-4 md:w-5 md:h-5 text-zinc-300 group-hover:text-white transition-colors" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center shadow-lg shadow-blue-500/50 animate-scale-in">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-[9px] sm:text-[10px] font-black rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center shadow-lg shadow-blue-500/50 animate-scale-in">
                     {cartCount}
                   </span>
                 )}
               </Link>
 
+              {/* CTA Desktop */}
               <Link 
                 href="/simulador" 
                 className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30 transition-all hover:scale-105 active:scale-95"
@@ -684,15 +682,17 @@ export default function Header() {
                 <span>Ver Ofertas</span>
               </Link>
 
+              {/* Menu button mobile */}
               <button 
                 onClick={toggleMenu} 
-                className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 transition-all relative z-[60] hover:bg-white/10" 
+                className="lg:hidden flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 transition-all relative z-[60] hover:bg-white/10" 
                 aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+                aria-expanded={isMenuOpen}
               >
                 {isMenuOpen ? (
-                  <Icons.X className="w-5 h-5 text-zinc-300" />
+                  <Icons.X className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-300" />
                 ) : (
-                  <Icons.Menu className="w-5 h-5 text-zinc-300" />
+                  <Icons.Menu className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-300" />
                 )}
               </button>
             </div>
@@ -700,38 +700,40 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* BUSCADOR MÓVIL - FULLSCREEN */}
+      {/* BUSCADOR MÓVIL - FULLSCREEN - OPTIMIZADO */}
       {isSearchOpen && (
         <div className="lg:hidden fixed inset-0 z-[100] bg-zinc-950/98 backdrop-blur-xl animate-fade-in">
           <div className="container mx-auto px-4 py-4 h-full flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-2 sm:gap-3 mb-4">
               <div className="relative flex-1">
-                <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-400 pointer-events-none" />
+                <Icons.Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-blue-400 pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="🔥 Buscá colchones y ofertas..."
                   autoFocus
-                  className="w-full pl-12 pr-12 py-3.5 bg-white/5 border border-blue-500/20 rounded-xl text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                  aria-label="Buscar productos"
+                  className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-3.5 bg-white/5 border border-blue-500/20 rounded-xl text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm sm:text-base"
                 />
                 {isSearching && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    <Icons.Loader className="w-5 h-5 text-blue-400 animate-spin" />
+                  <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
+                    <Icons.Loader className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 animate-spin" />
                   </div>
                 )}
                 {searchQuery && !isSearching && (
                   <button
                     onClick={() => { setSearchQuery(''); setSearchResults([]) }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
+                    className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
+                    aria-label="Limpiar búsqueda"
                   >
-                    <Icons.X className="w-5 h-5" />
+                    <Icons.X className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 )}
               </div>
               <button
                 onClick={() => { setIsSearchOpen(false); setSearchQuery(''); setSearchResults([]) }}
-                className="flex-shrink-0 px-4 py-3.5 text-zinc-300 hover:text-white font-semibold text-sm transition-colors"
+                className="flex-shrink-0 px-3 sm:px-4 py-3 sm:py-3.5 text-zinc-300 hover:text-white font-semibold text-sm transition-colors"
               >
                 Cancelar
               </button>
@@ -741,7 +743,7 @@ export default function Header() {
               {searchQuery.trim().length === 0 ? (
                 <div>
                   <div className="flex items-center gap-2 text-xs font-bold text-blue-400 uppercase tracking-wider mb-4">
-                    <Icons.TrendingUp className="w-4 h-4" />
+                    <Icons.TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     <span>Búsquedas Populares</span>
                   </div>
                   <div className="space-y-2">
@@ -749,17 +751,17 @@ export default function Header() {
                       <button
                         key={idx}
                         onClick={() => handlePopularSearch(term)}
-                        className="w-full text-left px-4 py-3.5 bg-white/5 hover:bg-blue-500/10 rounded-xl transition-all flex items-center gap-3 group border border-blue-500/20"
+                        className="w-full text-left px-3 sm:px-4 py-3 sm:py-3.5 bg-white/5 hover:bg-blue-500/10 rounded-xl transition-all flex items-center gap-2 sm:gap-3 group border border-blue-500/20"
                       >
-                        <Icons.Search className="w-5 h-5 text-zinc-600 group-hover:text-blue-400 transition-colors" />
-                        <span className="font-semibold text-zinc-300 group-hover:text-white transition-colors">{term}</span>
+                        <Icons.Search className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-600 group-hover:text-blue-400 transition-colors flex-shrink-0" />
+                        <span className="font-semibold text-sm sm:text-base text-zinc-300 group-hover:text-white transition-colors">{term}</span>
                       </button>
                     ))}
                   </div>
                 </div>
               ) : searchResults.length > 0 ? (
                 <div>
-                  <div className="text-sm font-bold text-blue-400 uppercase tracking-wider mb-4">
+                  <div className="text-xs sm:text-sm font-bold text-blue-400 uppercase tracking-wider mb-4">
                     {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''}
                   </div>
                   <div className="space-y-3">
@@ -767,11 +769,11 @@ export default function Header() {
                       <button
                         key={product.id}
                         onClick={() => handleSearchClick(product.slug)}
-                        className="w-full text-left p-4 bg-white/5 hover:bg-blue-500/10 rounded-xl transition-all border border-blue-500/20"
+                        className="w-full text-left p-3 sm:p-4 bg-white/5 hover:bg-blue-500/10 rounded-xl transition-all border border-blue-500/20"
                       >
                         <div className="flex items-start gap-3">
                           {product.images && product.images.length > 0 && (
-                            <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-white/5">
+                            <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden bg-white/5">
                               <Image
                                 src={product.images[0]}
                                 alt={product.name}
@@ -783,12 +785,12 @@ export default function Header() {
                           )}
                           
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-3 mb-2">
-                              <h4 className="font-bold text-white text-base line-clamp-2">
+                            <div className="flex items-start justify-between gap-2 sm:gap-3 mb-2">
+                              <h4 className="font-bold text-white text-sm sm:text-base line-clamp-2">
                                 {product.name}
                               </h4>
                               <div className="flex-shrink-0 text-right">
-                                <div className="text-xl font-black text-blue-400">
+                                <div className="text-lg sm:text-xl font-black text-blue-400">
                                   {formatPrice(product.price)}
                                 </div>
                                 {product.originalPrice && product.originalPrice > product.price && (
@@ -810,15 +812,15 @@ export default function Header() {
                 </div>
               ) : isSearching ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <Icons.Loader className="w-12 h-12 mx-auto mb-6 text-blue-400 animate-spin" />
-                  <p className="text-lg text-zinc-300 font-bold">Buscando ofertas...</p>
+                  <Icons.Loader className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-6 text-blue-400 animate-spin" />
+                  <p className="text-base sm:text-lg text-zinc-300 font-bold">Buscando ofertas...</p>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
-                    <Icons.Search className="w-10 h-10 text-zinc-600" />
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
+                    <Icons.Search className="w-8 h-8 sm:w-10 sm:h-10 text-zinc-600" />
                   </div>
-                  <p className="text-lg text-zinc-300 font-bold mb-2">No encontramos resultados</p>
+                  <p className="text-base sm:text-lg text-zinc-300 font-bold mb-2">No encontramos resultados</p>
                   <p className="text-sm text-zinc-600">Probá con otras palabras</p>
                 </div>
               )}
@@ -827,33 +829,38 @@ export default function Header() {
         </div>
       )}
 
-      {/* MOBILE MENU - ARGENTINA */}
+      {/* MOBILE MENU - ARGENTINA - OPTIMIZADO */}
       {isMenuOpen && (
         <>
           <div 
             onClick={closeMenu} 
             className="fixed inset-0 bg-black/90 backdrop-blur-sm lg:hidden animate-fade-in"
             style={{ zIndex: 9998 }}
+            aria-hidden="true"
           />
 
           <div 
             className="fixed inset-0 lg:hidden flex flex-col animate-slide-up"
             style={{ zIndex: 9999 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú de navegación"
           >
+            {/* Menu Header */}
             <div className="flex-shrink-0 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 relative overflow-hidden">
-              <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.15)_50%,transparent_75%)] bg-[length:250%_250%] animate-shimmer" />
+              <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.15)_50%,transparent_75%)] bg-[length:250%_250%] animate-shimmer" aria-hidden="true" />
               <div className="container mx-auto px-4 relative z-10">
-                <div className="flex items-center justify-between h-16">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                <div className="flex items-center justify-between h-14 sm:h-16">
+                  <div className="flex items-center gap-2 sm:gap-2.5">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
                       {SITE_CONFIG.showCountdown ? (
-                        <Icons.Fire className="w-5 h-5 text-yellow-300" />
+                        <Icons.Fire className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300" />
                       ) : (
-                        <Icons.CreditCard className="w-5 h-5 text-cyan-200" />
+                        <Icons.CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-200" />
                       )}
                     </div>
                     <div>
-                      <div className="text-base font-black text-white">{SITE_CONFIG.tagline}</div>
+                      <div className="text-sm sm:text-base font-black text-white">{SITE_CONFIG.tagline}</div>
                       {SITE_CONFIG.showCountdown && countdown && (
                         <div className="text-[9px] text-cyan-100 uppercase tracking-wider font-bold">Termina en {countdown}</div>
                       )}
@@ -861,29 +868,31 @@ export default function Header() {
                   </div>
                   <button 
                     onClick={closeMenu} 
-                    className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition"
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition"
                     aria-label="Cerrar menú"
                   >
-                    <Icons.X className="w-5 h-5 text-white" />
+                    <Icons.X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </button>
                 </div>
               </div>
             </div>
 
+            {/* Menu Content */}
             <div className="flex-1 overflow-y-auto bg-gradient-to-b from-zinc-950 to-zinc-900">
-              <div className="container mx-auto px-4 py-6 pb-safe">
-                <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="container mx-auto px-4 py-4 sm:py-6 pb-safe">
+                {/* Quick Actions - GRID 2 COLUMNAS */}
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
                   <Link 
                     href="/catalogo" 
                     onClick={closeMenu} 
-                    className="relative overflow-hidden rounded-2xl active:scale-95 transition-transform shadow-xl"
+                    className="relative overflow-hidden rounded-xl sm:rounded-2xl active:scale-95 transition-transform shadow-xl"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500" />
-                    <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.15)_50%,transparent_75%)] bg-[length:200%_200%] animate-shimmer" />
-                    <div className="relative flex flex-col items-center justify-center p-6 text-white">
-                      <Icons.Fire className="w-8 h-8 mb-2 drop-shadow-lg animate-pulse" />
-                      <span className="text-base font-black mb-1">Ver Ofertas</span>
-                      <span className="text-xs text-cyan-100 font-bold">
+                    <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.15)_50%,transparent_75%)] bg-[length:200%_200%] animate-shimmer" aria-hidden="true" />
+                    <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 text-white">
+                      <Icons.Fire className="w-7 h-7 sm:w-8 sm:h-8 mb-2 drop-shadow-lg animate-pulse" />
+                      <span className="text-sm sm:text-base font-black mb-1">Ver Ofertas</span>
+                      <span className="text-[10px] sm:text-xs text-cyan-100 font-bold">
                         {SITE_CONFIG.showCountdown ? 'Hasta -45%' : 'Mejores precios'}
                       </span>
                     </div>
@@ -893,58 +902,62 @@ export default function Header() {
                     href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent('¡Hola! Me interesa conocer más')}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative overflow-hidden rounded-2xl active:scale-95 transition-transform shadow-xl"
+                    className="relative overflow-hidden rounded-xl sm:rounded-2xl active:scale-95 transition-transform shadow-xl"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500" />
-                    <div className="relative flex flex-col items-center justify-center p-6 text-white">
-                      <Icons.WhatsApp className="w-8 h-8 mb-2 drop-shadow-lg" />
-                      <span className="text-base font-black mb-1">WhatsApp</span>
-                      <span className="text-xs text-emerald-100 font-medium">Asesoría</span>
+                    <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 text-white">
+                      <Icons.WhatsApp className="w-7 h-7 sm:w-8 sm:h-8 mb-2 drop-shadow-lg" />
+                      <span className="text-sm sm:text-base font-black mb-1">WhatsApp</span>
+                      <span className="text-[10px] sm:text-xs text-emerald-100 font-medium">Asesoría</span>
                     </div>
                   </a>
                 </div>
 
-                <div className="mb-6 p-4 bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-blue-500/20 rounded-2xl border-2 border-blue-500/30 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.05)_50%,transparent_75%)] bg-[length:200%_200%] animate-shimmer" />
+                {/* Promo Code */}
+                <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-blue-500/20 rounded-xl sm:rounded-2xl border-2 border-blue-500/30 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.05)_50%,transparent_75%)] bg-[length:200%_200%] animate-shimmer" aria-hidden="true" />
                   <div className="relative flex items-center justify-between">
                     <div>
-                      <div className="text-xs font-bold text-cyan-300 uppercase mb-1">Código exclusivo</div>
-                      <div className="text-2xl font-black text-white tracking-wider">{SITE_CONFIG.promoCode}</div>
-                      <div className="text-xs text-zinc-400 mt-1">
+                      <div className="text-[10px] sm:text-xs font-bold text-cyan-300 uppercase mb-0.5 sm:mb-1">Código exclusivo</div>
+                      <div className="text-xl sm:text-2xl font-black text-white tracking-wider">{SITE_CONFIG.promoCode}</div>
+                      <div className="text-[10px] sm:text-xs text-zinc-400 mt-1">
                         {SITE_CONFIG.showCountdown ? 'Descuento adicional' : 'Beneficio especial'}
                       </div>
                     </div>
-                    <Icons.Tag className="w-12 h-12 text-cyan-400/30" />
+                    <Icons.Tag className="w-10 h-10 sm:w-12 sm:h-12 text-cyan-400/30" />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 mb-6 p-4 bg-gradient-to-br from-blue-950/30 to-cyan-950/30 rounded-2xl border border-blue-500/20">
+                {/* Trust Badges */}
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-br from-blue-950/30 to-cyan-950/30 rounded-xl sm:rounded-2xl border border-blue-500/20">
                   <div className="flex flex-col items-center text-center">
-                    <Icons.Truck className="w-5 h-5 text-blue-400 mb-2" />
-                    <div className="text-xs font-bold text-white">Envío</div>
-                    <div className="text-[10px] text-blue-400 mt-0.5">Gratis VM</div>
+                    <Icons.Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 mb-1.5 sm:mb-2" />
+                    <div className="text-[10px] sm:text-xs font-bold text-white">Envío</div>
+                    <div className="text-[9px] sm:text-[10px] text-blue-400 mt-0.5">Gratis VM</div>
                   </div>
                   <div className="flex flex-col items-center text-center border-x border-blue-500/20">
-                    <Icons.CreditCard className="w-5 h-5 text-cyan-400 mb-2" />
-                    <div className="text-xs font-bold text-white">12 cuotas</div>
-                    <div className="text-[10px] text-cyan-400 mt-0.5">Sin interés</div>
+                    <Icons.CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 mb-1.5 sm:mb-2" />
+                    <div className="text-[10px] sm:text-xs font-bold text-white">12 cuotas</div>
+                    <div className="text-[9px] sm:text-[10px] text-cyan-400 mt-0.5">Sin interés</div>
                   </div>
                   <div className="flex flex-col items-center text-center">
-                    <Icons.Sparkles className="w-5 h-5 text-blue-400 mb-2" />
-                    <div className="text-xs font-bold text-white">Premium</div>
-                    <div className="text-[10px] text-cyan-400 mt-0.5">Calidad</div>
+                    <Icons.Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 mb-1.5 sm:mb-2" />
+                    <div className="text-[10px] sm:text-xs font-bold text-white">Premium</div>
+                    <div className="text-[9px] sm:text-[10px] text-cyan-400 mt-0.5">Calidad</div>
                   </div>
                 </div>
 
-                <nav className="mb-6">
-                  <div className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-3 px-1">Navegación</div>
-                  <ul className="space-y-2">
+                {/* Navigation Links */}
+                <nav className="mb-4 sm:mb-6">
+                  <div className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider mb-2 sm:mb-3 px-1">Navegación</div>
+                  <ul className="space-y-2" role="menu">
                     {navLinks.map((link) => (
-                      <li key={link.href}>
+                      <li key={link.href} role="none">
                         <Link 
                           href={link.href} 
-                          onClick={closeMenu} 
-                          className={`flex items-center justify-between p-4 rounded-xl font-bold text-base transition-all active:scale-98 ${
+                          onClick={closeMenu}
+                          role="menuitem"
+                          className={`flex items-center justify-between p-3 sm:p-4 rounded-xl font-bold text-sm sm:text-base transition-all active:scale-98 ${
                             link.featured
                               ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-white border border-blue-500/30 shadow-lg' 
                               : link.special 
@@ -954,12 +967,12 @@ export default function Header() {
                         >
                           <span>{link.label}</span>
                           {link.featured && (
-                            <span className="px-2.5 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[9px] font-black rounded-full uppercase shadow-lg animate-pulse">
+                            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg animate-pulse">
                               Hot
                             </span>
                           )}
                           {link.special && (
-                            <span className="px-2.5 py-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-[9px] font-black rounded-full uppercase shadow-lg">
+                            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg">
                               IA
                             </span>
                           )}
@@ -969,15 +982,16 @@ export default function Header() {
                   </ul>
                 </nav>
 
-                <div className="border-t border-blue-500/20 pt-6">
-                  <div className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-3 px-1">Mi cuenta</div>
+                {/* User Account */}
+                <div className="border-t border-blue-500/20 pt-4 sm:pt-6">
+                  <div className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider mb-2 sm:mb-3 px-1">Mi cuenta</div>
                   <Link 
                     href="/mi-cuenta" 
                     onClick={closeMenu} 
-                    className="flex items-center gap-3 p-4 text-zinc-300 bg-white/5 border border-blue-500/20 rounded-xl transition-all active:scale-98 hover:bg-blue-500/10"
+                    className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 text-zinc-300 bg-white/5 border border-blue-500/20 rounded-xl transition-all active:scale-98 hover:bg-blue-500/10"
                   >
-                    <Icons.User className="w-5 h-5" />
-                    <span className="font-semibold">Acceder a mi cuenta</span>
+                    <Icons.User className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                    <span className="font-semibold text-sm sm:text-base">Acceder a mi cuenta</span>
                   </Link>
                 </div>
               </div>
@@ -1024,13 +1038,20 @@ export default function Header() {
         
         .pb-safe { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
 
+        @media (min-width: 375px) {
+          .xs\\:inline { display: inline; }
+          .xs\\:flex { display: flex; }
+          .xs\\:hidden { display: none; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .animate-pulse-glow,
           .animate-scale-in,
           .animate-fade-in,
           .animate-slide-up,
           .animate-slide-down,
-          .animate-shimmer { animation: none !important; }
+          .animate-shimmer,
+          .animate-pulse { animation: none !important; }
         }
 
         @supports (scrollbar-width: thin) {

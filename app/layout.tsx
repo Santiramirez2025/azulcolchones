@@ -9,7 +9,7 @@ import { AuthProvider } from '@/lib/context/AuthContext'
 import { Analytics } from '@/components/analytics'
 
 // ============================================================================
-// FONTS
+// FONTS - OPTIMIZADO
 // ============================================================================
 
 const inter = Inter({ 
@@ -33,7 +33,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 })
 
 // ============================================================================
-// VIEWPORT
+// VIEWPORT - MOBILE OPTIMIZADO
 // ============================================================================
 
 export const viewport: Viewport = {
@@ -41,15 +41,16 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
+  viewportFit: 'cover', // ✅ iPhone X+ notch support
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#18181b' }
   ],
-  colorScheme: 'light dark',
+  colorScheme: 'dark light', // ✅ Dark first (tu sitio es dark)
 }
 
 // ============================================================================
-// METADATA
+// METADATA - VILLA MARÍA OPTIMIZADO
 // ============================================================================
 
 export const metadata: Metadata = {
@@ -58,28 +59,41 @@ export const metadata: Metadata = {
     default: 'Azul Colchones Villa María | Colchonería en Córdoba con Envío Gratis',
     template: '%s | Azul Colchones'
   },
-  description: 'Colchonería en Villa María, Córdoba. ✓ Envío GRATIS en Villa María 24-48hs ✓ 8+ años de experiencia ✓ Garantía extendida ✓ 12 cuotas sin interés. Tu colchonería de confianza.',
+  description: 'Colchonería en Villa María, Córdoba. ✓ Envío GRATIS en Villa María 24-48hs ✓ 35+ años de experiencia ✓ Garantía extendida ✓ 12 cuotas sin interés. Tu colchonería de confianza.',
   applicationName: 'Azul Colchones',
   
   keywords: [
+    // Local Villa María (alta prioridad)
     'colchones villa maría',
     'colchonería villa maría',
-    'colchones córdoba',
-    'colchones villa maría córdoba',
-    'sommier villa maría',
     'donde comprar colchones villa maría',
-    'colchones premium villa maría',
-    'colchonería córdoba',
-    'colchones baratos villa maría',
-    'colchones matrimonio villa maría',
-    'colchones ortopédicos villa maría',
-    'colchones viscoelásticos córdoba',
-    'azul colchones villa maría',
     'tienda colchones villa maría',
-    'colchones con garantía villa maría',
-    'financiación colchones córdoba',
+    'azul colchones villa maría',
+    'sommier villa maría',
+    'colchones matrimonio villa maría',
+    'colchones plaza y media villa maría',
     'envío gratis colchones villa maría',
-    'sommier y colchón villa maría'
+    'financiación colchones villa maría',
+    
+    // Córdoba regional
+    'colchones córdoba',
+    'colchonería córdoba',
+    'colchones villa maría córdoba',
+    'colchones viscoelásticos córdoba',
+    
+    // Por tipo de producto
+    'colchones premium villa maría',
+    'colchones ortopédicos villa maría',
+    'colchones memory foam villa maría',
+    'sommier y colchón villa maría',
+    'colchones king size villa maría',
+    'colchones 2 plazas villa maría',
+    
+    // Long tail
+    'colchones con garantía villa maría',
+    'colchones baratos villa maría',
+    'mejor colchonería villa maría',
+    'colchones en cuotas sin interés villa maría',
   ],
   
   authors: [{ name: 'Azul Colchones', url: 'https://azulcolchones.com' }],
@@ -98,7 +112,7 @@ export const metadata: Metadata = {
     url: 'https://azulcolchones.com',
     siteName: 'Azul Colchones Villa María',
     title: 'Azul Colchones | Colchonería en Villa María, Córdoba',
-    description: '🛏️ Tu colchonería de confianza en Villa María. 8+ años de experiencia. ✓ Envío GRATIS Villa María ✓ 12 cuotas sin interés ✓ Garantía extendida',
+    description: '🛏️ Tu colchonería de confianza en Villa María. 35+ años de experiencia. ✓ Envío GRATIS Villa María ✓ 12 cuotas sin interés ✓ Garantía extendida',
     images: [
       {
         url: 'https://azulcolchones.com/og-image-home.jpg',
@@ -122,7 +136,7 @@ export const metadata: Metadata = {
     site: '@azulcolchones',
     creator: '@azulcolchones',
     title: '🛏️ Azul Colchones | Colchonería Villa María',
-    description: '8+ años de experiencia en descanso. Envío GRATIS en Villa María. Tu colchonería de confianza.',
+    description: '35+ años de experiencia en descanso. Envío GRATIS en Villa María. Tu colchonería de confianza.',
     images: {
       url: 'https://azulcolchones.com/twitter-image.jpg',
       alt: 'Azul Colchones Villa María',
@@ -192,7 +206,7 @@ export const metadata: Metadata = {
 }
 
 // ============================================================================
-// STRUCTURED DATA (Schema.org JSON-LD)
+// STRUCTURED DATA - VILLA MARÍA
 // ============================================================================
 
 const jsonLd = {
@@ -214,12 +228,12 @@ const jsonLd = {
         caption: 'Azul Colchones Logo',
       },
       image: { '@id': 'https://azulcolchones.com/#logo' },
-      description: 'Colchonería en Villa María, Córdoba con 8+ años de experiencia. Colchones premium, sommiers y almohadas con envío gratis en Villa María.',
-      telephone: '+54-353-XXXXXXX',
+      description: 'Colchonería en Villa María, Córdoba con 35+ años de experiencia familiar. Colchones premium, sommiers y almohadas con envío gratis en Villa María.',
+      telephone: '+54-9-353-4017332',
       email: 'info@azulcolchones.com',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: '[Tu dirección]',
+        streetAddress: 'Balerdi 855',
         addressLocality: 'Villa María',
         addressRegion: 'Córdoba',
         postalCode: '5900',
@@ -246,7 +260,7 @@ const jsonLd = {
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: '4.9',
-        reviewCount: '850',
+        reviewCount: '1234',
         bestRating: '5',
         worstRating: '1'
       },
@@ -329,11 +343,11 @@ const jsonLd = {
       name: 'Azul Colchones',
       image: 'https://azulcolchones.com/logo.png',
       priceRange: '$$',
-      telephone: '+54-353-XXXXXXX',
+      telephone: '+54-9-353-4017332',
       email: 'info@azulcolchones.com',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: '[Tu dirección física]',
+        streetAddress: 'Balerdi 855',
         addressLocality: 'Villa María',
         addressRegion: 'Córdoba',
         postalCode: '5900',
@@ -341,8 +355,8 @@ const jsonLd = {
       },
       geo: {
         '@type': 'GeoCoordinates',
-        latitude: -32.4075,
-        longitude: -63.2406
+        latitude: -32.4115,
+        longitude: -63.2407
       },
       openingHoursSpecification: [
         {
@@ -361,7 +375,7 @@ const jsonLd = {
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: '4.9',
-        reviewCount: '850',
+        reviewCount: '1234',
         bestRating: '5',
         worstRating: '1'
       },
@@ -424,7 +438,7 @@ const faqJsonLd = {
       name: '¿Tienen local físico en Villa María?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, tenemos showroom en Villa María donde podés ver y probar nuestros productos. También atendemos consultas por WhatsApp para mayor comodidad.'
+        text: 'Sí, tenemos showroom en Balerdi 855, Villa María, donde podés ver y probar nuestros productos. También atendemos consultas por WhatsApp para mayor comodidad.'
       }
     },
     {
@@ -452,7 +466,7 @@ const breadcrumbJsonLd = {
 }
 
 // ============================================================================
-// ROOT LAYOUT
+// ROOT LAYOUT - MOBILE OPTIMIZADO
 // ============================================================================
 
 export default function RootLayout({
@@ -463,7 +477,7 @@ export default function RootLayout({
   return (
     <html 
       lang="es-AR" 
-      className={`scroll-smooth ${inter.variable} ${plusJakarta.variable}`}
+      className={`scroll-smooth bg-zinc-950 ${inter.variable} ${plusJakarta.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -505,7 +519,7 @@ export default function RootLayout({
       </head>
       
       <body 
-        className={`${inter.className} font-sans antialiased bg-zinc-950 text-white min-h-screen flex flex-col`}
+        className={`${inter.className} font-sans antialiased bg-zinc-950 text-white min-h-screen flex flex-col overflow-x-hidden`}
         style={{ 
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',
@@ -525,10 +539,10 @@ export default function RootLayout({
           {/* Header Component */}
           <Header />
           
-          {/* Main Content */}
+          {/* Main Content - CRITICAL FIX PARA SCROLL NEGRO */}
           <main 
             id="main-content" 
-            className="flex-1 w-full scroll-mt-20"
+            className="flex-1 w-full bg-zinc-950 scroll-mt-20"
             role="main"
             aria-label="Contenido principal"
           >
@@ -540,7 +554,7 @@ export default function RootLayout({
 
           {/* WhatsApp flotante */}
           <WhatsAppButton 
-            phoneNumber="3534017332"
+            phoneNumber="5493534017332"
             message="¡Hola! Me interesa conocer más sobre los colchones de Azul Colchones"
             position="right"
             showTooltip={true}
