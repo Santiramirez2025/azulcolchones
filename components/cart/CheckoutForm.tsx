@@ -1,14 +1,14 @@
-// components/cart/CheckoutForm.tsx - OPTIMIZADO 2025 🚀 - ✅ CORREGIDO PARA PRODUCCIÓN
-// Sistema simplificado: MercadoPago + Efectivo en domicilio
+// components/cart/CheckoutForm.tsx - DISEÑO PROFESIONAL SIMPLE 2025 🚀
+// Optimizado mobile-first • Sin fricción • Conversion-focused
 'use client'
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, CreditCard, Lock, CheckCircle2, Loader2, AlertCircle,
-  Shield, Wallet, Check, ChevronDown, DollarSign, Percent, MapPin,
-  Phone, Mail, User, Building2, Package, Clock, Zap, TrendingUp
+  Shield, Wallet, Check, ChevronDown, DollarSign, Percent, 
+  Phone, Mail, User, Package, Zap
 } from 'lucide-react'
 import Link from 'next/link'
 import { useCartStore } from '@/lib/store/cart-store'
@@ -43,7 +43,6 @@ function useCheckoutAnalytics() {
     const eventName = events[step]
     
     try {
-      // Google Analytics 4
       if (typeof window !== 'undefined' && (window as any).gtag) {
         (window as any).gtag('event', eventName, {
           currency: 'ARS',
@@ -52,7 +51,6 @@ function useCheckoutAnalytics() {
         })
       }
       
-      // Meta Pixel - ✅ CORREGIDO
       if (typeof window !== 'undefined' && (window as any).fbq) {
         const fbEventNames: readonly string[] = ['', 'ViewContent', 'InitiateCheckout', 'AddPaymentInfo', 'Purchase']
         const fbEventName = fbEventNames[step]
@@ -65,12 +63,13 @@ function useCheckoutAnalytics() {
         }
       }
       
-      // Datadog RUM
       if (typeof window !== 'undefined' && (window as any).DD_RUM) {
         (window as any).DD_RUM.addAction(`checkout_step_${step}`, data)
       }
     } catch (error) {
-      console.error('[Analytics] Error:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Analytics] Error:', error)
+      }
     }
   }, [])
   
@@ -85,7 +84,9 @@ function useCheckoutAnalytics() {
         })
       }
     } catch (error) {
-      console.error('[Analytics] Error:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Analytics] Error:', error)
+      }
     }
   }, [])
   
@@ -106,7 +107,6 @@ function useFormValidation<T extends Record<string, any>>(
     
     let sanitized = value.trim()
     
-    // Remover HTML y caracteres peligrosos
     sanitized = sanitized
       .replace(/<[^>]*>/g, '')
       .replace(/[<>{}]/g, '')
@@ -181,7 +181,7 @@ function useFormValidation<T extends Record<string, any>>(
   }
 }
 
-/** Hook para fetch con retry y timeout */
+/** Hook para fetch con retry */
 function useFetchWithRetry() {
   const fetchWithRetry = useCallback(async (
     url: string, 
@@ -207,7 +207,6 @@ function useFetchWithRetry() {
         
         if (i === maxRetries - 1) throw error
         
-        // Exponential backoff
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000))
       }
     }
@@ -231,10 +230,10 @@ export default function CheckoutForm({ step, total, onBack, onNext }: CheckoutFo
   }, [step, total, trackStep])
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950">
-      {/* Background effects */}
-      <div className="fixed inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" />
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" />
+    <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-16 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 overflow-x-hidden">
+      {/* Background effects - SOLO DESKTOP */}
+      <div className="hidden md:block fixed inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
+      <div className="hidden md:block fixed inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" aria-hidden="true" />
       
       {/* Schema Markup para SEO */}
       <script
@@ -250,6 +249,7 @@ export default function CheckoutForm({ step, total, onBack, onNext }: CheckoutFo
               "name": "Azul Colchones",
               "address": {
                 "@type": "PostalAddress",
+                "streetAddress": "Balerdi 855",
                 "addressLocality": "Villa María",
                 "addressRegion": "Córdoba",
                 "addressCountry": "AR"
@@ -259,56 +259,53 @@ export default function CheckoutForm({ step, total, onBack, onNext }: CheckoutFo
         }}
       />
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 relative z-10">
         {/* Checkout Steps */}
         <CheckoutSteps currentStep={step} />
 
-        {/* Header */}
+        {/* Header - MOBILE OPTIMIZED */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <button
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-4 transition-colors"
+            className="inline-flex items-center gap-1.5 sm:gap-2 text-zinc-400 hover:text-white mb-3 sm:mb-4 transition-colors touch-target"
             aria-label="Volver al carrito"
           >
-            <ArrowLeft className="w-5 h-5" aria-hidden="true" />
-            <span className="font-semibold">Volver al carrito</span>
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
+            <span className="text-sm sm:text-base font-semibold">Volver</span>
           </button>
 
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-3">
-            {step === 2 && 'Información de envío'}
-            {step === 3 && 'Método de pago'}
-            {step === 4 && '¡Pedido confirmado!'}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-2 sm:mb-3">
+            {step === 2 && 'Tus datos'}
+            {step === 3 && 'Pago'}
+            {step === 4 && '¡Listo! 🎉'}
           </h1>
-          <p className="text-lg text-zinc-400">
-            {step === 2 && 'Completá tus datos para continuar'}
-            {step === 3 && 'Elegí cómo querés pagar'}
-            {step === 4 && 'Tu pedido fue procesado correctamente'}
+          <p className="text-sm sm:text-base md:text-lg text-zinc-400">
+            {step === 2 && 'Completá tus datos de envío'}
+            {step === 3 && 'Elegí cómo pagar'}
+            {step === 4 && 'Tu pedido fue confirmado'}
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
             {step === 2 && <ShippingForm onNext={onNext} />}
             
             {step === 3 && (
-              <div className="space-y-6">
-                {/* Payment Method Selection */}
+              <div className="space-y-4 sm:space-y-6">
                 <PaymentMethodSelector 
                   selected={selectedPaymentMethod}
                   onSelect={setSelectedPaymentMethod}
                 />
 
-                {/* MercadoPago Payment */}
                 {selectedPaymentMethod === 'mercadopago' && (
                   <MercadoPagoPaymentForm total={total} onNext={onNext} />
                 )}
 
-                {/* Efectivo en Domicilio */}
                 {selectedPaymentMethod === 'efectivo_domicilio' && (
                   <EfectivoPaymentForm total={total} onNext={onNext} />
                 )}
@@ -329,7 +326,7 @@ export default function CheckoutForm({ step, total, onBack, onNext }: CheckoutFo
 }
 
 // ============================================================================
-// PAYMENT METHOD SELECTOR - SIMPLIFICADO
+// PAYMENT METHOD SELECTOR - SIMPLE & AMIGABLE
 // ============================================================================
 
 function PaymentMethodSelector({ 
@@ -344,20 +341,18 @@ function PaymentMethodSelector({
   const methods = useMemo(() => [
     {
       id: 'mercadopago' as PaymentMethodType,
-      name: 'MercadoPago',
-      description: 'Tarjeta de crédito/débito - Hasta 12 cuotas',
+      name: 'Tarjeta',
+      description: 'Hasta 12 cuotas sin interés',
       icon: CreditCard,
       color: 'from-blue-500 to-cyan-600',
-      popular: true,
       badge: 'Más elegido'
     },
     {
       id: 'efectivo_domicilio' as PaymentMethodType,
-      name: 'Efectivo en domicilio',
-      description: 'Pagás cuando te lo entregamos - 15% OFF',
+      name: 'Efectivo',
+      description: '15% OFF - Pagás al recibir',
       icon: Wallet,
       color: 'from-emerald-500 to-teal-600',
-      popular: false,
       badge: 'Mejor precio'
     }
   ], [])
@@ -371,17 +366,17 @@ function PaymentMethodSelector({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-6 md:p-8 shadow-2xl border border-blue-500/20 backdrop-blur-sm"
+      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-blue-500/20"
     >
-      <h3 className="text-xl font-black text-white mb-6 flex items-center gap-2">
-        <Shield className="w-6 h-6 text-blue-400" aria-hidden="true" />
-        Seleccioná tu método de pago
+      <h3 className="text-lg sm:text-xl font-black text-white mb-4 sm:mb-6 flex items-center gap-2">
+        <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 flex-shrink-0" aria-hidden="true" />
+        <span>¿Cómo querés pagar?</span>
       </h3>
 
       <div 
-        className="grid md:grid-cols-2 gap-4"
+        className="grid gap-3 sm:gap-4"
         role="radiogroup"
-        aria-label="Métodos de pago disponibles"
+        aria-label="Métodos de pago"
       >
         {methods.map((method) => {
           const Icon = method.icon
@@ -391,57 +386,56 @@ function PaymentMethodSelector({
             <motion.button
               key={method.id}
               onClick={() => handleSelect(method.id)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className={`relative p-6 rounded-xl border-2 transition-all text-left ${
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className={`relative p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl border-2 transition-all text-left touch-target ${
                 isSelected
                   ? 'border-blue-500 bg-blue-500/20 ring-2 ring-blue-500/30'
                   : 'border-zinc-800 bg-zinc-900/50 hover:border-blue-500/50'
               }`}
               role="radio"
               aria-checked={isSelected}
-              aria-label={`${method.name} - ${method.description}`}
             >
               {/* Badge */}
-              {method.badge && (
-                <div className={`absolute -top-2 -right-2 ${
-                  method.popular ? 'bg-gradient-to-r from-blue-500 to-cyan-500' : 'bg-gradient-to-r from-emerald-500 to-teal-500'
-                } text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
-                  {method.badge}
-                </div>
-              )}
-
-              {/* Icon */}
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${method.color} flex items-center justify-center mb-4`}>
-                <Icon className="w-7 h-7 text-white" aria-hidden="true" />
+              <div className={`absolute -top-2 -right-2 bg-gradient-to-r ${method.color} text-white text-[10px] sm:text-xs font-black px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-lg`}>
+                {method.badge}
               </div>
 
-              {/* Content */}
-              <h4 className="text-lg font-bold text-white mb-1">{method.name}</h4>
-              <p className="text-sm text-zinc-400">{method.description}</p>
+              <div className="flex items-center gap-3 sm:gap-4">
+                {/* Icon */}
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br ${method.color} flex items-center justify-center flex-shrink-0`}>
+                  <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" aria-hidden="true" />
+                </div>
 
-              {/* Selected Indicator */}
-              {isSelected && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute top-4 right-4 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center"
-                  aria-hidden="true"
-                >
-                  <Check className="w-4 h-4 text-white" />
-                </motion.div>
-              )}
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-base sm:text-lg font-bold text-white mb-0.5 sm:mb-1">{method.name}</h4>
+                  <p className="text-xs sm:text-sm text-zinc-400 leading-tight">{method.description}</p>
+                </div>
+
+                {/* Check */}
+                {isSelected && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-6 h-6 sm:w-7 sm:h-7 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0"
+                    aria-hidden="true"
+                  >
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  </motion.div>
+                )}
+              </div>
             </motion.button>
           )
         })}
       </div>
 
-      {/* Security Notice */}
-      <div className="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
-        <div className="flex items-center gap-3">
-          <Lock className="w-5 h-5 text-emerald-400 flex-shrink-0" aria-hidden="true" />
-          <div className="text-sm text-emerald-300">
-            <strong>Pago 100% seguro</strong> • Todos los métodos protegidos con encriptación SSL 256 bits
+      {/* Security */}
+      <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg sm:rounded-xl">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0" aria-hidden="true" />
+          <div className="text-xs sm:text-sm text-emerald-300 leading-tight">
+            <strong>Pago 100% seguro</strong> • SSL 256 bits
           </div>
         </div>
       </div>
@@ -450,7 +444,7 @@ function PaymentMethodSelector({
 }
 
 // ============================================================================
-// MERCADOPAGO PAYMENT FORM
+// MERCADOPAGO - SIMPLE & CONVERSION-FOCUSED
 // ============================================================================
 
 function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () => void }) {
@@ -479,7 +473,7 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
     setErrorMessage('')
 
     if (!acceptedTerms) {
-      setErrorMessage('Debés aceptar los términos y condiciones')
+      setErrorMessage('Aceptá los términos para continuar')
       return
     }
 
@@ -525,17 +519,19 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
       }
 
     } catch (err) {
-      console.error('[MercadoPago] Error:', err)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[MercadoPago] Error:', err)
+      }
       
-      let userMessage = 'Error al procesar el pago. Intentá de nuevo.'
+      let userMessage = 'Error al procesar. Intentá de nuevo.'
       
       if (err instanceof Error) {
         if (err.name === 'AbortError') {
-          userMessage = 'La solicitud tardó demasiado. Verificá tu conexión e intentá de nuevo.'
+          userMessage = 'Conexión lenta. Intentá de nuevo.'
         } else if (err.message.includes('HTTP 429')) {
-          userMessage = 'Demasiadas solicitudes. Esperá un momento e intentá de nuevo.'
+          userMessage = 'Esperá un momento e intentá de nuevo.'
         } else if (err.message.includes('HTTP 503')) {
-          userMessage = 'El servicio no está disponible temporalmente. Intentá en unos minutos.'
+          userMessage = 'Servicio no disponible. Intentá en unos minutos.'
         }
       }
       
@@ -548,54 +544,50 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-6 md:p-8 shadow-2xl border border-blue-500/20 backdrop-blur-sm"
+      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-blue-500/20"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Header */}
-        <div className="text-center pb-6 border-b border-blue-500/20">
-          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center">
-            <CreditCard className="w-10 h-10 text-white" aria-hidden="true" />
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        {/* Header - SIMPLE */}
+        <div className="text-center pb-4 sm:pb-6 border-b border-blue-500/20">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center">
+            <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 text-white" aria-hidden="true" />
           </div>
-          <h3 className="text-2xl font-black text-white mb-2">Pago con Mercado Pago</h3>
-          <p className="text-zinc-400">Pagá seguro con tarjeta o efectivo</p>
+          <h3 className="text-xl sm:text-2xl font-black text-white mb-1 sm:mb-2">Mercado Pago</h3>
+          <p className="text-sm sm:text-base text-zinc-400">Pagá seguro con tarjeta o efectivo</p>
         </div>
 
-        {/* Selector de Cuotas */}
-        <div className="space-y-3">
+        {/* Selector de Cuotas - MOBILE FRIENDLY */}
+        <div className="space-y-2 sm:space-y-3">
           <label 
             htmlFor="cuotas-selector"
-            className="text-sm font-bold text-white flex items-center gap-2"
+            className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5 sm:gap-2"
           >
-            <Percent className="w-4 h-4 text-blue-400" aria-hidden="true" />
-            Elegí tu plan de pago
+            <Percent className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" aria-hidden="true" />
+            Plan de pago
           </label>
           
           <button
             id="cuotas-selector"
             type="button"
             onClick={() => setShowCuotasDropdown(!showCuotasDropdown)}
-            className="w-full flex items-center justify-between p-4 bg-zinc-800/50 hover:bg-zinc-800 border border-blue-500/30 rounded-xl transition-all duration-300"
+            className="w-full flex items-center justify-between p-3 sm:p-4 bg-zinc-800/50 hover:bg-zinc-800 border border-blue-500/30 rounded-lg sm:rounded-xl transition-all touch-target"
             aria-expanded={showCuotasDropdown}
-            aria-label={selectedCuotas === null 
-              ? 'Pago de contado seleccionado' 
-              : `${selectedCuotas} cuotas seleccionadas`
-            }
           >
-            <div className="flex items-center gap-3 flex-1 min-w-0 text-left">
-              <CreditCard className="w-5 h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
+            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 text-left">
+              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
               <div className="flex-1 min-w-0">
                 {selectedCuotas === null ? (
                   <div>
-                    <span className="text-white font-bold block text-sm">Pago de contado</span>
-                    <span className="text-xs text-zinc-400">Sin recargo</span>
+                    <span className="text-white font-bold block text-xs sm:text-sm">Contado</span>
+                    <span className="text-[10px] sm:text-xs text-zinc-400">Sin recargo</span>
                   </div>
                 ) : (
                   <div>
-                    <span className="text-white font-bold block text-sm">
-                      {cuotaSeleccionada?.cuotas} cuotas de {cuotaSeleccionada?.formatted.precioCuota}
+                    <span className="text-white font-bold block text-xs sm:text-sm">
+                      {cuotaSeleccionada?.cuotas}x {cuotaSeleccionada?.formatted.precioCuota}
                     </span>
-                    <span className="text-xs text-zinc-400">
-                      Total: {cuotaSeleccionada?.formatted.precioTotal} (+{cuotaSeleccionada?.recargoPercentage})
+                    <span className="text-[10px] sm:text-xs text-zinc-400">
+                      {cuotaSeleccionada?.formatted.precioTotal}
                     </span>
                   </div>
                 )}
@@ -605,7 +597,7 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
               animate={{ rotate: showCuotasDropdown ? 180 : 0 }}
               transition={{ duration: 0.3 }}
             >
-              <ChevronDown className="w-5 h-5 text-blue-400" aria-hidden="true" />
+              <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" aria-hidden="true" />
             </motion.div>
           </button>
 
@@ -617,10 +609,8 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 className="overflow-hidden"
-                role="radiogroup"
-                aria-label="Opciones de cuotas"
               >
-                <div className="space-y-2 mt-3">
+                <div className="space-y-2 mt-2 sm:mt-3">
                   {/* Contado */}
                   <button
                     type="button"
@@ -629,30 +619,27 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
                       setShowCuotasDropdown(false)
                       trackPaymentMethod('contado', { amount: total })
                     }}
-                    className={`w-full p-3 rounded-xl border transition-all duration-300 text-left ${
+                    className={`w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl border transition-all text-left touch-target ${
                       selectedCuotas === null
                         ? 'bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30'
                         : 'bg-zinc-800/50 border-zinc-700 hover:border-emerald-500/30'
                     }`}
-                    role="radio"
-                    aria-checked={selectedCuotas === null}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <DollarSign className="w-4 h-4 text-emerald-400" aria-hidden="true" />
-                          <span className="font-bold text-white text-sm">Pago de Contado</span>
+                        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+                          <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 flex-shrink-0" aria-hidden="true" />
+                          <span className="font-bold text-white text-xs sm:text-sm">Contado</span>
                         </div>
-                        <div className="text-xl font-black text-emerald-400">
+                        <div className="text-lg sm:text-xl font-black text-emerald-400">
                           {formatARS(total)}
                         </div>
-                        <p className="text-xs text-zinc-400 mt-1">Sin recargo</p>
                       </div>
                       {selectedCuotas === null && (
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center"
+                          className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0"
                           aria-hidden="true"
                         >
                           <Check className="w-3 h-3 text-white" />
@@ -677,32 +664,30 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
                           monthly: cuota.precioCuota
                         })
                       }}
-                      className={`w-full p-3 rounded-xl border transition-all duration-300 text-left ${
+                      className={`w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl border transition-all text-left touch-target ${
                         selectedCuotas === cuota.cuotas
                           ? 'bg-blue-500/20 border-blue-500/50 ring-2 ring-blue-500/30'
                           : 'bg-zinc-800/50 border-zinc-700 hover:border-blue-500/30'
                       }`}
-                      role="radio"
-                      aria-checked={selectedCuotas === cuota.cuotas}
                     >
-                      <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center justify-between gap-2 sm:gap-3">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <div className="w-6 h-6 bg-blue-500/20 border border-blue-500/30 rounded-full flex items-center justify-center flex-shrink-0">
-                              <span className="text-xs font-bold text-blue-400">
+                          <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500/20 border border-blue-500/30 rounded-full flex items-center justify-center flex-shrink-0">
+                              <span className="text-[10px] sm:text-xs font-bold text-blue-400">
                                 {cuota.cuotas}
                               </span>
                             </div>
-                            <span className="text-lg font-black text-white">
+                            <span className="text-base sm:text-lg font-black text-white">
                               {cuota.formatted.precioCuota}
                             </span>
-                            <span className="text-xs text-zinc-400">/ mes</span>
+                            <span className="text-[10px] sm:text-xs text-zinc-400">/ mes</span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs">
-                            <span className="text-zinc-400">
+                          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs">
+                            <span className="text-zinc-400 truncate">
                               Total: {cuota.formatted.precioTotal}
                             </span>
-                            <span className="px-2 py-0.5 bg-orange-500/20 border border-orange-500/30 text-orange-400 font-bold rounded-full">
+                            <span className="px-1.5 sm:px-2 py-0.5 bg-orange-500/20 border border-orange-500/30 text-orange-400 font-bold rounded-full flex-shrink-0">
                               +{cuota.recargoPercentage}
                             </span>
                           </div>
@@ -722,23 +707,21 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
                   ))}
                 </div>
 
-                {/* Info tip */}
+                {/* Tip */}
                 {selectedCuotas !== null && cuotaSeleccionada && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-3 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg"
-                    role="status"
-                    aria-live="polite"
+                    className="mt-2 sm:mt-3 p-2.5 sm:p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg"
                   >
-                    <div className="flex items-start gap-2">
-                      <Percent className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                      <div className="text-xs text-zinc-400">
-                        <p className="font-semibold text-blue-400 mb-1">
-                          💡 Ahorrás con pago de contado
+                    <div className="flex items-start gap-1.5 sm:gap-2">
+                      <Percent className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <div className="text-[10px] sm:text-xs text-zinc-400 leading-tight">
+                        <p className="font-semibold text-blue-400 mb-0.5">
+                          💡 Ahorrá pagando de contado
                         </p>
                         <p>
-                          La diferencia es de {formatARS(cuotaSeleccionada.precioTotal - total)}
+                          Diferencia: {formatARS(cuotaSeleccionada.precioTotal - total)}
                         </p>
                       </div>
                     </div>
@@ -749,41 +732,40 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
           </AnimatePresence>
         </div>
 
-        {/* Features */}
-        <div className="space-y-3" role="list" aria-label="Beneficios del pago con MercadoPago">
-          <div className="flex items-center gap-3 text-sm text-zinc-300" role="listitem">
-            <CheckCircle2 className="w-5 h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
-            <span>Tarjeta de crédito y débito (Visa, Mastercard, Amex)</span>
+        {/* Features - SIMPLE */}
+        <div className="space-y-2 sm:space-y-3">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-zinc-300">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
+            <span>Tarjetas Visa, Mastercard, Amex</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-zinc-300" role="listitem">
-            <CheckCircle2 className="w-5 h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
-            <span>Pago en efectivo (Rapipago, Pago Fácil)</span>
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-zinc-300">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
+            <span>Rapipago, Pago Fácil</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-zinc-300" role="listitem">
-            <CheckCircle2 className="w-5 h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
-            <span>Compra protegida por Mercado Pago</span>
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-zinc-300">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
+            <span>Compra protegida</span>
           </div>
         </div>
 
         {/* Terms */}
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-2 sm:gap-3">
           <input
             type="checkbox"
             id="terms"
             checked={acceptedTerms}
             onChange={(e) => setAcceptedTerms(e.target.checked)}
-            className="mt-1 w-5 h-5 text-blue-600 border-zinc-700 bg-zinc-800 rounded focus:ring-blue-500 focus:ring-2"
+            className="mt-1 w-4 h-4 sm:w-5 sm:h-5 text-blue-600 border-zinc-700 bg-zinc-800 rounded focus:ring-blue-500 focus:ring-2 flex-shrink-0"
             disabled={isProcessing}
-            aria-required="true"
           />
-          <label htmlFor="terms" className="text-sm text-zinc-400">
+          <label htmlFor="terms" className="text-xs sm:text-sm text-zinc-400 leading-tight">
             Acepto los{' '}
             <Link href="/terminos" className="text-blue-400 hover:underline font-semibold">
-              términos y condiciones
-            </Link>{' '}
-            y la{' '}
+              términos
+            </Link>
+            {' '}y{' '}
             <Link href="/privacidad" className="text-blue-400 hover:underline font-semibold">
-              política de privacidad
+              privacidad
             </Link>
           </label>
         </div>
@@ -795,59 +777,54 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl text-sm flex items-start gap-3"
+              className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg sm:rounded-xl text-xs sm:text-sm flex items-start gap-2 sm:gap-3"
               role="alert"
-              aria-live="assertive"
             >
-              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <p>{errorMessage}</p>
+              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="leading-tight">{errorMessage}</p>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Payment Info */}
-        <div className="p-4 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-xl">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-semibold text-zinc-300">Total a pagar</span>
-            <span className="text-2xl font-black text-white">{formatARS(finalTotal)}</span>
+        {/* Total - DESTACADO */}
+        <div className="p-3 sm:p-4 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-lg sm:rounded-xl">
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-xs sm:text-sm font-semibold text-zinc-300">Total</span>
+            <span className="text-xl sm:text-2xl font-black text-white">{formatARS(finalTotal)}</span>
           </div>
           {cuotaSeleccionada && (
-            <p className="text-xs text-zinc-400">
-              {cuotaSeleccionada.cuotas} cuotas de {cuotaSeleccionada.formatted.precioCuota}
+            <p className="text-[10px] sm:text-xs text-zinc-400">
+              {cuotaSeleccionada.cuotas}x {cuotaSeleccionada.formatted.precioCuota}
             </p>
           )}
-          <p className="text-xs text-zinc-400 mt-2">
-            El pago se procesará de forma segura a través de Mercado Pago
-          </p>
         </div>
 
-        {/* Submit */}
+        {/* Submit - GRANDE Y CLARO */}
         <motion.button
           type="submit"
           disabled={isProcessing}
           whileHover={{ scale: isProcessing ? 1 : 1.01 }}
           whileTap={{ scale: isProcessing ? 1 : 0.99 }}
-          className="w-full py-5 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white rounded-xl font-bold text-lg shadow-2xl shadow-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
-          aria-busy={isProcessing}
+          className="w-full py-4 sm:py-5 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white rounded-xl font-bold text-base sm:text-lg shadow-2xl shadow-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3 touch-target"
         >
           {isProcessing ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
-              <span>Redirigiendo a Mercado Pago...</span>
+              <span>Procesando...</span>
             </>
           ) : (
             <>
               <CreditCard className="w-5 h-5" aria-hidden="true" />
-              <span>Pagar con Mercado Pago</span>
+              <span>Pagar</span>
             </>
           )}
         </motion.button>
 
-        {/* Security */}
+        {/* Security - DISCRETO */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 text-sm text-zinc-500">
-            <Lock className="w-4 h-4" aria-hidden="true" />
-            <span>Conexión segura SSL 256 bits</span>
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-zinc-500">
+            <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
+            <span>Conexión segura SSL</span>
           </div>
         </div>
       </form>
@@ -856,7 +833,7 @@ function MercadoPagoPaymentForm({ total, onNext }: { total: number; onNext: () =
 }
 
 // ============================================================================
-// EFECTIVO EN DOMICILIO PAYMENT
+// EFECTIVO - SUPER SIMPLE
 // ============================================================================
 
 function EfectivoPaymentForm({ total, onNext }: { total: number; onNext: () => void }) {
@@ -874,7 +851,7 @@ function EfectivoPaymentForm({ total, onNext }: { total: number; onNext: () => v
     e.preventDefault()
     
     if (!acceptedTerms) {
-      setErrorMessage('Debés aceptar los términos y condiciones')
+      setErrorMessage('Aceptá los términos para continuar')
       return
     }
 
@@ -906,8 +883,10 @@ function EfectivoPaymentForm({ total, onNext }: { total: number; onNext: () => v
       onNext()
 
     } catch (err) {
-      console.error('[Efectivo] Error:', err)
-      setErrorMessage('Error al procesar. Intentá de nuevo.')
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Efectivo] Error:', err)
+      }
+      setErrorMessage('Error. Intentá de nuevo.')
       setIsProcessing(false)
     }
   }
@@ -916,85 +895,80 @@ function EfectivoPaymentForm({ total, onNext }: { total: number; onNext: () => v
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-6 md:p-8 shadow-2xl border border-emerald-500/20 backdrop-blur-sm"
+      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-emerald-500/20"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="text-center pb-6 border-b border-emerald-500/20">
-          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
-            <Wallet className="w-10 h-10 text-white" aria-hidden="true" />
+        <div className="text-center pb-4 sm:pb-6 border-b border-emerald-500/20">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
+            <Wallet className="w-8 h-8 sm:w-10 sm:h-10 text-white" aria-hidden="true" />
           </div>
-          <h3 className="text-2xl font-black text-white mb-2">Pago en Efectivo en Domicilio</h3>
-          <p className="text-zinc-400">15% de descuento - Mejor precio garantizado</p>
+          <h3 className="text-xl sm:text-2xl font-black text-white mb-1 sm:mb-2">Efectivo</h3>
+          <p className="text-sm sm:text-base text-zinc-400">Pagás al recibir - 15% OFF</p>
         </div>
 
-        {/* Discount */}
-        <div className="p-6 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 rounded-xl">
+        {/* Discount - DESTACADO */}
+        <div className="p-4 sm:p-6 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 rounded-lg sm:rounded-xl">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-semibold text-zinc-300">Total original:</span>
-            <span className="text-lg font-bold text-zinc-500 line-through">{formatARS(total)}</span>
+            <span className="text-xs sm:text-sm font-semibold text-zinc-300">Total:</span>
+            <span className="text-base sm:text-lg font-bold text-zinc-500 line-through">{formatARS(total)}</span>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-emerald-400">Total a pagar en efectivo:</span>
-            <span className="text-3xl font-black text-emerald-400">{formatARS(finalTotal)}</span>
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <span className="text-sm sm:text-base font-semibold text-emerald-400">Pagás:</span>
+            <span className="text-2xl sm:text-3xl font-black text-emerald-400">{formatARS(finalTotal)}</span>
           </div>
-          <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+          <div className="p-2.5 sm:p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-emerald-400" aria-hidden="true" />
-              <p className="text-sm text-emerald-300 font-bold">
+              <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0" aria-hidden="true" />
+              <p className="text-xs sm:text-sm text-emerald-300 font-bold">
                 ¡Ahorrás {formatARS(discount)}! 🎉
               </p>
             </div>
           </div>
         </div>
 
-        {/* Instructions */}
-        <div className="p-5 bg-blue-500/10 border border-blue-500/30 rounded-xl">
-          <p className="text-sm text-blue-300 font-semibold mb-3 flex items-center gap-2">
-            <Package className="w-4 h-4" aria-hidden="true" />
+        {/* Cómo funciona - SIMPLE */}
+        <div className="p-3 sm:p-5 bg-blue-500/10 border border-blue-500/30 rounded-lg sm:rounded-xl">
+          <p className="text-xs sm:text-sm text-blue-300 font-semibold mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2">
+            <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
             ¿Cómo funciona?
           </p>
-          <ol className="text-sm text-zinc-300 space-y-2 list-decimal list-inside">
-            <li>Confirmás tu pedido ahora</li>
-            <li>Te contactamos para coordinar la entrega</li>
-            <li>Recibís tu colchón en tu domicilio</li>
-            <li>Pagás en efectivo al recibirlo</li>
+          <ol className="text-xs sm:text-sm text-zinc-300 space-y-1.5 sm:space-y-2 list-decimal list-inside leading-tight">
+            <li>Confirmás ahora</li>
+            <li>Te contactamos para coordinar</li>
+            <li>Recibís en tu domicilio</li>
+            <li>Pagás en efectivo</li>
           </ol>
         </div>
 
-        {/* Benefits */}
-        <div className="space-y-3" role="list" aria-label="Beneficios del pago en efectivo">
-          <div className="flex items-center gap-3 text-sm text-emerald-300" role="listitem">
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-            <span className="font-semibold">Mejor precio garantizado - 15% OFF</span>
+        {/* Benefits - COMPACTO */}
+        <div className="space-y-2 sm:space-y-3">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-emerald-300">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" aria-hidden="true" />
+            <span className="font-semibold">15% OFF garantizado</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-zinc-300" role="listitem">
-            <CheckCircle2 className="w-5 h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
-            <span>Pagás solo cuando recibís el producto</span>
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-zinc-300">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
+            <span>Pagás al recibir</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-zinc-300" role="listitem">
-            <CheckCircle2 className="w-5 h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
-            <span>Entrega en 3 a 6 días hábiles</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm text-zinc-300" role="listitem">
-            <CheckCircle2 className="w-5 h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
-            <span>100 noches de prueba gratis</span>
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-zinc-300">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" aria-hidden="true" />
+            <span>100 noches de prueba</span>
           </div>
         </div>
 
         {/* Terms */}
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-2 sm:gap-3">
           <input
             type="checkbox"
             id="terms-efec"
             checked={acceptedTerms}
             onChange={(e) => setAcceptedTerms(e.target.checked)}
-            className="mt-1 w-5 h-5 text-emerald-600 border-zinc-700 bg-zinc-800 rounded focus:ring-emerald-500 focus:ring-2"
+            className="mt-1 w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 border-zinc-700 bg-zinc-800 rounded focus:ring-emerald-500 focus:ring-2 flex-shrink-0"
             disabled={isProcessing}
-            aria-required="true"
           />
-          <label htmlFor="terms-efec" className="text-sm text-zinc-400">
-            Acepto los términos de pago en efectivo y confirmo que estaré disponible para recibir el pedido
+          <label htmlFor="terms-efec" className="text-xs sm:text-sm text-zinc-400 leading-tight">
+            Acepto pagar en efectivo al recibir
           </label>
         </div>
 
@@ -1005,12 +979,11 @@ function EfectivoPaymentForm({ total, onNext }: { total: number; onNext: () => v
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl text-sm flex items-start gap-3"
+              className="p-3 sm:p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg sm:rounded-xl text-xs sm:text-sm flex items-start gap-2 sm:gap-3"
               role="alert"
-              aria-live="assertive"
             >
-              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <p>{errorMessage}</p>
+              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="leading-tight">{errorMessage}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -1021,8 +994,7 @@ function EfectivoPaymentForm({ total, onNext }: { total: number; onNext: () => v
           disabled={isProcessing}
           whileHover={{ scale: isProcessing ? 1 : 1.01 }}
           whileTap={{ scale: isProcessing ? 1 : 0.99 }}
-          className="w-full py-5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl font-bold text-lg shadow-2xl shadow-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
-          aria-busy={isProcessing}
+          className="w-full py-4 sm:py-5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl font-bold text-base sm:text-lg shadow-2xl shadow-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3 touch-target"
         >
           {isProcessing ? (
             <>
@@ -1032,21 +1004,17 @@ function EfectivoPaymentForm({ total, onNext }: { total: number; onNext: () => v
           ) : (
             <>
               <Wallet className="w-5 h-5" aria-hidden="true" />
-              <span>Confirmar pedido</span>
+              <span>Confirmar</span>
             </>
           )}
         </motion.button>
-
-        <p className="text-center text-xs text-zinc-500">
-          Te contactaremos por WhatsApp o email para coordinar la entrega
-        </p>
       </form>
     </motion.div>
   )
 }
 
 // ============================================================================
-// SHIPPING FORM - CON VALIDACIÓN EN TIEMPO REAL
+// SHIPPING FORM - SUPER SIMPLE
 // ============================================================================
 
 function ShippingForm({ onNext }: { onNext: () => void }) {
@@ -1055,14 +1023,14 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
   const validationRules = useMemo(() => ({
     firstName: (value: string) => {
       if (!value?.trim()) return 'Nombre requerido'
-      if (value.length < 2) return 'Nombre muy corto (mínimo 2 caracteres)'
-      if (!/^[a-záéíóúñü\s]+$/i.test(value)) return 'Solo se permiten letras'
+      if (value.length < 2) return 'Muy corto'
+      if (!/^[a-záéíóúñü\s]+$/i.test(value)) return 'Solo letras'
       return null
     },
     lastName: (value: string) => {
       if (!value?.trim()) return 'Apellido requerido'
-      if (value.length < 2) return 'Apellido muy corto (mínimo 2 caracteres)'
-      if (!/^[a-záéíóúñü\s]+$/i.test(value)) return 'Solo se permiten letras'
+      if (value.length < 2) return 'Muy corto'
+      if (!/^[a-záéíóúñü\s]+$/i.test(value)) return 'Solo letras'
       return null
     },
     email: (value: string) => {
@@ -1073,13 +1041,12 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
     phone: (value: string) => {
       if (!value?.trim()) return 'Teléfono requerido'
       const cleaned = value.replace(/[\s\-\(\)]/g, '')
-      if (cleaned.length < 10) return 'Teléfono inválido (mínimo 10 dígitos)'
-      if (!/^\d+$/.test(cleaned)) return 'Solo se permiten números'
+      if (cleaned.length < 10) return 'Muy corto'
       return null
     },
     address: (value: string) => {
       if (!value?.trim()) return 'Calle requerida'
-      if (value.length < 3) return 'Dirección muy corta'
+      if (value.length < 3) return 'Muy corta'
       return null
     },
     addressNumber: (value: string) => {
@@ -1091,15 +1058,15 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
       return null
     },
     postalCode: (value: string) => {
-      if (!value?.trim()) return 'Código postal requerido'
-      if (value.length < 4) return 'Código postal inválido'
+      if (!value?.trim()) return 'CP requerido'
+      if (value.length < 4) return 'CP inválido'
       return null
     },
     province: (value: string) => {
       if (!value?.trim()) return 'Provincia requerida'
       return null
     },
-    notes: () => null // Optional field
+    notes: () => null
   }), [])
 
   const {
@@ -1135,21 +1102,21 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       onSubmit={handleSubmit}
-      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-6 md:p-8 shadow-2xl border border-blue-500/20 backdrop-blur-sm"
+      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-blue-500/20"
       noValidate
     >
-      {/* Contact Information */}
-      <div className="mb-8">
-        <h3 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 flex items-center justify-center text-sm font-bold">
+      {/* Contact */}
+      <div className="mb-6 sm:mb-8">
+        <h3 className="text-lg sm:text-xl font-black text-white mb-3 sm:mb-4 flex items-center gap-2">
+          <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 flex items-center justify-center text-sm font-bold flex-shrink-0">
             1
           </span>
-          Datos de contacto
+          <span>Contacto</span>
         </h3>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
-            <label htmlFor="firstName" className="block text-sm font-semibold text-white mb-2">
+            <label htmlFor="firstName" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
               Nombre *
             </label>
             <input
@@ -1159,24 +1126,19 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
               value={formData.firstName}
               onChange={(e) => handleChange('firstName', e.target.value, 'text')}
               onBlur={() => handleBlur('firstName')}
-              className={`w-full px-4 py-3 bg-zinc-800 border-2 rounded-xl focus:outline-none transition-colors text-white ${
+              className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 rounded-lg sm:rounded-xl focus:outline-none transition-colors text-white text-sm sm:text-base ${
                 touched.firstName && errors.firstName ? 'border-red-500' : 'border-zinc-700 focus:border-blue-500'
               }`}
               placeholder="Juan"
               autoComplete="given-name"
-              aria-required="true"
-              aria-invalid={!!(touched.firstName && errors.firstName)}
-              aria-describedby={touched.firstName && errors.firstName ? "firstName-error" : undefined}
             />
             {touched.firstName && errors.firstName && (
-              <p id="firstName-error" className="text-xs text-red-400 mt-1" role="alert">
-                {errors.firstName}
-              </p>
+              <p className="text-xs text-red-400 mt-1">{errors.firstName}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="lastName" className="block text-sm font-semibold text-white mb-2">
+            <label htmlFor="lastName" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
               Apellido *
             </label>
             <input
@@ -1186,24 +1148,19 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
               value={formData.lastName}
               onChange={(e) => handleChange('lastName', e.target.value, 'text')}
               onBlur={() => handleBlur('lastName')}
-              className={`w-full px-4 py-3 bg-zinc-800 border-2 rounded-xl focus:outline-none transition-colors text-white ${
+              className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 rounded-lg sm:rounded-xl focus:outline-none transition-colors text-white text-sm sm:text-base ${
                 touched.lastName && errors.lastName ? 'border-red-500' : 'border-zinc-700 focus:border-blue-500'
               }`}
               placeholder="Pérez"
               autoComplete="family-name"
-              aria-required="true"
-              aria-invalid={!!(touched.lastName && errors.lastName)}
-              aria-describedby={touched.lastName && errors.lastName ? "lastName-error" : undefined}
             />
             {touched.lastName && errors.lastName && (
-              <p id="lastName-error" className="text-xs text-red-400 mt-1" role="alert">
-                {errors.lastName}
-              </p>
+              <p className="text-xs text-red-400 mt-1">{errors.lastName}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-semibold text-white mb-2">
+            <label htmlFor="email" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
               Email *
             </label>
             <input
@@ -1213,25 +1170,20 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value, 'email')}
               onBlur={() => handleBlur('email')}
-              className={`w-full px-4 py-3 bg-zinc-800 border-2 rounded-xl focus:outline-none transition-colors text-white ${
+              className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 rounded-lg sm:rounded-xl focus:outline-none transition-colors text-white text-sm sm:text-base ${
                 touched.email && errors.email ? 'border-red-500' : 'border-zinc-700 focus:border-blue-500'
               }`}
               placeholder="juan@ejemplo.com"
               autoComplete="email"
-              aria-required="true"
-              aria-invalid={!!(touched.email && errors.email)}
-              aria-describedby={touched.email && errors.email ? "email-error" : undefined}
             />
             {touched.email && errors.email && (
-              <p id="email-error" className="text-xs text-red-400 mt-1" role="alert">
-                {errors.email}
-              </p>
+              <p className="text-xs text-red-400 mt-1">{errors.email}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2">
-              Teléfono (WhatsApp) *
+            <label htmlFor="phone" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
+              WhatsApp *
             </label>
             <input
               id="phone"
@@ -1240,37 +1192,32 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
               value={formData.phone}
               onChange={(e) => handleChange('phone', e.target.value, 'phone')}
               onBlur={() => handleBlur('phone')}
-              className={`w-full px-4 py-3 bg-zinc-800 border-2 rounded-xl focus:outline-none transition-colors text-white ${
+              className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 rounded-lg sm:rounded-xl focus:outline-none transition-colors text-white text-sm sm:text-base ${
                 touched.phone && errors.phone ? 'border-red-500' : 'border-zinc-700 focus:border-blue-500'
               }`}
               placeholder="353 123 4567"
               autoComplete="tel"
-              aria-required="true"
-              aria-invalid={!!(touched.phone && errors.phone)}
-              aria-describedby={touched.phone && errors.phone ? "phone-error" : undefined}
             />
             {touched.phone && errors.phone && (
-              <p id="phone-error" className="text-xs text-red-400 mt-1" role="alert">
-                {errors.phone}
-              </p>
+              <p className="text-xs text-red-400 mt-1">{errors.phone}</p>
             )}
           </div>
         </div>
       </div>
 
-      {/* Shipping Address */}
-      <div className="mb-8">
-        <h3 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 flex items-center justify-center text-sm font-bold">
+      {/* Address */}
+      <div className="mb-6 sm:mb-8">
+        <h3 className="text-lg sm:text-xl font-black text-white mb-3 sm:mb-4 flex items-center gap-2">
+          <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 flex items-center justify-center text-sm font-bold flex-shrink-0">
             2
           </span>
-          Dirección de envío
+          <span>Dirección</span>
         </h3>
 
-        <div className="space-y-4">
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="md:col-span-2">
-              <label htmlFor="address" className="block text-sm font-semibold text-white mb-2">
+        <div className="space-y-3 sm:space-y-4">
+          <div className="grid grid-cols-3 gap-3 sm:gap-4">
+            <div className="col-span-2">
+              <label htmlFor="address" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
                 Calle *
               </label>
               <input
@@ -1280,25 +1227,20 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
                 value={formData.address}
                 onChange={(e) => handleChange('address', e.target.value, 'text')}
                 onBlur={() => handleBlur('address')}
-                className={`w-full px-4 py-3 bg-zinc-800 border-2 rounded-xl focus:outline-none transition-colors text-white ${
+                className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 rounded-lg sm:rounded-xl focus:outline-none transition-colors text-white text-sm sm:text-base ${
                   touched.address && errors.address ? 'border-red-500' : 'border-zinc-700 focus:border-blue-500'
                 }`}
                 placeholder="Av. Libertador"
                 autoComplete="street-address"
-                aria-required="true"
-                aria-invalid={!!(touched.address && errors.address)}
-                aria-describedby={touched.address && errors.address ? "address-error" : undefined}
               />
               {touched.address && errors.address && (
-                <p id="address-error" className="text-xs text-red-400 mt-1" role="alert">
-                  {errors.address}
-                </p>
+                <p className="text-xs text-red-400 mt-1">{errors.address}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="addressNumber" className="block text-sm font-semibold text-white mb-2">
-                Número *
+              <label htmlFor="addressNumber" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
+                Nro *
               </label>
               <input
                 id="addressNumber"
@@ -1307,26 +1249,21 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
                 value={formData.addressNumber}
                 onChange={(e) => handleChange('addressNumber', e.target.value, 'text')}
                 onBlur={() => handleBlur('addressNumber')}
-                className={`w-full px-4 py-3 bg-zinc-800 border-2 rounded-xl focus:outline-none transition-colors text-white ${
+                className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 rounded-lg sm:rounded-xl focus:outline-none transition-colors text-white text-sm sm:text-base ${
                   touched.addressNumber && errors.addressNumber ? 'border-red-500' : 'border-zinc-700 focus:border-blue-500'
                 }`}
                 placeholder="1234"
-                aria-required="true"
-                aria-invalid={!!(touched.addressNumber && errors.addressNumber)}
-                aria-describedby={touched.addressNumber && errors.addressNumber ? "addressNumber-error" : undefined}
               />
               {touched.addressNumber && errors.addressNumber && (
-                <p id="addressNumber-error" className="text-xs text-red-400 mt-1" role="alert">
-                  {errors.addressNumber}
-                </p>
+                <p className="text-xs text-red-400 mt-1">{errors.addressNumber}</p>
               )}
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-3 sm:gap-4">
             <div>
-              <label htmlFor="postalCode" className="block text-sm font-semibold text-white mb-2">
-                Código Postal *
+              <label htmlFor="postalCode" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
+                CP *
               </label>
               <input
                 id="postalCode"
@@ -1335,24 +1272,19 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
                 value={formData.postalCode}
                 onChange={(e) => handleChange('postalCode', e.target.value, 'number')}
                 onBlur={() => handleBlur('postalCode')}
-                className={`w-full px-4 py-3 bg-zinc-800 border-2 rounded-xl focus:outline-none transition-colors text-white ${
+                className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 rounded-lg sm:rounded-xl focus:outline-none transition-colors text-white text-sm sm:text-base ${
                   touched.postalCode && errors.postalCode ? 'border-red-500' : 'border-zinc-700 focus:border-blue-500'
                 }`}
                 placeholder="5900"
                 autoComplete="postal-code"
-                aria-required="true"
-                aria-invalid={!!(touched.postalCode && errors.postalCode)}
-                aria-describedby={touched.postalCode && errors.postalCode ? "postalCode-error" : undefined}
               />
               {touched.postalCode && errors.postalCode && (
-                <p id="postalCode-error" className="text-xs text-red-400 mt-1" role="alert">
-                  {errors.postalCode}
-                </p>
+                <p className="text-xs text-red-400 mt-1">{errors.postalCode}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="city" className="block text-sm font-semibold text-white mb-2">
+              <label htmlFor="city" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
                 Ciudad *
               </label>
               <input
@@ -1362,24 +1294,19 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
                 value={formData.city}
                 onChange={(e) => handleChange('city', e.target.value, 'text')}
                 onBlur={() => handleBlur('city')}
-                className={`w-full px-4 py-3 bg-zinc-800 border-2 rounded-xl focus:outline-none transition-colors text-white ${
+                className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 rounded-lg sm:rounded-xl focus:outline-none transition-colors text-white text-sm sm:text-base ${
                   touched.city && errors.city ? 'border-red-500' : 'border-zinc-700 focus:border-blue-500'
                 }`}
                 placeholder="Villa María"
                 autoComplete="address-level2"
-                aria-required="true"
-                aria-invalid={!!(touched.city && errors.city)}
-                aria-describedby={touched.city && errors.city ? "city-error" : undefined}
               />
               {touched.city && errors.city && (
-                <p id="city-error" className="text-xs text-red-400 mt-1" role="alert">
-                  {errors.city}
-                </p>
+                <p className="text-xs text-red-400 mt-1">{errors.city}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="province" className="block text-sm font-semibold text-white mb-2">
+              <label htmlFor="province" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
                 Provincia *
               </label>
               <select
@@ -1388,9 +1315,8 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
                 value={formData.province}
                 onChange={(e) => handleChange('province', e.target.value)}
                 onBlur={() => handleBlur('province')}
-                className="w-full px-4 py-3 bg-zinc-800 border-2 border-zinc-700 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-white"
+                className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 border-zinc-700 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-white text-sm sm:text-base"
                 autoComplete="address-level1"
-                aria-required="true"
               >
                 <option value="Córdoba">Córdoba</option>
                 <option value="Buenos Aires">Buenos Aires</option>
@@ -1403,17 +1329,17 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
           </div>
 
           <div>
-            <label htmlFor="notes" className="block text-sm font-semibold text-white mb-2">
-              Notas adicionales (opcional)
+            <label htmlFor="notes" className="block text-xs sm:text-sm font-semibold text-white mb-1.5 sm:mb-2">
+              Notas (opcional)
             </label>
             <textarea
               id="notes"
               name="notes"
               value={formData.notes}
               onChange={(e) => handleChange('notes', e.target.value, 'text')}
-              rows={3}
-              className="w-full px-4 py-3 bg-zinc-800 border-2 border-zinc-700 rounded-xl focus:outline-none focus:border-blue-500 transition-colors resize-none text-white placeholder-zinc-500"
-              placeholder="Piso, departamento, referencias..."
+              rows={2}
+              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-zinc-800 border-2 border-zinc-700 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 transition-colors resize-none text-white placeholder-zinc-500 text-sm sm:text-base"
+              placeholder="Piso, depto..."
               maxLength={500}
             />
           </div>
@@ -1425,23 +1351,16 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
         type="submit"
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="w-full py-5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-bold text-lg shadow-2xl shadow-blue-500/30 transition-all"
+        className="w-full py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-bold text-base sm:text-lg shadow-2xl shadow-blue-500/30 transition-all touch-target"
       >
-        Continuar al pago
+        Continuar
       </motion.button>
-
-      <p className="text-xs text-zinc-500 text-center mt-4">
-        Al continuar, aceptás nuestros{' '}
-        <Link href="/terminos" className="underline hover:text-zinc-300">
-          Términos y Condiciones
-        </Link>
-      </p>
     </motion.form>
   )
 }
 
 // ============================================================================
-// CONFIRMATION VIEW
+// CONFIRMATION - SIMPLE & CELEBRATORIO
 // ============================================================================
 
 function ConfirmationView() {
@@ -1449,18 +1368,16 @@ function ConfirmationView() {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-12 shadow-2xl border border-emerald-500/30 text-center backdrop-blur-sm"
-      role="status"
-      aria-live="polite"
+      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl p-8 sm:p-10 md:p-12 shadow-2xl border border-emerald-500/30 text-center"
     >
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.2, type: 'spring' }}
-        className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center"
+        className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center"
         aria-hidden="true"
       >
-        <CheckCircle2 className="w-12 h-12 text-white" />
+        <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
       </motion.div>
 
       <motion.div
@@ -1468,29 +1385,29 @@ function ConfirmationView() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <h2 className="text-3xl font-black text-white mb-4">¡Pedido confirmado!</h2>
+        <h2 className="text-2xl sm:text-3xl font-black text-white mb-3 sm:mb-4">¡Listo! 🎉</h2>
 
-        <p className="text-lg text-zinc-300 mb-2">
-          Tu pedido fue procesado correctamente.
+        <p className="text-base sm:text-lg text-zinc-300 mb-2">
+          Tu pedido fue confirmado.
         </p>
-        <p className="text-base text-zinc-400 mb-8">
-          Vas a recibir un email de confirmación con todos los detalles.
+        <p className="text-sm sm:text-base text-zinc-400 mb-6 sm:mb-8">
+          Te enviamos un email con los detalles.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
           <Link href="/cuenta/pedidos">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-bold shadow-2xl shadow-blue-500/30 transition-all"
+              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-bold shadow-2xl shadow-blue-500/30 transition-all text-sm sm:text-base"
             >
-              Ver mi pedido
+              Ver pedido
             </motion.button>
           </Link>
 
           <Link href="/">
-            <button className="px-8 py-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-bold transition-colors">
-              Volver al inicio
+            <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-bold transition-colors text-sm sm:text-base">
+              Ir al inicio
             </button>
           </Link>
         </div>
@@ -1500,7 +1417,7 @@ function ConfirmationView() {
 }
 
 // ============================================================================
-// ORDER SUMMARY - CON PERFORMANCE
+// ORDER SUMMARY - COMPACTO
 // ============================================================================
 
 function OrderSummary({ total }: { total: number }) {
@@ -1513,19 +1430,15 @@ function OrderSummary({ total }: { total: number }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="sticky top-24 bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-6 shadow-2xl border border-blue-500/20 backdrop-blur-sm"
+      className="sticky top-20 sm:top-24 bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl border border-blue-500/20"
     >
-      <h3 className="text-xl font-black text-white mb-6">Resumen del pedido</h3>
+      <h3 className="text-lg sm:text-xl font-black text-white mb-4 sm:mb-6">Resumen</h3>
 
-      {/* Items */}
-      <div 
-        className="space-y-4 mb-6 pb-6 border-b border-blue-500/20 max-h-64 overflow-y-auto"
-        role="list"
-        aria-label="Productos en el carrito"
-      >
+      {/* Items - COMPACTO */}
+      <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-blue-500/20 max-h-48 sm:max-h-64 overflow-y-auto">
         {items.map((item) => (
-          <div key={item.id} className="flex gap-3" role="listitem">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border border-blue-500/20">
+          <div key={item.id} className="flex gap-2 sm:gap-3">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border border-blue-500/20">
               {item.image ? (
                 <img 
                   src={item.image} 
@@ -1534,16 +1447,16 @@ function OrderSummary({ total }: { total: number }) {
                   loading="lazy"
                 />
               ) : (
-                <span className="text-2xl" aria-hidden="true">🛏️</span>
+                <span className="text-xl sm:text-2xl" aria-hidden="true">🛏️</span>
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="font-semibold text-sm text-white truncate">{item.name}</h4>
-              <p className="text-xs text-zinc-400">
-                Cantidad: {item.quantity}
+              <h4 className="font-semibold text-xs sm:text-sm text-white truncate">{item.name}</h4>
+              <p className="text-[10px] sm:text-xs text-zinc-400">
+                x{item.quantity}
                 {item.size && ` • ${item.size}`}
               </p>
-              <p className="text-sm font-bold text-white mt-1">
+              <p className="text-xs sm:text-sm font-bold text-white mt-0.5 sm:mt-1">
                 {formatARS(item.price * item.quantity)}
               </p>
             </div>
@@ -1551,21 +1464,21 @@ function OrderSummary({ total }: { total: number }) {
         ))}
       </div>
 
-      {/* Price Breakdown */}
-      <div className="space-y-3 mb-6 pb-6 border-b border-blue-500/20">
-        <div className="flex justify-between text-zinc-400 text-sm">
+      {/* Breakdown */}
+      <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-blue-500/20">
+        <div className="flex justify-between text-zinc-400 text-xs sm:text-sm">
           <span>Subtotal</span>
           <span className="font-semibold text-white">{formatARS(getSubtotal())}</span>
         </div>
 
         {getDiscount() > 0 && (
-          <div className="flex justify-between text-emerald-400 text-sm">
+          <div className="flex justify-between text-emerald-400 text-xs sm:text-sm">
             <span>Descuento</span>
             <span className="font-semibold">-{formatARS(getDiscount())}</span>
           </div>
         )}
 
-        <div className="flex justify-between text-zinc-400 text-sm">
+        <div className="flex justify-between text-zinc-400 text-xs sm:text-sm">
           <span>Envío</span>
           <span className="font-semibold">
             {getShipping() === 0 ? (
@@ -1577,10 +1490,10 @@ function OrderSummary({ total }: { total: number }) {
         </div>
       </div>
 
-      {/* Total */}
-      <div className="flex justify-between items-center mb-6">
-        <span className="text-lg font-bold text-white">Total</span>
-        <span className="text-2xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+      {/* Total - DESTACADO */}
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
+        <span className="text-base sm:text-lg font-bold text-white">Total</span>
+        <span className="text-xl sm:text-2xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
           {formatARS(total)}
         </span>
       </div>

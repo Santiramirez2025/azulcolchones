@@ -1,4 +1,4 @@
-// components/cart/CartComponents.tsx - ✅ ULTRA-OPTIMIZADO 2025
+// components/cart/CartComponents.tsx - ✅ ULTRA-OPTIMIZADO MOBILE-FIRST 2025
 'use client'
 
 import { useState, useEffect, useCallback, useMemo, memo } from 'react'
@@ -19,24 +19,24 @@ type ProductWithVariants = Product & {
 }
 
 // ============================================================================
-// CONFIGURACIÓN CENTRALIZADA
+// CONFIGURACIÓN CENTRALIZADA - VILLA MARÍA
 // ============================================================================
 const STORE_CONFIG = {
   name: 'Azul Colchones',
   address: {
-    street: 'Av. San Martín 1234',
+    street: 'Balerdi 855',
     city: 'Villa María',
     province: 'Córdoba',
     postalCode: '5900',
     country: 'AR'
   },
   contact: {
-    email: 'ventas@azulcolchones.com.ar',
-    phone: '+54 9 353 412-3456'
+    email: 'ventas@azulcolchones.com',
+    phone: '+54 9 353 4017332'
   },
   rating: {
-    value: 4.8,
-    count: 247
+    value: 4.9,
+    count: 1234
   },
   shipping: {
     freeThreshold: 50000,
@@ -81,7 +81,6 @@ function useAnalytics() {
       
       const gtag = (window as any).gtag
       const fbq = (window as any).fbq
-      const Sentry = (window as any).Sentry
       
       // Google Analytics 4
       if (gtag) {
@@ -101,7 +100,9 @@ function useAnalytics() {
         (window as any).DD_RUM.addAction(eventName, params)
       }
     } catch (error) {
-      console.error('[Analytics] Error:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Analytics] Error:', error)
+      }
       
       // Report to Sentry if available
       if (typeof window !== 'undefined' && (window as any).Sentry) {
@@ -164,7 +165,7 @@ function useSanitizedInput(initialValue: string = '') {
 }
 
 // ============================================================================
-// SHIPPING PROGRESS - OPTIMIZADO
+// SHIPPING PROGRESS - MOBILE OPTIMIZED
 // ============================================================================
 
 interface ShippingProgressProps {
@@ -184,28 +185,28 @@ export const ShippingProgress = memo(function ShippingProgress({
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-blue-500/10 border border-blue-500/20 rounded-2xl p-4 sm:p-5 mb-6"
+      className="bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-blue-500/10 border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 mb-4 sm:mb-6"
       role="region"
       aria-label="Progreso hacia envío gratis"
     >
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2.5">
+      <div className="flex items-center justify-between mb-2 sm:mb-3">
+        <div className="flex items-center gap-2 sm:gap-2.5">
           <div 
-            className="w-10 h-10 bg-blue-500/20 border border-blue-500/30 rounded-xl flex items-center justify-center"
+            className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-blue-500/20 border border-blue-500/30 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0"
             aria-hidden="true"
           >
-            <Truck className="w-5 h-5 text-blue-400" />
+            <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
           </div>
-          <div>
-            <span className="font-bold text-white text-sm sm:text-base block">
+          <div className="flex-1 min-w-0">
+            <span className="font-bold text-white text-xs sm:text-sm md:text-base block">
               {isUnlocked ? (
                 '¡Envío gratis desbloqueado! 🎉'
               ) : (
-                'Envío gratis en Villa María'
+                'Envío gratis Villa María'
               )}
             </span>
             {!isUnlocked && (
-              <span className="text-xs text-zinc-400">
+              <span className="text-[10px] sm:text-xs text-zinc-400">
                 Te faltan {formatARS(remaining)}
               </span>
             )}
@@ -214,7 +215,7 @@ export const ShippingProgress = memo(function ShippingProgress({
       </div>
       
       <div 
-        className="relative h-2.5 bg-zinc-800 rounded-full overflow-hidden border border-white/10"
+        className="relative h-2 sm:h-2.5 bg-zinc-800 rounded-full overflow-hidden border border-white/10"
         role="progressbar"
         aria-valuenow={Math.round(percentage)}
         aria-valuemin={0}
@@ -240,14 +241,15 @@ export const ShippingProgress = memo(function ShippingProgress({
 })
 
 // ============================================================================
-// TRUST BADGES - CON SCHEMA MARKUP DINÁMICO
+// TRUST BADGES - MOBILE OPTIMIZED
 // ============================================================================
 
 export const TrustBadges = memo(function TrustBadges() {
   const badges = useMemo(() => [
     {
       icon: Shield,
-      title: '5 Años Garantía',
+      title: '5 Años',
+      titleFull: '5 Años Garantía',
       description: 'Piero Argentina',
       color: 'text-blue-400',
       bg: 'from-blue-500/10 to-blue-600/5',
@@ -256,7 +258,8 @@ export const TrustBadges = memo(function TrustBadges() {
     {
       icon: RotateCcw,
       title: '100 Noches',
-      description: 'De prueba gratis',
+      titleFull: '100 Noches de prueba',
+      description: 'Prueba gratis',
       color: 'text-emerald-400',
       bg: 'from-emerald-500/10 to-emerald-600/5',
       border: 'border-emerald-500/20'
@@ -264,6 +267,7 @@ export const TrustBadges = memo(function TrustBadges() {
     {
       icon: CreditCard,
       title: 'Pago Seguro',
+      titleFull: 'Pago 100% Seguro',
       description: 'SSL 256 bits',
       color: 'text-cyan-400',
       bg: 'from-cyan-500/10 to-cyan-600/5',
@@ -272,6 +276,7 @@ export const TrustBadges = memo(function TrustBadges() {
     {
       icon: Truck,
       title: 'Envío Gratis',
+      titleFull: 'Envío Gratis',
       description: 'Villa María',
       color: 'text-violet-400',
       bg: 'from-violet-500/10 to-violet-600/5',
@@ -318,29 +323,32 @@ export const TrustBadges = memo(function TrustBadges() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-5 border border-blue-500/20 mb-6"
+        className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-blue-500/20 mb-4 sm:mb-6"
         role="region"
         aria-label="Beneficios de compra"
       >
-        <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-blue-400" aria-hidden="true" />
+        <h4 className="text-xs sm:text-sm font-bold text-white mb-3 sm:mb-4 flex items-center gap-1.5 sm:gap-2">
+          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" aria-hidden="true" />
           Comprá con confianza
         </h4>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {badges.map((badge, index) => {
             const Icon = badge.icon
             return (
               <motion.div
-                key={badge.title}
+                key={badge.titleFull}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 + index * 0.05 }}
                 whileHover={{ scale: 1.02, y: -2 }}
-                className={`bg-gradient-to-br ${badge.bg} rounded-xl p-3 border ${badge.border} transition-all duration-300`}
+                className={`bg-gradient-to-br ${badge.bg} rounded-lg sm:rounded-xl p-2.5 sm:p-3 border ${badge.border} transition-all duration-300`}
               >
-                <Icon className={`w-5 h-5 ${badge.color} mb-2`} aria-hidden="true" />
-                <div className="text-xs font-bold text-white">{badge.title}</div>
-                <div className="text-[10px] text-zinc-400">{badge.description}</div>
+                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${badge.color} mb-1.5 sm:mb-2`} aria-hidden="true" />
+                <div className="text-[10px] sm:text-xs font-bold text-white leading-tight">
+                  <span className="hidden sm:inline">{badge.titleFull}</span>
+                  <span className="sm:hidden">{badge.title}</span>
+                </div>
+                <div className="text-[9px] sm:text-[10px] text-zinc-400 leading-tight">{badge.description}</div>
               </motion.div>
             )
           })}
@@ -351,7 +359,7 @@ export const TrustBadges = memo(function TrustBadges() {
 })
 
 // ============================================================================
-// URGENCY BANNER - SIN FAKE DATA
+// URGENCY BANNER - MOBILE OPTIMIZED
 // ============================================================================
 
 interface UrgencyBannerProps {
@@ -390,20 +398,20 @@ export const UrgencyBanner = memo(function UrgencyBanner({
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className={`bg-gradient-to-r ${current.color} ${current.textColor} rounded-xl p-3.5 mb-4 text-center shadow-xl border border-white/20`}
+      className={`bg-gradient-to-r ${current.color} ${current.textColor} rounded-lg sm:rounded-xl p-3 sm:p-3.5 mb-3 sm:mb-4 text-center shadow-xl border border-white/20`}
       role="alert"
       aria-live="polite"
     >
-      <span className="text-sm font-bold flex items-center justify-center gap-2">
-        <span className="text-lg" aria-hidden="true">{current.icon}</span>
-        {current.text}
+      <span className="text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2">
+        <span className="text-base sm:text-lg flex-shrink-0" aria-hidden="true">{current.icon}</span>
+        <span className="leading-tight">{current.text}</span>
       </span>
     </motion.div>
   )
 })
 
 // ============================================================================
-// UPSELL - CON SWR Y ERROR HANDLING ROBUSTO
+// UPSELL - MOBILE OPTIMIZED
 // ============================================================================
 
 interface UpsellProps {
@@ -459,7 +467,9 @@ export const Upsell = memo(function Upsell({ onAdd }: UpsellProps) {
         }
       } catch (err) {
         if (err instanceof Error && err.name !== 'AbortError') {
-          console.error('[Upsell] Error:', err)
+          if (process.env.NODE_ENV === 'development') {
+            console.error('[Upsell] Error:', err)
+          }
           setError('No pudimos cargar las recomendaciones')
         }
       } finally {
@@ -522,15 +532,15 @@ export const Upsell = memo(function Upsell({ onAdd }: UpsellProps) {
   if (isLoading) {
     return (
       <div 
-        className="animate-pulse bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 rounded-xl p-4 border border-blue-500/20"
+        className="animate-pulse bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-blue-500/20"
         role="status"
         aria-label="Cargando recomendaciones"
       >
-        <div className="flex items-center gap-4">
-          <div className="w-20 h-20 bg-zinc-700/50 rounded-lg" />
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-zinc-700/50 rounded-lg flex-shrink-0" />
           <div className="flex-1 space-y-2">
-            <div className="h-4 bg-zinc-700/50 rounded w-2/3" />
-            <div className="h-3 bg-zinc-700/50 rounded w-1/2" />
+            <div className="h-3 sm:h-4 bg-zinc-700/50 rounded w-2/3" />
+            <div className="h-2.5 sm:h-3 bg-zinc-700/50 rounded w-1/2" />
           </div>
         </div>
       </div>
@@ -559,21 +569,21 @@ export const Upsell = memo(function Upsell({ onAdd }: UpsellProps) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
-      className="relative bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-blue-500/10 border border-blue-500/30 rounded-2xl p-4 overflow-hidden"
+      className="relative bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-blue-500/10 border border-blue-500/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 overflow-hidden"
     >
       {hasDiscount && (
-        <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-black px-2 py-1 rounded-lg shadow-lg">
+        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg shadow-lg">
           -{discountPercent}%
         </div>
       )}
 
-      <div className="flex items-center gap-4">
-        <div className="relative w-20 h-20 bg-zinc-800 rounded-xl flex-shrink-0 overflow-hidden border border-blue-500/20">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-zinc-800 rounded-lg sm:rounded-xl flex-shrink-0 overflow-hidden border border-blue-500/20">
           <Image
             src={productImage}
             alt={topper.name}
             fill
-            sizes="80px"
+            sizes="(max-width: 640px) 64px, 80px"
             quality={75}
             loading="lazy"
             placeholder="blur"
@@ -587,23 +597,23 @@ export const Upsell = memo(function Upsell({ onAdd }: UpsellProps) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <h4 className="font-black text-white text-sm mb-1 flex items-center gap-2">
-            {topper.name}
+          <h4 className="font-black text-white text-xs sm:text-sm mb-0.5 sm:mb-1 flex items-center gap-1.5 sm:gap-2 leading-tight">
+            <span className="line-clamp-1">{topper.name}</span>
             {topper.rating && topper.rating >= 4.5 && (
-              <div className="flex items-center gap-0.5" aria-label={`${topper.rating} estrellas`}>
-                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                <span className="text-[10px] text-amber-400 font-bold">{topper.rating}</span>
+              <div className="flex items-center gap-0.5 flex-shrink-0" aria-label={`${topper.rating} estrellas`}>
+                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-400 text-amber-400" />
+                <span className="text-[9px] sm:text-[10px] text-amber-400 font-bold">{topper.rating}</span>
               </div>
             )}
           </h4>
           
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
             {hasDiscount && (
-              <span className="text-zinc-500 line-through text-xs">
+              <span className="text-zinc-500 line-through text-[10px] sm:text-xs">
                 {formatARS(selectedVariant.originalPrice!)}
               </span>
             )}
-            <span className="text-blue-400 font-black text-base">
+            <span className="text-blue-400 font-black text-sm sm:text-base">
               {formatARS(selectedVariant.price)}
             </span>
           </div>
@@ -614,7 +624,7 @@ export const Upsell = memo(function Upsell({ onAdd }: UpsellProps) {
           whileTap={{ scale: 0.95 }}
           onClick={handleAddToCart}
           disabled={addedToCart || isInCart}
-          className={`px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg flex items-center gap-2 ${
+          className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm transition-all shadow-lg flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${
             addedToCart || isInCart
               ? 'bg-emerald-500 text-white'
               : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
@@ -622,9 +632,9 @@ export const Upsell = memo(function Upsell({ onAdd }: UpsellProps) {
           aria-label={addedToCart || isInCart ? 'Añadido' : 'Añadir'}
         >
           {addedToCart || isInCart ? (
-            <Check className="w-4 h-4" />
+            <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           ) : (
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           )}
         </motion.button>
       </div>
@@ -633,7 +643,7 @@ export const Upsell = memo(function Upsell({ onAdd }: UpsellProps) {
 })
 
 // ============================================================================
-// CHECKOUT STEPS
+// CHECKOUT STEPS - MOBILE OPTIMIZED
 // ============================================================================
 
 interface CheckoutStepsProps {
@@ -642,14 +652,14 @@ interface CheckoutStepsProps {
 
 export const CheckoutSteps = memo(function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
   const steps = useMemo(() => [
-    { number: 1, label: 'Carrito' },
-    { number: 2, label: 'Datos' },
-    { number: 3, label: 'Pago' },
-    { number: 4, label: 'Confirmación' }
+    { number: 1, label: 'Carrito', labelShort: 'Cart' },
+    { number: 2, label: 'Datos', labelShort: 'Data' },
+    { number: 3, label: 'Pago', labelShort: 'Pay' },
+    { number: 4, label: 'OK', labelShort: 'OK' }
   ], [])
   
   return (
-    <nav className="mb-12" aria-label="Progreso del checkout">
+    <nav className="mb-8 sm:mb-10 md:mb-12" aria-label="Progreso del checkout">
       <ol className="flex items-center justify-between max-w-2xl mx-auto">
         {steps.map((step, index) => {
           const isActive = step.number === currentStep
@@ -662,7 +672,7 @@ export const CheckoutSteps = memo(function CheckoutSteps({ currentStep }: Checko
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm mb-2 ${
+                  className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm mb-1.5 sm:mb-2 ${
                     step.number <= currentStep
                       ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg'
                       : 'bg-zinc-800 border border-zinc-700 text-zinc-500'
@@ -670,20 +680,21 @@ export const CheckoutSteps = memo(function CheckoutSteps({ currentStep }: Checko
                   aria-current={isActive ? 'step' : undefined}
                 >
                   {isCompleted ? (
-                    <Check className="w-5 h-5" />
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                   ) : (
                     step.number
                   )}
                 </motion.div>
-                <span className={`text-xs font-medium ${
+                <span className={`text-[10px] sm:text-xs font-medium ${
                   step.number <= currentStep ? 'text-white' : 'text-zinc-500'
                 }`}>
-                  {step.label}
+                  <span className="hidden xs:inline">{step.label}</span>
+                  <span className="xs:hidden">{step.labelShort}</span>
                 </span>
               </div>
               
               {index < steps.length - 1 && (
-                <div className="flex-1 h-0.5 mx-2 relative">
+                <div className="flex-1 h-0.5 mx-1 sm:mx-2 relative">
                   <div className="absolute inset-0 bg-zinc-800" />
                   <motion.div
                     initial={{ scaleX: 0 }}
@@ -702,7 +713,7 @@ export const CheckoutSteps = memo(function CheckoutSteps({ currentStep }: Checko
 })
 
 // ============================================================================
-// EMPTY CART
+// EMPTY CART - MOBILE OPTIMIZED
 // ============================================================================
 
 export const EmptyCart = memo(function EmptyCart() {
@@ -710,25 +721,25 @@ export const EmptyCart = memo(function EmptyCart() {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl p-12 text-center shadow-2xl border border-blue-500/20"
+      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl sm:rounded-3xl p-8 sm:p-10 md:p-12 text-center shadow-2xl border border-blue-500/20"
     >
-      <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
-        <span className="text-5xl">🛒</span>
+      <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
+        <span className="text-4xl sm:text-5xl">🛒</span>
       </div>
-      <h3 className="text-2xl font-black text-white mb-3">
+      <h3 className="text-xl sm:text-2xl font-black text-white mb-2 sm:mb-3">
         Tu carrito está vacío
       </h3>
-      <p className="text-zinc-400 mb-8 max-w-md mx-auto">
+      <p className="text-sm sm:text-base text-zinc-400 mb-6 sm:mb-8 max-w-md mx-auto">
         Explorá nuestro catálogo y encontrá tu colchón perfecto
       </p>
       <Link href="/catalogo">
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-xl font-bold inline-flex items-center gap-2 shadow-2xl"
+          className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-xl font-bold inline-flex items-center gap-2 shadow-2xl text-sm sm:text-base"
         >
           <span>Explorar productos</span>
-          <ChevronRight className="w-5 h-5" />
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </motion.button>
       </Link>
     </motion.div>
@@ -736,7 +747,7 @@ export const EmptyCart = memo(function EmptyCart() {
 })
 
 // ============================================================================
-// PAYMENT METHODS - VALIDACIÓN DE DISPONIBILIDAD
+// PAYMENT METHODS - MOBILE OPTIMIZED
 // ============================================================================
 
 interface PaymentMethodsProps {
@@ -763,7 +774,8 @@ export const PaymentMethods = memo(function PaymentMethods({
       },
       {
         id: 'efectivo_domicilio',
-        name: 'Efectivo en domicilio',
+        name: 'Efectivo',
+        nameShort: 'Efectivo',
         icon: '💵',
         description: 'Pagás al recibir',
         badge: 'Sin recargo',
@@ -783,7 +795,7 @@ export const PaymentMethods = memo(function PaymentMethods({
   }, [onSelect, trackEvent])
   
   return (
-    <div className="space-y-3" role="radiogroup" aria-label="Métodos de pago">
+    <div className="space-y-2 sm:space-y-3" role="radiogroup" aria-label="Métodos de pago">
       {methods.map((method) => {
         const isSelected = selected === method.id
         
@@ -794,7 +806,7 @@ export const PaymentMethods = memo(function PaymentMethods({
             onClick={() => handleSelect(method.id)}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
-            className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+            className={`w-full p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all text-left ${
               isSelected
                 ? 'border-blue-500 bg-blue-500/20'
                 : 'border-zinc-800 hover:border-blue-500/50 bg-zinc-900/50'
@@ -803,18 +815,18 @@ export const PaymentMethods = memo(function PaymentMethods({
             aria-checked={isSelected}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{method.icon}</span>
-                <div>
-                  <div className="font-bold text-white text-sm flex items-center gap-2">
-                    {method.name}
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <span className="text-xl sm:text-2xl flex-shrink-0">{method.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-white text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                    <span className="truncate">{method.name}</span>
                     {method.recommended && (
-                      <span className="text-[9px] px-1.5 py-0.5 bg-blue-500/20 text-blue-400 rounded">
-                        RECOMENDADO
+                      <span className="text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.5 bg-blue-500/20 text-blue-400 rounded flex-shrink-0">
+                        TOP
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-zinc-400">{method.description}</div>
+                  <div className="text-[10px] sm:text-xs text-zinc-400 truncate">{method.description}</div>
                 </div>
               </div>
               
@@ -822,9 +834,9 @@ export const PaymentMethods = memo(function PaymentMethods({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center"
+                  className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 ml-2"
                 >
-                  <Check className="w-4 h-4 text-white" />
+                  <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                 </motion.div>
               )}
             </div>
