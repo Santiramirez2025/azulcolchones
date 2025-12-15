@@ -1,4 +1,4 @@
-// app/catalogo/components/FilterDrawer.tsx - ✅ OPTIMIZADO
+// app/catalogo/components/FilterDrawer.tsx - ✅ OPTIMIZADO MOBILE
 'use client'
 
 import { Dispatch, SetStateAction, useEffect, useCallback, useMemo, useRef } from 'react'
@@ -24,15 +24,14 @@ const ratingOptions = [
   { label: '4+ Estrellas', value: 4, description: 'Muy buena calidad' },
   { label: '4.5+ Estrellas', value: 4.5, description: 'Excelente calidad' },
   { label: '4.7+ Estrellas', value: 4.7, description: 'Calidad premium' },
-  { label: '4.9+ Estrellas', value: 4.9, description: 'Lo mejor del catálogo' }
+  { label: '4.9+ Estrellas', value: 4.9, description: 'Lo mejor del catálogo' },
 ]
 
-// Configuración de precios para Argentina
 const PRICE_CONFIG = {
   MIN: 0,
   MAX: 10000000, // $100,000 en centavos
   STEP: 500000,  // $5,000 en centavos
-  DEFAULT: [0, 10000000] as [number, number]
+  DEFAULT: [0, 10000000] as [number, number],
 }
 
 export default function FilterDrawer({
@@ -45,22 +44,17 @@ export default function FilterDrawer({
   minRating,
   onMinRatingChange,
   availableCategories,
-  onClearFilters
+  onClearFilters,
 }: FilterDrawerProps) {
   
   const drawerRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   
-  // 🎯 Focus trap: Capturar foco al abrir
+  // 🎯 Focus trap
   useEffect(() => {
     if (isOpen) {
-      // Guardar elemento activo antes de abrir
       const previouslyFocused = document.activeElement as HTMLElement
-      
-      // Focus en el botón de cerrar
       closeButtonRef.current?.focus()
-      
-      // Restaurar foco al cerrar
       return () => {
         previouslyFocused?.focus()
       }
@@ -81,7 +75,7 @@ export default function FilterDrawer({
     return () => document.removeEventListener('keydown', handleEscape)
   }, [isOpen, onClose])
   
-  // 🔒 Prevenir scroll del body cuando está abierto
+  // 🔒 Prevenir scroll del body
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -94,23 +88,19 @@ export default function FilterDrawer({
     }
   }, [isOpen])
   
-  // 📊 Memoizar conteo de filtros activos
+  // 📊 Conteo de filtros activos
   const activeFiltersCount = useMemo(() => {
     let count = selectedCategories.length
-    
-    // Verificar si el rango de precio cambió del default
     if (priceRange[0] !== PRICE_CONFIG.DEFAULT[0] || priceRange[1] !== PRICE_CONFIG.DEFAULT[1]) {
       count++
     }
-    
     if (minRating > 0) {
       count++
     }
-    
     return count
   }, [selectedCategories.length, priceRange, minRating])
   
-  // 🎯 Toggle category con useCallback
+  // 🎯 Toggle category
   const toggleCategory = useCallback((category: string) => {
     onCategoryChange(prev => 
       prev.includes(category) 
@@ -134,10 +124,9 @@ export default function FilterDrawer({
   const handleRatingChange = useCallback((value: number) => {
     onMinRatingChange(value)
     
-    // Analytics
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'filter_rating', {
-        rating_value: value
+        rating_value: value,
       })
     }
   }, [onMinRatingChange])
@@ -146,18 +135,23 @@ export default function FilterDrawer({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop con mejor accesibilidad */}
+          {/* ✅ BACKDROP MEJORADO - Más obvio en mobile */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] cursor-pointer"
             aria-hidden="true"
-          />
+          >
+            {/* ✅ HINT VISUAL PARA CERRAR - Solo mobile */}
+            <div className="sm:hidden absolute top-6 right-6 flex items-center gap-2 text-white/90 text-sm font-medium animate-pulse">
+              <span>👈 Tocá para cerrar</span>
+            </div>
+          </motion.div>
 
-          {/* Drawer Panel con ARIA */}
+          {/* ✅ DRAWER PANEL - ANCHO OPTIMIZADO MOBILE */}
           <motion.div
             ref={drawerRef}
             initial={{ x: '-100%' }}
@@ -168,41 +162,43 @@ export default function FilterDrawer({
             aria-modal="true"
             aria-labelledby="filter-drawer-title"
             aria-describedby="filter-drawer-description"
-            className="fixed left-0 top-0 h-full w-full sm:w-96 bg-zinc-900 shadow-2xl z-[101] overflow-y-auto"
+            className="fixed left-0 top-0 h-full w-[85vw] max-w-md sm:w-96 bg-zinc-900 shadow-2xl z-[101] overflow-y-auto"
           >
-            {/* Header */}
-            <div className="sticky top-0 bg-zinc-900 border-b border-zinc-800 p-6 flex items-center justify-between z-10">
+            {/* Header - ✅ BOTÓN CERRAR MÁS GRANDE MOBILE */}
+            <div className="sticky top-0 bg-zinc-900 border-b border-zinc-800 p-4 sm:p-6 flex items-center justify-between z-10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center flex-shrink-0">
                   <Filter className="w-5 h-5 text-white" aria-hidden="true" />
                 </div>
                 <div>
-                  <h2 id="filter-drawer-title" className="text-xl font-black text-white">
+                  <h2 id="filter-drawer-title" className="text-lg sm:text-xl font-black text-white">
                     Filtros
                   </h2>
                   {activeFiltersCount > 0 && (
                     <p id="filter-drawer-description" className="text-xs text-zinc-400">
-                      {activeFiltersCount} filtro{activeFiltersCount !== 1 ? 's' : ''} activo{activeFiltersCount !== 1 ? 's' : ''}
+                      {activeFiltersCount} activo{activeFiltersCount !== 1 ? 's' : ''}
                     </p>
                   )}
                 </div>
               </div>
+              
+              {/* ✅ BOTÓN CERRAR - Touch-friendly */}
               <button
                 ref={closeButtonRef}
                 onClick={onClose}
-                className="w-10 h-10 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-12 h-12 sm:w-10 sm:h-10 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 flex-shrink-0"
                 aria-label="Cerrar filtros"
               >
-                <X className="w-5 h-5 text-white" aria-hidden="true" />
+                <X className="w-6 h-6 sm:w-5 sm:h-5 text-white" aria-hidden="true" />
               </button>
             </div>
 
             {/* Content */}
-            <div className="p-6 space-y-8">
+            <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
               
-              {/* Categorías con checkboxes reales */}
+              {/* Categorías */}
               {availableCategories.length > 0 && (
-                <fieldset className="space-y-4">
+                <fieldset className="space-y-3 sm:space-y-4">
                   <legend className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
                     <span role="img" aria-label="Etiquetas">🏷️</span>
                     Categorías
@@ -225,9 +221,10 @@ export default function FilterDrawer({
                           <label
                             htmlFor={checkboxId}
                             className={`
-                              block w-full px-4 py-3 rounded-xl text-sm font-medium
+                              block w-full px-4 py-3.5 sm:py-3 rounded-xl text-sm font-medium
                               transition-all duration-200 cursor-pointer
                               flex items-center justify-between
+                              min-h-[48px]
                               ${isSelected
                                 ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg'
                                 : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
@@ -237,7 +234,7 @@ export default function FilterDrawer({
                           >
                             <span>{category}</span>
                             {isSelected && (
-                              <Check className="w-4 h-4" aria-hidden="true" />
+                              <Check className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                             )}
                           </label>
                         </div>
@@ -247,14 +244,15 @@ export default function FilterDrawer({
                 </fieldset>
               )}
 
-              {/* Rango de Precio mejorado */}
-              <fieldset className="space-y-4">
+              {/* Rango de Precio */}
+              <fieldset className="space-y-3 sm:space-y-4">
                 <legend className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
                   <span role="img" aria-label="Dinero">💰</span>
                   Precio
                 </legend>
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4">
+                  {/* Inputs numéricos */}
+                  <div className="flex items-center gap-3">
                     <div className="flex-1">
                       <label htmlFor="price-min" className="block text-xs text-zinc-400 mb-2">
                         Mínimo
@@ -262,9 +260,9 @@ export default function FilterDrawer({
                       <input
                         id="price-min"
                         type="number"
-                        value={priceRange[0] / 100} // Convertir a pesos
+                        value={priceRange[0] / 100}
                         onChange={(e) => handleMinPriceChange(Number(e.target.value) * 100)}
-                        className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                        className="w-full px-3 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500 min-h-[44px]"
                         min={PRICE_CONFIG.MIN}
                         max={priceRange[1] / 100}
                         step={PRICE_CONFIG.STEP / 100}
@@ -278,9 +276,9 @@ export default function FilterDrawer({
                       <input
                         id="price-max"
                         type="number"
-                        value={priceRange[1] / 100} // Convertir a pesos
+                        value={priceRange[1] / 100}
                         onChange={(e) => handleMaxPriceChange(Number(e.target.value) * 100)}
-                        className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                        className="w-full px-3 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500 min-h-[44px]"
                         min={priceRange[0] / 100}
                         max={PRICE_CONFIG.MAX / 100}
                         step={PRICE_CONFIG.STEP / 100}
@@ -289,8 +287,8 @@ export default function FilterDrawer({
                     </div>
                   </div>
                   
-                  {/* Range Sliders con mejor accesibilidad */}
-                  <div className="space-y-2">
+                  {/* Range Sliders - ✅ MÁS GRANDES MOBILE */}
+                  <div className="space-y-3">
                     <label htmlFor="price-range-min" className="sr-only">
                       Deslizador de precio mínimo
                     </label>
@@ -302,7 +300,7 @@ export default function FilterDrawer({
                       step={PRICE_CONFIG.STEP}
                       value={priceRange[0]}
                       onChange={(e) => handleMinPriceChange(Number(e.target.value))}
-                      className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-violet-600 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-violet-600 [&::-moz-range-thumb]:border-0"
+                      className="w-full h-3 sm:h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 sm:[&::-webkit-slider-thumb]:w-4 sm:[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-violet-600 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 sm:[&::-moz-range-thumb]:w-4 sm:[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-violet-600 [&::-moz-range-thumb]:border-0"
                       aria-valuemin={PRICE_CONFIG.MIN}
                       aria-valuemax={PRICE_CONFIG.MAX}
                       aria-valuenow={priceRange[0]}
@@ -320,7 +318,7 @@ export default function FilterDrawer({
                       step={PRICE_CONFIG.STEP}
                       value={priceRange[1]}
                       onChange={(e) => handleMaxPriceChange(Number(e.target.value))}
-                      className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-fuchsia-600 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-fuchsia-600 [&::-moz-range-thumb]:border-0"
+                      className="w-full h-3 sm:h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 sm:[&::-webkit-slider-thumb]:w-4 sm:[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-fuchsia-600 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 sm:[&::-moz-range-thumb]:w-4 sm:[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-fuchsia-600 [&::-moz-range-thumb]:border-0"
                       aria-valuemin={PRICE_CONFIG.MIN}
                       aria-valuemax={PRICE_CONFIG.MAX}
                       aria-valuenow={priceRange[1]}
@@ -335,8 +333,8 @@ export default function FilterDrawer({
                 </div>
               </fieldset>
 
-              {/* Valoración con radio buttons */}
-              <fieldset className="space-y-4">
+              {/* Valoración */}
+              <fieldset className="space-y-3 sm:space-y-4">
                 <legend className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
                   <span role="img" aria-label="Estrella">⭐</span>
                   Valoración Mínima
@@ -360,9 +358,10 @@ export default function FilterDrawer({
                         <label
                           htmlFor={radioId}
                           className={`
-                            block w-full px-4 py-3 rounded-xl text-sm font-medium
+                            block w-full px-4 py-3.5 sm:py-3 rounded-xl text-sm font-medium
                             transition-all duration-200 cursor-pointer
                             flex items-center justify-between
+                            min-h-[48px]
                             ${isSelected
                               ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg'
                               : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
@@ -375,16 +374,15 @@ export default function FilterDrawer({
                             {option.value > 0 && (
                               <span className="flex" aria-label={`${option.value} estrellas`}>
                                 {[...Array(Math.floor(option.value))].map((_, i) => (
-                                  <Star key={i} className="w-3 h-3 fill-current" aria-hidden="true" />
+                                  <Star key={i} className="w-3 h-3 fill-current flex-shrink-0" aria-hidden="true" />
                                 ))}
                               </span>
                             )}
                           </span>
                           {isSelected && (
-                            <Check className="w-4 h-4" aria-hidden="true" />
+                            <Check className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                           )}
                         </label>
-                        {/* Descripción para screen readers */}
                         <span className="sr-only">{option.description}</span>
                       </div>
                     )
@@ -393,12 +391,12 @@ export default function FilterDrawer({
               </fieldset>
             </div>
 
-            {/* Footer con acciones */}
-            <div className="sticky bottom-0 bg-zinc-900 border-t border-zinc-800 p-6 space-y-3">
+            {/* Footer - ✅ BOTONES TOUCH-FRIENDLY */}
+            <div className="sticky bottom-0 bg-zinc-900 border-t border-zinc-800 p-4 sm:p-6 space-y-3">
               {activeFiltersCount > 0 && (
                 <button
                   onClick={onClearFilters}
-                  className="w-full py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  className="w-full py-3.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 min-h-[48px]"
                   aria-label={`Limpiar ${activeFiltersCount} filtros activos`}
                 >
                   Limpiar Filtros
@@ -406,7 +404,7 @@ export default function FilterDrawer({
               )}
               <button
                 onClick={onClose}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-black shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-black shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 min-h-[52px]"
                 aria-label="Aplicar filtros y cerrar"
               >
                 Aplicar Filtros

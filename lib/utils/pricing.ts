@@ -6,7 +6,7 @@ import { formatARS } from './currency'
  * Estos porcentajes se pueden cambiar fácilmente
  */
 export const CUOTAS_CONFIG = {
-  3: { recargo: 0.20, label: '3 cuotas' },   // +20%
+  3: { recargo: 0.00, label: '3 cuotas' },   // ✅ SIN RECARGO (0%)
   6: { recargo: 0.31, label: '6 cuotas' },   // +31%
   9: { recargo: 0.44, label: '9 cuotas' },   // +44%
   12: { recargo: 0.60, label: '12 cuotas' }, // +60%
@@ -22,7 +22,7 @@ export interface CuotaCalculation {
   precioTotal: number
   precioCuota: number
   recargo: number
-  recargoPercentage: number
+  recargoPercentage: string // ✅ CAMBIADO a string (ya formateado como "20%")
   label: string
   formatted: {
     precioTotal: string
@@ -42,13 +42,19 @@ export function calcularPrecioCuotas(
   const recargo = precioBase * config.recargo
   const precioTotal = precioBase + recargo
   const precioCuota = precioTotal / cuotas
+  
+  // ✅ Formatear porcentaje como string
+  const recargoPercentageNumber = config.recargo * 100
+  const recargoPercentageFormatted = recargoPercentageNumber === 0 
+    ? '0%' 
+    : `${recargoPercentageNumber.toFixed(1)}%`
 
   return {
     cuotas,
     precioTotal,
     precioCuota,
     recargo,
-    recargoPercentage: config.recargo * 100,
+    recargoPercentage: recargoPercentageFormatted, // ✅ Ya viene como string "20%"
     label: config.label,
     formatted: {
       precioTotal: formatARS(precioTotal),
@@ -68,10 +74,10 @@ export function calcularTodasLasCuotas(precioBase: number): CuotaCalculation[] {
 }
 
 /**
- * Obtiene la mejor opción (12 cuotas para marketing)
+ * Obtiene la mejor opción (3 cuotas sin recargo para destacar)
  */
 export function getMejorCuota(precioBase: number): CuotaCalculation {
-  return calcularPrecioCuotas(precioBase, 12)
+  return calcularPrecioCuotas(precioBase, 3) // ✅ 3 cuotas sin recargo
 }
 
 /**
@@ -86,5 +92,5 @@ export function formatPrecioContado(precio: number): string {
  */
 export function getTextoPromocional(precioBase: number): string {
   const mejor = getMejorCuota(precioBase)
-  return `Hasta ${mejor.cuotas} cuotas de ${mejor.formatted.precioCuota}`
+  return `Hasta 3 cuotas sin recargo de ${mejor.formatted.precioCuota}`
 }

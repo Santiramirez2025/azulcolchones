@@ -1,13 +1,14 @@
-// app/producto/[slug]/components/ImageGallery.tsx
+// app/producto/[slug]/components/ImageGallery.tsx - ✅ UNIFICADO SIN DUPLICACIÓN
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { useState, useCallback, useEffect, memo } from 'react'
 import {
-  Heart, ChevronRight, ChevronLeft, Sparkles, TrendingUp, ZoomIn, 
-  Truck, Award, Maximize2, X, ChevronUp, ChevronDown
+  Heart, ChevronRight, ChevronLeft, Sparkles, TrendingUp,
+  Truck, Award, Maximize2
 } from 'lucide-react'
+import ImageModal from './ImageModal' // ✅ Solo usar el modal externo
 
 interface ImageGalleryProps {
   images: string[]
@@ -79,156 +80,6 @@ const Thumbnail = memo(({
 ))
 Thumbnail.displayName = 'Thumbnail'
 
-// ✅ FIXED: Modal de zoom fullscreen con hooks en orden correcto
-const ImageModal = memo(({ 
-  isOpen, 
-  onClose, 
-  images, 
-  currentIndex, 
-  onNavigate,
-  productName 
-}: any) => {
-  // ✅ ALL HOOKS MUST BE AT THE TOP
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen])
-
-  useEffect(() => {
-    if (!isOpen) return
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowLeft') onNavigate(-1)
-      if (e.key === 'ArrowRight') onNavigate(1)
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose, onNavigate])
-
-  // ✅ EARLY RETURN AFTER ALL HOOKS
-  if (!isOpen) return null
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Vista ampliada de la imagen del producto"
-    >
-      {/* Header con contador */}
-      <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex items-center justify-between z-10">
-        <div className="text-white font-semibold text-sm md:text-base">
-          Imagen {currentIndex + 1} de {images.length}
-        </div>
-        <button
-          onClick={onClose}
-          className="p-2 md:p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white"
-          aria-label="Cerrar vista ampliada"
-        >
-          <X className="w-5 h-5 md:w-6 md:h-6 text-white" />
-        </button>
-      </div>
-
-      {/* Imagen principal */}
-      <motion.div
-        initial={{ scale: 0.9 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0.9 }}
-        className="relative w-full h-full max-w-6xl max-h-[90vh] p-4 md:p-16"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.3 }}
-            className="relative w-full h-full"
-          >
-            <Image
-              src={images[currentIndex]}
-              alt={`${productName} - Vista ampliada ${currentIndex + 1}`}
-              fill
-              className="object-contain"
-              priority
-              sizes="100vw"
-            />
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Controles de navegación */}
-      {images.length > 1 && (
-        <>
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              onNavigate(-1)
-            }}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-md transition-all focus:outline-none focus:ring-2 focus:ring-white"
-            aria-label="Imagen anterior"
-          >
-            <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 text-white" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              onNavigate(1)
-            }}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-md transition-all focus:outline-none focus:ring-2 focus:ring-white"
-            aria-label="Siguiente imagen"
-          >
-            <ChevronRight className="w-6 h-6 md:w-8 md:h-8 text-white" />
-          </button>
-        </>
-      )}
-
-      {/* Miniaturas en la parte inferior */}
-      {images.length > 1 && (
-        <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 bg-black/50 backdrop-blur-md p-2 rounded-xl">
-          {images.map((img: string, idx: number) => (
-            <button
-              key={idx}
-              onClick={(e) => {
-                e.stopPropagation()
-                onNavigate(idx - currentIndex)
-              }}
-              className={`w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                idx === currentIndex 
-                  ? 'border-violet-500 ring-2 ring-violet-500/50' 
-                  : 'border-white/20 hover:border-white/50'
-              }`}
-              aria-label={`Ver imagen ${idx + 1}`}
-            >
-              <Image
-                src={img}
-                alt={`Miniatura ${idx + 1}`}
-                width={64}
-                height={64}
-                className="object-cover"
-              />
-            </button>
-          ))}
-        </div>
-      )}
-    </motion.div>
-  )
-})
-ImageModal.displayName = 'ImageModal'
-
 // Componente principal
 export default function ImageGallery({ 
   images, 
@@ -241,27 +92,13 @@ export default function ImageGallery({
   setIsFavorite,
   discountPercent 
 }: ImageGalleryProps) {
+  // ✅ ESTADO INTERNO para controlar el modal
   const [showModal, setShowModal] = useState(false)
   const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
 
-  // Navegación con teclado
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' && images.length > 1) {
-        setImageIndex((imageIndex - 1 + images.length) % images.length)
-      }
-      if (e.key === 'ArrowRight' && images.length > 1) {
-        setImageIndex((imageIndex + 1) % images.length)
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [imageIndex, images.length, setImageIndex])
-
-  // Swipe gestures en móvil
+  // ✅ SWIPE GESTURES para galería principal
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX)
   }, [])
@@ -288,17 +125,32 @@ export default function ImageGallery({
     setTouchEnd(0)
   }, [touchStart, touchEnd, images.length, imageIndex, setImageIndex])
 
-  const handlePrevImage = useCallback(() => {
+  // ✅ KEYBOARD NAVIGATION solo cuando modal está cerrado
+  useEffect(() => {
+    if (showModal) return // No interferir con el modal
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && images.length > 1) {
+        setImageIndex((imageIndex - 1 + images.length) % images.length)
+      }
+      if (e.key === 'ArrowRight' && images.length > 1) {
+        setImageIndex((imageIndex + 1) % images.length)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [showModal, imageIndex, images.length, setImageIndex])
+
+  // ✅ HANDLERS SIMPLIFICADOS
+  const handlePrevImage = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
     setImageIndex((imageIndex - 1 + images.length) % images.length)
   }, [imageIndex, images.length, setImageIndex])
 
-  const handleNextImage = useCallback(() => {
+  const handleNextImage = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
     setImageIndex((imageIndex + 1) % images.length)
-  }, [imageIndex, images.length, setImageIndex])
-
-  const handleModalNavigate = useCallback((direction: number) => {
-    const newIndex = (imageIndex + direction + images.length) % images.length
-    setImageIndex(newIndex)
   }, [imageIndex, images.length, setImageIndex])
 
   const openModal = useCallback(() => {
@@ -321,7 +173,7 @@ export default function ImageGallery({
         aria-label="Galería de imágenes del producto"
       >
         <div className="relative">
-          {/* Badges flotantes y botón de favorito */}
+          {/* ✅ Badges flotantes y botón de favorito */}
           <div className="absolute top-3 md:top-4 left-3 md:left-4 right-3 md:right-4 z-20 flex items-start justify-between pointer-events-none">
             <div className="flex flex-col gap-2 pointer-events-auto">
               <AnimatePresence>
@@ -371,7 +223,7 @@ export default function ImageGallery({
             </motion.button>
           </div>
 
-          {/* Imagen principal con gestos táctiles */}
+          {/* ✅ IMAGEN PRINCIPAL con gestos táctiles */}
           <div 
             className="relative aspect-square bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl md:rounded-3xl overflow-hidden group cursor-zoom-in mb-3 md:mb-4 border border-white/10 shadow-2xl"
             onTouchStart={handleTouchStart}
@@ -419,7 +271,7 @@ export default function ImageGallery({
               )}
             </motion.div>
             
-            {/* Overlay con icono de zoom */}
+            {/* ✅ Overlay con icono de zoom */}
             <motion.div 
               initial={{ opacity: 0 }}
               whileHover={{ opacity: 1 }}
@@ -440,17 +292,14 @@ export default function ImageGallery({
               </motion.div>
             </motion.div>
 
-            {/* Controles de navegación con mejor accesibilidad */}
+            {/* ✅ CONTROLES DE NAVEGACIÓN optimizados mobile */}
             {images.length > 1 && (
               <>
                 <motion.button
                   initial={{ opacity: 0, x: -20 }}
                   whileHover={{ opacity: 1, x: 0, scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handlePrevImage()
-                  }}
+                  onClick={handlePrevImage}
                   className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-violet-500"
                   aria-label="Imagen anterior"
                 >
@@ -461,17 +310,14 @@ export default function ImageGallery({
                   initial={{ opacity: 0, x: 20 }}
                   whileHover={{ opacity: 1, x: 0, scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleNextImage()
-                  }}
+                  onClick={handleNextImage}
                   className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-violet-500"
                   aria-label="Siguiente imagen"
                 >
                   <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white" aria-hidden="true" />
                 </motion.button>
 
-                {/* Indicador de posición */}
+                {/* ✅ Indicador de posición con dots */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black/30 backdrop-blur-md px-3 py-2 rounded-full">
                   {images.slice(0, 5).map((_, idx) => (
                     <motion.button
@@ -489,12 +335,17 @@ export default function ImageGallery({
                       aria-current={idx === imageIndex}
                     />
                   ))}
+                  {images.length > 5 && (
+                    <span className="text-white/60 text-xs font-semibold">
+                      +{images.length - 5}
+                    </span>
+                  )}
                 </div>
               </>
             )}
           </div>
 
-          {/* Miniaturas mejoradas */}
+          {/* ✅ MINIATURAS mejoradas */}
           {images.length > 1 && (
             <nav 
               className="grid grid-cols-4 gap-2 md:gap-3 mb-4 md:mb-6"
@@ -513,15 +364,19 @@ export default function ImageGallery({
             </nav>
           )}
 
-          {/* Trust badges con animación */}
+          {/* ✅ TRUST BADGES con animación */}
           <div className="grid grid-cols-2 gap-2 md:gap-3">
             <motion.div 
               whileHover={{ scale: 1.03, y: -2 }}
               className="text-center p-3 md:p-4 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-xl hover:border-emerald-500/40 transition-all cursor-default"
             >
               <Truck className="w-5 h-5 md:w-6 md:h-6 text-emerald-400 mx-auto mb-2" aria-hidden="true" />
-              <p className="text-xs md:text-sm font-bold text-white">Envío en {product.deliveryDays}h</p>
-              <p className="text-[10px] md:text-xs text-zinc-400">Totalmente gratis</p>
+              <p className="text-xs md:text-sm font-bold text-white">
+                Envío Gratis
+              </p>
+              <p className="text-[10px] md:text-xs text-zinc-400">
+                Villa María
+              </p>
             </motion.div>
 
             <motion.div 
@@ -529,14 +384,18 @@ export default function ImageGallery({
               className="text-center p-3 md:p-4 bg-gradient-to-br from-purple-500/10 to-fuchsia-500/10 border border-purple-500/20 rounded-xl hover:border-purple-500/40 transition-all cursor-default"
             >
               <Award className="w-5 h-5 md:w-6 md:h-6 text-purple-400 mx-auto mb-2" aria-hidden="true" />
-              <p className="text-xs md:text-sm font-bold text-white">{product.warranty} años garantía</p>
-              <p className="text-[10px] md:text-xs text-zinc-400">Sin complicaciones</p>
+              <p className="text-xs md:text-sm font-bold text-white">
+                {product.warranty || 5} años garantía
+              </p>
+              <p className="text-[10px] md:text-xs text-zinc-400">
+                Sin complicaciones
+              </p>
             </motion.div>
           </div>
         </div>
       </motion.article>
 
-      {/* Modal fullscreen */}
+      {/* ✅ MODAL EXTERNO - Sin duplicación */}
       <AnimatePresence>
         {showModal && (
           <ImageModal
@@ -544,7 +403,6 @@ export default function ImageGallery({
             onClose={closeModal}
             images={images}
             currentIndex={imageIndex}
-            onNavigate={handleModalNavigate}
             productName={product.name}
           />
         )}

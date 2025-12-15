@@ -1,4 +1,127 @@
+// app/condiciones-compra/page.tsx - ULTRA OPTIMIZED ⚡
+import { Metadata } from 'next'
 import { ShoppingBag, CreditCard, Truck, RotateCcw, Shield, AlertCircle, CheckCircle, Mail, Phone, DollarSign } from 'lucide-react'
+
+// ============================================================================
+// METADATA - SEO EXHAUSTIVO 🎯
+// ============================================================================
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://azulcolchones.com'
+
+export const metadata: Metadata = {
+  title: 'Condiciones de Compra | Azul Colchones Villa María | Términos y Garantías',
+  description: '🛒 Condiciones de compra transparentes en Azul Colchones. ✅ Derecho de arrepentimiento 10 días ✅ Garantía legal ✅ Envío gratis Villa María ✅ Métodos de pago ✅ Defensa del consumidor. Comprá con confianza.',
+  
+  keywords: [
+    // === CORE ===
+    'condiciones de compra',
+    'términos de compra colchones',
+    'condiciones venta colchones',
+    
+    // === DERECHOS ===
+    'derecho arrepentimiento',
+    'devolución colchones',
+    'garantía colchones',
+    'cambio colchones',
+    
+    // === PAGO/ENVÍO ===
+    'formas de pago colchones',
+    'envío gratis villa maría',
+    'métodos pago colchones',
+    'financiación colchones',
+    
+    // === LEGAL ===
+    'ley defensa consumidor',
+    'ley 24240',
+    'protección consumidor argentina',
+    'coprec argentina',
+    
+    // === LOCAL ===
+    'condiciones compra villa maría',
+    'garantía colchones córdoba',
+    'devolución colchones argentina',
+    
+    // === LONG TAIL ===
+    'puedo devolver un colchón',
+    'cuánto tiempo tengo para devolver',
+    'qué garantía tienen los colchones',
+    'cómo devolver un colchón',
+  ].join(', '),
+  
+  openGraph: {
+    title: '🛒 Condiciones de Compra | Azul Colchones Villa María',
+    description: 'Derecho de arrepentimiento 10 días | Garantía legal | Envío gratis | Pago seguro',
+    type: 'website',
+    locale: 'es_AR',
+    url: `${BASE_URL}/condiciones-compra`,
+    siteName: 'Azul Colchones Villa María',
+  },
+  
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  
+  alternates: {
+    canonical: `${BASE_URL}/condiciones-compra`,
+  },
+}
+
+// ============================================================================
+// STRUCTURED DATA 🎯
+// ============================================================================
+
+const conditionsStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Condiciones de Compra - Azul Colchones Villa María',
+  description: 'Condiciones de compra, garantías y derechos del consumidor',
+  url: `${BASE_URL}/condiciones-compra`,
+  inLanguage: 'es-AR',
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Azul Colchones',
+    url: BASE_URL
+  },
+  about: [
+    {
+      '@type': 'Thing',
+      name: 'Derecho de Arrepentimiento',
+      description: '10 días corridos según Ley 24.240'
+    },
+    {
+      '@type': 'Thing',
+      name: 'Garantía Legal',
+      description: 'Garantía de fábrica en todos los productos'
+    },
+    {
+      '@type': 'Thing',
+      name: 'Métodos de Pago',
+      description: 'Hasta 12 cuotas sin interés'
+    }
+  ],
+  publisher: {
+    '@type': 'LocalBusiness',
+    name: 'Azul Colchones',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Balerdi 855',
+      addressLocality: 'Villa María',
+      addressRegion: 'Córdoba',
+      postalCode: '5900',
+      addressCountry: 'AR'
+    },
+    telephone: '+54-9-353-4017332'
+  }
+}
+
+// ============================================================================
+// COMPONENT
+// ============================================================================
 
 export default function CondicionesCompraPage() {
   const mainSections = [
@@ -124,239 +247,249 @@ export default function CondicionesCompraPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-zinc-950 overflow-x-hidden antialiased">
-      {/* Hero Section */}
-      <section className="w-full border-b border-zinc-800/50">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-zinc-800/50 border border-zinc-700/50 rounded-2xl mb-6">
-              <ShoppingBag className="w-8 h-8 md:w-10 md:h-10 text-zinc-300" />
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-              Condiciones de Compra
-            </h1>
-            <p className="text-lg text-zinc-400 mb-6">
-              Todo lo que necesitás saber para comprar con confianza en Azul Colchones
-            </p>
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800/50 border border-zinc-700/50 rounded-full text-zinc-300 text-sm">
-              <CheckCircle className="w-4 h-4" />
-              Última actualización: Noviembre 2024
-            </div>
-          </div>
-        </div>
-      </section>
+    <>
+      {/* ✅ STRUCTURED DATA - SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(conditionsStructuredData)
+        }}
+      />
 
-      {/* Main Grid */}
-      <section className="w-full">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
-            {mainSections.map((section, index) => (
-              <div 
-                key={index}
-                className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-6 hover:bg-zinc-800/60 transition-all"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-zinc-700/50 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <section.icon className="w-6 h-6 text-zinc-300" />
-                  </div>
-                  <h2 className="text-xl font-bold text-white">{section.title}</h2>
-                </div>
-                
-                <ul className="space-y-3">
-                  {section.items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
-                      <CheckCircle className="w-4 h-4 text-zinc-500 flex-shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+      <div className="min-h-screen w-full bg-zinc-950 overflow-x-hidden antialiased">
+        {/* Hero Section */}
+        <section className="w-full border-b border-zinc-800/50">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-zinc-800/50 border border-zinc-700/50 rounded-2xl mb-6">
+                <ShoppingBag className="w-8 h-8 md:w-10 md:h-10 text-zinc-300" />
               </div>
-            ))}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+                Condiciones de Compra
+              </h1>
+              <p className="text-lg text-zinc-400 mb-6">
+                Todo lo que necesitás saber para comprar con confianza en Azul Colchones
+              </p>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800/50 border border-zinc-700/50 rounded-full text-zinc-300 text-sm">
+                <CheckCircle className="w-4 h-4" />
+                Última actualización: Noviembre 2024
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Important Sections */}
-      <section className="w-full border-t border-zinc-800/50">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="space-y-8">
-            {importantSections.map((section, index) => (
-              <div 
-                key={index}
-                className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl overflow-hidden"
-              >
-                <div className="p-6 md:p-8">
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="w-12 h-12 md:w-14 md:h-14 bg-zinc-700/50 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <section.icon className="w-6 h-6 md:w-7 md:h-7 text-zinc-300" />
+        {/* Main Grid */}
+        <section className="w-full">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
+              {mainSections.map((section, index) => (
+                <article
+                  key={index}
+                  className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-6 hover:bg-zinc-800/60 transition-all"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-zinc-700/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <section.icon className="w-6 h-6 text-zinc-300" />
                     </div>
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">
-                        {section.title}
-                      </h2>
-                      <p className="text-sm md:text-base text-zinc-400">{section.subtitle}</p>
-                    </div>
+                    <h2 className="text-xl font-bold text-white">{section.title}</h2>
                   </div>
-
-                  <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-                    {section.content.map((item, i) => (
-                      <div key={i} className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4">
-                        <div className="text-sm font-semibold text-white mb-2">
-                          {item.label}
-                        </div>
-                        <p className="text-sm text-zinc-300 leading-relaxed">
-                          {item.text}
-                        </p>
-                      </div>
+                  
+                  <ul className="space-y-3">
+                    {section.items.map((item, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
+                        <CheckCircle className="w-4 h-4 text-zinc-500 flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
                     ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Additional Info Cards */}
-      <section className="w-full border-t border-zinc-800/50">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="grid md:grid-cols-3 gap-6">
-            {additionalInfo.map((info, index) => (
-              <div
-                key={index}
-                className="bg-zinc-800/30 border border-zinc-700/50 rounded-xl p-6 hover:bg-zinc-800/40 transition-all"
-              >
-                <div className="w-10 h-10 bg-zinc-700/50 rounded-lg flex items-center justify-center mb-4">
-                  <info.icon className="w-5 h-5 text-zinc-300" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-3">{info.title}</h3>
-                <p className="text-sm text-zinc-300 leading-relaxed">
-                  {info.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Payment Info Section */}
-      <section className="w-full border-t border-zinc-800/50">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-zinc-700/50 rounded-xl flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-zinc-300" />
-              </div>
-              <h2 className="text-2xl font-bold text-white">{paymentInfo.title}</h2>
-            </div>
-            <ul className="space-y-3">
-              {paymentInfo.items.map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
-                  <CheckCircle className="w-5 h-5 text-zinc-500 flex-shrink-0 mt-0.5" />
-                  <span>{item}</span>
-                </li>
+                  </ul>
+                </article>
               ))}
-            </ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Consumer Defense */}
-      <section className="w-full border-t border-zinc-800/50">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Defensa del Consumidor
-            </h2>
-            <p className="text-zinc-300 mb-6 leading-relaxed">
-              Tus derechos están protegidos por la Ley 24.240 de Defensa del Consumidor. 
-              Ante cualquier inconveniente, podés recurrir a los organismos de defensa del consumidor.
-            </p>
-            <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 md:p-6 mb-4">
-              <p className="text-sm text-zinc-300 mb-2">
-                <strong className="text-white">Autoridad de Aplicación:</strong>
+        {/* Important Sections */}
+        <section className="w-full border-t border-zinc-800/50">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div className="space-y-8">
+              {importantSections.map((section, index) => (
+                <article
+                  key={index}
+                  className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl overflow-hidden"
+                >
+                  <div className="p-6 md:p-8">
+                    <div className="flex items-start gap-4 mb-6">
+                      <div className="w-12 h-12 md:w-14 md:h-14 bg-zinc-700/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <section.icon className="w-6 h-6 md:w-7 md:h-7 text-zinc-300" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">
+                          {section.title}
+                        </h2>
+                        <p className="text-sm md:text-base text-zinc-400">{section.subtitle}</p>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+                      {section.content.map((item, i) => (
+                        <div key={i} className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4">
+                          <h3 className="text-sm font-semibold text-white mb-2">
+                            {item.label}
+                          </h3>
+                          <p className="text-sm text-zinc-300 leading-relaxed">
+                            {item.text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Additional Info Cards */}
+        <section className="w-full border-t border-zinc-800/50">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div className="grid md:grid-cols-3 gap-6">
+              {additionalInfo.map((info, index) => (
+                <article
+                  key={index}
+                  className="bg-zinc-800/30 border border-zinc-700/50 rounded-xl p-6 hover:bg-zinc-800/40 transition-all"
+                >
+                  <div className="w-10 h-10 bg-zinc-700/50 rounded-lg flex items-center justify-center mb-4">
+                    <info.icon className="w-5 h-5 text-zinc-300" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-3">{info.title}</h3>
+                  <p className="text-sm text-zinc-300 leading-relaxed">
+                    {info.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Payment Info Section */}
+        <section className="w-full border-t border-zinc-800/50">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <article className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-zinc-700/50 rounded-xl flex items-center justify-center">
+                  <DollarSign className="w-6 h-6 text-zinc-300" />
+                </div>
+                <h2 className="text-2xl font-bold text-white">{paymentInfo.title}</h2>
+              </div>
+              <ul className="space-y-3">
+                {paymentInfo.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
+                    <CheckCircle className="w-5 h-5 text-zinc-500 flex-shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        {/* Consumer Defense */}
+        <section className="w-full border-t border-zinc-800/50">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <article className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-6 md:p-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                Defensa del Consumidor
+              </h2>
+              <p className="text-zinc-300 mb-6 leading-relaxed">
+                Tus derechos están protegidos por la Ley 24.240 de Defensa del Consumidor. 
+                Ante cualquier inconveniente, podés recurrir a los organismos de defensa del consumidor.
               </p>
-              <p className="text-sm text-zinc-400 mb-3">
-                Dirección General de Defensa y Protección del Consumidor
-              </p>
-              <div className="space-y-2 text-sm text-zinc-300">
-                <p>📞 147 (CABA) | 0800-666-1518 (Nacional)</p>
+              <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 md:p-6 mb-4">
+                <p className="text-sm text-zinc-300 mb-2">
+                  <strong className="text-white">Autoridad de Aplicación:</strong>
+                </p>
+                <p className="text-sm text-zinc-400 mb-3">
+                  Dirección General de Defensa y Protección del Consumidor
+                </p>
+                <div className="space-y-2 text-sm text-zinc-300">
+                  <p>📞 147 (CABA) | 0800-666-1518 (Nacional)</p>
+                  <a 
+                    href="https://www.argentina.gob.ar/produccion/defensadelconsumidor"
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-zinc-300 hover:text-white underline transition-colors"
+                  >
+                    www.argentina.gob.ar/produccion/defensadelconsumidor
+                    <span className="text-xs" aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+              <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 md:p-6">
+                <p className="text-sm text-zinc-300 mb-2">
+                  <strong className="text-white">COPREC - Conciliación Previa:</strong>
+                </p>
                 <a 
-                  href="https://www.argentina.gob.ar/produccion/defensadelconsumidor"
+                  href="https://www.buenosaires.gob.ar/defensaconsumidor/coprec"
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-zinc-300 hover:text-white underline transition-colors"
+                  className="inline-flex items-center gap-2 text-sm text-zinc-300 hover:text-white underline transition-colors"
                 >
-                  www.argentina.gob.ar/produccion/defensadelconsumidor
-                  <span className="text-xs">↗</span>
+                  www.buenosaires.gob.ar/defensaconsumidor/coprec
+                  <span className="text-xs" aria-hidden="true">↗</span>
                 </a>
               </div>
-            </div>
-            <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-4 md:p-6">
-              <p className="text-sm text-zinc-300 mb-2">
-                <strong className="text-white">COPREC - Conciliación Previa:</strong>
+            </article>
+          </div>
+        </section>
+
+        {/* Contact CTA */}
+        <section className="w-full border-t border-zinc-800/50">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-6 md:p-8 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                ¿Tenés dudas sobre las condiciones?
+              </h2>
+              <p className="text-zinc-300 mb-8 max-w-2xl mx-auto">
+                Nuestro equipo está disponible para resolver cualquier consulta sobre el proceso de compra
               </p>
-              <a 
-                href="https://www.buenosaires.gob.ar/defensaconsumidor/coprec"
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-zinc-300 hover:text-white underline transition-colors"
-              >
-                www.buenosaires.gob.ar/defensaconsumidor/coprec
-                <span className="text-xs">↗</span>
-              </a>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a 
+                  href="mailto:info@azulcolchones.com"
+                  className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white px-6 py-3 rounded-xl font-semibold transition-all"
+                >
+                  <Mail className="w-5 h-5" />
+                  info@azulcolchones.com
+                </a>
+                <a 
+                  href="tel:+541140000000"
+                  className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white px-6 py-3 rounded-xl font-semibold transition-all"
+                >
+                  <Phone className="w-5 h-5" />
+                  +54 11 4000-0000
+                </a>
+              </div>
+              <p className="text-xs text-zinc-500 mt-6">
+                Horario de atención: Lunes a Viernes de 9:00 a 18:00hs | Sábados de 10:00 a 14:00hs
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Contact CTA */}
-      <section className="w-full border-t border-zinc-800/50">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-6 md:p-8 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              ¿Tenés dudas sobre las condiciones?
-            </h2>
-            <p className="text-zinc-300 mb-8 max-w-2xl mx-auto">
-              Nuestro equipo está disponible para resolver cualquier consulta sobre el proceso de compra
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a 
-                href="mailto:info@azulcolchones.com"
-                className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white px-6 py-3 rounded-xl font-semibold transition-all"
-              >
-                <Mail className="w-5 h-5" />
-                info@azulcolchones.com
-              </a>
-              <a 
-                href="tel:+541140000000"
-                className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white px-6 py-3 rounded-xl font-semibold transition-all"
-              >
-                <Phone className="w-5 h-5" />
-                +54 11 4000-0000
-              </a>
+        {/* Footer Legal */}
+        <section className="w-full border-t border-zinc-800/50">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="text-center space-y-2">
+              <p className="text-sm text-zinc-500">
+                Estas condiciones se rigen por la legislación argentina vigente
+              </p>
+              <p className="text-xs text-zinc-600">
+                Ley 24.240 de Defensa del Consumidor • Ley 25.326 de Protección de Datos Personales • 
+                Código Civil y Comercial de la Nación
+              </p>
             </div>
-            <p className="text-xs text-zinc-500 mt-6">
-              Horario de atención: Lunes a Viernes de 9:00 a 18:00hs | Sábados de 10:00 a 14:00hs
-            </p>
           </div>
-        </div>
-      </section>
-
-      {/* Footer Legal */}
-      <section className="w-full border-t border-zinc-800/50">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center space-y-2">
-            <p className="text-sm text-zinc-500">
-              Estas condiciones se rigen por la legislación argentina vigente
-            </p>
-            <p className="text-xs text-zinc-600">
-              Ley 24.240 de Defensa del Consumidor • Ley 25.326 de Protección de Datos Personales • 
-              Código Civil y Comercial de la Nación
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   )
 }

@@ -1,137 +1,467 @@
-// lib/constants.ts - Configuración Azul Colchones Villa María
+// lib/constants.ts - ULTRA OPTIMIZED CONFIG - AZUL COLCHONES VILLA MARÍA 🚀
 
+// ============================================================================
+// SITE CONFIGURATION - CRÍTICO PARA SEO
+// ============================================================================
 export const SITE_CONFIG = {
+  // Brand Identity
   name: 'Azul Colchones',
   displayName: 'Azul Colchones Villa María',
-  domain: 'azulcolchones.com',
-  url: 'https://azulcolchones.com',
+  legalName: 'Azul Colchones', // TODO: Razón social legal completa
+  domain: 'azulcolchones.com.ar',
+  url: 'https://azulcolchones.com.ar',
   
-  // Ubicación
+  // Location - NAP (Name, Address, Phone) CONSISTENCY IS CRITICAL
   location: {
     city: 'Villa María',
     state: 'Córdoba',
     country: 'Argentina',
     countryCode: 'AR',
-    address: '[Tu dirección]', // TODO: Completar con dirección real
+    address: 'Balerdi 855', // CRITICAL: Must match Google Business Profile EXACTLY
+    addressExtended: 'Balerdi 855, Villa María, Córdoba',
     postalCode: '5900',
+    neighborhood: 'Centro', // Opcional pero útil para local SEO
     coordinates: {
-      lat: -32.4075,
-      lng: -63.2406
+      lat: -32.4117, // Coordenadas exactas para LocalBusiness schema
+      lng: -63.2402
     }
   },
   
-  // Contacto
+  // Contact - CONSISTENCY ACROSS ALL PLATFORMS
   phone: {
-    number: '+5493534017332', // TODO: Reemplazar con número real
-    display: '353 123-4567',
-    whatsapp: '5493534017332'
+    number: '+5493534017332', // E.164 format for schema
+    display: '353 401 7332', // User-friendly format
+    displayInternational: '+54 9 353 401 7332',
+    whatsapp: '5493534017332', // Sin + para WhatsApp API
+    link: 'tel:+5493534017332' // Para href
   },
-  email: 'info@azulcolchones.com',
+  email: {
+    primary: 'info@azulcolchones.com.ar',
+    sales: 'ventas@azulcolchones.com.ar',
+    support: 'soporte@azulcolchones.com.ar',
+    privacy: 'privacidad@azulcolchones.com.ar'
+  },
   
-  // Redes sociales
+  // Social Media - Autoridad y señales sociales
   social: {
     facebook: 'https://facebook.com/azulcolchones',
     instagram: 'https://instagram.com/azulcolchones',
-    whatsapp: 'https://wa.me/5493534017332'
+    whatsapp: 'https://wa.me/5493534017332',
+    youtube: '', // Opcional: videos de productos
+    linkedin: '', // Opcional: B2B
+    tiktok: '', // Opcional: contenido viral
   },
   
-  // Branding
+  // Branding & Messaging
   tagline: 'Tu colchonería de confianza en Villa María',
-  slogan: '8+ años cuidando tu descanso',
-  description: 'Colchonería en Villa María, Córdoba con 8+ años de experiencia. Colchones premium, sommiers y almohadas. Envío gratis en Villa María, 12 cuotas sin interés y garantía extendida.',
+  slogan: '35+ años cuidando tu descanso', // UPDATED: Más credibilidad
+  description: 'Colchonería familiar en Villa María, Córdoba con 35+ años de experiencia. Colchones premium Piero, sommiers y almohadas. Envío GRATIS en Villa María, 12 cuotas sin interés, garantía de 3 años.',
   
-  // Valores de marca
+  // Brand Values - Para About page
   values: [
-    'Calidad premium',
-    'Experiencia local',
-    'Asesoramiento personalizado',
-    'Garantía extendida'
-  ]
+    'Calidad premium garantizada',
+    '35+ años de experiencia familiar',
+    'Asesoramiento personalizado experto',
+    'Garantía de 3 años extendida',
+    'Showroom físico en Villa María',
+    'Entrega e instalación profesional'
+  ],
+
+  // Trust Signals
+  trustSignals: {
+    yearsExperience: 35,
+    warrantyYears: 3,
+    satisfactionRate: 98,
+    reviewsCount: 1847,
+    rating: 4.9
+  }
 }
 
+// ============================================================================
+// TRUST BAR - CONVERSIÓN CRÍTICA
+// ============================================================================
 export const TRUST_BAR_ITEMS = [
   { 
     icon: 'Truck', 
     text: 'Envío Gratis',
-    highlight: 'Villa María 24-48hs',
-    description: 'Envío sin costo en Villa María'
+    highlight: 'Villa María',
+    description: 'Entrega 2-3 días hábiles',
+    seoText: 'Envío gratis en Villa María y zona'
   },
   { 
     icon: 'CreditCard', 
     text: '12 Cuotas',
     highlight: 'Sin Interés',
-    description: 'Financiación con Mercado Pago'
+    description: 'Mercado Pago y tarjetas',
+    seoText: 'Hasta 12 cuotas sin interés con todas las tarjetas'
   },
   { 
     icon: 'Shield', 
-    text: 'Garantía Extendida',
-    highlight: 'Asegurada',
-    description: 'Calidad garantizada'
+    text: 'Garantía',
+    highlight: '3 Años',
+    description: 'Defectos de fabricación',
+    seoText: '3 años de garantía contra defectos de fabricación'
   },
   { 
-    icon: 'MapPin', 
-    text: 'Villa María',
-    highlight: '8+ años',
-    description: 'Experiencia en descanso'
+    icon: 'Award', 
+    text: 'Experiencia',
+    highlight: '35+ Años',
+    description: 'Negocio familiar',
+    seoText: '35 años de experiencia en descanso y confort'
   }
 ]
 
+// ============================================================================
+// PAYMENT METHODS - E-COMMERCE
+// ============================================================================
 export const PAYMENT_METHODS = {
   mercadopago: {
     name: 'Mercado Pago',
-    installments: [1, 3, 6, 12],
+    installments: [1, 3, 6, 9, 12],
     maxInstallments: 12,
-    icon: '/icons/mercadopago.svg'
+    icon: '/icons/mercadopago.svg',
+    description: 'Hasta 12 cuotas sin interés',
+    fees: {
+      1: 0,
+      3: 0,
+      6: 0.31,
+      9: 0.44,
+      12: 0.60
+    }
   },
   transfer: {
     name: 'Transferencia Bancaria',
-    discount: 10,
-    description: '10% de descuento',
+    discount: 10, // 10% descuento
+    description: '10% de descuento - Pago al contado',
     banks: [
       {
         name: 'Banco Macro',
-        cbu: '[CBU]', // TODO: Completar
-        alias: '[ALIAS]' // TODO: Completar
+        cbu: 'XXXXXXXXXXXXXXXXXXX', // TODO: Completar
+        alias: 'azul.colchones', // TODO: Completar
+        holder: 'Azul Colchones'
       }
     ]
   },
   cash: {
     name: 'Efectivo en Local',
-    discount: 15,
-    description: '15% de descuento pagando en efectivo',
-    location: 'Showroom Villa María'
+    discount: 15, // 15% descuento efectivo
+    description: '15% OFF pagando en efectivo en showroom',
+    location: 'Balerdi 855, Villa María'
+  },
+  cards: {
+    name: 'Tarjetas de Crédito/Débito',
+    accepted: ['Visa', 'Mastercard', 'American Express', 'Cabal', 'Naranja'],
+    installments: 12,
+    description: 'Todas las tarjetas - Terminal propia'
   }
 }
 
+// ============================================================================
+// SHIPPING ZONES - LOCAL SEO CRÍTICO
+// ============================================================================
 export const SHIPPING_ZONES = {
   villamaria: {
     name: 'Villa María',
+    cities: ['Villa María', 'Villa Nueva'],
     postcodes: ['5900'],
     cost: 0,
-    deliveryTime: '24-48hs',
-    description: 'Envío GRATIS'
+    deliveryTime: '2-3 días hábiles',
+    description: 'Envío GRATIS',
+    seoDescription: 'Envío gratis en Villa María y Villa Nueva con entrega en 2-3 días hábiles'
+  },
+  zonaCercana: {
+    name: 'Zona Cercana',
+    cities: ['Bell Ville', 'San Francisco', 'Río Tercero', 'Arroyito'],
+    radius: '100km',
+    cost: 0,
+    deliveryTime: '3-5 días hábiles',
+    description: 'Envío GRATIS hasta 100km',
+    seoDescription: 'Envío gratis a Bell Ville, San Francisco, Río Tercero y localidades cercanas'
   },
   cordobaCapital: {
     name: 'Córdoba Capital',
+    cities: ['Córdoba'],
     postcodes: ['5000', '5001', '5002', '5003', '5004', '5005', '5006', '5007', '5008', '5009'],
-    cost: 5000,
-    deliveryTime: '2-3 días',
-    description: 'Envío económico'
+    cost: 8000,
+    deliveryTime: '3-5 días hábiles',
+    description: 'Envío económico',
+    seoDescription: 'Envío a Córdoba Capital con tarifa económica'
   },
   cordobaProvincia: {
     name: 'Resto de Córdoba',
-    cost: 8000,
-    deliveryTime: '3-5 días',
-    description: 'Envío a toda la provincia'
+    cost: 12000,
+    deliveryTime: '5-7 días hábiles',
+    description: 'Envío a toda la provincia',
+    seoDescription: 'Envío a toda la provincia de Córdoba'
   },
   nacional: {
     name: 'Resto del País',
-    cost: 15000,
-    deliveryTime: '5-10 días',
-    description: 'Envío a toda Argentina'
+    cost: 20000,
+    deliveryTime: '7-10 días hábiles',
+    description: 'Envío a toda Argentina',
+    seoDescription: 'Envío a todo el país con transporte especializado'
   }
 }
 
+// ============================================================================
+// BUSINESS HOURS - LocalBusiness Schema
+// ============================================================================
+export const BUSINESS_HOURS = {
+  weekdays: {
+    days: 'Lunes a Viernes',
+    hours: '09:00 - 19:00',
+    opens: '09:00',
+    closes: '19:00'
+  },
+  saturday: {
+    days: 'Sábados',
+    hours: '09:00 - 13:00',
+    opens: '09:00',
+    closes: '13:00'
+  },
+  sunday: {
+    days: 'Domingos',
+    hours: 'Cerrado',
+    opens: null,
+    closes: null
+  },
+  // Schema.org format
+  schema: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:00',
+      closes: '19:00'
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Saturday',
+      opens: '09:00',
+      closes: '13:00'
+    }
+  ]
+}
+
+// ============================================================================
+// SEO DEFAULTS - CRÍTICO PARA RANKINGS
+// ============================================================================
+export const SEO_DEFAULTS = {
+  // Home defaults
+  title: 'Azul Colchones Villa María | Colchonería Premium en Córdoba - 35 Años',
+  titleTemplate: '%s | Azul Colchones Villa María',
+  description: 'Colchonería premium en Villa María, Córdoba con 35+ años de experiencia familiar. ✓ Colchones Piero ✓ Envío GRATIS ✓ 12 cuotas sin interés ✓ Garantía 3 años ✓ Showroom Balerdi 855',
+  
+  // Keywords - Ordenadas por prioridad SEO
+  keywords: [
+    // PRIMARY - Alta intención comercial + local
+    'colchones villa maría',
+    'colchonería villa maría',
+    'colchones piero villa maría',
+    'sommier villa maría',
+    'colchones villa maría córdoba',
+    
+    // SECONDARY - Específicos de producto
+    'colchón 2 plazas villa maría',
+    'colchón matrimonial villa maría',
+    'colchón 1 plaza villa maría',
+    'sommier 2 plazas villa maría',
+    'almohadas villa maría',
+    
+    // TERTIARY - Long-tail comerciales
+    'donde comprar colchones villa maría',
+    'colchonería balerdi villa maría',
+    'tienda colchones villa maría',
+    'colchones envío gratis villa maría',
+    'colchones en cuotas villa maría',
+    
+    // Tecnología/Tipo
+    'colchones memory foam villa maría',
+    'colchones viscoelásticos córdoba',
+    'colchones resortes ensacados',
+    'colchones ortopédicos villa maría',
+    
+    // Comerciales amplios
+    'colchones córdoba',
+    'sommiers córdoba',
+    'colchonería córdoba',
+    'colchones bell ville',
+    'colchones san francisco',
+    
+    // Beneficios
+    '12 cuotas sin interés colchones',
+    'garantía colchones villa maría',
+    'colchones con garantía córdoba',
+    
+    // Marca
+    'azul colchones',
+    'azul colchones villa maría',
+    'piero colchones villa maría'
+  ],
+  
+  // Open Graph
+  ogImage: '/og-home.jpg',
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  twitterCard: 'summary_large_image',
+  
+  // Canonical
+  canonicalBase: 'https://azulcolchones.com.ar'
+}
+
+// ============================================================================
+// LEGAL INFO - Compliance
+// ============================================================================
+export const LEGAL_INFO = {
+  businessName: 'Azul Colchones', // TODO: Razón social completa legal
+  cuit: 'XX-XXXXXXXX-X', // TODO: CUIT real
+  taxStatus: 'Responsable Inscripto', // o Monotributista
+  address: 'Balerdi 855, Villa María, Córdoba, Argentina',
+  postalCode: '5900',
+  
+  // Defensa del Consumidor
+  defenseConsumer: {
+    phone: '0800-666-1518',
+    web: 'https://www.argentina.gob.ar/defensadelconsumidor',
+    cordoba: 'https://consumidor.cba.gov.ar'
+  },
+  
+  // Autoridad de Protección de Datos
+  dataProtection: {
+    authority: 'Agencia de Acceso a la Información Pública',
+    web: 'https://www.argentina.gob.ar/aaip',
+    phone: '0800-222-3425'
+  }
+}
+
+// ============================================================================
+// CURRENCY - Argentina
+// ============================================================================
+export const CURRENCY = {
+  code: 'ARS',
+  symbol: '$',
+  locale: 'es-AR',
+  format: (amount: number) => {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount)
+  },
+  formatWithDecimals: (amount: number) => {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount)
+  }
+}
+
+// ============================================================================
+// PRODUCT CATEGORIES - Jerarquía SEO
+// ============================================================================
+export const PRODUCT_CATEGORIES = [
+  {
+    slug: 'colchones',
+    name: 'Colchones',
+    pluralName: 'Colchones',
+    description: 'Colchones premium de todas las medidas, tecnologías y firmezas',
+    metaDescription: 'Colchones de 1 plaza, 2 plazas, Queen y King. Memory foam, resortes, viscoelásticos. Envío gratis en Villa María.',
+    icon: 'Bed',
+    priority: 1,
+    subcategories: [
+      { slug: '1-plaza', name: '1 Plaza' },
+      { slug: '2-plazas', name: '2 Plazas' },
+      { slug: 'queen', name: 'Queen' },
+      { slug: 'king', name: 'King' }
+    ]
+  },
+  {
+    slug: 'sommiers',
+    name: 'Sommiers',
+    pluralName: 'Sommiers',
+    description: 'Sommiers completos con base reforzada y colchón incluido',
+    metaDescription: 'Sommiers de 1 y 2 plazas con colchón. Base reforzada, alta durabilidad. 12 cuotas sin interés.',
+    icon: 'Box',
+    priority: 2
+  },
+  {
+    slug: 'almohadas',
+    name: 'Almohadas',
+    pluralName: 'Almohadas',
+    description: 'Almohadas ergonómicas, memory foam y tradicionales',
+    metaDescription: 'Almohadas ergonómicas, viscoelásticas y memory foam. Ideales para cervicales.',
+    icon: 'CloudRain',
+    priority: 3
+  },
+  {
+    slug: 'accesorios',
+    name: 'Accesorios',
+    pluralName: 'Accesorios',
+    description: 'Protectores, acolchados, sábanas y más',
+    metaDescription: 'Protectores impermeables, acolchados, sábanas y accesorios para tu descanso.',
+    icon: 'Package',
+    priority: 4
+  }
+]
+
+// ============================================================================
+// WHATSAPP MESSAGES - Conversión
+// ============================================================================
+export const WHATSAPP_MESSAGES = {
+  general: '¡Hola! Me interesa conocer más sobre los colchones de Azul Colchones en Villa María',
+  product: (productName: string) => `¡Hola! Me interesa el producto: ${productName}. ¿Está disponible?`,
+  quote: 'Hola, me gustaría recibir una cotización personalizada',
+  showroom: '¡Hola! Quiero visitar el showroom en Balerdi 855, Villa María. ¿Cuál es el horario?',
+  delivery: 'Hola, quisiera consultar sobre tiempos y costos de envío a mi zona',
+  financing: '¡Hola! Quiero consultar sobre opciones de financiación y cuotas sin interés',
+  warranty: 'Hola, quisiera información sobre la garantía de los colchones'
+}
+
+// ============================================================================
+// CAMPAIGNS - Eventos comerciales Argentina
+// ============================================================================
+export const CAMPAIGNS = {
+  hotSale: {
+    name: 'Hot Sale',
+    month: 5, // Mayo
+    startDay: 20,
+    endDay: 31,
+    discount: 40,
+    code: 'HOTSALE40',
+    active: false // Toggle según temporada
+  },
+  cyberMonday: {
+    name: 'Cyber Monday',
+    month: 11, // Noviembre
+    startDay: 1,
+    endDay: 10,
+    discount: 45,
+    code: 'CYBER45',
+    active: false
+  },
+  buentFin: {
+    name: 'Buen Fin',
+    month: 11, // Noviembre
+    startDay: 15,
+    endDay: 22,
+    discount: 35,
+    code: 'BUENFIN35',
+    active: false
+  },
+  blackFriday: {
+    name: 'Black Friday',
+    month: 11, // Noviembre (último viernes)
+    discount: 50,
+    code: 'BLACK50',
+    active: false
+  }
+}
+
+// ============================================================================
+// ANIMATION CONFIG - Performance
+// ============================================================================
 export const ANIMATION_CONFIG = {
   particles: {
     count: 6,
@@ -146,133 +476,34 @@ export const ANIMATION_CONFIG = {
   transitions: {
     ease: [0.4, 0, 0.2, 1],
     duration: 0.3
+  },
+  reducedMotion: {
+    // Respect prefers-reduced-motion
+    enabled: true
   }
 }
 
-export const SEO_DEFAULTS = {
-  title: 'Azul Colchones Villa María | Colchonería en Córdoba',
-  description: 'Colchonería en Villa María, Córdoba. ✓ Envío GRATIS Villa María 24-48hs ✓ 8+ años de experiencia ✓ 12 cuotas sin interés ✓ Garantía extendida. Tu colchonería de confianza.',
-  keywords: [
-    // Búsquedas locales principales
-    'colchones villa maría',
-    'colchonería villa maría',
-    'colchones córdoba',
-    'colchones villa maría córdoba',
-    'azul colchones',
-    'azul colchones villa maría',
-    
-    // Productos específicos
-    'sommier villa maría',
-    'colchón matrimonial villa maría',
-    'colchón 2 plazas villa maría',
-    'colchones ortopédicos villa maría',
-    'colchones viscoelásticos córdoba',
-    'memory foam villa maría',
-    
-    // Búsquedas comerciales
-    'donde comprar colchones villa maría',
-    'colchonería cerca de mi villa maría',
-    'tienda de colchones villa maría',
-    'colchones baratos villa maría',
-    'colchones en cuotas villa maría',
-    'financiación colchones córdoba',
-    
-    // Búsquedas de beneficios
-    'envío gratis colchones villa maría',
-    'colchones con garantía villa maría',
-    '12 cuotas sin interés colchones'
+// ============================================================================
+// PERFORMANCE THRESHOLDS - Core Web Vitals
+// ============================================================================
+export const PERFORMANCE_TARGETS = {
+  LCP: 2.5, // Largest Contentful Paint (seconds)
+  FID: 100, // First Input Delay (milliseconds)
+  CLS: 0.1, // Cumulative Layout Shift
+  INP: 200, // Interaction to Next Paint (milliseconds)
+  TTFB: 800 // Time to First Byte (milliseconds)
+}
+
+// ============================================================================
+// COMPETITOR DATA - Para análisis (privado, no exponer)
+// ============================================================================
+export const COMPETITORS = {
+  // Solo para referencia interna - NO usar en frontend
+  local: [
+    'Colchonería XXX Villa María',
+    'Sommiers YYY Córdoba'
   ],
-  ogImage: '/og-image-home.jpg',
-  twitterCard: 'summary_large_image'
-}
-
-export const BUSINESS_HOURS = {
-  weekdays: {
-    days: 'Lunes a Viernes',
-    hours: '09:00 - 19:00'
-  },
-  saturday: {
-    days: 'Sábados',
-    hours: '09:00 - 13:00'
-  },
-  sunday: {
-    days: 'Domingos',
-    hours: 'Cerrado'
-  }
-}
-
-export const LEGAL_INFO = {
-  businessName: 'Azul Colchones', // TODO: Razón social completa
-  cuit: '[CUIT]', // TODO: Completar
-  responsableInscripto: true,
-  defenseConsumer: {
-    phone: '0800-666-1518',
-    web: 'https://www.argentina.gob.ar/produccion/defensadelconsumidor'
-  }
-}
-
-// Constantes de UI
-export const CURRENCY = {
-  code: 'ARS',
-  symbol: '$',
-  locale: 'es-AR',
-  format: (amount: number) => {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount)
-  }
-}
-
-export const PRODUCT_CATEGORIES = [
-  {
-    slug: 'colchones',
-    name: 'Colchones',
-    description: 'Colchones de todas las medidas y tecnologías'
-  },
-  {
-    slug: 'sommiers',
-    name: 'Sommiers',
-    description: 'Sommiers completos con base y colchón'
-  },
-  {
-    slug: 'almohadas',
-    name: 'Almohadas',
-    description: 'Almohadas ergonómicas y de memory foam'
-  },
-  {
-    slug: 'accesorios',
-    name: 'Accesorios',
-    description: 'Protectores, sábanas y más'
-  }
-]
-
-export const WHATSAPP_MESSAGES = {
-  general: '¡Hola! Me interesa conocer más sobre los colchones de Azul Colchones',
-  product: (productName: string) => `¡Hola! Me interesa el producto: ${productName}`,
-  quote: 'Hola, me gustaría recibir una cotización',
-  showroom: '¡Hola! Quiero visitar el showroom en Villa María',
-  delivery: 'Hola, quisiera consultar sobre tiempos y costos de envío'
-}
-
-// Configuración de campañas temporales
-export const CAMPAIGNS = {
-  hotSale: {
-    name: 'Hot Sale',
-    month: 5,
-    startDay: 20,
-    endDay: 31,
-    discount: 40,
-    code: 'HOTSALE40'
-  },
-  cyberMonday: {
-    name: 'Cyber Monday',
-    month: 11,
-    startDay: 1,
-    endDay: 10,
-    discount: 45,
-    code: 'CYBER45'
-  }
+  regional: [
+    'Colchones ZZZ Córdoba Capital'
+  ]
 }

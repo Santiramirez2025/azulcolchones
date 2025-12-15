@@ -2,7 +2,6 @@
 
 import { useState, useRef, useMemo, useCallback } from 'react'
 import { useScroll, useTransform, AnimatePresence, motion, MotionValue } from 'framer-motion'
-// Importaciones de tipos y helpers
 import { NormalizedProduct, CatalogoClientProps } from './components/types'
 
 // Componentes modulares
@@ -33,7 +32,7 @@ const CATEGORY_CONFIG = [
 ] as const
 
 // ============================================================================
-// MAIN COMPONENT
+// MAIN COMPONENT - ✅ OPTIMIZADO MOBILE-FIRST
 // ============================================================================
 
 export default function CatalogoClient({ 
@@ -42,7 +41,7 @@ export default function CatalogoClient({
 }: CatalogoClientProps) {
   
   // ============================================================================
-  // DEBUG Y NORMALIZACIÓN DE PRODUCTOS
+  // NORMALIZACIÓN DE PRODUCTOS
   // ============================================================================
   
   const productsToFilter: NormalizedProduct[] = useMemo(() => {
@@ -50,19 +49,7 @@ export default function CatalogoClient({
     
     if (process.env.NODE_ENV === 'development') {
       console.log('🛍️ CatalogoClient mounted')
-      console.log('📦 Initial products received:', products.length)
-      console.log('📊 Total products:', totalProducts)
-      
-      if (products.length > 0) {
-        console.log('✅ First product sample:', {
-          id: products[0].id,
-          name: products[0].name,
-          category: products[0].category,
-          price: products[0].price,
-          images: products[0].images,
-          isActive: products[0].isActive
-        })
-      }
+      console.log('📦 Products:', products.length)
     }
     
     return products
@@ -75,8 +62,6 @@ export default function CatalogoClient({
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('featured')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  
-  // ✅ Estados de filtrado sincronizados
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [activeCategory, setActiveCategory] = useState('todos')
   const [priceRange, setPriceRange] = useState<[number, number]>([PRICE_RANGE_MIN, PRICE_RANGE_MAX])
@@ -104,20 +89,12 @@ export default function CatalogoClient({
   
   const availableCategories = useMemo(() => {
     const categories = new Set<string>()
-    
     productsToFilter.forEach(p => {
       if (p.category && typeof p.category === 'string') {
         categories.add(p.category.trim())
       }
     })
-    
-    const cats = Array.from(categories).sort()
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🏷️ Available categories:', cats)
-    }
-    
-    return cats
+    return Array.from(categories).sort()
   }, [productsToFilter])
 
   const categoriesWithCount = useMemo(() => {
@@ -134,10 +111,6 @@ export default function CatalogoClient({
   // ============================================================================
   
   const clearFilters = useCallback(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🧹 Clearing all filters')
-    }
-    
     setSearchTerm('')
     setSortBy('featured')
     setSelectedCategories([])
@@ -153,15 +126,8 @@ export default function CatalogoClient({
     })
   }, [])
 
-  // ✅ Handler para cambio de categoría (sincroniza tabs con drawer)
   const handleCategoryChange = useCallback((categoryId: string) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Category changed to:', categoryId)
-    }
-    
     setActiveCategory(categoryId)
-    
-    // Sincronizar con selectedCategories del drawer
     if (categoryId === 'todos') {
       setSelectedCategories([])
     } else {
@@ -169,25 +135,18 @@ export default function CatalogoClient({
     }
   }, [])
 
-  // ✅ Handler para cambio desde drawer (sincroniza drawer con tabs)
   const handleDrawerCategoryChange = useCallback((categories: string[] | ((prev: string[]) => string[])) => {
     const newCategories = typeof categories === 'function' 
       ? categories(selectedCategories)
       : categories
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Drawer categories changed to:', newCategories)
-    }
-    
     setSelectedCategories(newCategories)
     
-    // Sincronizar con activeCategory
     if (newCategories.length === 0) {
       setActiveCategory('todos')
     } else if (newCategories.length === 1) {
       setActiveCategory(newCategories[0])
     } else {
-      // Multiple categories selected - keep 'todos' active
       setActiveCategory('todos')
     }
   }, [selectedCategories])
@@ -197,51 +156,24 @@ export default function CatalogoClient({
   // ============================================================================
   
   const filteredProducts = useMemo(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 Filtering products...')
-      console.log('  📊 Total products:', productsToFilter.length)
-      console.log('  🏷️ Active category:', activeCategory)
-      console.log('  🔍 Search term:', searchTerm)
-      console.log('  🔢 Sort by:', sortBy)
-      console.log('  📁 Selected categories (drawer):', selectedCategories)
-      console.log('  💰 Price range (centavos):', priceRange)
-      console.log('  ⭐ Min rating:', minRating)
-    }
+    if (!productsToFilter.length) return []
     
-    if (!productsToFilter.length) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('⚠️ No products to filter!')
-      }
-      return []
-    }
-    
-    // Convertir precio range de centavos a pesos para comparación
     const minPricePesos = priceRange[0] / 100
     const maxPricePesos = priceRange[1] / 100
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('  💰 Price range in pesos:', minPricePesos, '-', maxPricePesos)
-    }
-    
     const filtered = productsToFilter.filter(product => {
-      // 1. ✅ Verificar que esté activo
-      if (product.isActive === false) {
-        return false
-      }
+      if (product.isActive === false) return false
       
-      // 2. ✅ Filtro de categoría (prioridad a tabs)
+      // Categoría
       let matchesCategory = true
-      
       if (activeCategory !== 'todos') {
         matchesCategory = product.category === activeCategory
       } else if (selectedCategories.length > 0) {
-        // Si hay categorías seleccionadas en drawer pero tab es 'todos'
         matchesCategory = selectedCategories.includes(product.category || '')
       }
-      
       if (!matchesCategory) return false
       
-      // 3. ✅ Búsqueda de texto
+      // Búsqueda
       if (searchTerm) {
         const search = searchTerm.toLowerCase()
         const matchesSearch = 
@@ -249,21 +181,14 @@ export default function CatalogoClient({
           product.subtitle?.toLowerCase().includes(search) ||
           product.description?.toLowerCase().includes(search) ||
           product.category?.toLowerCase().includes(search)
-        
         if (!matchesSearch) return false
       }
       
-      // 4. ✅ Rango de precio (los productos ya vienen en pesos)
+      // Precio
       const matchesPrice = product.price >= minPricePesos && product.price <= maxPricePesos
+      if (!matchesPrice) return false
       
-      if (!matchesPrice) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`  ❌ ${product.name}: price ${product.price} pesos out of range ${minPricePesos}-${maxPricePesos} pesos`)
-        }
-        return false
-      }
-      
-      // 5. ✅ Rating mínimo
+      // Rating
       if (minRating > 0) {
         const matchesRating = (product.rating || 0) >= minRating
         if (!matchesRating) return false
@@ -272,22 +197,18 @@ export default function CatalogoClient({
       return true
     })
     
-    // ✅ Ordenamiento
-    const sorted = [...filtered].sort((a, b) => {
+    // Ordenamiento
+    return [...filtered].sort((a, b) => {
       switch (sortBy) {
-        case 'price-asc':
-          return a.price - b.price
-        case 'price-desc':
-          return b.price - a.price
-        case 'rating':
-          return (b.rating || 0) - (a.rating || 0)
+        case 'price-asc': return a.price - b.price
+        case 'price-desc': return b.price - a.price
+        case 'rating': return (b.rating || 0) - (a.rating || 0)
         case 'newest':
           if (a.isNew && !b.isNew) return -1
           if (!a.isNew && b.isNew) return 1
           return 0
         case 'featured':
         default:
-          // Featured: BestSeller > New > Rating
           if (a.isBestSeller && !b.isBestSeller) return -1
           if (!a.isBestSeller && b.isBestSeller) return 1
           if (a.isNew && !b.isNew) return -1
@@ -295,21 +216,6 @@ export default function CatalogoClient({
           return (b.rating || 0) - (a.rating || 0)
       }
     })
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('✅ Filtered products:', sorted.length)
-      
-      if (sorted.length === 0 && productsToFilter.length > 0) {
-        console.log('⚠️ All products filtered out!')
-        console.log('  Check filters:')
-        console.log('    - Category:', activeCategory)
-        console.log('    - Price range (pesos):', minPricePesos, '-', maxPricePesos)
-        console.log('    - Rating:', minRating)
-        console.log('    - Search:', searchTerm)
-      }
-    }
-    
-    return sorted
   }, [productsToFilter, activeCategory, selectedCategories, searchTerm, sortBy, priceRange, minRating])
 
   // ============================================================================
@@ -318,17 +224,9 @@ export default function CatalogoClient({
   
   const avgPrice = useMemo(() => {
     if (!productsToFilter.length) return 300000
-    
     const activeProducts = productsToFilter.filter(p => p.isActive !== false)
     if (!activeProducts.length) return 300000
-    
-    const avg = activeProducts.reduce((acc, p) => acc + p.price, 0) / activeProducts.length
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📊 Average price:', avg, 'pesos')
-    }
-    
-    return avg
+    return activeProducts.reduce((acc, p) => acc + p.price, 0) / activeProducts.length
   }, [productsToFilter])
 
   const activeFiltersCount = useMemo(() => {
@@ -346,21 +244,17 @@ export default function CatalogoClient({
   // ============================================================================
   
   if (productsToFilter.length === 0) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('❌ No products available - showing empty state')
-    }
-    
     return (
-      <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center overflow-x-hidden">
         <div className="text-center max-w-lg mx-auto px-4 py-12">
-          <div className="text-6xl sm:text-7xl md:text-8xl mb-4 sm:mb-6">🛏️</div>
-          <h2 className="text-2xl sm:text-3xl font-black text-white mb-3 sm:mb-4">
+          <div className="text-6xl sm:text-7xl md:text-8xl mb-6">🛏️</div>
+          <h2 className="text-2xl sm:text-3xl font-black text-white mb-4">
             No hay productos disponibles
           </h2>
-          <p className="text-zinc-400 text-sm sm:text-base mb-4 sm:mb-6">
+          <p className="text-zinc-400 text-sm sm:text-base mb-6">
             La base de datos está vacía. Ejecutá el seed para cargar productos.
           </p>
-          <code className="inline-block bg-zinc-800 text-blue-400 px-3 sm:px-4 py-2 rounded-lg font-mono text-xs sm:text-sm">
+          <code className="inline-block bg-zinc-800 text-blue-400 px-4 py-2 rounded-lg font-mono text-xs sm:text-sm">
             npm run db:seed
           </code>
         </div>
@@ -369,16 +263,12 @@ export default function CatalogoClient({
   }
 
   // ============================================================================
-  // RENDERIZADO
+  // RENDERIZADO - ✅ SIN SCROLL HORIZONTAL
   // ============================================================================
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🎨 Rendering catalog with', filteredProducts.length, 'products')
-  }
-  
   return (
-    <div className="min-h-screen bg-white relative">
-      {/* Hero Section */}
+    <div className="min-h-screen bg-white overflow-x-hidden">
+      {/* Hero Section - MOBILE OPTIMIZADO */}
       <HeroSection 
         heroRef={heroRef} 
         heroY={heroY} 
@@ -388,31 +278,36 @@ export default function CatalogoClient({
         avgPrice={avgPrice}
       />
       
-      {/* Barra sticky con búsqueda y ordenamiento */}
-      <StickyBar
-        productsRef={productsRef}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        activeFiltersCount={activeFiltersCount}
-        clearFilters={clearFilters}
-        setIsFilterOpen={setIsFilterOpen}
-        filteredProductsLength={filteredProducts.length}
-      />
-
-      {/* Category Tabs - Sticky below StickyBar - MOBILE OPTIMIZED */}
-      <div className="sticky top-14 sm:top-16 z-30 bg-white/95 backdrop-blur-md border-b border-zinc-200 py-3 sm:py-4">
-        <div className="container mx-auto px-3 sm:px-4">
-          <CategoryTabs
-            categories={categoriesWithCount}
-            activeCategory={activeCategory}
-            onCategoryChange={handleCategoryChange}
+      {/* ✅ STICKY COMBINADO - Una sola barra pegajosa */}
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-lg shadow-sm">
+        {/* StickyBar con búsqueda */}
+        <div className="border-b border-gray-200">
+          <StickyBar
+            productsRef={productsRef}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            activeFiltersCount={activeFiltersCount}
+            clearFilters={clearFilters}
+            setIsFilterOpen={setIsFilterOpen}
+            filteredProductsLength={filteredProducts.length}
           />
+        </div>
+        
+        {/* CategoryTabs integrados */}
+        <div className="border-b border-gray-100 py-3 sm:py-4">
+          <div className="container mx-auto px-4 sm:px-6">
+            <CategoryTabs
+              categories={categoriesWithCount}
+              activeCategory={activeCategory}
+              onCategoryChange={handleCategoryChange}
+            />
+          </div>
         </div>
       </div>
 
-      {/* ✅ FilterDrawer CORRECTAMENTE CONECTADO */}
+      {/* FilterDrawer mejorado */}
       <FilterDrawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
@@ -426,8 +321,8 @@ export default function CatalogoClient({
         onClearFilters={clearFilters}
       />
 
-      {/* Grid de productos - MOBILE OPTIMIZED */}
-      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 md:py-12 lg:py-16">
+      {/* Grid de productos - MOBILE OPTIMIZADO */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
         <AnimatePresence mode="wait">
           {filteredProducts.length > 0 ? (
             <motion.div
@@ -437,7 +332,7 @@ export default function CatalogoClient({
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
               layout
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
+              className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
             >
               {filteredProducts.map((product, index) => (
                 <ProductCard
@@ -454,7 +349,7 @@ export default function CatalogoClient({
         </AnimatePresence>
       </div>
 
-      {/* CTA Section - SIN TrustSection */}
+      {/* CTA Section optimizado */}
       <CTASection />
     </div>
   )

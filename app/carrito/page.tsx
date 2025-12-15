@@ -1,24 +1,28 @@
-// app/carrito/page.tsx - ARGENTINA 2025 CON SISTEMA DE CUOTAS - MOBILE OPTIMIZED
+// app/carrito/page.tsx - ULTRA OPTIMIZED ⚡ - Azul Colchones
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, lazy, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCartStore } from '@/lib/store/cart-store'
 import { formatARS } from '@/lib/utils/currency'
-import { getMejorCuota, calcularTodasLasCuotas, getTextoPromocional } from '@/lib/utils/pricing'
+import { getMejorCuota, calcularTodasLasCuotas } from '@/lib/utils/pricing'
+
+// ✅ LAZY LOAD COMPONENTS (performance crítica)
+const CheckoutForm = lazy(() => import('@/components/cart/CheckoutForm'))
+const Upsell = lazy(() => import('@/components/cart/CartComponents').then(mod => ({ default: mod.Upsell })))
+
+// ✅ COMPONENTS CRÍTICOS (no lazy)
 import {
   ShippingProgress,
   TrustBadges,
   UrgencyBanner,
-  Upsell,
   EmptyCart,
   CheckoutSteps
 } from '@/components/cart/CartComponents'
-import CheckoutForm from '@/components/cart/CheckoutForm'
 
-// ✅ Iconos inline SVG optimizados
+// ✅ Iconos inline SVG optimizados (sin cambios - ya están bien)
 const Icons = {
   ShoppingBag: ({ className = "w-6 h-6" }: { className?: string }) => (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -117,13 +121,23 @@ const Icons = {
   ),
 }
 
+// ✅ LOADING SKELETON
+const LoadingSkeleton = () => (
+  <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-16 bg-zinc-950 flex items-center justify-center">
+    <div className="animate-pulse space-y-4">
+      <div className="h-8 w-48 bg-zinc-800 rounded-lg" />
+      <div className="h-4 w-32 bg-zinc-800 rounded-lg" />
+    </div>
+  </div>
+)
+
 export default function CarritoPage() {
   const [checkoutStep, setCheckoutStep] = useState<1 | 2 | 3 | 4>(1)
   const [couponCode, setCouponCode] = useState('')
   const [couponError, setCouponError] = useState('')
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [selectedCuotas, setSelectedCuotas] = useState<number | null>(null) // ✅ null = contado
+  const [selectedCuotas, setSelectedCuotas] = useState<number | null>(null)
   const [showCuotasDropdown, setShowCuotasDropdown] = useState(false)
   
   const {
@@ -142,16 +156,14 @@ export default function CarritoPage() {
   
   useEffect(() => {
     setMounted(true)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🛒 [Carrito] Mounted')
-    }
   }, [])
   
-  const subtotal = getSubtotal()
-  const discount = getDiscount()
-  const shipping = getShipping()
-  const baseTotal = getTotal() // Total sin recargo de cuotas
-  const itemCount = getItemCount()
+  // ✅ MEMOIZED CALCULATIONS (performance crítica)
+  const subtotal = useMemo(() => getSubtotal(), [items])
+  const discount = useMemo(() => getDiscount(), [coupon, subtotal])
+  const shipping = useMemo(() => getShipping(), [subtotal])
+  const baseTotal = useMemo(() => getTotal(), [subtotal, discount, shipping])
+  const itemCount = useMemo(() => getItemCount(), [items])
   
   // ✅ CALCULAR CUOTAS DEL TOTAL
   const mejorCuota = useMemo(() => getMejorCuota(baseTotal), [baseTotal])
@@ -164,13 +176,7 @@ export default function CarritoPage() {
   // ✅ PRECIO FINAL (contado o con recargo de cuotas)
   const finalTotal = cuotaSeleccionada ? cuotaSeleccionada.precioTotal : baseTotal
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('💰 [Carrito] Base total:', baseTotal, '→', formatARS(baseTotal))
-    console.log('💳 [Carrito] Selected cuotas:', selectedCuotas)
-    console.log('🏷️ [Carrito] Final total:', finalTotal, '→', formatARS(finalTotal))
-  }
-  
-  // Handle coupon application
+  // ✅ HANDLE COUPON (optimizado)
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return
     
@@ -211,9 +217,6 @@ export default function CarritoPage() {
   
   // ✅ HANDLER PARA CAMBIAR CUOTAS
   const handleCuotasChange = (cuotas: number | null) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('💳 [Carrito] Cuotas changed:', cuotas)
-    }
     setSelectedCuotas(cuotas)
     setShowCuotasDropdown(false)
     
@@ -227,565 +230,594 @@ export default function CarritoPage() {
     }
   }
   
-  // Show checkout form
+  // ✅ SHOW CHECKOUT FORM (lazy loaded)
   if (checkoutStep >= 2) {
     return (
-      <CheckoutForm
-        step={checkoutStep}
-        total={finalTotal} // ✅ Pasar total con cuotas
-        onBack={() => setCheckoutStep(1)}
-        onNext={() => setCheckoutStep((prev) => Math.min(4, prev + 1) as 1 | 2 | 3 | 4)}
-      />
+      <Suspense fallback={<LoadingSkeleton />}>
+        <CheckoutForm
+          step={checkoutStep}
+          total={finalTotal}
+          onBack={() => setCheckoutStep(1)}
+          onNext={() => setCheckoutStep((prev) => Math.min(4, prev + 1) as 1 | 2 | 3 | 4)}
+        />
+      </Suspense>
     )
   }
 
-  // Prevent hydration issues
+  // ✅ PREVENT HYDRATION ISSUES
   if (!mounted) {
-    return (
-      <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-16 bg-zinc-950 flex items-center justify-center">
-        <div className="text-white text-base sm:text-lg">Cargando carrito...</div>
-      </div>
-    )
+    return <LoadingSkeleton />
   }
   
   return (
-    <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-16 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 relative overflow-x-hidden">
-      {/* Background effects - SOLO DESKTOP */}
-      <div className="hidden md:block fixed inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
-      <div className="hidden md:block fixed inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" aria-hidden="true" />
+    <>
+      {/* ✅ STRUCTURED DATA - SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CheckoutPage',
+            name: 'Carrito de Compras - Azul Colchones',
+            description: 'Finalizá tu compra de colchones con envío gratis',
+            url: 'https://azulcolchones.com/carrito',
+            provider: {
+              '@type': 'Organization',
+              name: 'Azul Colchones',
+              url: 'https://azulcolchones.com'
+            },
+            paymentAccepted: ['Cash', 'Credit Card', 'Debit Card', 'Mercado Pago'],
+            availableShippingMethod: {
+              '@type': 'ShippingMethod',
+              name: 'Envío Gratis Villa María',
+              shippingCost: '0 ARS',
+              deliveryTime: '24-48 horas'
+            }
+          })
+        }}
+      />
 
-      <div className="container relative z-10 mx-auto px-3 sm:px-4">
-        {/* Checkout Steps */}
-        <CheckoutSteps currentStep={checkoutStep} />
-        
-        {/* Header - MOBILE OPTIMIZED */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 sm:mb-8 md:mb-12"
-        >
-          <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 flex items-center justify-center shadow-xl shadow-blue-500/30 flex-shrink-0">
-              <Icons.ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
-                Tu carrito
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-zinc-400 mt-0.5 sm:mt-1">
-                {itemCount} {itemCount === 1 ? 'producto' : 'productos'} seleccionado{itemCount !== 1 ? 's' : ''}
-              </p>
-            </div>
-          </div>
+      <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-16 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 relative overflow-x-hidden">
+        {/* Background effects - SOLO DESKTOP */}
+        <div className="hidden md:block fixed inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
+        <div className="hidden md:block fixed inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" aria-hidden="true" />
+
+        <div className="container relative z-10 mx-auto px-3 sm:px-4">
+          {/* Checkout Steps */}
+          <CheckoutSteps currentStep={checkoutStep} />
           
-          {/* Trust indicators - MOBILE STACK */}
-          <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 md:gap-6 text-xs sm:text-sm">
-            <div className="flex items-center gap-1.5 sm:gap-2 text-emerald-400">
-              <Icons.CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="font-semibold">Envío gratis Villa María</span>
+          {/* Header - MOBILE OPTIMIZED */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 sm:mb-8 md:mb-12"
+          >
+            <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 flex items-center justify-center shadow-xl shadow-blue-500/30 flex-shrink-0">
+                <Icons.ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
+                  Tu carrito
+                </h1>
+                <p className="text-sm sm:text-base md:text-lg text-zinc-400 mt-0.5 sm:mt-1">
+                  {itemCount} {itemCount === 1 ? 'producto' : 'productos'} seleccionado{itemCount !== 1 ? 's' : ''}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 sm:gap-2 text-blue-400">
-              <Icons.Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="font-semibold">Pago 100% seguro</span>
+            
+            {/* Trust indicators - MOBILE STACK */}
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 md:gap-6 text-xs sm:text-sm">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-emerald-400">
+                <Icons.CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-semibold">Envío gratis Villa María</span>
+              </div>
+              <div className="flex items-center gap-1.5 sm:gap-2 text-blue-400">
+                <Icons.Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-semibold">Pago 100% seguro</span>
+              </div>
+              <div className="flex items-center gap-1.5 sm:gap-2 text-cyan-400">
+                <Icons.CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="font-semibold">Hasta 12 cuotas</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 sm:gap-2 text-cyan-400">
-              <Icons.CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-              <span className="font-semibold">Hasta 12 cuotas</span>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {items.length === 0 ? (
-          <EmptyCart />
-        ) : (
-          <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-3 sm:space-y-4 md:space-y-6">
-              {/* Urgency Banner */}
-              <UrgencyBanner type="stock" />
-              
-              {/* Shipping Progress */}
-              <ShippingProgress current={subtotal} target={50000} />
-              
-              {/* Items List */}
-              <AnimatePresence mode="popLayout">
-                {items.map((item, index) => {
-                  const productImage = item.image || '/images/placeholder.jpg'
-                  const hasDiscount = item.originalPrice && item.originalPrice > item.price
-                  const discountPercent = hasDiscount 
-                    ? Math.round(((item.originalPrice! - item.price) / item.originalPrice!) * 100)
-                    : 0
+          {items.length === 0 ? (
+            <EmptyCart />
+          ) : (
+            <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+              {/* Cart Items */}
+              <div className="lg:col-span-2 space-y-3 sm:space-y-4 md:space-y-6">
+                {/* Urgency Banner */}
+                <UrgencyBanner type="stock" />
+                
+                {/* Shipping Progress */}
+                <ShippingProgress current={subtotal} target={50000} />
+                
+                {/* Items List */}
+                <AnimatePresence mode="popLayout">
+                  {items.map((item, index) => {
+                    const productImage = item.image || '/images/placeholder.jpg'
+                    const hasDiscount = item.originalPrice && item.originalPrice > item.price
+                    const discountPercent = hasDiscount 
+                      ? Math.round(((item.originalPrice! - item.price) / item.originalPrice!) * 100)
+                      : 0
 
-                  return (
-                    <motion.article
-                      key={item.id}
-                      layout
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20, height: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl md:rounded-3xl p-3 sm:p-4 md:p-6 border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 shadow-xl backdrop-blur-sm"
-                    >
-                      <div className="flex gap-3 sm:gap-4 md:gap-6">
-                        {/* Image - MOBILE OPTIMIZED */}
-                        <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 bg-zinc-800 rounded-lg sm:rounded-xl md:rounded-2xl flex-shrink-0 overflow-hidden">
-                          <Image
-                            src={productImage}
-                            alt={item.name}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, (max-width: 1024px) 112px, 128px"
-                          />
-                          
-                          {/* Discount badge */}
-                          {hasDiscount && (
-                            <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-black text-[9px] sm:text-[10px] md:text-xs font-black px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg shadow-lg">
-                              -{discountPercent}%
+                    return (
+                      <motion.article
+                        key={item.id}
+                        layout
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20, height: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl md:rounded-3xl p-3 sm:p-4 md:p-6 border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 shadow-xl backdrop-blur-sm"
+                      >
+                        <div className="flex gap-3 sm:gap-4 md:gap-6">
+                          {/* Image - MOBILE OPTIMIZED */}
+                          <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 bg-zinc-800 rounded-lg sm:rounded-xl md:rounded-2xl flex-shrink-0 overflow-hidden">
+                            <Image
+                              src={productImage}
+                              alt={item.name}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, (max-width: 1024px) 112px, 128px"
+                              loading="lazy"
+                            />
+                            
+                            {/* Discount badge */}
+                            {hasDiscount && (
+                              <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-black text-[9px] sm:text-[10px] md:text-xs font-black px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg shadow-lg">
+                                -{discountPercent}%
+                              </div>
+                            )}
+                            
+                            {/* Stock badge */}
+                            <div className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 bg-emerald-500/90 backdrop-blur-sm text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-md flex items-center gap-0.5 sm:gap-1">
+                              <Icons.Package className="w-2 h-2 sm:w-2.5 sm:h-2.5" />
+                              Stock
                             </div>
-                          )}
-                          
-                          {/* Stock badge */}
-                          <div className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 bg-emerald-500/90 backdrop-blur-sm text-white text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-md flex items-center gap-0.5 sm:gap-1">
-                            <Icons.Package className="w-2 h-2 sm:w-2.5 sm:h-2.5" />
-                            Stock
                           </div>
-                        </div>
 
-                        {/* Info - MOBILE OPTIMIZED */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between mb-2 sm:mb-3 md:mb-4">
-                            <div className="flex-1 min-w-0 pr-2">
-                              <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-black text-white mb-1 sm:mb-2 line-clamp-2">
-                                {item.name}
-                              </h3>
-                              <div className="flex flex-wrap gap-1.5 sm:gap-2 text-[10px] sm:text-xs md:text-sm">
-                                <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-blue-500/20 text-blue-300 rounded-md sm:rounded-lg font-semibold">
-                                  <Icons.TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                                  {item.size}
-                                </span>
-                                {item.variant && (
-                                  <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-cyan-500/20 text-cyan-300 rounded-md sm:rounded-lg font-semibold">
-                                    {item.variant}
+                          {/* Info - MOBILE OPTIMIZED */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between mb-2 sm:mb-3 md:mb-4">
+                              <div className="flex-1 min-w-0 pr-2">
+                                <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-black text-white mb-1 sm:mb-2 line-clamp-2">
+                                  {item.name}
+                                </h3>
+                                <div className="flex flex-wrap gap-1.5 sm:gap-2 text-[10px] sm:text-xs md:text-sm">
+                                  <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-blue-500/20 text-blue-300 rounded-md sm:rounded-lg font-semibold">
+                                    <Icons.TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                                    {item.size}
                                   </span>
+                                  {item.variant && (
+                                    <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-cyan-500/20 text-cyan-300 rounded-md sm:rounded-lg font-semibold">
+                                      {item.variant}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => removeItem(item.id)}
+                                className="p-1.5 sm:p-2 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
+                                aria-label="Eliminar producto"
+                              >
+                                <Icons.Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                              </motion.button>
+                            </div>
+
+                            <div className="flex items-end justify-between gap-2 sm:gap-4">
+                              {/* Quantity - MOBILE COMPACTO */}
+                              <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
+                                <motion.button
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 border-2 border-blue-500/20 rounded-lg flex items-center justify-center hover:border-blue-500 hover:bg-blue-500/20 transition-all text-white"
+                                  disabled={item.quantity <= 1}
+                                  aria-label="Disminuir cantidad"
+                                >
+                                  <Icons.Minus className="w-3 h-3 sm:w-4 sm:h-4" />
+                                </motion.button>
+                                
+                                <span className="font-black text-white w-6 sm:w-8 md:w-10 text-center text-sm sm:text-base md:text-lg tabular-nums">
+                                  {item.quantity}
+                                </span>
+                                
+                                <motion.button
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 border-2 border-blue-500/20 rounded-lg flex items-center justify-center hover:border-blue-500 hover:bg-blue-500/20 transition-all text-white"
+                                  aria-label="Aumentar cantidad"
+                                >
+                                  <Icons.Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                                </motion.button>
+                              </div>
+
+                              {/* Price - MOBILE OPTIMIZED */}
+                              <div className="text-right">
+                                {hasDiscount && (
+                                  <p className="text-[10px] sm:text-xs md:text-sm text-zinc-500 line-through mb-0.5 sm:mb-1">
+                                    {formatARS(item.originalPrice! * item.quantity)}
+                                  </p>
                                 )}
+                                <p className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
+                                  {formatARS(item.price * item.quantity)}
+                                </p>
                               </div>
                             </div>
-                            
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => removeItem(item.id)}
-                              className="p-1.5 sm:p-2 text-zinc-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
-                              aria-label="Eliminar producto"
-                            >
-                              <Icons.Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                            </motion.button>
-                          </div>
-
-                          <div className="flex items-end justify-between gap-2 sm:gap-4">
-                            {/* Quantity - MOBILE COMPACTO */}
-                            <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
-                              <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 border-2 border-blue-500/20 rounded-lg flex items-center justify-center hover:border-blue-500 hover:bg-blue-500/20 transition-all text-white"
-                                disabled={item.quantity <= 1}
-                                aria-label="Disminuir cantidad"
-                              >
-                                <Icons.Minus className="w-3 h-3 sm:w-4 sm:h-4" />
-                              </motion.button>
-                              
-                              <span className="font-black text-white w-6 sm:w-8 md:w-10 text-center text-sm sm:text-base md:text-lg tabular-nums">
-                                {item.quantity}
-                              </span>
-                              
-                              <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 border-2 border-blue-500/20 rounded-lg flex items-center justify-center hover:border-blue-500 hover:bg-blue-500/20 transition-all text-white"
-                                aria-label="Aumentar cantidad"
-                              >
-                                <Icons.Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-                              </motion.button>
-                            </div>
-
-                            {/* Price - MOBILE OPTIMIZED */}
-                            <div className="text-right">
-                              {hasDiscount && (
-                                <p className="text-[10px] sm:text-xs md:text-sm text-zinc-500 line-through mb-0.5 sm:mb-1">
-                                  {formatARS(item.originalPrice! * item.quantity)}
-                                </p>
-                              )}
-                              <p className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
-                                {formatARS(item.price * item.quantity)}
-                              </p>
-                            </div>
                           </div>
                         </div>
-                      </div>
-                    </motion.article>
-                  )
-                })}
-              </AnimatePresence>
+                      </motion.article>
+                    )
+                  })}
+                </AnimatePresence>
 
-              {/* Recommended products */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-blue-500/20"
-              >
-                <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
-                  <Icons.Heart className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
-                  También te puede interesar
-                </h3>
-                <Upsell onAdd={() => console.log('Add upsell')} />
-              </motion.div>
-            </div>
+                {/* Recommended products - LAZY LOADED */}
+                <Suspense fallback={<div className="h-48 bg-zinc-900 rounded-2xl animate-pulse" />}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-blue-500/20"
+                  >
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+                      <Icons.Heart className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
+                      También te puede interesar
+                    </h3>
+                    <Upsell onAdd={() => console.log('Add upsell')} />
+                  </motion.div>
+                </Suspense>
+              </div>
 
-            {/* Summary Sidebar - MOBILE OPTIMIZED */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-20 sm:top-24 space-y-3 sm:space-y-4 md:space-y-6">
-                {/* Order Summary */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-blue-500/20 shadow-2xl backdrop-blur-sm"
-                >
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                    <Icons.Package className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
-                    Resumen
-                  </h3>
+              {/* Summary Sidebar - MOBILE OPTIMIZED */}
+              <div className="lg:col-span-1">
+                <div className="sticky top-20 sm:top-24 space-y-3 sm:space-y-4 md:space-y-6">
+                  {/* Order Summary */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-blue-500/20 shadow-2xl backdrop-blur-sm"
+                  >
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+                      <Icons.Package className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+                      Resumen
+                    </h3>
 
-                  {/* Coupon Input - MOBILE OPTIMIZED */}
-                  <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-white/5 rounded-lg sm:rounded-xl border border-blue-500/20">
-                    <label className="block text-xs sm:text-sm font-bold text-white mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2">
-                      <Icons.Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />
-                      ¿Tenés un cupón?
-                    </label>
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <input
-                          type="text"
-                          value={couponCode}
-                          onChange={(e) => {
-                            setCouponCode(e.target.value.toUpperCase())
-                            setCouponError('')
-                          }}
-                          onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                          placeholder="CÓDIGO"
-                          className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-zinc-800 border-2 border-blue-500/20 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all uppercase font-mono text-xs sm:text-sm text-white placeholder-zinc-500"
-                          disabled={!!coupon}
-                        />
+                    {/* Coupon Input - MOBILE OPTIMIZED */}
+                    <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-white/5 rounded-lg sm:rounded-xl border border-blue-500/20">
+                      <label className="block text-xs sm:text-sm font-bold text-white mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2">
+                        <Icons.Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />
+                        ¿Tenés un cupón?
+                      </label>
+                      <div className="flex gap-2">
+                        <div className="relative flex-1">
+                          <input
+                            type="text"
+                            value={couponCode}
+                            onChange={(e) => {
+                              setCouponCode(e.target.value.toUpperCase())
+                              setCouponError('')
+                            }}
+                            onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                            placeholder="CÓDIGO"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-zinc-800 border-2 border-blue-500/20 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all uppercase font-mono text-xs sm:text-sm text-white placeholder-zinc-500"
+                            disabled={!!coupon}
+                          />
+                        </div>
+                        
+                        {!coupon ? (
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={handleApplyCoupon}
+                            disabled={isApplyingCoupon || !couponCode.trim()}
+                            className="px-4 sm:px-6 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm hover:from-blue-500 hover:to-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-500/30 disabled:shadow-none"
+                          >
+                            {isApplyingCoupon ? '...' : 'OK'}
+                          </motion.button>
+                        ) : (
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={removeCoupon}
+                            className="px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-red-500 text-white rounded-lg sm:rounded-xl font-bold hover:bg-red-600 transition-all flex items-center shadow-lg"
+                            aria-label="Eliminar cupón"
+                          >
+                            <Icons.X className="w-4 h-4" />
+                          </motion.button>
+                        )}
                       </div>
                       
-                      {!coupon ? (
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={handleApplyCoupon}
-                          disabled={isApplyingCoupon || !couponCode.trim()}
-                          className="px-4 sm:px-6 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm hover:from-blue-500 hover:to-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-500/30 disabled:shadow-none"
+                      {couponError && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-xs text-red-400 mt-2 flex items-center gap-1"
                         >
-                          {isApplyingCoupon ? '...' : 'OK'}
-                        </motion.button>
-                      ) : (
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={removeCoupon}
-                          className="px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 bg-red-500 text-white rounded-lg sm:rounded-xl font-bold hover:bg-red-600 transition-all flex items-center shadow-lg"
-                          aria-label="Eliminar cupón"
+                          <Icons.X className="w-3 h-3" />
+                          {couponError}
+                        </motion.p>
+                      )}
+                      
+                      {coupon && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="mt-2 sm:mt-3 inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-lg text-xs font-bold"
                         >
-                          <Icons.X className="w-4 h-4" />
-                        </motion.button>
+                          <Icons.CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          Cupón {coupon.code} aplicado
+                        </motion.div>
                       )}
                     </div>
-                    
-                    {couponError && (
-                      <motion.p
-                        initial={{ opacity: 0, y: -5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-xs text-red-400 mt-2 flex items-center gap-1"
-                      >
-                        <Icons.X className="w-3 h-3" />
-                        {couponError}
-                      </motion.p>
-                    )}
-                    
-                    {coupon && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="mt-2 sm:mt-3 inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-lg text-xs font-bold"
-                      >
-                        <Icons.CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        Cupón {coupon.code} aplicado
-                      </motion.div>
-                    )}
-                  </div>
 
-                  {/* Price Breakdown - MOBILE OPTIMIZED */}
-                  <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-blue-500/20">
-                    <div className="flex justify-between text-zinc-400">
-                      <span className="text-xs sm:text-sm md:text-base">Subtotal</span>
-                      <span className="font-bold text-white text-xs sm:text-sm md:text-base">
-                        {formatARS(subtotal)}
-                      </span>
-                    </div>
-                    
-                    {discount > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex justify-between text-emerald-400"
-                      >
+                    {/* Price Breakdown - MOBILE OPTIMIZED */}
+                    <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-blue-500/20">
+                      <div className="flex justify-between text-zinc-400">
+                        <span className="text-xs sm:text-sm md:text-base">Subtotal</span>
+                        <span className="font-bold text-white text-xs sm:text-sm md:text-base">
+                          {formatARS(subtotal)}
+                        </span>
+                      </div>
+                      
+                      {discount > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="flex justify-between text-emerald-400"
+                        >
+                          <span className="text-xs sm:text-sm md:text-base flex items-center gap-1.5 sm:gap-2">
+                            <Icons.Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            Descuento
+                          </span>
+                          <span className="font-bold text-xs sm:text-sm md:text-base">
+                            -{formatARS(discount)}
+                          </span>
+                        </motion.div>
+                      )}
+                      
+                      <div className="flex justify-between text-zinc-400">
                         <span className="text-xs sm:text-sm md:text-base flex items-center gap-1.5 sm:gap-2">
-                          <Icons.Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          Descuento
+                          <Icons.Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          Envío
                         </span>
                         <span className="font-bold text-xs sm:text-sm md:text-base">
-                          -{formatARS(discount)}
-                        </span>
-                      </motion.div>
-                    )}
-                    
-                    <div className="flex justify-between text-zinc-400">
-                      <span className="text-xs sm:text-sm md:text-base flex items-center gap-1.5 sm:gap-2">
-                        <Icons.Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        Envío
-                      </span>
-                      <span className="font-bold text-xs sm:text-sm md:text-base">
-                        {shipping === 0 ? (
-                          <span className="text-emerald-400 font-black">GRATIS</span>
-                        ) : (
-                          <span className="text-white">{formatARS(shipping)}</span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* SELECTOR DE CUOTAS - MOBILE OPTIMIZED */}
-                  <div className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-blue-500/20">
-                    <button
-                      onClick={() => setShowCuotasDropdown(!showCuotasDropdown)}
-                      className="w-full flex items-center justify-between p-3 sm:p-4 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg sm:rounded-xl transition-all duration-300 group"
-                    >
-                      <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                        <Icons.CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
-                        <div className="text-left flex-1 min-w-0">
-                          {selectedCuotas === null ? (
-                            <div>
-                              <span className="text-blue-400 font-semibold block text-xs sm:text-sm">
-                                Pago de contado
-                              </span>
-                              <span className="text-[10px] sm:text-xs text-zinc-400">
-                                o elegí cuotas
-                              </span>
-                            </div>
+                          {shipping === 0 ? (
+                            <span className="text-emerald-400 font-black">GRATIS</span>
                           ) : (
-                            <div>
-                              <span className="text-white font-bold block text-xs sm:text-sm">
-                                {cuotaSeleccionada?.cuotas} cuotas de {cuotaSeleccionada?.formatted.precioCuota}
-                              </span>
-                              <span className="text-[10px] sm:text-xs text-zinc-400">
-                                Total: {cuotaSeleccionada?.formatted.precioTotal}
-                              </span>
-                            </div>
+                            <span className="text-white">{formatARS(shipping)}</span>
                           )}
-                        </div>
+                        </span>
                       </div>
-                      <motion.div
-                        animate={{ rotate: showCuotasDropdown ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex-shrink-0"
+                    </div>
+
+                    {/* SELECTOR DE CUOTAS - MOBILE OPTIMIZED */}
+                    <div className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-blue-500/20">
+                      <button
+                        onClick={() => setShowCuotasDropdown(!showCuotasDropdown)}
+                        className="w-full flex items-center justify-between p-3 sm:p-4 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg sm:rounded-xl transition-all duration-300 group"
                       >
-                        <Icons.ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-                      </motion.div>
-                    </button>
-
-                    {/* Dropdown con opciones */}
-                    <AnimatePresence>
-                      {showCuotasDropdown && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="space-y-2 mt-2 sm:mt-3">
-                            {/* Opción CONTADO */}
-                            <button
-                              onClick={() => handleCuotasChange(null)}
-                              className={`w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl border transition-all duration-300 text-left ${
-                                selectedCuotas === null
-                                  ? 'bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30'
-                                  : 'bg-zinc-800/50 border-zinc-700 hover:border-emerald-500/30'
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
-                                    <Icons.DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
-                                    <span className="font-bold text-white text-xs sm:text-sm">Contado</span>
-                                  </div>
-                                  <div className="text-lg sm:text-xl font-black text-emerald-400">
-                                    {formatARS(baseTotal)}
-                                  </div>
-                                </div>
-                                {selectedCuotas === null && (
-                                  <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    className="w-4 h-4 sm:w-5 sm:h-5 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0"
-                                  >
-                                    <Icons.Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
-                                  </motion.div>
-                                )}
+                        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                          <Icons.CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
+                          <div className="text-left flex-1 min-w-0">
+                            {selectedCuotas === null ? (
+                              <div>
+                                <span className="text-blue-400 font-semibold block text-xs sm:text-sm">
+                                  Pago de contado
+                                </span>
+                                <span className="text-[10px] sm:text-xs text-zinc-400">
+                                  o elegí cuotas
+                                </span>
                               </div>
-                            </button>
+                            ) : (
+                              <div>
+                                <span className="text-white font-bold block text-xs sm:text-sm">
+                                  {cuotaSeleccionada?.cuotas} cuotas de {cuotaSeleccionada?.formatted.precioCuota}
+                                </span>
+                                <span className="text-[10px] sm:text-xs text-zinc-400">
+                                  Total: {cuotaSeleccionada?.formatted.precioTotal}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <motion.div
+                          animate={{ rotate: showCuotasDropdown ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="flex-shrink-0"
+                        >
+                          <Icons.ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                        </motion.div>
+                      </button>
 
-                            {/* Opciones de CUOTAS */}
-                            {todasLasCuotas.map((cuota, index) => (
-                              <motion.button
-                                key={cuota.cuotas}
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05 }}
-                                onClick={() => handleCuotasChange(cuota.cuotas)}
+                      {/* Dropdown con opciones */}
+                      <AnimatePresence>
+                        {showCuotasDropdown && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="space-y-2 mt-2 sm:mt-3">
+                              {/* Opción CONTADO */}
+                              <button
+                                onClick={() => handleCuotasChange(null)}
                                 className={`w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl border transition-all duration-300 text-left ${
-                                  selectedCuotas === cuota.cuotas
-                                    ? 'bg-blue-500/20 border-blue-500/50 ring-2 ring-blue-500/30'
-                                    : 'bg-zinc-800/50 border-zinc-700 hover:border-blue-500/30'
+                                  selectedCuotas === null
+                                    ? 'bg-emerald-500/20 border-emerald-500/50 ring-2 ring-emerald-500/30'
+                                    : 'bg-zinc-800/50 border-zinc-700 hover:border-emerald-500/30'
                                 }`}
                               >
-                                <div className="flex items-center justify-between gap-2 sm:gap-3">
-                                  <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between">
+                                  <div>
                                     <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
-                                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500/20 border border-blue-500/30 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <span className="text-[10px] sm:text-xs font-bold text-blue-400">
-                                          {cuota.cuotas}
-                                        </span>
-                                      </div>
-                                      <span className="text-base sm:text-lg font-black text-white">
-                                        {cuota.formatted.precioCuota}
-                                      </span>
-                                      <span className="text-[10px] sm:text-xs text-zinc-400">/ mes</span>
+                                      <Icons.DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
+                                      <span className="font-bold text-white text-xs sm:text-sm">Contado</span>
                                     </div>
-                                    <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs">
-                                      <span className="text-zinc-400">
-                                        Total: {cuota.formatted.precioTotal}
-                                      </span>
-                                      <span className="px-1.5 sm:px-2 py-0.5 bg-orange-500/20 border border-orange-500/30 text-orange-400 font-bold rounded-full">
-                                        +{cuota.recargoPercentage}
-                                      </span>
+                                    <div className="text-lg sm:text-xl font-black text-emerald-400">
+                                      {formatARS(baseTotal)}
                                     </div>
                                   </div>
-                                  {selectedCuotas === cuota.cuotas && (
+                                  {selectedCuotas === null && (
                                     <motion.div
                                       initial={{ scale: 0 }}
                                       animate={{ scale: 1 }}
-                                      className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0"
+                                      className="w-4 h-4 sm:w-5 sm:h-5 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0"
                                     >
                                       <Icons.Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
                                     </motion.div>
                                   )}
                                 </div>
-                              </motion.button>
-                            ))}
-                          </div>
+                              </button>
 
-                          {/* Info tip */}
-                          {selectedCuotas !== null && (
-                            <motion.div
-                              initial={{ opacity: 0, y: -10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              className="mt-2 sm:mt-3 p-2.5 sm:p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg"
-                            >
-                              <div className="flex items-start gap-1.5 sm:gap-2">
-                                <Icons.Percent className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                                <div className="text-[10px] sm:text-xs text-zinc-400">
-                                  <p className="font-semibold text-blue-400 mb-0.5 sm:mb-1">
-                                    💡 Con pago de contado ahorrás
-                                  </p>
-                                  <p>
-                                    {formatARS(finalTotal - baseTotal)} menos que en cuotas
-                                  </p>
+                              {/* Opciones de CUOTAS */}
+                              {todasLasCuotas.map((cuota, index) => (
+                                <motion.button
+                                  key={cuota.cuotas}
+                                  initial={{ opacity: 0, y: -10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: index * 0.05 }}
+                                  onClick={() => handleCuotasChange(cuota.cuotas)}
+                                  className={`w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl border transition-all duration-300 text-left ${
+                                    selectedCuotas === cuota.cuotas
+                                      ? 'bg-blue-500/20 border-blue-500/50 ring-2 ring-blue-500/30'
+                                      : 'bg-zinc-800/50 border-zinc-700 hover:border-blue-500/30'
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between gap-2 sm:gap-3">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+                                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500/20 border border-blue-500/30 rounded-full flex items-center justify-center flex-shrink-0">
+                                          <span className="text-[10px] sm:text-xs font-bold text-blue-400">
+                                            {cuota.cuotas}
+                                          </span>
+                                        </div>
+                                        <span className="text-base sm:text-lg font-black text-white">
+                                          {cuota.formatted.precioCuota}
+                                        </span>
+                                        <span className="text-[10px] sm:text-xs text-zinc-400">/ mes</span>
+                                      </div>
+                                      <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs">
+                                        <span className="text-zinc-400">
+                                          Total: {cuota.formatted.precioTotal}
+                                        </span>
+                                        <span className="px-1.5 sm:px-2 py-0.5 bg-orange-500/20 border border-orange-500/30 text-orange-400 font-bold rounded-full">
+                                          +{cuota.recargoPercentage}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    {selectedCuotas === cuota.cuotas && (
+                                      <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0"
+                                      >
+                                        <Icons.Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
+                                      </motion.div>
+                                    )}
+                                  </div>
+                                </motion.button>
+                              ))}
+                            </div>
+
+                            {/* Info tip */}
+                            {selectedCuotas !== null && (
+                              <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mt-2 sm:mt-3 p-2.5 sm:p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg"
+                              >
+                                <div className="flex items-start gap-1.5 sm:gap-2">
+                                  <Icons.Percent className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                                  <div className="text-[10px] sm:text-xs text-zinc-400">
+                                    <p className="font-semibold text-blue-400 mb-0.5 sm:mb-1">
+                                      💡 Con pago de contado ahorrás
+                                    </p>
+                                    <p>
+                                      {formatARS(finalTotal - baseTotal)} menos que en cuotas
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
-                            </motion.div>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Total con recargo de cuotas si aplica */}
-                  <div className="flex justify-between items-center mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg sm:rounded-xl border border-blue-500/20">
-                    <div>
-                      <span className="text-xs sm:text-sm text-zinc-400 block mb-0.5 sm:mb-1">
-                        {selectedCuotas ? `Total en ${selectedCuotas} cuotas` : 'Total a pagar'}
-                      </span>
-                      <span className="text-base sm:text-lg md:text-xl font-bold text-white">Total</span>
+                              </motion.div>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                    <div className="text-right">
-                      <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
-                        {formatARS(finalTotal)}
-                      </span>
-                      {selectedCuotas && cuotaSeleccionada && (
-                        <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 sm:mt-1">
-                          {cuotaSeleccionada.cuotas}x {cuotaSeleccionada.formatted.precioCuota}
-                        </p>
-                      )}
-                    </div>
-                  </div>
 
-                  {/* Checkout Button - MOBILE FULL WIDTH */}
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setCheckoutStep(2)}
-                    className="w-full py-3.5 sm:py-4 md:py-5 bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-[length:200%_100%] hover:bg-[position:100%_0] text-white rounded-xl sm:rounded-2xl font-black text-sm sm:text-base md:text-lg shadow-2xl shadow-blue-500/50 transition-all duration-500 flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4"
-                  >
-                    <span>Finalizar compra</span>
-                    <Icons.ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </motion.button>
-
-                  <Link href="/catalogo">
-                    <button className="w-full py-3 sm:py-4 bg-white/5 hover:bg-white/10 border border-blue-500/20 text-white rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base transition-all">
-                      Seguir comprando
-                    </button>
-                  </Link>
-
-                  {/* Security badges - MOBILE OPTIMIZED */}
-                  <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-blue-500/20 space-y-2 sm:space-y-3">
-                    <div className="flex items-center gap-2 sm:gap-3 text-zinc-400 text-xs sm:text-sm">
-                      <Icons.Shield className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0" />
-                      <span>Pago 100% seguro con MercadoPago</span>
+                    {/* Total con recargo de cuotas si aplica */}
+                    <div className="flex justify-between items-center mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg sm:rounded-xl border border-blue-500/20">
+                      <div>
+                        <span className="text-xs sm:text-sm text-zinc-400 block mb-0.5 sm:mb-1">
+                          {selectedCuotas ? `Total en ${selectedCuotas} cuotas` : 'Total a pagar'}
+                        </span>
+                        <span className="text-base sm:text-lg md:text-xl font-bold text-white">Total</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
+                          {formatARS(finalTotal)}
+                        </span>
+                        {selectedCuotas && cuotaSeleccionada && (
+                          <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 sm:mt-1">
+                            {cuotaSeleccionada.cuotas}x {cuotaSeleccionada.formatted.precioCuota}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 sm:gap-3 text-zinc-400 text-xs sm:text-sm">
-                      <Icons.Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
-                      <span>Entrega en 3 a 6 días hábiles</span>
-                    </div>
-                    <div className="flex items-center gap-2 sm:gap-3 text-zinc-400 text-xs sm:text-sm">
-                      <Icons.Package className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 flex-shrink-0" />
-                      <span>Devolución gratuita 100 noches</span>
-                    </div>
-                  </div>
-                </motion.div>
 
-                {/* Trust Badges */}
-                <TrustBadges />
-                
+                    {/* Checkout Button - MOBILE FULL WIDTH */}
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setCheckoutStep(2)}
+                      className="w-full py-3.5 sm:py-4 md:py-5 bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-[length:200%_100%] hover:bg-[position:100%_0] text-white rounded-xl sm:rounded-2xl font-black text-sm sm:text-base md:text-lg shadow-2xl shadow-blue-500/50 transition-all duration-500 flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4"
+                    >
+                      <span>Finalizar compra</span>
+                      <Icons.ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </motion.button>
+
+                    <Link href="/catalogo">
+                      <button className="w-full py-3 sm:py-4 bg-white/5 hover:bg-white/10 border border-blue-500/20 text-white rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base transition-all">
+                        Seguir comprando
+                      </button>
+                    </Link>
+
+                    {/* Security badges - MOBILE OPTIMIZED */}
+                    <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-blue-500/20 space-y-2 sm:space-y-3">
+                      <div className="flex items-center gap-2 sm:gap-3 text-zinc-400 text-xs sm:text-sm">
+                        <Icons.Shield className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0" />
+                        <span>Pago 100% seguro con MercadoPago</span>
+                      </div>
+                      <div className="flex items-center gap-2 sm:gap-3 text-zinc-400 text-xs sm:text-sm">
+                        <Icons.Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
+                        <span>Entrega en 3 a 6 días hábiles</span>
+                      </div>
+                      <div className="flex items-center gap-2 sm:gap-3 text-zinc-400 text-xs sm:text-sm">
+                        <Icons.Package className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 flex-shrink-0" />
+                        <span>Devolución gratuita 100 noches</span>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Trust Badges */}
+                  <TrustBadges />
+                  
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

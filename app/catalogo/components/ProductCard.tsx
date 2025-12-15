@@ -1,4 +1,4 @@
-// app/catalogo/components/ProductCard.tsx - ✅ HOOKS CORREGIDOS
+// app/catalogo/components/ProductCard.tsx - ✅ CON NAVEGACIÓN EN IMAGEN Y TÍTULO
 'use client'
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
@@ -109,14 +109,12 @@ function SizeSelector({
     [variants]
   )
   
-  // ✅ CRÍTICO: useEffect ANTES de TODOS los returns
   useEffect(() => {
     if (available.length === 1 && !selectedVariant) {
       onSelectVariant(available[0])
     }
   }, [available, selectedVariant, onSelectVariant])
   
-  // ✅ AHORA SÍ los returns condicionales
   if (available.length === 0) {
     return (
       <div className="p-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-2">
@@ -152,7 +150,10 @@ function SizeSelector({
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onSelectVariant(variant)}
+                onClick={(e) => {
+                  e.stopPropagation() // ✅ Evitar que propague al card
+                  onSelectVariant(variant)
+                }}
                 className={`
                   w-full p-2.5 rounded-lg text-xs font-semibold transition-all
                   ${isSelected
@@ -319,6 +320,13 @@ export default function ProductCard({
     
     toggleFavorite(product.id)
   }, [toggleFavorite, product.id])
+  
+  // ✅ NUEVO: Handler para navegar al producto
+  const handleNavigateToProduct = useCallback((e: React.MouseEvent) => {
+    // No prevenir default ni stopPropagation para que el click funcione normal
+    const url = `/producto/${product.slug}${selectedVariant ? `?variant=${selectedVariant.id}` : ''}`
+    router.push(url)
+  }, [product.slug, selectedVariant, router])
   
   const handleAddToCart = useCallback(async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -528,7 +536,11 @@ export default function ProductCard({
               />
             </motion.button>
             
-            <div className="relative h-64 sm:h-80 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+            {/* ✅ IMAGEN CLICKEABLE */}
+            <div 
+              onClick={handleNavigateToProduct}
+              className="relative h-64 sm:h-80 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden cursor-pointer"
+            >
               {!imageLoaded && (
                 <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-gray-200 via-gray-100 to-gray-200" />
               )}
@@ -574,8 +586,12 @@ export default function ProductCard({
                 </span>
               </div>
               
+              {/* ✅ TÍTULO CLICKEABLE */}
               <div>
-                <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-1 leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h3 
+                  onClick={handleNavigateToProduct}
+                  className="text-lg sm:text-xl font-black text-gray-900 mb-1 leading-tight line-clamp-2 group-hover:text-blue-600 transition-colors cursor-pointer"
+                >
                   {product.name}
                 </h3>
                 {product.subtitle && (
@@ -642,8 +658,8 @@ export default function ProductCard({
               )}
               
               <div className={`grid gap-2 pt-2 ${hasStock ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                <motion.a
-                  href={`/producto/${product.slug}${selectedVariant ? `?variant=${selectedVariant.id}` : ''}`}
+                <motion.button
+                  onClick={handleNavigateToProduct}
                   whileTap={{ scale: 0.97 }}
                   className={`py-3 rounded-xl font-bold text-xs sm:text-sm text-center border-2 transition-all ${
                     hasStock
@@ -652,7 +668,7 @@ export default function ProductCard({
                   }`}
                 >
                   Ver detalles
-                </motion.a>
+                </motion.button>
                 
                 {hasStock && (
                   <motion.button

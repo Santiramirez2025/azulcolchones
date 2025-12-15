@@ -1,0 +1,80 @@
+# robots.txt - OPTIMIZED FOR SEO 🚀
+# https://azulcolchones.com.ar/robots.txt
+
+# ==============================================================================
+# ALLOW ALL SEARCH ENGINES
+# ==============================================================================
+User-agent: *
+Allow: /
+
+# ==============================================================================
+# DISALLOW SPECIFIC PATHS
+# ==============================================================================
+# Don't index admin, API routes, or private pages
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /carrito
+Disallow: /checkout
+Disallow: /cuenta/
+Disallow: /gracias
+
+# ==============================================================================
+# GOOGLE BOT SPECIFIC
+# ==============================================================================
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /carrito
+Disallow: /checkout
+
+# ==============================================================================
+# GOOGLE IMAGE BOT
+# ==============================================================================
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /productos/
+
+# ==============================================================================
+# BING BOT
+# ==============================================================================
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /carrito
+
+# ==============================================================================
+# CRAWL DELAY (if needed to prevent server overload)
+# ==============================================================================
+# User-agent: *
+# Crawl-delay: 1
+
+# ==============================================================================
+# SITEMAP LOCATION
+# ==============================================================================
+Sitemap: https://azulcolchones.com.ar/sitemap.xml
+Sitemap: https://azulcolchones.com.ar/sitemap-products.xml
+Sitemap: https://azulcolchones.com.ar/sitemap-pages.xml
+
+# ==============================================================================
+# ADDITIONAL SEARCH ENGINES
+# ==============================================================================
+# Yandex (Russian search engine)
+User-agent: YandexBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Baidu (Chinese search engine)
+User-agent: Baiduspider
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/

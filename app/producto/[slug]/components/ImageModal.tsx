@@ -1,10 +1,10 @@
-// app/producto/[slug]/components/ImageModal.tsx
+// app/producto/[slug]/components/ImageModal.tsx - ✅ CON SWIPE GESTURES
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, ZoomIn, Maximize2, Grid3x3 } from 'lucide-react'
-import ImageZoomer from './ImageZoomer'
+import Image from 'next/image'
 
 interface ImageModalProps {
   isOpen: boolean
@@ -21,23 +21,34 @@ export default function ImageModal({
   currentIndex, 
   productName 
 }: ImageModalProps) {
+  // ✅ ESTADO INTERNO para el slide actual
   const [currentSlide, setCurrentSlide] = useState(currentIndex)
   const [showThumbnails, setShowThumbnails] = useState(false)
   const [isZoomed, setIsZoomed] = useState(false)
+  
+  // ✅ SWIPE STATE
+  const [touchStart, setTouchStart] = useState(0)
+  const [touchEnd, setTouchEnd] = useState(0)
+  const [touchStartY, setTouchStartY] = useState(0)
+  const [touchEndY, setTouchEndY] = useState(0)
 
   const currentImage = images[currentSlide] || ''
   const totalImages = images.length
 
-  // Callbacks de navegación
+  // ✅ CALLBACKS DE NAVEGACIÓN
   const goToNext = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % totalImages)
-    setIsZoomed(false)
-  }, [totalImages])
+    if (currentSlide < totalImages - 1) {
+      setCurrentSlide(prev => prev + 1)
+      setIsZoomed(false)
+    }
+  }, [currentSlide, totalImages])
 
   const goToPrev = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + totalImages) % totalImages)
-    setIsZoomed(false)
-  }, [totalImages])
+    if (currentSlide > 0) {
+      setCurrentSlide(prev => prev - 1)
+      setIsZoomed(false)
+    }
+  }, [currentSlide])
 
   const goToSlide = useCallback((index: number) => {
     setCurrentSlide(index)
@@ -45,7 +56,51 @@ export default function ImageModal({
     setIsZoomed(false)
   }, [])
 
-  // Effect para sincronizar con el index externo
+  // ✅ SWIPE HANDLERS
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX)
+    setTouchStartY(e.targetTouches[0].clientY)
+  }, [])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+    setTouchEndY(e.targetTouches[0].clientY)
+  }, [])
+
+  const handleTouchEnd = useCallback(() => {
+    if (!touchStart || !touchEnd) return
+
+    const distanceX = touchStart - touchEnd
+    const distanceY = touchStartY - touchEndY
+    const isHorizontalSwipe = Math.abs(distanceX) > Math.abs(distanceY)
+    
+    // ✅ SWIPE HORIZONTAL (cambiar imagen)
+    if (isHorizontalSwipe) {
+      const isLeftSwipe = distanceX > 50
+      const isRightSwipe = distanceX < -50
+
+      if (isLeftSwipe && currentSlide < totalImages - 1) {
+        goToNext()
+      }
+      if (isRightSwipe && currentSlide > 0) {
+        goToPrev()
+      }
+    } 
+    // ✅ SWIPE DOWN (cerrar modal)
+    else {
+      const isDownSwipe = distanceY < -100
+      if (isDownSwipe) {
+        onClose()
+      }
+    }
+
+    setTouchStart(0)
+    setTouchEnd(0)
+    setTouchStartY(0)
+    setTouchEndY(0)
+  }, [touchStart, touchEnd, touchStartY, touchEndY, currentSlide, totalImages, goToNext, goToPrev, onClose])
+
+  // ✅ SINCRONIZAR con index externo cuando abre
   useEffect(() => {
     if (isOpen) {
       setCurrentSlide(currentIndex)
@@ -60,7 +115,7 @@ export default function ImageModal({
     }
   }, [isOpen, currentIndex])
 
-  // Navegación con teclado
+  // ✅ KEYBOARD NAVIGATION
   useEffect(() => {
     if (!isOpen) return
 
@@ -74,12 +129,12 @@ export default function ImageModal({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose, goToNext, goToPrev])
 
-  // ✅ FIXED: Move early return AFTER all hooks
+  // ✅ EARLY RETURN después de todos los hooks
   if (!isOpen) return null
 
   return (
     <AnimatePresence>
-      {isOpen && ( // ✅ Additional safety check
+      {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -90,7 +145,7 @@ export default function ImageModal({
           aria-modal="true"
           aria-label="Galería de imágenes del producto"
         >
-          {/* Backdrop con blur */}
+          {/* ✅ BACKDROP con blur */}
           <motion.div 
             initial={{ backdropFilter: 'blur(0px)' }}
             animate={{ backdropFilter: 'blur(20px)' }}
@@ -100,19 +155,19 @@ export default function ImageModal({
             aria-hidden="true"
           />
 
-          {/* Contenedor principal */}
+          {/* ✅ CONTENEDOR PRINCIPAL */}
           <div className="relative w-full h-full max-w-7xl mx-auto p-4 md:p-6 lg:p-10 flex flex-col">
             
-            {/* Header con controles */}
+            {/* ✅ HEADER COMPACTO con controles */}
             <motion.header 
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
               className="relative z-20 flex items-center justify-between mb-4 md:mb-6"
             >
-              <div className="flex items-center gap-3">
-                <div className="px-4 py-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20">
-                  <p className="text-white font-bold text-sm md:text-base">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/10 backdrop-blur-xl rounded-lg sm:rounded-xl border border-white/20">
+                  <p className="text-white font-bold text-xs sm:text-sm md:text-base">
                     {currentSlide + 1} <span className="text-zinc-400 font-normal">/ {totalImages}</span>
                   </p>
                 </div>
@@ -128,53 +183,46 @@ export default function ImageModal({
                 </motion.div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 {/* Botón de thumbnails */}
                 {totalImages > 1 && (
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowThumbnails(!showThumbnails)}
-                    className={`p-3 rounded-xl backdrop-blur-xl border transition-all ${
+                    className={`p-2 sm:p-3 rounded-lg sm:rounded-xl backdrop-blur-xl border transition-all ${
                       showThumbnails 
                         ? 'bg-violet-500/30 border-violet-500/50' 
                         : 'bg-white/10 border-white/20 hover:bg-white/20'
                     }`}
                     aria-label={showThumbnails ? 'Ocultar miniaturas' : 'Mostrar miniaturas'}
                   >
-                    <Grid3x3 className="w-5 h-5 text-white" />
+                    <Grid3x3 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </motion.button>
                 )}
-
-                {/* Indicador de zoom */}
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: isZoomed ? 1 : 0 }}
-                  className="hidden md:flex items-center gap-2 px-3 py-2 bg-emerald-500/20 backdrop-blur-xl rounded-xl border border-emerald-500/30"
-                >
-                  <ZoomIn className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-300 font-semibold text-sm">Zoom activo</span>
-                </motion.div>
 
                 {/* Botón de cerrar */}
                 <motion.button
                   whileHover={{ scale: 1.05, rotate: 90 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={onClose}
-                  className="p-3 bg-red-500/20 hover:bg-red-500/30 rounded-xl backdrop-blur-xl border border-red-500/30 transition-all"
+                  className="p-2 sm:p-3 bg-red-500/20 hover:bg-red-500/30 rounded-lg sm:rounded-xl backdrop-blur-xl border border-red-500/30 transition-all"
                   aria-label="Cerrar galería"
                 >
-                  <X className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                 </motion.button>
               </div>
             </motion.header>
 
-            {/* Área principal de imagen */}
+            {/* ✅ ÁREA PRINCIPAL DE IMAGEN con swipe */}
             <motion.div 
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.15 }}
               className="relative flex-1 bg-zinc-900/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -183,26 +231,31 @@ export default function ImageModal({
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -100 }}
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="w-full h-full"
+                  className="w-full h-full relative"
                 >
-                  <ImageZoomer 
-  src={currentImage} 
-  alt={`${productName} - Vista ${currentSlide + 1} de ${totalImages}`}
-/>
+                  <Image
+                    src={currentImage}
+                    alt={`${productName} - Vista ${currentSlide + 1} de ${totalImages}`}
+                    fill
+                    className="object-contain"
+                    sizes="100vw"
+                    priority
+                  />
                 </motion.div>
               </AnimatePresence>
 
-              {/* Controles de navegación flotantes */}
+              {/* ✅ CONTROLES DE NAVEGACIÓN flotantes */}
               {totalImages > 1 && (
                 <>
                   <motion.button
                     initial={{ x: -50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
+                    animate={{ x: 0, opacity: currentSlide > 0 ? 1 : 0.3 }}
                     transition={{ delay: 0.2 }}
-                    whileHover={{ scale: 1.1, x: -5 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={currentSlide > 0 ? { scale: 1.1, x: -5 } : {}}
+                    whileTap={currentSlide > 0 ? { scale: 0.9 } : {}}
                     onClick={goToPrev}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl border border-white/20 transition-all group z-10"
+                    disabled={currentSlide === 0}
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 md:p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl border border-white/20 transition-all group z-10 disabled:cursor-not-allowed"
                     aria-label="Imagen anterior"
                   >
                     <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:text-violet-400 transition-colors" />
@@ -210,12 +263,13 @@ export default function ImageModal({
 
                   <motion.button
                     initial={{ x: 50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
+                    animate={{ x: 0, opacity: currentSlide < totalImages - 1 ? 1 : 0.3 }}
                     transition={{ delay: 0.2 }}
-                    whileHover={{ scale: 1.1, x: 5 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={currentSlide < totalImages - 1 ? { scale: 1.1, x: 5 } : {}}
+                    whileTap={currentSlide < totalImages - 1 ? { scale: 0.9 } : {}}
                     onClick={goToNext}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 md:p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl border border-white/20 transition-all group z-10"
+                    disabled={currentSlide === totalImages - 1}
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 md:p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl border border-white/20 transition-all group z-10 disabled:cursor-not-allowed"
                     aria-label="Siguiente imagen"
                   >
                     <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:text-violet-400 transition-colors" />
@@ -223,20 +277,21 @@ export default function ImageModal({
                 </>
               )}
 
-              {/* Hint de navegación por teclado */}
+              {/* ✅ HINT DE NAVEGACIÓN */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="hidden md:block absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/50 backdrop-blur-xl rounded-full border border-white/10"
+                className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1.5 sm:py-2 bg-black/50 backdrop-blur-xl rounded-full border border-white/10"
               >
-                <p className="text-zinc-400 text-xs font-medium">
-                  Usa ← → para navegar • ESC para cerrar
+                <p className="text-zinc-400 text-[10px] sm:text-xs font-medium text-center">
+                  <span className="hidden sm:inline">← → para navegar • ESC para cerrar</span>
+                  <span className="sm:hidden">👆 Deslizá → ← • ↓ para cerrar</span>
                 </p>
               </motion.div>
             </motion.div>
 
-            {/* Panel de thumbnails */}
+            {/* ✅ PANEL DE THUMBNAILS expandible */}
             <AnimatePresence>
               {showThumbnails && totalImages > 1 && (
                 <motion.div
@@ -244,11 +299,11 @@ export default function ImageModal({
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 100, opacity: 0 }}
                   transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                  className="relative z-20 mt-4 p-4 bg-zinc-900/80 backdrop-blur-xl rounded-2xl border border-white/10"
+                  className="relative z-20 mt-3 sm:mt-4 p-3 sm:p-4 bg-zinc-900/80 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/10"
                 >
-                  <div className="flex items-center gap-2 mb-3">
-                    <Maximize2 className="w-4 h-4 text-violet-400" />
-                    <p className="text-white font-bold text-sm">Todas las imágenes</p>
+                  <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                    <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-violet-400" />
+                    <p className="text-white font-bold text-xs sm:text-sm">Todas las imágenes</p>
                   </div>
                   
                   <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 md:gap-3 max-h-32 overflow-y-auto custom-scrollbar">
@@ -266,10 +321,12 @@ export default function ImageModal({
                         aria-label={`Ver imagen ${index + 1}`}
                         aria-current={currentSlide === index ? 'true' : 'false'}
                       >
-                        <img
+                        <Image
                           src={img}
                           alt={`Miniatura ${index + 1}`}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          sizes="80px"
                         />
                         {currentSlide === index && (
                           <motion.div
@@ -286,7 +343,7 @@ export default function ImageModal({
             </AnimatePresence>
           </div>
 
-          {/* Estilos para scrollbar personalizado */}
+          {/* ✅ ESTILOS para scrollbar personalizado */}
           <style jsx global>{`
             .custom-scrollbar::-webkit-scrollbar {
               width: 6px;
