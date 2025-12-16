@@ -187,7 +187,7 @@ export function HeroSection() {
                         Desde
                       </div>
                       <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white">
-                        $220K
+                        $220.000
                       </div>
                     </div>
                     <div className="text-right">
