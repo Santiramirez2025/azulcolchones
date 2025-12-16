@@ -1,14 +1,14 @@
-// app/producto/[slug]/components/ImageGallery.tsx - ✅ UNIFICADO SIN DUPLICACIÓN
+// app/producto/[slug]/components/ImageGallery.tsx - ✅ FIX: SIN DOBLE CLICK
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import { useState, useCallback, useEffect, memo } from 'react'
+import { useState, useCallback, useEffect, memo, useRef } from 'react'
 import {
   Heart, ChevronRight, ChevronLeft, Sparkles, TrendingUp,
-  Truck, Award, Maximize2
+  Truck, Award, Maximize2, ZoomIn
 } from 'lucide-react'
-import ImageModal from './ImageModal' // ✅ Solo usar el modal externo
+import ImageModal from './ImageModal'
 
 interface ImageGalleryProps {
   images: string[]
@@ -22,7 +22,6 @@ interface ImageGalleryProps {
   discountPercent: number
 }
 
-// Badge Component optimizado
 const Badge = memo(({ icon: Icon, children, gradient }: any) => (
   <motion.span
     initial={{ scale: 0.8, opacity: 0 }}
@@ -35,7 +34,6 @@ const Badge = memo(({ icon: Icon, children, gradient }: any) => (
 ))
 Badge.displayName = 'Badge'
 
-// Thumbnail Component con lazy loading
 const Thumbnail = memo(({ 
   src, 
   index, 
@@ -80,7 +78,6 @@ const Thumbnail = memo(({
 ))
 Thumbnail.displayName = 'Thumbnail'
 
-// Componente principal
 export default function ImageGallery({ 
   images, 
   currentImage, 
@@ -92,13 +89,37 @@ export default function ImageGallery({
   setIsFavorite,
   discountPercent 
 }: ImageGalleryProps) {
-  // ✅ ESTADO INTERNO para controlar el modal
   const [showModal, setShowModal] = useState(false)
   const [isImageLoaded, setIsImageLoaded] = useState(false)
+  
+  // ✅ ZOOM INLINE (solo desktop)
+  const [isZooming, setIsZooming] = useState(false)
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 })
+  const imageContainerRef = useRef<HTMLDivElement>(null)
+  
+  // ✅ SWIPE GESTURES (mobile)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
 
-  // ✅ SWIPE GESTURES para galería principal
+  // ✅ FIX: Cooldown para evitar que se abra el modal inmediatamente después de cerrar
+  const [canOpenModal, setCanOpenModal] = useState(true)
+
+  // ============================================================================
+  // ✅ ZOOM INLINE HANDLER (Desktop only)
+  // ============================================================================
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageContainerRef.current || window.innerWidth < 1024) return
+    
+    const rect = imageContainerRef.current.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    
+    setZoomPosition({ x, y })
+  }, [])
+
+  // ============================================================================
+  // ✅ SWIPE GESTURES (Mobile)
+  // ============================================================================
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX)
   }, [])
@@ -125,9 +146,11 @@ export default function ImageGallery({
     setTouchEnd(0)
   }, [touchStart, touchEnd, images.length, imageIndex, setImageIndex])
 
-  // ✅ KEYBOARD NAVIGATION solo cuando modal está cerrado
+  // ============================================================================
+  // ✅ KEYBOARD NAVIGATION
+  // ============================================================================
   useEffect(() => {
-    if (showModal) return // No interferir con el modal
+    if (showModal) return
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft' && images.length > 1) {
@@ -142,7 +165,9 @@ export default function ImageGallery({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [showModal, imageIndex, images.length, setImageIndex])
 
-  // ✅ HANDLERS SIMPLIFICADOS
+  // ============================================================================
+  // ✅ HANDLERS
+  // ============================================================================
   const handlePrevImage = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     setImageIndex((imageIndex - 1 + images.length) % images.length)
@@ -153,15 +178,42 @@ export default function ImageGallery({
     setImageIndex((imageIndex + 1) % images.length)
   }, [imageIndex, images.length, setImageIndex])
 
+  // ✅ FIX: MODAL con cooldown
   const openModal = useCallback(() => {
+    // No abrir en mobile
+    if (window.innerWidth < 1024) return
+    
+    // ✅ Solo abrir si pasó el cooldown
+    if (!canOpenModal) return
+    
     setShowModal(true)
     setShowImageModal(true)
-  }, [setShowImageModal])
+  }, [canOpenModal, setShowImageModal])
 
   const closeModal = useCallback(() => {
     setShowModal(false)
     setShowImageModal(false)
+    
+    // ✅ FIX: Cooldown de 300ms para evitar que se vuelva a abrir
+    setCanOpenModal(false)
+    setTimeout(() => {
+      setCanOpenModal(true)
+    }, 300)
   }, [setShowImageModal])
+
+  // ✅ FIX: Handler de click en imagen - con stopPropagation
+  const handleImageClick = useCallback((e: React.MouseEvent) => {
+    // Si está en mobile, no hacer nada
+    if (window.innerWidth < 1024) return
+    
+    // Si el click viene de un botón de navegación, no abrir modal
+    const target = e.target as HTMLElement
+    if (target.closest('button')) {
+      return
+    }
+    
+    openModal()
+  }, [openModal])
 
   return (
     <>
@@ -223,41 +275,69 @@ export default function ImageGallery({
             </motion.button>
           </div>
 
-          {/* ✅ IMAGEN PRINCIPAL con gestos táctiles */}
+          {/* ============================================================================ */}
+          {/* ✅ IMAGEN PRINCIPAL - FIX: onClick separado del contenedor */}
+          {/* ============================================================================ */}
           <div 
-            className="relative aspect-square bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl md:rounded-3xl overflow-hidden group cursor-zoom-in mb-3 md:mb-4 border border-white/10 shadow-2xl"
+            ref={imageContainerRef}
+            className="relative aspect-square bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl md:rounded-3xl overflow-hidden group mb-3 md:mb-4 border border-white/10 shadow-2xl"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => window.innerWidth >= 1024 && setIsZooming(true)}
+            onMouseLeave={() => setIsZooming(false)}
           >
+            {/* ✅ FIX: Separar el onClick de la animación */}
             <motion.div 
               key={imageIndex}
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
               className="absolute inset-0"
-              onClick={openModal}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  openModal()
-                }
-              }}
-              aria-label={`Ver imagen en tamaño completo. Imagen ${imageIndex + 1} de ${images.length}`}
             >
+              {/* ✅ FIX: Capa clickeable separada (solo desktop) */}
+              <div
+                onClick={handleImageClick}
+                className="hidden lg:block absolute inset-0 cursor-pointer z-[5]"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    openModal()
+                  }
+                }}
+                aria-label={`Ver imagen en tamaño completo. Imagen ${imageIndex + 1} de ${images.length}`}
+              />
+              
               {currentImage ? (
                 <>
+                  {/* ✅ ZOOM INLINE (Desktop) */}
+                  <div
+                    className="hidden lg:block absolute inset-0 pointer-events-none"
+                    style={{
+                      backgroundImage: isZooming ? `url(${currentImage})` : 'none',
+                      backgroundSize: isZooming ? '250%' : '100%',
+                      backgroundPosition: isZooming ? `${zoomPosition.x}% ${zoomPosition.y}%` : 'center',
+                      backgroundRepeat: 'no-repeat',
+                      transition: 'background-size 0.2s ease-out'
+                    }}
+                  />
+                  
+                  {/* ✅ IMAGEN NORMAL (Mobile + Desktop sin hover) */}
                   <Image
                     src={currentImage}
                     alt={`${product.name} - Imagen ${imageIndex + 1} de ${images.length}`}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className={`object-cover transition-all duration-300 pointer-events-none ${
+                      isZooming ? 'lg:opacity-0' : 'opacity-100'
+                    }`}
                     priority={imageIndex === 0}
                     sizes="(max-width: 768px) 100vw, 50vw"
                     onLoad={() => setIsImageLoaded(true)}
                   />
+                  
                   {!isImageLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
                       <div className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full animate-spin" />
@@ -271,11 +351,11 @@ export default function ImageGallery({
               )}
             </motion.div>
             
-            {/* ✅ Overlay con icono de zoom */}
+            {/* ✅ Overlay con hint - Solo desktop */}
             <motion.div 
               initial={{ opacity: 0 }}
               whileHover={{ opacity: 1 }}
-              className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 flex items-center justify-center pointer-events-none"
+              className="hidden lg:flex absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 items-center justify-center pointer-events-none z-[3]"
             >
               <motion.div
                 initial={{ scale: 0 }}
@@ -284,15 +364,19 @@ export default function ImageGallery({
                 className="flex flex-col items-center gap-2"
               >
                 <div className="p-4 bg-white/10 backdrop-blur-md rounded-full">
-                  <Maximize2 className="w-8 h-8 md:w-12 md:h-12 text-white" aria-hidden="true" />
+                  {isZooming ? (
+                    <ZoomIn className="w-12 h-12 text-white" aria-hidden="true" />
+                  ) : (
+                    <Maximize2 className="w-12 h-12 text-white" aria-hidden="true" />
+                  )}
                 </div>
-                <span className="text-white font-semibold text-sm md:text-base bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">
-                  Click para ampliar
+                <span className="text-white font-semibold text-base bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">
+                  {isZooming ? 'Movete para explorar' : 'Click para ampliar'}
                 </span>
               </motion.div>
             </motion.div>
 
-            {/* ✅ CONTROLES DE NAVEGACIÓN optimizados mobile */}
+            {/* ✅ CONTROLES DE NAVEGACIÓN - z-index alto */}
             {images.length > 1 && (
               <>
                 <motion.button
@@ -300,7 +384,7 @@ export default function ImageGallery({
                   whileHover={{ opacity: 1, x: 0, scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handlePrevImage}
-                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-violet-500 z-10"
                   aria-label="Imagen anterior"
                 >
                   <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-white" aria-hidden="true" />
@@ -311,14 +395,14 @@ export default function ImageGallery({
                   whileHover={{ opacity: 1, x: 0, scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handleNextImage}
-                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-violet-500 z-10"
                   aria-label="Siguiente imagen"
                 >
                   <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white" aria-hidden="true" />
                 </motion.button>
 
                 {/* ✅ Indicador de posición con dots */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black/30 backdrop-blur-md px-3 py-2 rounded-full">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black/30 backdrop-blur-md px-3 py-2 rounded-full z-10">
                   {images.slice(0, 5).map((_, idx) => (
                     <motion.button
                       key={idx}
@@ -395,7 +479,7 @@ export default function ImageGallery({
         </div>
       </motion.article>
 
-      {/* ✅ MODAL EXTERNO - Sin duplicación */}
+      {/* ✅ MODAL SOLO PARA DESKTOP */}
       <AnimatePresence>
         {showModal && (
           <ImageModal

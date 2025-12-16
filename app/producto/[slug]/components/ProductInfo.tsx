@@ -1,11 +1,11 @@
-// app/producto/[slug]/components/ProductInfo.tsx - ✅ CUOTAS COMPACTAS SIN MODAL
+// app/producto/[slug]/components/ProductInfo.tsx - ✅ OPTIMIZADO SIN DROPDOWN
 'use client'
 
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Star, Heart, Share2, ShoppingCart, Plus, Minus, Check,
-  Truck, Shield, RotateCcw, CreditCard, DollarSign, ChevronDown
+  Truck, Shield, RotateCcw, CreditCard, DollarSign, X
 } from 'lucide-react'
 import { formatARS } from '@/lib/utils/currency'
 import type { ProductWithRelations, StockInfo } from '@/lib/types/product'
@@ -50,6 +50,245 @@ interface ProductInfoProps {
   onCuotasChange: (cuotas: number | null) => void
 }
 
+// ============================================================================
+// ✅ COMPONENTE DE OPCIÓN DE PAGO OPTIMIZADO
+// ============================================================================
+function PaymentOption({ 
+  icon, 
+  label, 
+  sublabel, 
+  price, 
+  tag, 
+  selected, 
+  onClick,
+  highlight = false
+}: {
+  icon: string
+  label: string
+  sublabel?: string
+  price: string
+  tag?: string
+  selected: boolean
+  onClick: () => void
+  highlight?: boolean
+}) {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className={`relative overflow-hidden p-3 sm:p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+        selected
+          ? highlight
+            ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/30'
+            : 'border-blue-500 bg-blue-500/10 ring-2 ring-blue-500/30'
+          : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
+      }`}
+    >
+      {/* Background gradient on hover/select */}
+      <div className={`absolute inset-0 transition-opacity duration-300 ${
+        selected 
+          ? highlight
+            ? 'bg-gradient-to-br from-emerald-500/5 to-green-500/5 opacity-100'
+            : 'bg-gradient-to-br from-blue-500/5 to-cyan-500/5 opacity-100'
+          : 'opacity-0'
+      }`} />
+      
+      <div className="relative">
+        {/* Tag (ej: "SIN INTERÉS") */}
+        {tag && (
+          <div className={`absolute -top-2 -right-2 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black ${
+            highlight ? 'bg-emerald-500 text-white' : 'bg-blue-500 text-white'
+          }`}>
+            {tag}
+          </div>
+        )}
+        
+        {/* Icono */}
+        <div className="text-2xl sm:text-3xl mb-2">{icon}</div>
+        
+        {/* Label */}
+        <p className={`text-xs sm:text-sm font-bold mb-1 ${
+          selected 
+            ? highlight ? 'text-emerald-400' : 'text-blue-400'
+            : 'text-zinc-400'
+        }`}>
+          {label}
+        </p>
+        
+        {/* Sublabel */}
+        {sublabel && (
+          <p className="text-[10px] text-zinc-500 mb-2">{sublabel}</p>
+        )}
+        
+        {/* Precio */}
+        <p className={`text-base sm:text-lg font-black ${
+          selected ? 'text-white' : 'text-zinc-300'
+        }`}>
+          {price}
+        </p>
+      </div>
+      
+      {/* Checkmark cuando está seleccionado */}
+      {selected && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className={`absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center ${
+            highlight ? 'bg-emerald-500' : 'bg-blue-500'
+          }`}
+        >
+          <Check className="w-3 h-3 text-white" />
+        </motion.div>
+      )}
+    </motion.button>
+  )
+}
+
+// ============================================================================
+// ✅ MODAL DE TODAS LAS CUOTAS (solo cuando usuario hace click en "Ver más")
+// ============================================================================
+function AllPaymentPlansModal({ 
+  isOpen, 
+  onClose, 
+  todasLasCuotas, 
+  basePrice,
+  selectedCuotas,
+  onSelect 
+}: {
+  isOpen: boolean
+  onClose: () => void
+  todasLasCuotas: CuotaOption[]
+  basePrice: number
+  selectedCuotas: number | null
+  onSelect: (cuotas: number | null) => void
+}) {
+  if (!isOpen) return null
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4"
+        onClick={onClose}
+      >
+        {/* Backdrop */}
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+        
+        {/* Modal Content */}
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+          className="relative w-full sm:max-w-2xl bg-zinc-900 sm:rounded-2xl overflow-hidden shadow-2xl"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-zinc-800">
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold text-white">
+                Todas las opciones de pago
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                Elegí la que más te convenga
+              </p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-zinc-400" />
+            </button>
+          </div>
+          
+          {/* Options List */}
+          <div className="max-h-[60vh] overflow-y-auto p-4 sm:p-6 space-y-3">
+            {/* Contado */}
+            <button
+              onClick={() => {
+                onSelect(null)
+                onClose()
+              }}
+              className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+                selectedCuotas === null
+                  ? 'border-emerald-500 bg-emerald-500/10'
+                  : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">💵</div>
+                  <div>
+                    <p className="font-bold text-white flex items-center gap-2">
+                      Precio de Contado
+                      <span className="px-2 py-0.5 bg-emerald-500 text-white text-[10px] font-black rounded-full">
+                        MEJOR PRECIO
+                      </span>
+                    </p>
+                    <p className="text-xl sm:text-2xl font-black text-emerald-400 mt-1">
+                      {formatARS(basePrice)}
+                    </p>
+                  </div>
+                </div>
+                {selectedCuotas === null && (
+                  <Check className="w-6 h-6 text-emerald-400" />
+                )}
+              </div>
+            </button>
+
+            {/* Todas las cuotas */}
+            {todasLasCuotas.map((cuota) => (
+              <button
+                key={cuota.cuotas}
+                onClick={() => {
+                  onSelect(cuota.cuotas)
+                  onClose()
+                }}
+                className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+                  selectedCuotas === cuota.cuotas
+                    ? 'border-blue-500 bg-blue-500/10'
+                    : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-500/20 border border-blue-500/30 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-bold text-blue-400">
+                        {cuota.cuotas}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-base sm:text-lg font-black text-white">
+                        {cuota.formatted.precioCuota}
+                      </p>
+                      <p className="text-xs sm:text-sm text-zinc-400">
+                        Total: {cuota.formatted.precioTotal}
+                        {cuota.recargo === 0 ? (
+                          <span className="ml-2 text-emerald-400 font-bold">SIN RECARGO</span>
+                        ) : (
+                          <span className="ml-2 text-orange-400">(+{cuota.recargoPercentage})</span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  {selectedCuotas === cuota.cuotas && (
+                    <Check className="w-6 h-6 text-blue-400" />
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+// ============================================================================
+// ✅ COMPONENTE PRINCIPAL
+// ============================================================================
 export default function ProductInfo({
   product,
   averageRatings,
@@ -76,23 +315,20 @@ export default function ProductInfo({
   onCuotasChange
 }: ProductInfoProps) {
   
-  // ✅ DROPDOWN COMPACTO en lugar de modal fullscreen
-  const [showCuotasDropdown, setShowCuotasDropdown] = useState(false)
+  const [showAllPlans, setShowAllPlans] = useState(false)
   const [showAllFeatures, setShowAllFeatures] = useState(false)
   
   const currentStock = selectedVariant?.stock ?? stockInfo.quantity ?? 0
   const isLowStock = currentStock > 0 && currentStock <= 5
   
-  // Mejor cuota destacada (3 cuotas sin recargo)
+  // Opciones principales (3 cuotas + contado)
   const mejorCuotaSinRecargo = useMemo(() => {
     return todasLasCuotas.find(c => c.cuotas === 3) || todasLasCuotas[0]
   }, [todasLasCuotas])
   
-  // Cuota seleccionada actual
-  const cuotaSeleccionada = useMemo(() => {
-    if (selectedCuotas === null) return null
-    return todasLasCuotas.find(c => c.cuotas === selectedCuotas) || null
-  }, [selectedCuotas, todasLasCuotas])
+  const cuota6 = useMemo(() => {
+    return todasLasCuotas.find(c => c.cuotas === 6) || todasLasCuotas[1]
+  }, [todasLasCuotas])
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -161,9 +397,9 @@ export default function ProductInfo({
       </div>
 
       {/* ============================================================================ */}
-      {/* ✅ SECCIÓN DE PRECIOS COMPACTA */}
+      {/* ✅ SECCIÓN DE PRECIOS OPTIMIZADA - SIEMPRE VISIBLE */}
       {/* ============================================================================ */}
-      <div className="space-y-3 sm:space-y-4 p-4 sm:p-6 bg-gradient-to-br from-blue-500/5 via-cyan-500/5 to-blue-500/5 border border-blue-500/20 rounded-xl sm:rounded-2xl">
+      <div className="space-y-4 sm:space-y-5 p-4 sm:p-6 bg-gradient-to-br from-blue-500/5 via-cyan-500/5 to-blue-500/5 border border-blue-500/20 rounded-xl sm:rounded-2xl">
         
         {/* Precio Original Tachado */}
         {originalPrice && originalPrice > basePrice && (
@@ -177,146 +413,72 @@ export default function ProductInfo({
           </div>
         )}
 
-        {/* ✅ PRECIO DE CONTADO (destacado) */}
-        <div className="space-y-1.5 sm:space-y-2">
-          <div className="flex items-baseline gap-2 sm:gap-3">
-            <span className="text-4xl sm:text-5xl md:text-6xl font-black bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              {formatARS(basePrice)}
-            </span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="px-2 sm:px-3 py-1 sm:py-1.5 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-bold rounded-lg flex items-center gap-1.5">
-              <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              CONTADO
-            </span>
-            <span className="text-xs sm:text-sm text-zinc-500">
-              Transferencia • Débito
-            </span>
-          </div>
+        {/* ✅ 3 OPCIONES PRINCIPALES - GRID SIEMPRE VISIBLE */}
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          {/* CONTADO */}
+          <PaymentOption
+            icon="💵"
+            label="Contado"
+            sublabel="Mejor precio"
+            price={formatARS(basePrice)}
+            tag="MEJOR"
+            selected={selectedCuotas === null}
+            onClick={() => onCuotasChange(null)}
+            highlight={true}
+          />
+          
+          {/* 3 CUOTAS SIN INTERÉS */}
+          <PaymentOption
+            icon="💳"
+            label="3 cuotas"
+            sublabel="Sin interés"
+            price={mejorCuotaSinRecargo.formatted.precioCuota}
+            tag="SIN INTERÉS"
+            selected={selectedCuotas === 3}
+            onClick={() => onCuotasChange(3)}
+          />
+          
+          {/* 6 CUOTAS */}
+          <PaymentOption
+            icon="🔢"
+            label="6 cuotas"
+            sublabel={cuota6.recargo === 0 ? 'Sin interés' : 'Con interés'}
+            price={cuota6.formatted.precioCuota}
+            selected={selectedCuotas === 6}
+            onClick={() => onCuotasChange(6)}
+          />
         </div>
 
-        {/* ✅ DROPDOWN COMPACTO PARA CUOTAS */}
-        <div className="relative">
+        {/* ✅ LINK DISCRETO PARA VER MÁS OPCIONES */}
+        <div className="text-center pt-2">
           <button
-            onClick={() => setShowCuotasDropdown(!showCuotasDropdown)}
-            className="w-full flex items-center justify-between p-3 sm:p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg sm:rounded-xl hover:bg-blue-500/15 transition-all group"
+            onClick={() => setShowAllPlans(true)}
+            className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 underline transition-colors inline-flex items-center gap-1"
           >
-            <div className="flex items-center gap-2 sm:gap-3">
-              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-              <div className="text-left">
-                {selectedCuotas === null ? (
-                  <>
-                    <p className="text-sm sm:text-base font-bold text-white">
-                      o {mejorCuotaSinRecargo.cuotas} × {mejorCuotaSinRecargo.formatted.precioCuota}
-                    </p>
-                    <p className="text-[10px] sm:text-xs text-blue-300">
-                      SIN RECARGO • Click para más opciones
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-sm sm:text-base font-bold text-white">
-                      {cuotaSeleccionada?.cuotas} × {cuotaSeleccionada?.formatted.precioCuota}
-                    </p>
-                    <p className="text-[10px] sm:text-xs text-zinc-400">
-                      Total: {cuotaSeleccionada?.formatted.precioTotal}
-                    </p>
-                  </>
-                )}
-              </div>
-            </div>
-            <motion.div
-              animate={{ rotate: showCuotasDropdown ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-            </motion.div>
+            Ver hasta 12 cuotas sin interés →
           </button>
+        </div>
 
-          {/* ✅ DROPDOWN EXPANDIBLE (no modal) */}
-          <AnimatePresence>
-            {showCuotasDropdown && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden mt-2"
-              >
-                <div className="space-y-2 p-3 sm:p-4 bg-zinc-900/80 border border-zinc-800 rounded-lg sm:rounded-xl backdrop-blur-sm">
-                  {/* Opción CONTADO */}
-                  <button
-                    onClick={() => {
-                      onCuotasChange(null)
-                      setShowCuotasDropdown(false)
-                    }}
-                    className={`w-full p-3 rounded-lg border transition-all text-left ${
-                      selectedCuotas === null
-                        ? 'bg-emerald-500/20 border-emerald-500/50'
-                        : 'bg-zinc-800/50 border-zinc-700 hover:border-emerald-500/30'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-bold text-white flex items-center gap-2">
-                          <DollarSign className="w-4 h-4 text-emerald-400" />
-                          Precio de Contado
-                        </p>
-                        <p className="text-xl sm:text-2xl font-black text-emerald-400 mt-1">
-                          {formatARS(basePrice)}
-                        </p>
-                      </div>
-                      {selectedCuotas === null && (
-                        <Check className="w-5 h-5 text-emerald-400" />
-                      )}
-                    </div>
-                  </button>
-
-                  {/* Opciones de CUOTAS */}
-                  {todasLasCuotas.map((cuota) => (
-                    <button
-                      key={cuota.cuotas}
-                      onClick={() => {
-                        onCuotasChange(cuota.cuotas)
-                        setShowCuotasDropdown(false)
-                      }}
-                      className={`w-full p-3 rounded-lg border transition-all text-left ${
-                        selectedCuotas === cuota.cuotas
-                          ? 'bg-blue-500/20 border-blue-500/50'
-                          : 'bg-zinc-800/50 border-zinc-700 hover:border-blue-500/30'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-blue-500/20 border border-blue-500/30 rounded-full flex items-center justify-center">
-                            <span className="text-xs font-bold text-blue-400">
-                              {cuota.cuotas}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="text-base sm:text-lg font-black text-white">
-                              {cuota.formatted.precioCuota}
-                            </p>
-                            <p className="text-[10px] sm:text-xs text-zinc-400">
-                              Total: {cuota.formatted.precioTotal}
-                              {cuota.recargo === 0 ? (
-                                <span className="ml-2 text-emerald-400 font-bold">SIN RECARGO</span>
-                              ) : (
-                                <span className="ml-2 text-orange-400">(+{cuota.recargoPercentage})</span>
-                              )}
-                            </p>
-                          </div>
-                        </div>
-                        {selectedCuotas === cuota.cuotas && (
-                          <Check className="w-5 h-5 text-blue-400" />
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        {/* ✅ PRECIO TOTAL SELECCIONADO */}
+        <div className="pt-3 border-t border-white/10">
+          <div className="flex items-baseline justify-between">
+            <span className="text-xs sm:text-sm text-zinc-400">
+              {selectedCuotas === null ? 'Pagas ahora:' : 'Pagas en cuotas:'}
+            </span>
+            <div className="text-right">
+              <p className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                {selectedCuotas === null 
+                  ? formatARS(basePrice)
+                  : `${selectedCuotas} × ${todasLasCuotas.find(c => c.cuotas === selectedCuotas)?.formatted.precioCuota}`
+                }
+              </p>
+              {selectedCuotas !== null && (
+                <p className="text-xs text-zinc-500 mt-1">
+                  Total: {todasLasCuotas.find(c => c.cuotas === selectedCuotas)?.formatted.precioTotal}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -373,9 +535,9 @@ export default function ProductInfo({
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             disabled={quantity <= 1}
-            className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center bg-zinc-900 border border-zinc-800 rounded-lg sm:rounded-xl hover:bg-zinc-800 hover:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-zinc-900 border border-zinc-800 rounded-lg sm:rounded-xl hover:bg-zinc-800 hover:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Minus className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-400" />
+            <Minus className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-400" />
           </button>
           
           <input
@@ -387,15 +549,15 @@ export default function ProductInfo({
               const val = parseInt(e.target.value) || 1
               setQuantity(Math.max(1, Math.min(10, val)))
             }}
-            className="w-16 sm:w-20 h-11 sm:h-12 text-center bg-zinc-900 border border-zinc-800 rounded-lg sm:rounded-xl text-white font-bold text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            className="w-20 sm:w-24 h-12 sm:h-14 text-center bg-zinc-900 border border-zinc-800 rounded-lg sm:rounded-xl text-white font-bold text-lg sm:text-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           />
           
           <button
             onClick={() => setQuantity(Math.min(10, quantity + 1))}
             disabled={quantity >= 10 || quantity >= currentStock}
-            className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center bg-zinc-900 border border-zinc-800 rounded-lg sm:rounded-xl hover:bg-zinc-800 hover:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-zinc-900 border border-zinc-800 rounded-lg sm:rounded-xl hover:bg-zinc-800 hover:border-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-400" />
+            <Plus className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-400" />
           </button>
           
           <span className="text-xs sm:text-sm text-zinc-400 ml-1 sm:ml-2">
@@ -410,7 +572,7 @@ export default function ProductInfo({
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
-          className="w-full px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold text-base sm:text-lg rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-blue-500/25 flex items-center justify-center gap-2 sm:gap-3 min-h-[52px] sm:min-h-[56px]"
+          className="w-full px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold text-base sm:text-lg rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-blue-500/25 flex items-center justify-center gap-2 sm:gap-3 min-h-[56px] sm:min-h-[60px]"
         >
           <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
           <span>{isOutOfStock ? 'Agotado' : 'Agregar al Carrito'}</span>
@@ -420,7 +582,7 @@ export default function ProductInfo({
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
           <button
             onClick={() => setIsFavorite(!isFavorite)}
-            className={`px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl border-2 font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 min-h-[48px] ${
+            className={`px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl border-2 font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 min-h-[52px] ${
               isFavorite
                 ? 'border-red-500 bg-red-500/20 text-red-400'
                 : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-red-500/50'
@@ -432,7 +594,7 @@ export default function ProductInfo({
 
           <button
             onClick={() => handleShare()}
-            className="px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl border-2 border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-blue-500/50 font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 min-h-[48px]"
+            className="px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl border-2 border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-blue-500/50 font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 min-h-[52px]"
           >
             <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Compartir</span>
@@ -443,36 +605,36 @@ export default function ProductInfo({
       {/* Trust Badges */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-white/10">
         <div className="flex items-start gap-2 sm:gap-3">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-emerald-500/20 border border-emerald-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
-            <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 bg-emerald-500/20 border border-emerald-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
           </div>
           <div>
-            <p className="font-semibold text-white text-xs sm:text-sm">Envío Gratis</p>
-            <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5">Villa María</p>
+            <p className="font-semibold text-white text-sm sm:text-base">Envío Gratis</p>
+            <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">Villa María</p>
           </div>
         </div>
 
         <div className="flex items-start gap-2 sm:gap-3">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-blue-500/20 border border-blue-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
-            <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 bg-blue-500/20 border border-blue-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
           </div>
           <div>
-            <p className="font-semibold text-white text-xs sm:text-sm">
+            <p className="font-semibold text-white text-sm sm:text-base">
               {product.warranty || 5} Años
             </p>
-            <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5">Garantía</p>
+            <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">Garantía</p>
           </div>
         </div>
 
         <div className="flex items-start gap-2 sm:gap-3">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-violet-500/20 border border-violet-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
-            <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 bg-violet-500/20 border border-violet-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
+            <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6 text-violet-400" />
           </div>
           <div>
-            <p className="font-semibold text-white text-xs sm:text-sm">
+            <p className="font-semibold text-white text-sm sm:text-base">
               {product.trialNights || 100} Noches
             </p>
-            <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5">Prueba gratis</p>
+            <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">Prueba gratis</p>
           </div>
         </div>
       </div>
@@ -492,7 +654,7 @@ export default function ProductInfo({
                 transition={{ delay: index * 0.05 }}
                 className="flex items-start gap-2 text-xs sm:text-sm text-zinc-400"
               >
-                <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                <Check className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
                 <span>{feature}</span>
               </motion.div>
             ))}
@@ -507,6 +669,16 @@ export default function ProductInfo({
           )}
         </div>
       )}
+
+      {/* ✅ MODAL DE TODAS LAS CUOTAS */}
+      <AllPaymentPlansModal
+        isOpen={showAllPlans}
+        onClose={() => setShowAllPlans(false)}
+        todasLasCuotas={todasLasCuotas}
+        basePrice={basePrice}
+        selectedCuotas={selectedCuotas}
+        onSelect={onCuotasChange}
+      />
     </div>
   )
 }

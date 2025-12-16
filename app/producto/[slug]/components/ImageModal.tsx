@@ -1,9 +1,9 @@
-// app/producto/[slug]/components/ImageModal.tsx - ✅ CON SWIPE GESTURES
+// app/producto/[slug]/components/ImageModal.tsx - ✅ FIX: SIN DOBLE CLICK
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, ZoomIn, Maximize2, Grid3x3 } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Maximize2, Grid3x3 } from 'lucide-react'
 import Image from 'next/image'
 
 interface ImageModalProps {
@@ -21,7 +21,6 @@ export default function ImageModal({
   currentIndex, 
   productName 
 }: ImageModalProps) {
-  // ✅ ESTADO INTERNO para el slide actual
   const [currentSlide, setCurrentSlide] = useState(currentIndex)
   const [showThumbnails, setShowThumbnails] = useState(false)
   const [isZoomed, setIsZoomed] = useState(false)
@@ -35,7 +34,9 @@ export default function ImageModal({
   const currentImage = images[currentSlide] || ''
   const totalImages = images.length
 
+  // ============================================================================
   // ✅ CALLBACKS DE NAVEGACIÓN
+  // ============================================================================
   const goToNext = useCallback(() => {
     if (currentSlide < totalImages - 1) {
       setCurrentSlide(prev => prev + 1)
@@ -56,7 +57,9 @@ export default function ImageModal({
     setIsZoomed(false)
   }, [])
 
+  // ============================================================================
   // ✅ SWIPE HANDLERS
+  // ============================================================================
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX)
     setTouchStartY(e.targetTouches[0].clientY)
@@ -100,7 +103,9 @@ export default function ImageModal({
     setTouchEndY(0)
   }, [touchStart, touchEnd, touchStartY, touchEndY, currentSlide, totalImages, goToNext, goToPrev, onClose])
 
+  // ============================================================================
   // ✅ SINCRONIZAR con index externo cuando abre
+  // ============================================================================
   useEffect(() => {
     if (isOpen) {
       setCurrentSlide(currentIndex)
@@ -115,7 +120,9 @@ export default function ImageModal({
     }
   }, [isOpen, currentIndex])
 
+  // ============================================================================
   // ✅ KEYBOARD NAVIGATION
+  // ============================================================================
   useEffect(() => {
     if (!isOpen) return
 
@@ -128,6 +135,22 @@ export default function ImageModal({
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose, goToNext, goToPrev])
+
+  // ============================================================================
+  // ✅ FIX: HANDLER DE CIERRE CON STOP PROPAGATION
+  // ============================================================================
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+    // Solo cerrar si el click es exactamente en el backdrop
+    if (e.target === e.currentTarget) {
+      e.stopPropagation() // ✅ CRÍTICO: Detener propagación
+      onClose()
+    }
+  }, [onClose])
+
+  const handleCloseButton = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation() // ✅ CRÍTICO: Detener propagación
+    onClose()
+  }, [onClose])
 
   // ✅ EARLY RETURN después de todos los hooks
   if (!isOpen) return null
@@ -144,19 +167,22 @@ export default function ImageModal({
           role="dialog"
           aria-modal="true"
           aria-label="Galería de imágenes del producto"
+          onClick={handleBackdropClick} // ✅ Click en el contenedor principal
         >
-          {/* ✅ BACKDROP con blur */}
+          {/* ✅ BACKDROP con blur - SIN onClick (delegado al padre) */}
           <motion.div 
             initial={{ backdropFilter: 'blur(0px)' }}
             animate={{ backdropFilter: 'blur(20px)' }}
             exit={{ backdropFilter: 'blur(0px)' }}
-            className="absolute inset-0 bg-black/95"
-            onClick={onClose}
+            className="absolute inset-0 bg-black/95 pointer-events-none" // ✅ pointer-events-none
             aria-hidden="true"
           />
 
-          {/* ✅ CONTENEDOR PRINCIPAL */}
-          <div className="relative w-full h-full max-w-7xl mx-auto p-4 md:p-6 lg:p-10 flex flex-col">
+          {/* ✅ CONTENEDOR PRINCIPAL - stopPropagation para evitar que cierre */}
+          <div 
+            className="relative w-full h-full max-w-7xl mx-auto p-4 md:p-6 lg:p-10 flex flex-col"
+            onClick={(e) => e.stopPropagation()} // ✅ CRÍTICO: Detener clicks internos
+          >
             
             {/* ✅ HEADER COMPACTO con controles */}
             <motion.header 
@@ -189,7 +215,10 @@ export default function ImageModal({
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setShowThumbnails(!showThumbnails)}
+                    onClick={(e) => {
+                      e.stopPropagation() // ✅ Detener propagación
+                      setShowThumbnails(!showThumbnails)
+                    }}
                     className={`p-2 sm:p-3 rounded-lg sm:rounded-xl backdrop-blur-xl border transition-all ${
                       showThumbnails 
                         ? 'bg-violet-500/30 border-violet-500/50' 
@@ -205,7 +234,7 @@ export default function ImageModal({
                 <motion.button
                   whileHover={{ scale: 1.05, rotate: 90 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={onClose}
+                  onClick={handleCloseButton} // ✅ Handler con stopPropagation
                   className="p-2 sm:p-3 bg-red-500/20 hover:bg-red-500/30 rounded-lg sm:rounded-xl backdrop-blur-xl border border-red-500/30 transition-all"
                   aria-label="Cerrar galería"
                 >
@@ -237,7 +266,7 @@ export default function ImageModal({
                     src={currentImage}
                     alt={`${productName} - Vista ${currentSlide + 1} de ${totalImages}`}
                     fill
-                    className="object-contain"
+                    className="object-contain pointer-events-none" // ✅ pointer-events-none
                     sizes="100vw"
                     priority
                   />
@@ -253,7 +282,10 @@ export default function ImageModal({
                     transition={{ delay: 0.2 }}
                     whileHover={currentSlide > 0 ? { scale: 1.1, x: -5 } : {}}
                     whileTap={currentSlide > 0 ? { scale: 0.9 } : {}}
-                    onClick={goToPrev}
+                    onClick={(e) => {
+                      e.stopPropagation() // ✅ Detener propagación
+                      goToPrev()
+                    }}
                     disabled={currentSlide === 0}
                     className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 md:p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl border border-white/20 transition-all group z-10 disabled:cursor-not-allowed"
                     aria-label="Imagen anterior"
@@ -267,7 +299,10 @@ export default function ImageModal({
                     transition={{ delay: 0.2 }}
                     whileHover={currentSlide < totalImages - 1 ? { scale: 1.1, x: 5 } : {}}
                     whileTap={currentSlide < totalImages - 1 ? { scale: 0.9 } : {}}
-                    onClick={goToNext}
+                    onClick={(e) => {
+                      e.stopPropagation() // ✅ Detener propagación
+                      goToNext()
+                    }}
                     disabled={currentSlide === totalImages - 1}
                     className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 md:p-4 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-xl border border-white/20 transition-all group z-10 disabled:cursor-not-allowed"
                     aria-label="Siguiente imagen"
@@ -282,7 +317,7 @@ export default function ImageModal({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1.5 sm:py-2 bg-black/50 backdrop-blur-xl rounded-full border border-white/10"
+                className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1.5 sm:py-2 bg-black/50 backdrop-blur-xl rounded-full border border-white/10 pointer-events-none" // ✅ pointer-events-none
               >
                 <p className="text-zinc-400 text-[10px] sm:text-xs font-medium text-center">
                   <span className="hidden sm:inline">← → para navegar • ESC para cerrar</span>
@@ -312,7 +347,10 @@ export default function ImageModal({
                         key={`thumbnail-${index}`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => goToSlide(index)}
+                        onClick={(e) => {
+                          e.stopPropagation() // ✅ Detener propagación
+                          goToSlide(index)
+                        }}
                         className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                           currentSlide === index
                             ? 'border-violet-500 ring-2 ring-violet-500/50'
@@ -325,13 +363,13 @@ export default function ImageModal({
                           src={img}
                           alt={`Miniatura ${index + 1}`}
                           fill
-                          className="object-cover"
+                          className="object-cover pointer-events-none" // ✅ pointer-events-none
                           sizes="80px"
                         />
                         {currentSlide === index && (
                           <motion.div
                             layoutId="thumbnail-highlight"
-                            className="absolute inset-0 bg-violet-500/20"
+                            className="absolute inset-0 bg-violet-500/20 pointer-events-none" // ✅ pointer-events-none
                             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                           />
                         )}

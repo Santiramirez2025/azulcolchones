@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Star, ChevronLeft, ChevronRight, TrendingUp, Heart, ShoppingCart, Sparkles, Eye, Zap, Award } from 'lucide-react'
+import { formatARS } from '@/lib/utils/currency'
 
 interface RelatedProductsProps {
   products: any[]
@@ -26,6 +27,11 @@ function ProductCard({ product, index }: ProductCardProps) {
 
   const rating = product.rating || 4.5
   const reviewCount = product.reviews?.length || 0
+  
+  // ✅ Cálculo de ahorro en pesos argentinos
+  const savings = product.originalPrice > product.price 
+    ? product.originalPrice - product.price 
+    : 0
 
   return (
     <motion.div
@@ -212,23 +218,23 @@ function ProductCard({ product, index }: ProductCardProps) {
               )}
             </div>
 
-            {/* Precio con gradiente */}
+            {/* ✅ Precio con formatARS - CORREGIDO */}
             <div className="flex items-baseline gap-2 pt-1">
               <motion.p 
                 whileHover={{ scale: 1.05 }}
                 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-violet-400 via-fuchsia-400 to-violet-400 bg-clip-text text-transparent drop-shadow-2xl"
               >
-                {product.price}€
+                {formatARS(product.price)}
               </motion.p>
               {discount > 0 && (
                 <span className="text-sm text-zinc-500 line-through">
-                  {product.originalPrice}€
+                  {formatARS(product.originalPrice)}
                 </span>
               )}
             </div>
 
-            {/* Badge de ahorro premium */}
-            {discount > 0 && (
+            {/* ✅ Badge de ahorro premium - CORREGIDO */}
+            {discount > 0 && savings > 0 && (
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -237,7 +243,7 @@ function ProductCard({ product, index }: ProductCardProps) {
               >
                 <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="text-xs text-emerald-300 font-bold">
-                  Ahorras {(product.originalPrice - product.price).toFixed(0)}€
+                  Ahorrás {formatARS(savings)}
                 </span>
               </motion.div>
             )}
