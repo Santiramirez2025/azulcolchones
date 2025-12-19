@@ -603,60 +603,65 @@ export default function Header() {
               </div>
             </div>
 
-            {/* DESKTOP NAV - ✅ CON PIERO FÁBRICA */}
             <ul className="hidden lg:flex items-center gap-1" role="menubar">
-              {navLinks.map((link) => (
-                <li key={link.href} role="none">
-                  <Link 
-                    href={link.href}
-                    role="menuitem"
-                    className={`relative group px-4 py-2.5 rounded-lg transition-all ${
-                      link.featured
-                        ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30' 
-                        : link.factory
-                        ? 'bg-gradient-to-r from-orange-600/10 to-red-600/10 border border-orange-500/20'
-                        : link.special 
-                        ? 'bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10 border border-violet-500/20' 
-                        : 'hover:bg-white/5'
-                    }`}
-                  >
-                    <span className={`font-semibold text-sm transition-colors ${
-                      link.featured
-                        ? 'text-blue-300 group-hover:text-blue-200'
-                        : link.factory
-                        ? 'text-orange-300 group-hover:text-orange-200'
-                        : link.special 
-                        ? 'text-violet-300 group-hover:text-violet-200' 
-                        : 'text-zinc-300 group-hover:text-white'
-                    }`}>
-                      {link.label}
-                    </span>
-                    {link.featured && (
-                      <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[8px] font-black rounded uppercase tracking-wider shadow-lg animate-pulse">
-                        HOT
-                      </span>
-                    )}
-                    {link.factory && (
-                      <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[8px] font-black rounded uppercase tracking-wider shadow-lg">
-                        -40%
-                      </span>
-                    )}
-                    {link.special && (
-                      <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-[8px] font-black rounded uppercase tracking-wider shadow-lg">
-                        IA
-                      </span>
-                    )}
-                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 rounded-full transition-all duration-300 group-hover:w-full ${
-                      link.featured 
-                        ? 'bg-gradient-to-r from-blue-400 to-cyan-400' 
-                        : link.factory
-                        ? 'bg-gradient-to-r from-orange-400 to-red-400'
-                        : 'bg-gradient-to-r from-violet-400 to-fuchsia-400'
-                    }`} aria-hidden="true" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+  {navLinks.map((link) => {
+    const isFeatured = 'featured' in link && link.featured
+    const isFactory = 'factory' in link && link.factory
+    const isSpecial = 'special' in link && link.special
+    
+    return (
+      <li key={link.href} role="none">
+        <Link 
+          href={link.href}
+          role="menuitem"
+          className={`relative group px-4 py-2.5 rounded-lg transition-all ${
+            isFeatured
+              ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30' 
+              : isFactory
+              ? 'bg-gradient-to-r from-orange-600/10 to-red-600/10 border border-orange-500/20'
+              : isSpecial 
+              ? 'bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10 border border-violet-500/20' 
+              : 'hover:bg-white/5'
+          }`}
+        >
+          <span className={`font-semibold text-sm transition-colors ${
+            isFeatured
+              ? 'text-blue-300 group-hover:text-blue-200'
+              : isFactory
+              ? 'text-orange-300 group-hover:text-orange-200'
+              : isSpecial 
+              ? 'text-violet-300 group-hover:text-violet-200' 
+              : 'text-zinc-300 group-hover:text-white'
+          }`}>
+            {link.label}
+          </span>
+          {isFeatured && (
+            <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[8px] font-black rounded uppercase tracking-wider shadow-lg animate-pulse">
+              HOT
+            </span>
+          )}
+          {isFactory && (
+            <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[8px] font-black rounded uppercase tracking-wider shadow-lg">
+              -40%
+            </span>
+          )}
+          {isSpecial && (
+            <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-[8px] font-black rounded uppercase tracking-wider shadow-lg">
+              IA
+            </span>
+          )}
+          <span className={`absolute bottom-0 left-0 w-0 h-0.5 rounded-full transition-all duration-300 group-hover:w-full ${
+            isFeatured 
+              ? 'bg-gradient-to-r from-blue-400 to-cyan-400' 
+              : isFactory
+              ? 'bg-gradient-to-r from-orange-400 to-red-400'
+              : 'bg-gradient-to-r from-violet-400 to-fuchsia-400'
+          }`} aria-hidden="true" />
+        </Link>
+      </li>
+    )
+  })}
+</ul>
 
             {/* ACTIONS - MOBILE OPTIMIZED */}
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
@@ -970,42 +975,48 @@ export default function Header() {
                 <nav className="mb-4 sm:mb-6">
                   <div className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider mb-2 sm:mb-3 px-1">Navegación</div>
                   <ul className="space-y-2" role="menu">
-                    {navLinks.map((link) => (
-                      <li key={link.href} role="none">
-                        <Link 
-                          href={link.href} 
-                          onClick={closeMenu}
-                          role="menuitem"
-                          className={`flex items-center justify-between p-3 sm:p-4 rounded-xl font-bold text-sm sm:text-base transition-all active:scale-98 ${
-                            link.featured
-                              ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-white border border-blue-500/30 shadow-lg' 
-                              : link.factory
-                              ? 'bg-gradient-to-r from-orange-600/20 to-red-600/20 text-white border border-orange-500/30 shadow-lg'
-                              : link.special 
-                              ? 'bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 text-white border border-violet-500/30' 
-                              : 'text-zinc-300 bg-white/5 border border-white/10 hover:bg-white/10'
-                          }`}
-                        >
-                          <span>{link.label}</span>
-                          {link.featured && (
-                            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg animate-pulse">
-                              Hot
-                            </span>
-                          )}
-                          {link.factory && (
-                            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg">
-                              -40%
-                            </span>
-                          )}
-                          {link.special && (
-                            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg">
-                              IA
-                            </span>
-                          )}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+  {navLinks.map((link) => {
+    const isFeatured = 'featured' in link && link.featured
+    const isFactory = 'factory' in link && link.factory
+    const isSpecial = 'special' in link && link.special
+    
+    return (
+      <li key={link.href} role="none">
+        <Link 
+          href={link.href} 
+          onClick={closeMenu}
+          role="menuitem"
+          className={`flex items-center justify-between p-3 sm:p-4 rounded-xl font-bold text-sm sm:text-base transition-all active:scale-98 ${
+            isFeatured
+              ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-white border border-blue-500/30 shadow-lg' 
+              : isFactory
+              ? 'bg-gradient-to-r from-orange-600/20 to-red-600/20 text-white border border-orange-500/30 shadow-lg'
+              : isSpecial 
+              ? 'bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 text-white border border-violet-500/30' 
+              : 'text-zinc-300 bg-white/5 border border-white/10 hover:bg-white/10'
+          }`}
+        >
+          <span>{link.label}</span>
+          {isFeatured && (
+            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg animate-pulse">
+              Hot
+            </span>
+          )}
+          {isFactory && (
+            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg">
+              -40%
+            </span>
+          )}
+          {isSpecial && (
+            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg">
+              IA
+            </span>
+          )}
+        </Link>
+      </li>
+    )
+  })}
+</ul>
                 </nav>
 
                 {/* User Account */}
