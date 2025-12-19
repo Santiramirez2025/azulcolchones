@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { usePathname } from 'next/navigation'
 
@@ -104,6 +104,11 @@ const Icons = {
   Tag: ({ className = "w-4 h-4" }: { className?: string }) => (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+    </svg>
+  ),
+  Factory: ({ className = "w-4 h-4" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
     </svg>
   ),
 }
@@ -295,12 +300,13 @@ export default function Header() {
     return () => { document.body.style.overflow = 'unset' }
   }, [isMenuOpen])
 
-  // Nav links memoized
-  const navLinks = useMemo(() => [
+  // Nav links - ✅ CONSTANTE ESTÁTICA (evita hydration errors)
+  const navLinks = [
     { href: '/catalogo', label: 'Ver Ofertas', icon: 'catalog', featured: true },
+    { href: '/piero-fabrica', label: 'Piero Fábrica', icon: 'factory', factory: true },
     { href: '/simulador', label: 'Test IA', icon: 'ai', special: true },
     { href: '/blog', label: 'Guía de Sueño', icon: 'blog' },
-  ], [])
+  ] as const
 
   // Search handlers
   const handleSearchClick = (slug: string) => {
@@ -597,7 +603,7 @@ export default function Header() {
               </div>
             </div>
 
-            {/* DESKTOP NAV */}
+            {/* DESKTOP NAV - ✅ CON PIERO FÁBRICA */}
             <ul className="hidden lg:flex items-center gap-1" role="menubar">
               {navLinks.map((link) => (
                 <li key={link.href} role="none">
@@ -607,6 +613,8 @@ export default function Header() {
                     className={`relative group px-4 py-2.5 rounded-lg transition-all ${
                       link.featured
                         ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30' 
+                        : link.factory
+                        ? 'bg-gradient-to-r from-orange-600/10 to-red-600/10 border border-orange-500/20'
                         : link.special 
                         ? 'bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10 border border-violet-500/20' 
                         : 'hover:bg-white/5'
@@ -615,6 +623,8 @@ export default function Header() {
                     <span className={`font-semibold text-sm transition-colors ${
                       link.featured
                         ? 'text-blue-300 group-hover:text-blue-200'
+                        : link.factory
+                        ? 'text-orange-300 group-hover:text-orange-200'
                         : link.special 
                         ? 'text-violet-300 group-hover:text-violet-200' 
                         : 'text-zinc-300 group-hover:text-white'
@@ -626,13 +636,22 @@ export default function Header() {
                         HOT
                       </span>
                     )}
+                    {link.factory && (
+                      <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[8px] font-black rounded uppercase tracking-wider shadow-lg">
+                        -40%
+                      </span>
+                    )}
                     {link.special && (
                       <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-[8px] font-black rounded uppercase tracking-wider shadow-lg">
                         IA
                       </span>
                     )}
                     <span className={`absolute bottom-0 left-0 w-0 h-0.5 rounded-full transition-all duration-300 group-hover:w-full ${
-                      link.featured ? 'bg-gradient-to-r from-blue-400 to-cyan-400' : 'bg-gradient-to-r from-violet-400 to-fuchsia-400'
+                      link.featured 
+                        ? 'bg-gradient-to-r from-blue-400 to-cyan-400' 
+                        : link.factory
+                        ? 'bg-gradient-to-r from-orange-400 to-red-400'
+                        : 'bg-gradient-to-r from-violet-400 to-fuchsia-400'
                     }`} aria-hidden="true" />
                   </Link>
                 </li>
@@ -829,7 +848,7 @@ export default function Header() {
         </div>
       )}
 
-      {/* MOBILE MENU - ARGENTINA - OPTIMIZADO */}
+      {/* MOBILE MENU - ARGENTINA - ✅ CON PIERO FÁBRICA */}
       {isMenuOpen && (
         <>
           <div 
@@ -880,7 +899,7 @@ export default function Header() {
             {/* Menu Content */}
             <div className="flex-1 overflow-y-auto bg-gradient-to-b from-zinc-950 to-zinc-900">
               <div className="container mx-auto px-4 py-4 sm:py-6 pb-safe">
-                {/* Quick Actions - GRID 2 COLUMNAS */}
+                {/* Quick Actions - GRID 2 COLUMNAS CON PIERO FÁBRICA */}
                 <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
                   <Link 
                     href="/catalogo" 
@@ -898,19 +917,19 @@ export default function Header() {
                     </div>
                   </Link>
                   
-                  <a 
-                    href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent('¡Hola! Me interesa conocer más')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link 
+                    href="/piero-fabrica" 
+                    onClick={closeMenu} 
                     className="relative overflow-hidden rounded-xl sm:rounded-2xl active:scale-95 transition-transform shadow-xl"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-orange-500 to-red-500" />
+                    <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.15)_50%,transparent_75%)] bg-[length:200%_200%] animate-shimmer" aria-hidden="true" />
                     <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 text-white">
-                      <Icons.WhatsApp className="w-7 h-7 sm:w-8 sm:h-8 mb-2 drop-shadow-lg" />
-                      <span className="text-sm sm:text-base font-black mb-1">WhatsApp</span>
-                      <span className="text-[10px] sm:text-xs text-emerald-100 font-medium">Asesoría</span>
+                      <Icons.Factory className="w-7 h-7 sm:w-8 sm:h-8 mb-2 drop-shadow-lg" />
+                      <span className="text-sm sm:text-base font-black mb-1">Piero Fábrica</span>
+                      <span className="text-[10px] sm:text-xs text-orange-100 font-bold">-30% a -40%</span>
                     </div>
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Promo Code */}
@@ -960,6 +979,8 @@ export default function Header() {
                           className={`flex items-center justify-between p-3 sm:p-4 rounded-xl font-bold text-sm sm:text-base transition-all active:scale-98 ${
                             link.featured
                               ? 'bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-white border border-blue-500/30 shadow-lg' 
+                              : link.factory
+                              ? 'bg-gradient-to-r from-orange-600/20 to-red-600/20 text-white border border-orange-500/30 shadow-lg'
                               : link.special 
                               ? 'bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 text-white border border-violet-500/30' 
                               : 'text-zinc-300 bg-white/5 border border-white/10 hover:bg-white/10'
@@ -969,6 +990,11 @@ export default function Header() {
                           {link.featured && (
                             <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg animate-pulse">
                               Hot
+                            </span>
+                          )}
+                          {link.factory && (
+                            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[8px] sm:text-[9px] font-black rounded-full uppercase shadow-lg">
+                              -40%
                             </span>
                           )}
                           {link.special && (

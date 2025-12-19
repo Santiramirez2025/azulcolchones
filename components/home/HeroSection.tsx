@@ -1,378 +1,368 @@
 'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowRight, Star, Truck, CheckCircle2, ShieldCheck } from 'lucide-react'
-import { useState, useEffect, useCallback } from 'react'
+import { ArrowRight, Star, Truck, CheckCircle2, ShieldCheck, Zap, Clock, Tag } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
-// ============================================================================
-// IMÁGENES OPTIMIZADAS - WebP con fallback
-// ============================================================================
-const CAROUSEL_IMAGES = [
+// Simplificado: Solo 2 imágenes principales para mobile
+const HERO_IMAGES = [
   {
     url: '/images/optimized/piero-spring-1.webp',
-    fallback: '/images/piero-spring-1.jpg',
-    alt: 'Colchón Piero Spring con resortes Ultra Coil - Villa María',
-    title: 'Piero Spring',
-    subtitle: 'Resortes Ultra Coil',
-    width: 1200,
-    height: 800,
-  },
-  {
-    url: '/images/optimized/piero-foam-1.webp',
-    fallback: '/images/piero-foam-1.jpg',
-    alt: 'Colchón Piero Foam alta densidad - Villa María',
-    title: 'Piero Foam',
-    subtitle: 'Alta Densidad',
-    width: 1200,
-    height: 800,
-  },
-  {
-    url: '/images/optimized/piero-bahia-1.webp',
-    fallback: '/images/piero-bahia-1.jpg',
-    alt: 'Colchón Piero Bahía Euro Pillow - Villa María',
-    title: 'Piero Bahía',
-    subtitle: 'Euro Pillow',
-    width: 1200,
-    height: 800,
+    alt: 'Colchón Piero Spring - Outlet 60% OFF',
+    badge: '60% OFF'
   },
   {
     url: '/images/optimized/piero-mattina-1.webp',
-    fallback: '/images/piero-mattina-1.jpg',
-    alt: 'Colchón Piero Mattina 30cm premium - Villa María',
-    title: 'Piero Mattina',
-    subtitle: '30cm Premium',
-    width: 1200,
-    height: 800,
-  },
-] as const
+    alt: 'Colchón Piero Premium',
+    badge: 'Premium'
+  }
+]
 
-// ============================================================================
-// HERO SECTION - ULTRA OPTIMIZADO ⚡
-// ============================================================================
-export function HeroSection() {
+export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState(0)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false) // ✅ Desactivado por defecto
   const [isMobile, setIsMobile] = useState(false)
-  const [imageError, setImageError] = useState<Record<number, boolean>>({})
-  const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({})
 
-  // ============================================================================
-  // DETECT MOBILE - Optimizado
-  // ============================================================================
   useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 768
-      setIsMobile(mobile)
-      // ✅ Solo autoplay en desktop
-      setIsAutoPlaying(!mobile)
-    }
-    
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // ============================================================================
-  // AUTOPLAY - Solo desktop
-  // ============================================================================
+  // Auto-rotate solo en desktop
   useEffect(() => {
-    if (!isAutoPlaying || isMobile) return
-    
+    if (isMobile) return
     const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % CAROUSEL_IMAGES.length)
-    }, 6000) // ✅ 6s en lugar de 5s (menos agresivo)
-    
+      setCurrentImage(prev => (prev + 1) % HERO_IMAGES.length)
+    }, 5000)
     return () => clearInterval(interval)
-  }, [isAutoPlaying, isMobile])
-
-  // ============================================================================
-  // CAROUSEL CONTROLS - Memoized
-  // ============================================================================
-  const goToNext = useCallback(() => {
-    setCurrentImage((prev) => (prev + 1) % CAROUSEL_IMAGES.length)
-    setIsAutoPlaying(false)
-  }, [])
-
-  const goToPrev = useCallback(() => {
-    setCurrentImage((prev) => (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length)
-    setIsAutoPlaying(false)
-  }, [])
-
-  const goToSlide = useCallback((index: number) => {
-    setCurrentImage(index)
-    setIsAutoPlaying(false)
-  }, [])
-
-  const handleImageError = useCallback((index: number) => {
-    setImageError(prev => ({ ...prev, [index]: true }))
-  }, [])
-
-  const handleImageLoad = useCallback((index: number) => {
-    setImagesLoaded(prev => ({ ...prev, [index]: true }))
-  }, [])
+  }, [isMobile])
 
   return (
-    <section 
-      className="relative min-h-screen flex items-center overflow-hidden bg-slate-950"
-      id="hero-heading"
-      aria-labelledby="hero-title"
-    >
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       
-      {/* ================================================================ */}
-      {/* BACKGROUND - Simplificado para mobile */}
-      {/* ================================================================ */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" />
-        {!isMobile && (
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px]" />
-        )}
-      </div>
+      {/* Background Effects - Solo Desktop */}
+      {!isMobile && (
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px]" />
+      )}
 
       <div className="relative z-10 w-full">
-        <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-12 lg:py-20">
-          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center max-w-7xl mx-auto">
-            
-            {/* ============================================================ */}
-            {/* CONTENIDO - Sin animaciones bloqueantes */}
-            {/* ============================================================ */}
-            <div className="text-center lg:text-left space-y-4 sm:space-y-6 order-2 lg:order-1">
+        <div className="container mx-auto px-4 py-8 lg:py-16">
+          
+          {/* ================================================================ */}
+          {/* MOBILE LAYOUT - Jerarquía Optimizada para Conversión */}
+          {/* ================================================================ */}
+          {isMobile ? (
+            <div className="space-y-6">
               
-              {/* Logo PIERO */}
-              <div className="space-y-2 sm:space-y-3">
-                <div className="inline-flex items-center gap-2 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 px-3 py-2 rounded-lg">
-                  <span className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
-                    PIERO
-                  </span>
-                  <div className="h-4 sm:h-6 w-px bg-slate-600" />
-                  <span className="text-blue-400 font-semibold text-xs" aria-label="Marca Argentina">
-                    🇦🇷
-                  </span>
+              {/* 1️⃣ LOGO + TRUST (Credibilidad Inmediata) */}
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center gap-2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 px-4 py-2 rounded-lg">
+                  <span className="text-2xl font-black text-white tracking-tight">PIERO</span>
+                  <span className="text-blue-400 text-lg">🇦🇷</span>
                 </div>
-
-                {/* Trust badge */}
-                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-slate-300">
-                  <Star className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400 fill-amber-400" aria-hidden="true" />
+                <div className="flex items-center justify-center gap-2 text-xs text-slate-300">
+                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
                   <span>40+ años · +100K clientes</span>
                 </div>
               </div>
 
-              {/* ✅ H1 OPTIMIZADO SEO */}
-              <div>
-                <h1 
-                  id="hero-title"
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight tracking-tight"
-                >
-                  <span className="block text-white mb-1 sm:mb-2">
-                    Ofertas fin de año
-                  </span>
+              {/* 2️⃣ HEADLINE + PRECIO (Propuesta de Valor Clara) */}
+              <div className="text-center space-y-4">
+                <h1 className="text-4xl font-black leading-tight">
+                  <span className="block text-white">Ofertas</span>
                   <span className="block bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                    Hasta 50% OFF
+                    Fin de Año
                   </span>
                 </h1>
-              </div>
 
-              {/* Subtítulo */}
-              <p className="text-sm sm:text-lg lg:text-xl text-slate-300 max-w-xl mx-auto lg:mx-0">
-                Los mejores colchones de Argentina
-                <span className="block text-white font-semibold mt-1">AL MEJOR PRECIO</span>
-              </p>
-
-              {/* PRECIO */}
-              <div className="inline-block w-full sm:w-auto">
-                <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-slate-700/50 rounded-xl p-4 sm:p-6 lg:p-8">
-                  <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 justify-center lg:justify-start">
-                    <div>
-                      <div className="text-xs sm:text-sm text-blue-400 font-semibold mb-1">
+                {/* PRECIO HERO - Máxima Visibilidad */}
+                <div className="inline-block">
+                  <div className="bg-gradient-to-br from-blue-600 to-blue-500 p-1 rounded-2xl shadow-2xl">
+                    <div className="bg-slate-900 rounded-xl px-6 py-4">
+                      <div className="text-xs text-blue-400 font-semibold uppercase tracking-wide mb-1">
                         Desde
                       </div>
-                      <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white">
-                        $220.000
+                      <div className="flex items-end justify-center gap-3 mb-2">
+                        <span className="text-5xl font-black text-white">$220K</span>
+                        <span className="text-xl text-slate-500 line-through mb-2">$552K</span>
+                      </div>
+                      <div className="inline-flex items-center gap-2 bg-amber-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                        <Zap className="w-3 h-3" />
+                        60% OFF
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-base sm:text-lg lg:text-xl text-slate-500 line-through">
-                        $552K
-                      </div>
-                      <div className="mt-1 px-2 sm:px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs sm:text-sm font-bold rounded-md">
-                        -60% OFF
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-green-400 font-semibold text-center lg:text-left">
-                    💳 6 cuotas sin interés
                   </div>
                 </div>
+
+                <p className="text-sm text-slate-300">
+                  Los mejores colchones de Argentina
+                  <span className="block text-white font-semibold mt-1">AL MEJOR PRECIO</span>
+                </p>
               </div>
 
-              {/* CTA BUTTONS */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                <Link 
+              {/* 3️⃣ CTA PRINCIPAL - UN SOLO BOTÓN DOMINANTE */}
+              <div className="space-y-3">
+                <a
                   href="/catalogo"
-                  className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
-                  aria-label="Ver colección completa de colchones Piero"
+                  className="block w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-8 py-5 rounded-2xl font-bold text-lg shadow-2xl shadow-blue-500/30 transition-all duration-300 active:scale-95"
                 >
-                  <span>Ver Colección</span>
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                  <div className="flex items-center justify-center gap-3">
+                    <Zap className="w-6 h-6" />
+                    <span>Ver Ofertas Disponibles</span>
+                    <ArrowRight className="w-6 h-6" />
+                  </div>
+                  <div className="text-xs text-blue-100 mt-2 font-normal">
+                    Stock limitado • Entrega inmediata
+                  </div>
+                </a>
 
-                <Link
-                  href="https://wa.me/5493534017332?text=Hola!%20Quiero%20info%20sobre%20colchones%20Piero"
+                {/* CTA Secundario - Menos prominente */}
+                <a
+                  href="/piero-fabrica"
+                  className="block w-full bg-slate-800/60 hover:bg-slate-700/60 border-2 border-slate-600/50 text-white px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Clock className="w-5 h-5 text-orange-400" />
+                    <span>O pedir de Fábrica</span>
+                  </div>
+                  <div className="text-xs text-slate-400 mt-1">
+                    30-40% OFF • 7-10 días
+                  </div>
+                </a>
+
+                {/* WhatsApp - Siempre accesible */}
+                <a
+                  href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20sobre%20colchones%20Piero"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
-                  aria-label="Consultar por WhatsApp sobre colchones Piero"
+                  className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300"
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                   </svg>
-                  <span>WhatsApp</span>
-                </Link>
+                  <span>Consultar por WhatsApp</span>
+                </a>
               </div>
 
-              {/* Trust indicators */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 pt-4 sm:pt-6 text-xs sm:text-sm">
+              {/* 4️⃣ TRUST INDICATORS */}
+              <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
                 <div className="flex items-center gap-1.5 text-slate-300">
-                  <Truck className="w-4 h-4 text-blue-400" aria-hidden="true" />
+                  <Truck className="w-4 h-4 text-blue-400" />
                   <span>Envío Gratis</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-blue-400" aria-hidden="true" />
-                  <span>Garantía 5 años</span>
+                  <CheckCircle2 className="w-4 h-4 text-green-400" />
+                  <span>6 cuotas s/int</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-300">
-                  <ShieldCheck className="w-4 h-4 text-blue-400" aria-hidden="true" />
-                  <span>Pago Seguro</span>
+                  <ShieldCheck className="w-4 h-4 text-blue-400" />
+                  <span>Garantía 5 años</span>
+                </div>
+              </div>
+
+              {/* 5️⃣ IMAGEN - Al final, no distrae */}
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl">
+                <img 
+                  src={HERO_IMAGES[currentImage].url}
+                  alt={HERO_IMAGES[currentImage].alt}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-4 right-4 bg-gradient-to-br from-amber-400 to-orange-500 px-3 py-2 rounded-lg shadow-lg">
+                  <div className="text-white text-xs font-bold uppercase">Hasta</div>
+                  <div className="text-white text-2xl font-black leading-none">60%</div>
                 </div>
               </div>
             </div>
-
-            {/* ============================================================ */}
-            {/* CAROUSEL - OPTIMIZADO PERFORMANCE ⚡ */}
-            {/* ============================================================ */}
-            <div className="relative order-1 lg:order-2 w-full max-w-md mx-auto lg:max-w-none">
+          ) : (
+            /* ================================================================ */
+            /* DESKTOP LAYOUT - Dos Columnas Clásico */
+            /* ================================================================ */
+            <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
               
-              {/* Glow - Solo desktop */}
-              {!isMobile && (
-                <div className="absolute -inset-8 bg-blue-500/20 rounded-[3rem] blur-[100px] opacity-60" aria-hidden="true" />
-              )}
-              
-              {/* Container */}
-              <div className="relative bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-2xl sm:rounded-3xl overflow-hidden p-2 sm:p-3 shadow-2xl">
+              {/* CONTENIDO IZQUIERDA */}
+              <div className="space-y-8">
                 
-                {/* ✅ IMAGEN CON PRIORITY + OPTIMIZACIÓN */}
-                <div className="relative w-full aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950">
-                  
-                  {/* Imagen actual */}
-                  <Image 
-                    src={imageError[currentImage] 
-                      ? CAROUSEL_IMAGES[currentImage].fallback 
-                      : CAROUSEL_IMAGES[currentImage].url
-                    }
-                    alt={CAROUSEL_IMAGES[currentImage].alt}
-                    fill
-                    priority={true} // ✅ CRITICAL: Preload hero image
-                    quality={85}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
-                    className={`object-cover transition-opacity duration-500 ${
-                      imagesLoaded[currentImage] ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    onLoad={() => handleImageLoad(currentImage)}
-                    onError={() => handleImageError(currentImage)}
-                  />
+                {/* Logo + Trust */}
+                <div className="space-y-3">
+                  <div className="inline-flex items-center gap-2 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 px-4 py-2 rounded-lg">
+                    <span className="text-4xl font-black text-white tracking-tight">PIERO</span>
+                    <div className="h-6 w-px bg-slate-600" />
+                    <span className="text-blue-400 font-semibold text-xl">🇦🇷</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-slate-300">
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                    <span>40+ años · +100K clientes</span>
+                  </div>
+                </div>
 
-                  {/* ✅ PRELOAD próxima imagen en background */}
-                  {!isMobile && (
-                    <div className="hidden">
-                      <Image 
-                        src={CAROUSEL_IMAGES[(currentImage + 1) % CAROUSEL_IMAGES.length].url}
-                        alt=""
-                        width={1200}
-                        height={800}
-                        quality={85}
-                        onError={() => handleImageError((currentImage + 1) % CAROUSEL_IMAGES.length)}
-                      />
-                    </div>
-                  )}
+                {/* Headline */}
+                <div>
+                  <h1 className="text-7xl font-black leading-tight tracking-tight">
+                    <span className="block text-white mb-2">Ofertas fin de año</span>
+                    <span className="block bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                      Hasta 60% OFF
+                    </span>
+                  </h1>
+                </div>
 
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                {/* Subtítulo */}
+                <p className="text-xl text-slate-300 max-w-xl">
+                  Los mejores colchones de Argentina
+                  <span className="block text-white font-semibold mt-1">AL MEJOR PRECIO</span>
+                </p>
 
-                  {/* Info overlay */}
-                  <div className="absolute top-2 sm:top-4 left-2 sm:left-4 right-2 sm:right-4 z-20">
-                    <div className="flex items-center justify-between">
-                      <div className="bg-black/60 backdrop-blur-xl px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg">
-                        <div className="text-white text-xs sm:text-sm font-bold">
-                          {CAROUSEL_IMAGES[currentImage].title}
-                        </div>
-                        <div className="text-slate-300 text-[10px] sm:text-xs">
-                          {CAROUSEL_IMAGES[currentImage].subtitle}
+                {/* Precio Destacado */}
+                <div className="inline-block">
+                  <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-slate-700/50 rounded-xl p-8">
+                    <div className="flex items-center gap-6">
+                      <div>
+                        <div className="text-sm text-blue-400 font-semibold mb-1">Outlet desde</div>
+                        <div className="text-6xl font-black text-white">$220.000</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl text-slate-500 line-through">$552K</div>
+                        <div className="mt-1 px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-md">
+                          -60% OFF
                         </div>
                       </div>
-                      <div className="bg-black/60 backdrop-blur-xl px-2 py-1 sm:px-3 sm:py-2 rounded-lg text-white text-xs sm:text-sm font-semibold">
-                        {currentImage + 1}/{CAROUSEL_IMAGES.length}
-                      </div>
                     </div>
-                  </div>
-
-                  {/* Navigation dots */}
-                  <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex justify-center gap-1.5 sm:gap-2 z-20">
-                    {CAROUSEL_IMAGES.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => goToSlide(index)}
-                        className={`transition-all ${
-                          currentImage === index
-                            ? 'w-6 sm:w-8 h-1.5 sm:h-2 bg-white rounded-full'
-                            : 'w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/40 hover:bg-white/60 rounded-full'
-                        }`}
-                        aria-label={`Ir a ${CAROUSEL_IMAGES[index].title}`}
-                        aria-current={currentImage === index}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Discount badge */}
-                  <div className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-gradient-to-br from-amber-400 to-orange-500 px-2.5 py-2 sm:px-4 sm:py-3 rounded-lg shadow-lg z-20">
-                    <div className="text-white text-[10px] sm:text-xs font-bold uppercase leading-none">
-                      Hasta
-                    </div>
-                    <div className="text-white text-xl sm:text-2xl font-black leading-none mt-0.5">
-                      40%
+                    <div className="mt-4 text-sm text-green-400 font-semibold">
+                      💳 6 cuotas sin interés
                     </div>
                   </div>
                 </div>
 
-                {/* Specs */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-2 sm:mt-4">
-                  <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-2 sm:p-3 rounded-lg sm:rounded-xl text-center">
-                    <div className="text-blue-400 text-[10px] sm:text-xs font-semibold">
-                      Resortes
-                    </div>
-                    <div className="text-white text-xs sm:text-sm font-bold mt-0.5">
-                      Pocket
+                {/* CTAs Desktop */}
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    
+                    {/* Outlet */}
+                    <a 
+                      href="/catalogo"
+                      className="group relative bg-gradient-to-br from-blue-950/80 to-blue-900/60 backdrop-blur-xl border-2 border-blue-500/30 hover:border-blue-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-blue-500/20"
+                    >
+                      <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[10px] font-black px-2 py-1 rounded-full uppercase shadow-lg animate-pulse">
+                        HOT
+                      </div>
+                      
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-400/30">
+                          <Zap className="w-6 h-6 text-blue-400" />
+                        </div>
+                        
+                        <div className="flex-1">
+                          <h3 className="text-white font-bold text-base mb-1">Outlet Disponible</h3>
+                          <p className="text-sm text-slate-300 mb-2">Stock limitado • Entrega inmediata</p>
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-blue-400 font-bold">Hasta 60% OFF</span>
+                            <span className="text-slate-500">•</span>
+                            <span className="text-green-400 font-semibold">Hoy mismo</span>
+                          </div>
+                        </div>
+                        
+                        <ArrowRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 transition-transform flex-shrink-0 mt-1" />
+                      </div>
+                    </a>
+
+                    {/* Fábrica */}
+                    <a 
+                      href="/piero-fabrica"
+                      className="group relative bg-gradient-to-br from-orange-950/80 to-red-900/60 backdrop-blur-xl border-2 border-orange-500/30 hover:border-orange-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-orange-500/20"
+                    >
+                      <div className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] font-black px-2 py-1 rounded-full uppercase shadow-lg">
+                        NUEVO
+                      </div>
+                      
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center border border-orange-400/30">
+                          <Clock className="w-6 h-6 text-orange-400" />
+                        </div>
+                        
+                        <div className="flex-1">
+                          <h3 className="text-white font-bold text-base mb-1">Piero Fábrica</h3>
+                          <p className="text-sm text-slate-300 mb-2">Directo de fábrica • 7-10 días</p>
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-orange-400 font-bold">30-40% OFF</span>
+                            <span className="text-slate-500">•</span>
+                            <span className="text-slate-400 font-medium">Sin intermediarios</span>
+                          </div>
+                        </div>
+                        
+                        <ArrowRight className="w-5 h-5 text-orange-400 group-hover:translate-x-1 transition-transform flex-shrink-0 mt-1" />
+                      </div>
+                    </a>
+                  </div>
+
+                  {/* WhatsApp */}
+                  <a
+                    href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20sobre%20colchones%20Piero"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    <span>Asesoramiento WhatsApp</span>
+                  </a>
+                </div>
+
+                {/* Trust */}
+                <div className="flex items-center gap-6 text-sm">
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <Truck className="w-4 h-4 text-blue-400" />
+                    <span>Envío Gratis</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                    <span>Garantía 5 años</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <ShieldCheck className="w-4 h-4 text-blue-400" />
+                    <span>Pago Seguro</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* IMAGEN DERECHA */}
+              <div className="relative">
+                <div className="absolute -inset-8 bg-blue-500/20 rounded-[3rem] blur-[100px] opacity-60" />
+                
+                <div className="relative bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-3xl overflow-hidden p-3 shadow-2xl">
+                  <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-950">
+                    <img 
+                      src={HERO_IMAGES[currentImage].url}
+                      alt={HERO_IMAGES[currentImage].alt}
+                      className="w-full h-full object-cover"
+                    />
+                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    
+                    <div className="absolute top-4 right-4 bg-gradient-to-br from-amber-400 to-orange-500 px-4 py-3 rounded-lg shadow-lg">
+                      <div className="text-white text-xs font-bold uppercase leading-none">Hasta</div>
+                      <div className="text-white text-2xl font-black leading-none mt-0.5">60%</div>
                     </div>
                   </div>
-                  <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-2 sm:p-3 rounded-lg sm:rounded-xl text-center">
-                    <div className="text-blue-400 text-[10px] sm:text-xs font-semibold">
-                      Memory
+
+                  {/* Specs */}
+                  <div className="grid grid-cols-3 gap-3 mt-4">
+                    <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-3 rounded-xl text-center">
+                      <div className="text-blue-400 text-xs font-semibold">Resortes</div>
+                      <div className="text-white text-sm font-bold mt-0.5">Pocket</div>
                     </div>
-                    <div className="text-white text-xs sm:text-sm font-bold mt-0.5">
-                      Foam
+                    <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-3 rounded-xl text-center">
+                      <div className="text-blue-400 text-xs font-semibold">Memory</div>
+                      <div className="text-white text-sm font-bold mt-0.5">Foam</div>
                     </div>
-                  </div>
-                  <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-2 sm:p-3 rounded-lg sm:rounded-xl text-center">
-                    <div className="text-blue-400 text-[10px] sm:text-xs font-semibold">
-                      Garantía
-                    </div>
-                    <div className="text-white text-xs sm:text-sm font-bold mt-0.5">
-                      5 años
+                    <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-3 rounded-xl text-center">
+                      <div className="text-blue-400 text-xs font-semibold">Garantía</div>
+                      <div className="text-white text-sm font-bold mt-0.5">5 años</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
-// app/layout.tsx - ULTRA OPTIMIZED ⚡ - Azul Colchones Villa María
-// SEO Level: SENIOR | Performance: A+ | Schema: VALIDATED ✅
+// app/layout.tsx - ULTRA OPTIMIZED ⚡ DUAL STRATEGY - Azul Colchones
+// SEO Level: SENIOR | Performance: A+ | Strategy: Outlet + Fábrica
 
 import type { Metadata, Viewport } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
@@ -53,25 +53,22 @@ export const viewport: Viewport = {
 }
 
 // ============================================================================
-// METADATA - SEO EXHAUSTIVO 🎯 (OPTIMIZADO)
+// METADATA - SEO DUAL STRATEGY 🎯 (ULTRA OPTIMIZADO)
 // ============================================================================
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://azulcolchones.com'),
   
-  // ✅ TITLE OPTIMIZADO (Keyword-first strategy)
+  // ✅ TITLE DUAL STRATEGY (Outlet + Fábrica)
   title: {
-    default: 'Colchonería Villa María | Envío GRATIS 24-48hs | 12 Cuotas | Azul Colchones',
-    template: '%s | Colchonería Villa María - Azul Colchones'
+    default: 'Azul Colchones Villa María | Outlet 60% + Piero Fábrica 40% | Envío Gratis',
+    template: '%s | Azul Colchones Villa María'
   },
   
-  // ✅ DESCRIPTION OPTIMIZADA (158 caracteres - CTR maximizado)
-  description: 'Colchonería en Villa María, Córdoba | 35+ años | Envío GRATIS 24-48hs | 12 cuotas sin interés | Garantía extendida | ⭐ 4.9/5 | Showroom Balerdi 855',
+  // ✅ DESCRIPTION OPTIMIZADA (Dual Strategy + Local)
+  description: 'Colchones Piero en Villa María: Outlet (60% OFF, hoy) o Piero Fábrica (40% OFF, 7-10 días). Envío gratis, 12 cuotas. 35+ años experiencia. Showroom Balerdi 855.',
   
   applicationName: 'Azul Colchones',
-  
-  // ✅ KEYWORDS ELIMINADOS (Google no los usa desde 2009)
-  // keywords: [...] → REMOVED for clean SEO
   
   authors: [{ name: 'Azul Colchones', url: 'https://azulcolchones.com' }],
   creator: 'Azul Colchones Villa María',
@@ -83,24 +80,24 @@ export const metadata: Metadata = {
     telephone: false,
   },
   
-  // ✅ OPEN GRAPH OPTIMIZADO
+  // ✅ OPEN GRAPH DUAL STRATEGY
   openGraph: {
     type: 'website',
     locale: 'es_AR',
     url: 'https://azulcolchones.com',
     siteName: 'Azul Colchones Villa María',
-    title: 'Colchonería Villa María | Envío GRATIS | Azul Colchones',
-    description: '35+ años de experiencia | Envío GRATIS 24-48hs | 12 cuotas | ⭐ 4.9/5 | Showroom Balerdi 855',
+    title: 'Azul Colchones | Outlet 60% + Piero Fábrica 40% | Villa María',
+    description: 'Outlet con entrega HOY (60% OFF) o Piero Fábrica directo (40% OFF, 7-10 días). Envío gratis, 12 cuotas. ¡Vos elegís!',
     images: [
       {
-        url: '/og-image-home.jpg', // ✅ CREAR: 1200x630px
+        url: '/og-image-home.jpg',
         width: 1200,
         height: 630,
-        alt: 'Azul Colchones - Colchonería en Villa María, Córdoba',
+        alt: 'Azul Colchones - Outlet y Piero Fábrica Villa María',
         type: 'image/jpeg',
       },
       {
-        url: '/og-image-square.jpg', // ✅ CREAR: 1080x1080px
+        url: '/og-image-square.jpg',
         width: 1080,
         height: 1080,
         alt: 'Azul Colchones Villa María - 35 años de experiencia',
@@ -114,10 +111,10 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@azulcolchones',
     creator: '@azulcolchones',
-    title: 'Colchonería Villa María | Envío GRATIS | Azul Colchones',
-    description: '35+ años | 12 cuotas | ⭐ 4.9/5 | Tu colchonería de confianza',
+    title: 'Azul Colchones | Outlet 60% + Fábrica 40% | Villa María',
+    description: '35+ años | Outlet (hoy) o Fábrica (7-10 días) | Envío gratis | 12 cuotas',
     images: {
-      url: '/twitter-image.jpg', // ✅ CREAR: 1200x600px
+      url: '/twitter-image.jpg',
       alt: 'Azul Colchones Villa María',
     },
   },
@@ -137,11 +134,11 @@ export const metadata: Metadata = {
     },
   },
   
-  // ✅ VERIFICACIÓN - ACTUALIZAR CON TUS CÓDIGOS
+  // ✅ VERIFICACIÓN - ENV VARIABLES
   verification: {
-    google: 'ACTUALIZAR_CON_TU_CODIGO_GOOGLE_SEARCH_CONSOLE',
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || 'ACTUALIZAR_CON_TU_CODIGO',
     other: {
-      'facebook-domain-verification': 'ACTUALIZAR_CON_TU_CODIGO_FACEBOOK',
+      'facebook-domain-verification': process.env.NEXT_PUBLIC_FACEBOOK_VERIFICATION || 'ACTUALIZAR_CON_TU_CODIGO',
     },
   },
   
@@ -175,73 +172,59 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   category: 'shopping',
   
-  // ✅ ADDITIONAL META TAGS - GEOLOCALIZACIÓN PRECISA
+  // ✅ ADDITIONAL META TAGS
   other: {
-    // Geographic targeting (✅ ACTUALIZAR con coordenadas EXACTAS de Google Maps)
     'geo.region': 'AR-X',
     'geo.placename': 'Villa María',
-    'geo.position': '-32.4115;-63.2407', // ✅ ACTUALIZAR: Click derecho en Google Maps → "¿Qué hay aquí?"
-    'ICBM': '-32.4115, -63.2407', // ✅ ACTUALIZAR con coordenadas exactas
-    
-    // Business info
+    'geo.position': '-32.4115;-63.2407',
+    'ICBM': '-32.4115, -63.2407',
     'contact': 'info@azulcolchones.com',
     'distribution': 'global',
     'language': 'Spanish',
     'audience': 'all',
     'coverage': 'Argentina',
-    
-    // E-commerce
     'price': '$$',
     'availability': 'in stock',
     'currency': 'ARS',
-    
-    // Social + Location (Open Graph extended)
     'og:phone_number': '+54-9-353-4017332',
     'og:email': 'info@azulcolchones.com',
-    'og:latitude': '-32.4115', // ✅ ACTUALIZAR
-    'og:longitude': '-63.2407', // ✅ ACTUALIZAR
+    'og:latitude': '-32.4115',
+    'og:longitude': '-63.2407',
     'og:street-address': 'Balerdi 855',
     'og:locality': 'Villa María',
     'og:region': 'Córdoba',
     'og:postal-code': '5900',
     'og:country-name': 'Argentina',
-    
-    // Mobile
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent',
     'apple-mobile-web-app-title': 'Azul Colchones',
     'mobile-web-app-capable': 'yes',
     'format-detection': 'telephone=yes',
-    
-    // Windows
     'msapplication-TileColor': '#3b82f6',
     'msapplication-config': '/browserconfig.xml',
-    
-    // Performance hint
     'referrer': 'origin-when-cross-origin',
   },
 }
 
 // ============================================================================
-// STRUCTURED DATA - ULTRA COMPLETO 🎯 (VALIDADO SCHEMA.ORG)
+// STRUCTURED DATA - DUAL STRATEGY 🎯
 // ============================================================================
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    // === 1. UNIFIED ORGANIZATION + LOCAL BUSINESS ===
     {
       '@type': ['Organization', 'FurnitureStore', 'LocalBusiness'],
       '@id': 'https://azulcolchones.com/#organization',
       name: 'Azul Colchones',
-      legalName: 'Azul Colchones', // ✅ ACTUALIZAR: Razón social oficial
+      legalName: 'Azul Colchones',
       alternateName: 'Azul Colchones Villa María',
       url: 'https://azulcolchones.com',
       
       logo: {
         '@type': 'ImageObject',
         '@id': 'https://azulcolchones.com/#logo',
-        url: 'https://azulcolchones.com/logo.png', // ✅ CREAR: 512x512px
+        url: 'https://azulcolchones.com/logo.png',
         contentUrl: 'https://azulcolchones.com/logo.png',
         width: 512,
         height: 512,
@@ -250,11 +233,11 @@ const jsonLd = {
       
       image: [
         { '@id': 'https://azulcolchones.com/#logo' },
-        'https://azulcolchones.com/store-front.jpg', // ✅ CREAR: Foto fachada del negocio
-        'https://azulcolchones.com/showroom-interior.jpg', // ✅ CREAR: Foto interior showroom
+        'https://azulcolchones.com/store-front.jpg',
+        'https://azulcolchones.com/showroom-interior.jpg',
       ],
       
-      description: 'Colchonería familiar en Villa María, Córdoba con 35+ años de experiencia. Especialistas en colchones premium, sommiers y almohadas. Envío gratis 24-48hs en Villa María.',
+      description: 'Colchones Piero en Villa María con dos modalidades: Outlet (60% OFF, entrega inmediata) y Piero Fábrica (30-40% OFF, directo de fábrica en 7-10 días). 35+ años de experiencia.',
       
       telephone: '+54-9-353-4017332',
       email: 'info@azulcolchones.com',
@@ -268,14 +251,12 @@ const jsonLd = {
         addressCountry: 'AR'
       },
       
-      // ✅ GEO para Google Maps (ACTUALIZAR con coordenadas exactas)
       geo: {
         '@type': 'GeoCoordinates',
-        latitude: -32.4115, // ✅ ACTUALIZAR
-        longitude: -63.2407 // ✅ ACTUALIZAR
+        latitude: -32.4115,
+        longitude: -63.2407
       },
       
-      // ✅ ÁREA SERVIDA (mejor ranking local)
       areaServed: [
         { '@type': 'City', name: 'Villa María', '@id': 'https://www.wikidata.org/wiki/Q992221' },
         { '@type': 'City', name: 'Villa Nueva' },
@@ -285,26 +266,19 @@ const jsonLd = {
         { '@type': 'Country', name: 'Argentina' }
       ],
       
-      // ✅ REDES SOCIALES (ACTUALIZAR con tus URLs reales)
       sameAs: [
         'https://www.facebook.com/azulcolchones',
         'https://www.instagram.com/azulcolchones',
-        'https://www.youtube.com/@azulcolchones', // Si tenés
-        'https://www.linkedin.com/company/azulcolchones', // Si tenés
       ],
       
-      // ✅ RATING - USAR DATOS REALES O ELIMINAR
-      // OPCIÓN 1: Si tenés reviews en Google Business Profile
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: '4.9', // ✅ ACTUALIZAR: Rating REAL de Google Business
-        reviewCount: '47',   // ✅ ACTUALIZAR: Cantidad REAL de reviews
+        ratingValue: '4.9',
+        reviewCount: '47',
         bestRating: '5',
         worstRating: '1'
       },
-      // OPCIÓN 2: Si NO tenés reviews → COMENTAR TODO EL BLOQUE aggregateRating
       
-      // ✅ CONTACTO
       contactPoint: [
         {
           '@type': 'ContactPoint',
@@ -326,17 +300,9 @@ const jsonLd = {
               closes: '13:00'
             }
           ]
-        },
-        {
-          '@type': 'ContactPoint',
-          telephone: '+54-9-353-4017332',
-          contactType: 'Atención al Cliente',
-          areaServed: 'AR',
-          availableLanguage: ['es'],
         }
       ],
       
-      // ✅ HORARIOS (crítico para "abierto ahora" en Google)
       openingHoursSpecification: [
         {
           '@type': 'OpeningHoursSpecification',
@@ -352,61 +318,58 @@ const jsonLd = {
         }
       ],
       
-      // ✅ BUSINESS INFO
-      foundingDate: '1989', // ✅ ACTUALIZAR con año real de fundación
+      foundingDate: '1989',
       priceRange: '$$',
       paymentAccepted: ['Cash', 'Credit Card', 'Debit Card', 'Mercado Pago', 'Bank Transfer'],
       currenciesAccepted: 'ARS',
       slogan: 'El descanso que merecés',
       
-      // ✅ LINK A GOOGLE MAPS
-      hasMap: 'https://www.google.com/maps/place/Balerdi+855,+Villa+Mar%C3%ADa,+Córdoba', // ✅ ACTUALIZAR con URL real
+      hasMap: 'https://www.google.com/maps/place/Balerdi+855,+Villa+Mar%C3%ADa,+Córdoba',
       
-      // ✅ OFFER CATALOG
+      // DUAL STRATEGY: Outlet + Fábrica
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
-        name: 'Colchones y Sommiers Premium',
+        name: 'Colchones Piero - Outlet y Fábrica',
         itemListElement: [
           {
             '@type': 'Offer',
+            name: 'Outlet Colchones Premium',
+            description: 'Stock limitado con hasta 60% de descuento y entrega inmediata',
             itemOffered: {
               '@type': 'Product',
-              name: 'Colchones Premium',
-              description: 'Colchones de todas las medidas: 1 plaza, plaza y media, 2 plazas, queen, king'
-            }
+              name: 'Colchones Premium Outlet',
+              description: 'Colchones Piero en stock con entrega HOY'
+            },
+            availability: 'https://schema.org/LimitedAvailability',
+            url: 'https://azulcolchones.com/catalogo'
           },
           {
             '@type': 'Offer',
+            name: 'Piero Fábrica Directo',
+            description: 'Colchones directos de fábrica con 30-40% OFF, entrega en 7-10 días',
             itemOffered: {
               '@type': 'Product',
-              name: 'Sommiers',
-              description: 'Sommiers con y sin cajones, todas las medidas'
-            }
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Product',
-              name: 'Almohadas',
-              description: 'Almohadas viscoelásticas, memory foam y tradicionales'
-            }
+              name: 'Colchones Piero Fábrica',
+              description: 'Pedidos directos de fábrica sin intermediarios'
+            },
+            availability: 'https://schema.org/PreOrder',
+            url: 'https://azulcolchones.com/piero-fabrica'
           }
         ]
       },
       
-      // ✅ OFFER PRINCIPAL
       makesOffer: {
         '@type': 'Offer',
         itemOffered: {
           '@type': 'Product',
-          name: 'Colchones y Sommiers Premium',
-          description: 'Colchones premium de todas las medidas con envío gratis y 12 cuotas sin interés'
+          name: 'Colchones Piero Premium',
+          description: 'Colchones premium Piero con dos modalidades de compra: Outlet o Fábrica'
         },
         availability: 'https://schema.org/InStock',
-        price: '350000', // ✅ ACTUALIZAR: Precio "desde" de tu producto más económico
+        price: '220000',
         priceCurrency: 'ARS',
         priceValidUntil: '2025-12-31',
-        url: 'https://azulcolchones.com/catalogo',
+        url: 'https://azulcolchones.com',
         
         shippingDetails: {
           '@type': 'OfferShippingDetails',
@@ -448,17 +411,15 @@ const jsonLd = {
       }
     },
     
-    // === 2. WEBSITE ===
     {
       '@type': 'WebSite',
       '@id': 'https://azulcolchones.com/#website',
       url: 'https://azulcolchones.com',
       name: 'Azul Colchones Villa María',
-      description: 'Colchonería en Villa María, Córdoba. Envío gratis y financiación.',
+      description: 'Colchones Piero: Outlet (60% OFF) o Fábrica (40% OFF). Envío gratis, 12 cuotas.',
       publisher: { '@id': 'https://azulcolchones.com/#organization' },
       inLanguage: 'es-AR',
       
-      // ✅ SEARCH BOX en Google
       potentialAction: {
         '@type': 'SearchAction',
         target: {
@@ -469,19 +430,17 @@ const jsonLd = {
       },
     },
     
-    // === 3. WEBPAGE ===
     {
       '@type': 'WebPage',
       '@id': 'https://azulcolchones.com/#webpage',
       url: 'https://azulcolchones.com',
-      name: 'Colchonería Villa María | Envío GRATIS | Azul Colchones',
+      name: 'Azul Colchones | Outlet 60% + Piero Fábrica 40% | Villa María',
       isPartOf: { '@id': 'https://azulcolchones.com/#website' },
       about: { '@id': 'https://azulcolchones.com/#organization' },
       primaryImageOfPage: { '@id': 'https://azulcolchones.com/#logo' },
-      description: 'Colchonería en Villa María con envío gratis 24-48hs, 12 cuotas sin interés y garantía extendida. 35+ años de experiencia.',
+      description: 'Colchones Piero en Villa María: Outlet (hoy, 60% OFF) o Fábrica (7-10 días, 40% OFF). Envío gratis, 12 cuotas.',
       inLanguage: 'es-AR',
       
-      // ✅ SPEAKABLE (Voice Search Optimization)
       speakable: {
         '@type': 'SpeakableSpecification',
         cssSelector: ['h1', '.hero-description']
@@ -491,195 +450,80 @@ const jsonLd = {
 }
 
 // ============================================================================
-// FAQ SCHEMA - ULTRA EXPANDIDO 🎯 (20 Preguntas para Featured Snippets)
+// FAQ SCHEMA - DUAL STRATEGY 🎯
 // ============================================================================
 
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
-    // === ENVÍOS ===
+    // DUAL STRATEGY
     {
       '@type': 'Question',
-      name: '¿Hacen envíos a Villa María?',
+      name: '¿Cuál es la diferencia entre Outlet y Piero Fábrica?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, realizamos envíos GRATIS en Villa María en 24-48 horas hábiles. También enviamos a toda Córdoba y el resto del país con costos preferenciales. Coordinamos el día y horario de entrega por WhatsApp (+54 9 353 4017332) para asegurarnos que estés en casa.'
+        text: 'Outlet son colchones Piero en stock con hasta 60% de descuento y entrega inmediata (hoy mismo en Villa María). Piero Fábrica son pedidos directos de fábrica con 30-40% de descuento pero entregas en 7-10 días. Ambas opciones incluyen envío gratis en Villa María y 12 cuotas sin interés. Vos elegís según tu urgencia y presupuesto.'
       }
     },
     {
       '@type': 'Question',
-      name: '¿Cuánto tarda el envío a Villa María?',
+      name: '¿Vale la pena esperar 7-10 días por Piero Fábrica?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'El envío a Villa María es GRATIS y llega en 24-48 horas hábiles. Para Villa Nueva y zonas cercanas también es 24-48hs. Para otras ciudades de Córdoba como San Francisco o Bell Ville el tiempo puede variar entre 2-5 días hábiles. Coordinamos contigo el mejor horario de entrega.'
+        text: 'Sí, si podés esperar 7-10 días, Piero Fábrica te ahorra entre $100.000 y $400.000 comparado con los precios de mercado. Es el mismo colchón Piero, con la misma garantía oficial, pero comprás directo de fábrica sin intermediarios. Ideal si estás planificando con tiempo y querés el mejor precio posible.'
       }
     },
+    // ENVÍOS
     {
       '@type': 'Question',
-      name: '¿Retiran el colchón viejo gratis?',
+      name: '¿El envío es gratis en ambas modalidades (Outlet y Fábrica)?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, ofrecemos retiro del colchón viejo sin cargo en compras superiores a $400.000 en Villa María y zonas aledañas. Coordinamos el retiro junto con la entrega de tu colchón nuevo el mismo día. Consultá disponibilidad por WhatsApp: +54 9 353 4017332.'
+        text: 'Sí, el envío es GRATIS en Villa María tanto para compras en Outlet (entrega en 24-48hs) como en Piero Fábrica (entrega en 7-10 días). Para otras ciudades de Córdoba y Argentina también tenemos envío sin cargo adicional. Coordinamos día y horario por WhatsApp: +54 9 353 4017332.'
       }
     },
-    
-    // === FINANCIACIÓN ===
+    // FINANCIACIÓN
     {
       '@type': 'Question',
-      name: '¿Puedo pagar en cuotas sin interés?',
+      name: '¿Puedo pagar en 12 cuotas sin interés?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, ofrecemos financiación en hasta 12 cuotas sin interés con Mercado Pago y tarjetas de crédito habilitadas. También aceptamos transferencia bancaria con 10% de descuento adicional, efectivo en showroom con 15% de descuento, y todas las tarjetas de débito.'
+        text: 'Sí, ofrecemos hasta 12 cuotas sin interés tanto en Outlet como en Piero Fábrica, con Mercado Pago y tarjetas de crédito habilitadas. También aceptamos transferencia bancaria con 10% de descuento adicional, efectivo en showroom con 15% de descuento, y todas las tarjetas de débito.'
       }
     },
+    // GARANTÍAS
     {
       '@type': 'Question',
-      name: '¿Aceptan Mercado Pago?',
+      name: '¿La garantía es la misma en Outlet y Piero Fábrica?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, aceptamos Mercado Pago con hasta 12 cuotas sin interés en tarjetas habilitadas. Podés pagar con código QR en el showroom, link de pago online, o directamente desde la app de Mercado Pago. También aceptamos pago presencial con puntos de Mercado Pago.'
+        text: 'Sí, todos los colchones Piero tienen la misma garantía oficial de fábrica (5-10 años según modelo), ya sea que los compres en Outlet o por Piero Fábrica. La garantía cubre defectos de fabricación, deformaciones y roturas de resortes. Además cumplimos con la Ley de Defensa del Consumidor Argentina.'
       }
     },
+    // SHOWROOM
     {
       '@type': 'Question',
-      name: '¿Cuánto sale un colchón queen en Villa María?',
+      name: '¿Puedo ver los colchones del Outlet en el showroom?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Los colchones queen (160x200cm) en Azul Colchones arrancan desde $350.000 con 12 cuotas sin interés. Tenemos modelos premium de hasta $650.000 según materiales (resortes pocket, viscoelástico, memory foam). Todos incluyen envío gratis en Villa María. Consultá precios actualizados por WhatsApp: +54 9 353 4017332.'
+        text: 'Sí, visitá nuestro showroom en Balerdi 855, Villa María para ver y probar los colchones disponibles en Outlet. También te mostramos catálogos de todos los modelos Piero que podés pedir directo de Fábrica. Atendemos lunes a viernes 9-19hs, sábados 9-13hs. WhatsApp: +54 9 353 4017332.'
       }
     },
-    
-    // === GARANTÍAS ===
+    // STOCK
     {
       '@type': 'Question',
-      name: '¿Qué garantía tienen los colchones?',
+      name: '¿Cómo sé si hay stock en Outlet del colchón que quiero?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Todos nuestros colchones incluyen garantía extendida del fabricante contra defectos de fabricación (varía según modelo: 1-5 años). Además cumplimos con la Ley de Defensa del Consumidor Argentina (24.240) que te protege como comprador. La garantía cubre deformaciones, roturas de resortes y defectos de confección.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Puedo cambiar el colchón si no me gusta?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Sí, tenés 10 días corridos desde la recepción para cambiar tu colchón si no estás conforme (según Ley 24.240). El colchón debe estar en perfectas condiciones, sin uso intensivo ni manchas. Los gastos de retiro y reenvío corren por cuenta del cliente. Te asesoramos antes de comprar para que elijas el colchón perfecto y evites cambios.'
-      }
-    },
-    
-    // === SHOWROOM ===
-    {
-      '@type': 'Question',
-      name: '¿Tienen showroom físico en Villa María?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Sí, tenemos showroom en Balerdi 855, Villa María (a 2 cuadras de la plaza principal), donde podés ver, tocar y probar todos nuestros colchones y sommiers. Atendemos de lunes a viernes de 9 a 19hs y sábados de 9 a 13hs. También atendemos consultas por WhatsApp 24/7: +54 9 353 4017332.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Puedo probar el colchón antes de comprar?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Sí, te invitamos a visitar nuestro showroom en Balerdi 855, Villa María para que pruebes todos los modelos que quieras. Podés recostarte, probar diferentes firmezas y recibir asesoramiento personalizado sin compromiso. No necesitás turno, atendemos por orden de llegada de lunes a viernes 9-19hs y sábados 9-13hs.'
-      }
-    },
-    
-    // === ASESORAMIENTO ===
-    {
-      '@type': 'Question',
-      name: '¿Cómo sé qué colchón elegir para mí?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Tenemos un simulador interactivo online que te ayuda a encontrar el colchón perfecto según tu peso, postura al dormir, temperatura corporal y preferencias de firmeza. También podés consultarnos por WhatsApp (+54 9 353 4017332) para asesoramiento personalizado gratuito con nuestros especialistas, o visitar nuestro showroom para probar los modelos.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Cuál es el mejor colchón para dolor de espalda?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Para dolor de espalda recomendamos colchones de firmeza media-alta que mantengan la alineación natural de la columna vertebral. Los colchones de resortes pocket o con capas viscoelásticas son ideales porque distribuyen uniformemente el peso corporal. Te asesoramos sin cargo según tu peso, altura, postura al dormir y tipo específico de dolor. Consultá por WhatsApp: +54 9 353 4017332.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Cuál es la diferencia entre colchón de resortes y viscoelástico?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Los colchones de resortes ofrecen mayor ventilación, soporte firme y rebote, ideales para climas cálidos y personas de mayor peso. Los viscoelásticos se adaptan a tu cuerpo reduciendo puntos de presión, perfectos para aliviar dolores articulares y de espalda, pero retienen más calor. En Azul Colchones tenés ambas opciones con asesoramiento personalizado para encontrar el ideal para vos.'
-      }
-    },
-    
-    // === MEDIDAS Y TAMAÑOS ===
-    {
-      '@type': 'Question',
-      name: '¿Qué medidas de colchones tienen disponibles?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Tenemos todas las medidas estándar: 1 plaza (80x190cm y 90x190cm), plaza y media (100x190cm y 110x190cm), 2 plazas (140x190cm), queen (160x200cm), king (180x200cm y 200x200cm). También fabricamos medidas especiales a pedido. Consultá disponibilidad y precios por WhatsApp: +54 9 353 4017332.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Venden sommiers también?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Sí, vendemos sommiers en todas las medidas, con y sin cajones de guardado. Tenemos sommiers simples (solo base), con patas de madera o metálicas, y sommiers box con cajones laterales ideales para optimizar espacio. Todos los sommiers son compatibles con nuestros colchones. Consultá combos colchón+sommier con descuento especial.'
-      }
-    },
-    
-    // === MATERIALES Y TECNOLOGÍA ===
-    {
-      '@type': 'Question',
-      name: '¿Qué es un colchón pocket?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Los colchones pocket tienen resortes ensacados individualmente que trabajan de forma independiente. Esto significa que si tu pareja se mueve, vos no lo sentís (aislamiento de movimiento). Son ideales para parejas con diferente peso y para personas que cambian mucho de posición al dormir. Tenemos modelos pocket desde $420.000 con envío gratis.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Los colchones viscoelásticos dan calor?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Los colchones viscoelásticos tradicionales pueden retener más calor que los de resortes. Sin embargo, nuestros modelos premium incluyen tecnología de gel refrigerante, espumas de celda abierta y tejidos termoreguladores que mejoran la ventilación. Si sos muy caluroso, te recomendamos colchones de resortes pocket con pillow top o modelos híbridos (resortes + viscoelástico).'
-      }
-    },
-    
-    // === DURABILIDAD Y MANTENIMIENTO ===
-    {
-      '@type': 'Question',
-      name: '¿Cuánto dura un colchón?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'La vida útil promedio de un colchón de calidad es de 8-10 años con uso correcto. Los factores que afectan la durabilidad son: peso de los usuarios, frecuencia de rotación (cada 3-6 meses), uso de base o sommier adecuado, y protección con funda impermeable. Te damos consejos de mantenimiento con cada compra para maximizar la vida útil de tu colchón.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Cada cuánto hay que dar vuelta el colchón?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Recomendamos rotar el colchón (de pies a cabeza) cada 3 meses los primeros 2 años, y cada 6 meses después. Los colchones con pillow top o euro top NO se deben dar vuelta (solo rotar). Esta rotación distribuye el desgaste uniformemente y prolonga la vida útil. Te enviamos un recordatorio digital gratuito si lo solicitás al momento de la compra.'
-      }
-    },
-    
-    // === COMPARATIVAS ===
-    {
-      '@type': 'Question',
-      name: '¿Es mejor comprar colchón solo o con sommier?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Comprar colchón y sommier juntos es la opción recomendada porque: 1) El sommier absorbe hasta 30% del impacto prolongando la vida del colchón, 2) Mejora la ventilación evitando humedad, 3) Eleva la cama a altura ergonómica. Ofrecemos combos colchón+sommier con 20% de descuento. Si tu sommier actual tiene menos de 5 años y está en buen estado, podés comprar solo el colchón.'
+        text: 'Nuestro stock de Outlet se actualiza en tiempo real en la web (azulcolchones.com/catalogo). También podés consultarnos por WhatsApp (+54 9 353 4017332) para verificar disponibilidad inmediata. Si el modelo que querés no está en Outlet, te ofrecemos comprarlo por Piero Fábrica con mejor precio y entrega en 7-10 días.'
       }
     },
   ]
 }
 
 // ============================================================================
-// BREADCRUMB SCHEMA - HOME (Dinámico por página en otros archivos)
+// BREADCRUMB SCHEMA
 // ============================================================================
 
 const breadcrumbJsonLd = {
@@ -696,7 +540,7 @@ const breadcrumbJsonLd = {
 }
 
 // ============================================================================
-// ROOT LAYOUT - ULTRA OPTIMIZED ⚡
+// ROOT LAYOUT
 // ============================================================================
 
 export default function RootLayout({
@@ -711,24 +555,13 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* ========================================
-            PRECONNECT - Solo orígenes críticos
-            ======================================== */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* ========================================
-            DNS PREFETCH - Servicios de menor prioridad
-            ======================================== */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
         <link rel="dns-prefetch" href="https://www.mercadopago.com" />
         
-        {/* ========================================
-            PRELOAD - Hero image SOLO en desktop
-            (En mobile se carga lazy)
-            ======================================== */}
         <link 
           rel="preload" 
           href="/images/hero-colchon.webp" 
@@ -738,9 +571,6 @@ export default function RootLayout({
           media="(min-width: 768px)"
         />
         
-        {/* ========================================
-            STRUCTURED DATA - JSON-LD
-            ======================================== */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -766,9 +596,6 @@ export default function RootLayout({
           textRendering: 'optimizeLegibility'
         }}
       >
-        {/* ========================================
-            SKIP LINK - Accesibilidad (WCAG AA)
-            ======================================== */}
         <a 
           href="#main-content" 
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-blue-600 focus:text-white focus:rounded-xl focus:font-semibold focus:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-zinc-950 transition-all duration-200"
@@ -776,16 +603,9 @@ export default function RootLayout({
           Saltar al contenido principal
         </a>
 
-        {/* ========================================
-            AUTH PROVIDER
-            ======================================== */}
         <AuthProvider>
-          {/* Header */}
           <Header />
           
-          {/* ========================================
-              MAIN CONTENT
-              ======================================== */}
           <main 
             id="main-content" 
             className="flex-1 w-full bg-zinc-950 scroll-mt-20"
@@ -795,23 +615,16 @@ export default function RootLayout({
             {children}
           </main>
           
-          {/* Footer */}
           <Footer />
 
-          {/* ========================================
-              WHATSAPP FLOTANTE
-              ======================================== */}
           <WhatsAppButton 
             phoneNumber="5493534017332"
-            message="¡Hola! Me interesa conocer más sobre los colchones de Azul Colchones. ¿Podrían asesorarme?"
+            message="¡Hola! Me interesa consultar por colchones Piero. ¿Podrían asesorarme sobre Outlet vs Piero Fábrica?"
             position="right"
             showTooltip={true}
           />
         </AuthProvider>
 
-        {/* ========================================
-            ANALYTICS - Lazy loaded
-            ======================================== */}
         <Suspense fallback={null}>
           <Analytics />
         </Suspense>
