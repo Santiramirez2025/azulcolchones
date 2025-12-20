@@ -83,8 +83,8 @@ export default function HeroSection() {
                         Desde
                       </div>
                       <div className="flex items-end justify-center gap-3 mb-2">
-                        <span className="text-5xl font-black text-white">$220K</span>
-                        <span className="text-xl text-slate-500 line-through mb-2">$552K</span>
+                        <span className="text-5xl font-black text-white">$220.000</span>
+                        <span className="text-xl text-slate-500 line-through mb-2">$552.000</span>
                       </div>
                       <div className="inline-flex items-center gap-2 bg-amber-500 text-black px-3 py-1 rounded-full text-xs font-bold">
                         <Zap className="w-3 h-3" />

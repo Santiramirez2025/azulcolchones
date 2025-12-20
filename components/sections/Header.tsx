@@ -302,7 +302,7 @@ export default function Header() {
 
   // Nav links - ✅ CONSTANTE ESTÁTICA (evita hydration errors)
   const navLinks = [
-    { href: '/catalogo', label: 'Ver Ofertas', icon: 'catalog', featured: true },
+    { href: '/catalogo', label: 'Colchones Outlet', icon: 'catalog', featured: true },
     { href: '/piero-fabrica', label: 'Piero Fábrica', icon: 'factory', factory: true },
     { href: '/simulador', label: 'Test IA', icon: 'ai', special: true },
     { href: '/blog', label: 'Guía de Sueño', icon: 'blog' },
