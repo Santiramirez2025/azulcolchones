@@ -22,7 +22,7 @@ interface ProductCardProps {
 }
 
 // ============================================================================
-// PRODUCT CARD - MOBILE-FIRST EXTREMO 📱
+// PRODUCT CARD - DISEÑO PROFESIONAL COHERENTE
 // ============================================================================
 
 function ProductCard({ 
@@ -42,31 +42,27 @@ function ProductCard({
   const categoriaConfig = {
     ancla: { 
       badge: 'Mejor Precio',
-      emoji: '🔥',
-      colorBg: 'bg-red-600',
-      colorText: 'text-red-600',
-      colorBorder: 'border-red-500/30'
+      colorBg: 'from-red-600 to-red-700',
+      colorBorder: 'border-red-500/30',
+      colorAccent: 'text-red-600'
     },
     equilibrio: { 
       badge: 'Más Vendido',
-      emoji: '⭐',
-      colorBg: 'bg-blue-600',
-      colorText: 'text-blue-600',
-      colorBorder: 'border-blue-500/30'
+      colorBg: 'from-blue-600 to-blue-700',
+      colorBorder: 'border-blue-500/30',
+      colorAccent: 'text-blue-600'
     },
     premium: { 
       badge: 'Premium',
-      emoji: '👑',
-      colorBg: 'bg-amber-600',
-      colorText: 'text-amber-600',
-      colorBorder: 'border-amber-500/30'
+      colorBg: 'from-amber-600 to-amber-700',
+      colorBorder: 'border-amber-500/30',
+      colorAccent: 'text-amber-600'
     },
     accesorio: {
       badge: 'Complemento',
-      emoji: '💎',
-      colorBg: 'bg-green-600',
-      colorText: 'text-green-600',
-      colorBorder: 'border-green-500/30'
+      colorBg: 'from-green-600 to-green-700',
+      colorBorder: 'border-green-500/30',
+      colorAccent: 'text-green-600'
     }
   }
 
@@ -85,93 +81,97 @@ function ProductCard({
   return (
     <article 
       className={`
-        relative bg-white rounded-2xl overflow-hidden
-        border-2 ${destacado ? 'border-blue-500' : 'border-zinc-200'}
-        ${destacado ? 'shadow-xl shadow-blue-500/20' : 'shadow-lg'}
+        group relative bg-white rounded-2xl overflow-hidden
+        border ${destacado ? 'border-blue-500 border-2' : 'border-zinc-200'}
+        ${destacado ? 'shadow-2xl shadow-blue-500/20' : 'shadow-lg hover:shadow-xl'}
+        transition-all duration-300 hover:-translate-y-1
         flex flex-col h-full
       `}
       itemScope 
       itemType="https://schema.org/Product"
     >
       
-      {/* Badge Destacado - Solo si aplica */}
+      {/* Badge Destacado */}
       {destacado && (
         <div 
-          className="absolute top-3 left-3 z-20 px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-full shadow-lg"
+          className="absolute top-4 left-4 z-20 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold rounded-full shadow-lg animate-pulse"
           aria-label="Producto recomendado"
         >
           ⭐ Recomendado
         </div>
       )}
 
-      {/* Badge Categoría */}
-      <div className={`${config.colorBg} text-white px-4 py-2 text-center`}>
-        <span className="text-xs font-bold tracking-wide" aria-label={`Categoría: ${config.badge}`}>
-          {config.emoji} {config.badge}
+      {/* Badge Categoría - Integrado con el diseño principal */}
+      <div className={`bg-gradient-to-r ${config.colorBg} text-white px-6 py-3 text-center`}>
+        <span className="text-sm font-bold tracking-wide" aria-label={`Categoría: ${config.badge}`}>
+          {config.badge}
         </span>
       </div>
 
-      {/* Imagen - Optimizada Next.js */}
-      <div className="relative aspect-[4/3] bg-zinc-100 overflow-hidden">
+      {/* Imagen - Placeholder coherente con el diseño */}
+      <div className="relative aspect-[4/3] bg-gradient-to-br from-zinc-50 to-zinc-100 overflow-hidden">
         {imagen ? (
           <Image
             src={imagen}
             alt={`${nombre} ${tamaño} - Precio de fábrica`}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
             loading={destacado ? "eager" : "lazy"}
             quality={85}
             itemProp="image"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200">
+          <div className="w-full h-full flex items-center justify-center">
             <div className="text-center">
-              <div className="text-5xl mb-2" role="img" aria-label={tipo}>
+              <div className="text-6xl mb-3 opacity-20" role="img" aria-label={tipo}>
                 {tipoEmoji[tipo]}
               </div>
-              <p className="text-zinc-500 text-sm font-medium">{nombre}</p>
+              <p className="text-zinc-400 text-sm font-semibold px-4">{nombre}</p>
             </div>
           </div>
         )}
+        
+        {/* Overlay sutil en hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      {/* Contenido - Jerarquía Visual Clara */}
-      <div className="p-4 flex-1 flex flex-col gap-3">
+      {/* Contenido Principal */}
+      <div className="p-6 flex-1 flex flex-col gap-4">
         
-        {/* Nombre + Medida */}
+        {/* Header: Nombre + Tamaño */}
         <div>
           <h3 
-            className="text-xl font-black text-zinc-900 leading-tight mb-1"
+            className="text-xl font-bold text-zinc-900 leading-tight mb-1.5"
             itemProp="name"
           >
             {nombre}
           </h3>
-          <p className="text-sm text-zinc-600">{tamaño}</p>
+          <p className="text-sm text-zinc-600 font-medium">{tamaño}</p>
         </div>
 
-        {/* Ahorro - Solo si existe */}
+        {/* Ahorro Destacado */}
         {ahorro && ahorroPorc && (
-          <div className={`border ${config.colorBorder} rounded-lg p-2.5 bg-green-50`}>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl p-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-zinc-700">Ahorrás:</span>
+              <span className="text-xs font-semibold text-green-700">Ahorrás:</span>
               <div className="text-right">
-                <div className="text-base font-bold text-green-700">
+                <div className="text-lg font-black text-green-700">
                   ${ahorro.toLocaleString('es-AR')}
                 </div>
-                <div className="text-xs text-green-600">
-                  {ahorroPorc}% menos
+                <div className="text-xs font-bold text-green-600">
+                  {ahorroPorc}% de descuento
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Precio - Máxima Prominencia */}
-        <div className="space-y-1" itemProp="offers" itemScope itemType="https://schema.org/Offer">
-          <p className="text-xs text-zinc-600">Precio Fábrica:</p>
+        {/* Precio Principal */}
+        <div className="space-y-1.5" itemProp="offers" itemScope itemType="https://schema.org/Offer">
+          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Precio Fábrica</p>
           <p 
-            className="text-3xl font-black text-zinc-900"
+            className="text-4xl font-black text-zinc-900"
             itemProp="price"
             content={precioFabrica.toString()}
           >
@@ -183,95 +183,121 @@ function ProductCard({
             stock === 'consultar' ? 'https://schema.org/PreOrder' :
             'https://schema.org/PreSale'
           } />
+          
+          {/* Precio comparativo tachado */}
+          {precioOnline && (
+            <p className="text-sm text-zinc-500">
+              <span className="line-through">${precioOnline.toLocaleString('es-AR')}</span>
+              <span className="ml-2 text-green-600 font-semibold">en otros sitios</span>
+            </p>
+          )}
         </div>
 
-        {/* Sistema de Cuotas - Compacto - Solo para colchones */}
+        {/* Opciones de Pago - Solo para colchones */}
         {tipo === 'colchon' && (
-          <details className="group/cuotas">
-            <summary className="flex items-center justify-between cursor-pointer list-none py-2 px-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-              <span className="text-sm font-semibold text-blue-700 flex items-center gap-1.5">
-                💳 Ver opciones de pago
+          <details className="group/cuotas border border-zinc-200 rounded-xl overflow-hidden">
+            <summary className="flex items-center justify-between cursor-pointer list-none py-3 px-4 bg-zinc-50 hover:bg-zinc-100 transition-colors">
+              <span className="text-sm font-bold text-zinc-700 flex items-center gap-2">
+                💳 Opciones de pago
               </span>
               <svg 
-                className="w-4 h-4 text-blue-600 transition-transform group-open/cuotas:rotate-180" 
+                className="w-5 h-5 text-zinc-500 transition-transform group-open/cuotas:rotate-180" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
               </svg>
             </summary>
             
-            <div className="mt-2 space-y-1.5 text-xs">
-              <div className="flex items-center justify-between py-1.5 px-2 bg-green-50 rounded">
-                <span className="font-medium text-green-800">Efectivo/Transferencia</span>
-                <span className="font-bold text-green-700">Sin recargo</span>
-              </div>
-              <div className="flex items-center justify-between py-1.5 px-2 bg-green-50 rounded">
-                <span className="font-medium text-green-800">Débito/Crédito 1 pago</span>
-                <span className="font-bold text-green-700">Sin recargo</span>
-              </div>
-              <div className="flex items-center justify-between py-1 px-2">
-                <span className="text-zinc-700">3 cuotas</span>
-                <span className="text-zinc-600">+18%</span>
-              </div>
-              <div className="flex items-center justify-between py-1 px-2">
-                <span className="text-zinc-700">6 cuotas</span>
-                <span className="text-zinc-600">+25%</span>
-              </div>
-              <div className="flex items-center justify-between py-1 px-2">
-                <span className="text-zinc-700">9 cuotas</span>
-                <span className="text-zinc-600">+35%</span>
-              </div>
-              <div className="flex items-center justify-between py-1 px-2">
-                <span className="text-zinc-700">12 cuotas</span>
-                <span className="text-zinc-600">+47%</span>
+            <div className="bg-white border-t border-zinc-200">
+              <div className="p-4 space-y-2.5">
+                {/* Métodos sin recargo */}
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-xs font-bold text-green-800 uppercase tracking-wide">Sin Recargo</span>
+                  </div>
+                  <div className="space-y-1 text-xs text-green-700">
+                    <p className="font-semibold">• Efectivo / Transferencia</p>
+                    <p className="font-semibold">• Débito / Crédito 1 pago</p>
+                  </div>
+                </div>
+                
+                {/* Cuotas con recargo */}
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between py-2 px-3 bg-zinc-50 rounded">
+                    <span className="font-medium text-zinc-700">3 cuotas</span>
+                    <span className="font-bold text-zinc-600">+18%</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2 px-3 bg-zinc-50 rounded">
+                    <span className="font-medium text-zinc-700">6 cuotas</span>
+                    <span className="font-bold text-zinc-600">+25%</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2 px-3 bg-zinc-50 rounded">
+                    <span className="font-medium text-zinc-700">9 cuotas</span>
+                    <span className="font-bold text-zinc-600">+35%</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2 px-3 bg-zinc-50 rounded">
+                    <span className="font-medium text-zinc-700">12 cuotas</span>
+                    <span className="font-bold text-zinc-600">+47%</span>
+                  </div>
+                </div>
               </div>
             </div>
           </details>
         )}
 
-        {/* Stock */}
-        <div className="py-2">
+        {/* Estado de Stock */}
+        <div className="py-3 border-t border-zinc-100">
           {stock === 'disponible' ? (
-            <div className="flex items-center gap-2 text-green-700">
-              <span className="w-2 h-2 bg-green-500 rounded-full" aria-hidden="true"></span>
-              <span className="text-sm font-semibold">Disponible • 7-10 días</span>
+            <div className="flex items-center gap-2.5 text-green-700">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
+              <span className="text-sm font-bold">Disponible • 7-10 días</span>
             </div>
           ) : stock === 'consultar' ? (
-            <div className="flex items-center gap-2 text-amber-700">
-              <span className="w-2 h-2 bg-amber-500 rounded-full" aria-hidden="true"></span>
-              <span className="text-sm font-semibold">Consultar stock</span>
+            <div className="flex items-center gap-2.5 text-amber-700">
+              <span className="w-3 h-3 bg-amber-500 rounded-full" aria-hidden="true"></span>
+              <span className="text-sm font-bold">Consultar disponibilidad</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-blue-700">
-              <span className="w-2 h-2 bg-blue-500 rounded-full" aria-hidden="true"></span>
-              <span className="text-sm font-semibold">Bajo pedido • 7-10 días</span>
+            <div className="flex items-center gap-2.5 text-blue-700">
+              <span className="w-3 h-3 bg-blue-500 rounded-full" aria-hidden="true"></span>
+              <span className="text-sm font-bold">Bajo pedido • 7-10 días</span>
             </div>
           )}
         </div>
 
-        {/* CTA - Thumb-Friendly */}
+        {/* CTA Principal */}
         <a
           href={urlWhatsApp}
           target="_blank"
           rel="noopener noreferrer"
           className="
             mt-auto w-full min-h-[56px] px-6 py-4
-            bg-green-600 hover:bg-green-700 active:bg-green-800
+            bg-gradient-to-r from-green-600 to-green-700
+            hover:from-green-700 hover:to-green-800
+            active:from-green-800 active:to-green-900
             text-white text-center font-bold text-base
             rounded-xl
-            flex items-center justify-center gap-2
-            transition-colors duration-200
+            flex items-center justify-center gap-3
+            transition-all duration-300
+            shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40
             focus:outline-none focus:ring-4 focus:ring-green-500/50
+            group/cta
           "
           aria-label={`Consultar ${nombre} por WhatsApp`}
         >
-          <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg className="w-6 h-6 flex-shrink-0 group-hover/cta:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
           </svg>
-          <span>Consultar</span>
+          <span>Consultar Ahora</span>
         </a>
 
       </div>
@@ -280,17 +306,18 @@ function ProductCard({
 }
 
 // ============================================================================
-// PRODUCTOS GRID - CATÁLOGO COMPLETO MODELO FINAL 📦
+// PRODUCTOS GRID PRINCIPAL
 // ============================================================================
 
-export default function ProductosGridCompleto() {
+export default function ProductosGridOptimizado() {
   const [categoriaActiva, setCategoriaActiva] = useState<'todos' | 'plaza' | 'plaza-media' | 'queen' | 'king' | 'accesorios'>('todos')
 
   // ============================================================================
-  // PILAR 1: PRODUCTOS ANCLA 🎣
+  // PRODUCTOS DATA
   // ============================================================================
+  
   const productosAncla: ProductCardProps[] = [
-    // ========== 1 PLAZA (Bajo Pedido - Seña 30%) ==========
+    // ========== 1 PLAZA ==========
     {
       nombre: 'Meditare EP',
       tamaño: '190x80 (1 plaza)',
@@ -300,7 +327,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 7,
       categoria: 'ancla',
       stock: 'bajo-pedido',
-      imagen: 'images/meditare-80.jpg'
+      imagen: '/images/meditare-80.jpg'
     },
     {
       nombre: 'Meditare EP',
@@ -311,7 +338,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 7,
       categoria: 'ancla',
       stock: 'bajo-pedido',
-      imagen: 'images/meditare-90.jpg'
+      imagen: '/images/meditare-90.jpg'
     },
     {
       nombre: 'Nirvana',
@@ -322,7 +349,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 8,
       categoria: 'ancla',
       stock: 'bajo-pedido',
-      imagen: 'images/nirvana-80.jpg'
+      imagen: '/images/nirvana-80.jpg'
     },
     {
       nombre: 'Nirvana',
@@ -333,9 +360,9 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 8,
       categoria: 'ancla',
       stock: 'bajo-pedido',
-      imagen: 'images/nirvana-90.jpg'
+      imagen: '/images/nirvana-90.jpg'
     },
-    // ========== 1½ PLAZA (Stock Principal) ==========
+    // ========== 1½ PLAZA ==========
     {
       nombre: 'Meditare EP',
       tamaño: '190x140 (1½ plaza)',
@@ -345,7 +372,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 7,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: 'images/meditare-140.jpg'
+      imagen: '/images/meditare-140.jpg'
     },
     {
       nombre: 'Nirvana',
@@ -356,7 +383,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 9,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: 'images/nirvana-140.jpg'
+      imagen: '/images/nirvana-140.jpg'
     },
     // ========== QUEEN ==========
     {
@@ -368,7 +395,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 13,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: 'images/nirvana-160.jpg'
+      imagen: '/images/nirvana-160.jpg'
     },
     // ========== KING ==========
     {
@@ -380,15 +407,12 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 5,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: 'images/nirvana-200.jpg'
+      imagen: '/images/nirvana-200.jpg'
     },
   ]
 
-  // ============================================================================
-  // PILAR 2: PRODUCTOS EQUILIBRIO ⭐ (El corazón del negocio)
-  // ============================================================================
   const productosEquilibrio: ProductCardProps[] = [
-    // ========== 1 PLAZA (Bajo Pedido) ==========
+    // ========== 1 PLAZA ==========
     {
       nombre: 'Sonno EP',
       tamaño: '190x80 (1 plaza)',
@@ -398,7 +422,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 8,
       categoria: 'equilibrio',
       stock: 'bajo-pedido',
-      imagen: 'images/sonno-ep-80.jpg'
+      imagen: '/images/sonno-ep-80.jpg'
     },
     {
       nombre: 'Sonno EP',
@@ -409,9 +433,9 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 8,
       categoria: 'equilibrio',
       stock: 'bajo-pedido',
-      imagen: 'images/sonno-ep-90.jpg'
+      imagen: '/images/sonno-ep-90.jpg'
     },
-    // ========== 1½ PLAZA (Estrella Absoluta) ==========
+    // ========== 1½ PLAZA ==========
     {
       nombre: 'Sonno EP',
       tamaño: '190x140 (1½ plaza)',
@@ -420,9 +444,9 @@ export default function ProductosGridCompleto() {
       ahorro: 53703,
       ahorroPorc: 8,
       categoria: 'equilibrio',
-      destacado: true, // ⭐ PRODUCTO PIVOT CENTRAL
+      destacado: true,
       stock: 'disponible',
-      imagen: 'images/sonno-ep-140.jpg'
+      imagen: '/images/sonno-ep-140.jpg'
     },
     {
       nombre: 'Gravita',
@@ -433,7 +457,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 5,
       categoria: 'equilibrio',
       stock: 'disponible',
-      imagen: 'images/gravita-140.jpg'
+      imagen: '/images/gravita-140.jpg'
     },
     {
       nombre: 'Regno Pillow Top',
@@ -444,7 +468,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 8,
       categoria: 'equilibrio',
       stock: 'disponible',
-      imagen: 'images/regno-pillow-140.jpg'
+      imagen: '/images/regno-pillow-140.jpg'
     },
     // ========== QUEEN ==========
     {
@@ -456,7 +480,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 5,
       categoria: 'equilibrio',
       stock: 'disponible',
-      imagen: 'images/regno-160.jpg'
+      imagen: '/images/regno-160.jpg'
     },
     {
       nombre: 'Gravita Queen',
@@ -467,15 +491,12 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 5,
       categoria: 'equilibrio',
       stock: 'disponible',
-      imagen: 'images/gravita-160.jpg'
+      imagen: '/images/gravita-160.jpg'
     },
   ]
 
-  // ============================================================================
-  // PILAR 3: PRODUCTOS PREMIUM 👑
-  // ============================================================================
   const productosPremium: ProductCardProps[] = [
-    // 1½ PLAZA
+    // ========== 1½ PLAZA ==========
     {
       nombre: 'Montreaux',
       tamaño: '190x140 (1½ plaza)',
@@ -485,7 +506,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 10,
       categoria: 'premium',
       stock: 'consultar',
-      imagen: 'images/montreaux-140.jpg'
+      imagen: '/images/montreaux-140.jpg'
     },
     {
       nombre: 'Montreaux Pillow Top',
@@ -496,7 +517,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 9,
       categoria: 'premium',
       stock: 'consultar',
-      imagen: 'images/montreaux-pillow-140.jpg'
+      imagen: '/images/montreaux-pillow-140.jpg'
     },
     {
       nombre: 'Dream Fit Pocket',
@@ -507,9 +528,9 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 3,
       categoria: 'premium',
       stock: 'consultar',
-      imagen: 'images/dreamfit-pocket-140.jpg'
+      imagen: '/images/dreamfit-pocket-140.jpg'
     },
-    // QUEEN
+    // ========== QUEEN ==========
     {
       nombre: 'Montreaux Pillow Top Queen',
       tamaño: '200x160 (Queen)',
@@ -519,7 +540,7 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 7,
       categoria: 'premium',
       stock: 'consultar',
-      imagen: 'images/montreaux-pillow-160.jpg'
+      imagen: '/images/montreaux-pillow-160.jpg'
     },
     {
       nombre: 'Dream Fit Pocket Queen',
@@ -530,15 +551,12 @@ export default function ProductosGridCompleto() {
       ahorroPorc: 6,
       categoria: 'premium',
       stock: 'consultar',
-      imagen: 'images/dreamfit-pocket-160.jpg'
+      imagen: '/images/dreamfit-pocket-160.jpg'
     },
   ]
 
-  // ============================================================================
-  // ACCESORIOS 💎 (Rentabilidad oculta)
-  // ============================================================================
   const accesorios: ProductCardProps[] = [
-    // PROTECTORES (TOP rentabilidad)
+    // ========== PROTECTORES ==========
     {
       nombre: 'Protector Impermeable',
       tamaño: '140x190 cm',
@@ -546,7 +564,7 @@ export default function ProductosGridCompleto() {
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
-      imagen: 'images/protector-140.jpg'
+      imagen: '/images/protector-140.jpg'
     },
     {
       nombre: 'Protector Impermeable',
@@ -555,7 +573,7 @@ export default function ProductosGridCompleto() {
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
-      imagen: 'images/protector-160.jpg'
+      imagen: '/images/protector-160.jpg'
     },
     {
       nombre: 'Protector Impermeable',
@@ -564,9 +582,9 @@ export default function ProductosGridCompleto() {
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
-      imagen: 'images/protector-200.jpg'
+      imagen: '/images/protector-200.jpg'
     },
-    // ALMOHADAS
+    // ========== ALMOHADAS ==========
     {
       nombre: 'Almohada Fibra Smart Tech Plus',
       tamaño: '70x50 cm',
@@ -574,7 +592,7 @@ export default function ProductosGridCompleto() {
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'almohada',
-      imagen: 'images/almohada-fibra.jpg'
+      imagen: '/images/almohada-fibra.jpg'
     },
     {
       nombre: 'Almohada Micro Max Premium',
@@ -583,9 +601,9 @@ export default function ProductosGridCompleto() {
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'almohada',
-      imagen: 'images/almohada-micro.jpg'
+      imagen: '/images/almohada-micro.jpg'
     },
-    // SÁBANAS BAMBOO
+    // ========== SÁBANAS BAMBOO ==========
     {
       nombre: 'Sábanas Bamboo 600 Hilos',
       tamaño: '140x190 cm',
@@ -593,7 +611,7 @@ export default function ProductosGridCompleto() {
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
-      imagen: 'images/sabanas-140.jpg'
+      imagen: '/images/sabanas-140.jpg'
     },
     {
       nombre: 'Sábanas Bamboo 600 Hilos',
@@ -602,7 +620,7 @@ export default function ProductosGridCompleto() {
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
-      imagen: 'images/sabanas-160.jpg'
+      imagen: '/images/sabanas-160.jpg'
     },
     {
       nombre: 'Sábanas Bamboo 600 Hilos',
@@ -611,11 +629,10 @@ export default function ProductosGridCompleto() {
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
-      imagen: 'images/sabanas-200.jpg'
+      imagen: '/images/sabanas-200.jpg'
     },
   ]
 
-  // COMBINAR TODOS LOS PRODUCTOS
   const todosLosProductos = [
     ...productosAncla,
     ...productosEquilibrio,
@@ -623,7 +640,6 @@ export default function ProductosGridCompleto() {
     ...accesorios
   ]
 
-  // FILTRAR PRODUCTOS SEGÚN CATEGORÍA
   const productosFiltrados = todosLosProductos.filter(producto => {
     if (categoriaActiva === 'todos') return true
     if (categoriaActiva === 'plaza') return producto.tamaño.includes('1 plaza') && !producto.tamaño.includes('1½')
@@ -634,186 +650,122 @@ export default function ProductosGridCompleto() {
     return true
   })
 
-  // ✅ TODOS LOS PRODUCTOS SIEMPRE VISIBLES - CERO FRICCIÓN
-  const productosAMostrar = productosFiltrados
-
   return (
     <section 
       id="productos" 
-      className="bg-zinc-50 py-12 sm:py-16"
+      className="relative bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950 py-20"
       aria-labelledby="productos-heading"
     >
-      <div className="max-w-7xl mx-auto px-4">
+      {/* Efecto de fondo sutil */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute w-96 h-96 bg-blue-500 rounded-full blur-3xl top-0 right-0"></div>
+        <div className="absolute w-96 h-96 bg-purple-500 rounded-full blur-3xl bottom-0 left-0"></div>
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-4">
         
-        {/* Header */}
-        <header className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 border border-blue-200 rounded-full text-blue-700 text-xs font-semibold mb-3">
-            <span role="img" aria-label="Productos">📦</span>
-            <span>Catálogo Completo PIERO Fábrica</span>
+        {/* Header Refinado */}
+        <header className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-sm font-bold mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            </span>
+            Catálogo Completo PIERO
           </div>
           
           <h2 
             id="productos-heading"
-            className="text-2xl sm:text-3xl md:text-4xl font-black text-zinc-900 mb-3"
+            className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight"
           >
-            Elegí Tu Colchón Perfecto
+            Elegí Tu Colchón
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-purple-500">
+              Directo de Fábrica
+            </span>
           </h2>
-          <p className="text-base sm:text-lg text-zinc-700 max-w-2xl mx-auto">
-            Directo de fábrica con <strong className="text-zinc-900">30-40% descuento</strong><br/>
-            <span className="text-sm text-zinc-600">Todas las medidas + Accesorios premium</span>
+          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+            Todos los modelos con <strong className="text-white">30-40% de descuento</strong> vs. online
           </p>
         </header>
 
-        {/* FILTROS POR CATEGORÍA */}
-        <div className="mb-8 overflow-x-auto pb-2">
-          <div className="flex gap-2 min-w-max justify-center">
-            <button
-              onClick={() => setCategoriaActiva('todos')}
-              className={`
-                px-4 py-2 rounded-lg font-semibold text-sm transition-all
-                ${categoriaActiva === 'todos' 
-                  ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-white text-zinc-700 border border-zinc-300 hover:border-blue-500'
-                }
-              `}
-            >
-              Todos ({todosLosProductos.length})
-            </button>
-            <button
-              onClick={() => setCategoriaActiva('plaza')}
-              className={`
-                px-4 py-2 rounded-lg font-semibold text-sm transition-all
-                ${categoriaActiva === 'plaza' 
-                  ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-white text-zinc-700 border border-zinc-300 hover:border-blue-500'
-                }
-              `}
-            >
-              1 Plaza
-            </button>
-            <button
-              onClick={() => setCategoriaActiva('plaza-media')}
-              className={`
-                px-4 py-2 rounded-lg font-semibold text-sm transition-all
-                ${categoriaActiva === 'plaza-media' 
-                  ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-white text-zinc-700 border border-zinc-300 hover:border-blue-500'
-                }
-              `}
-            >
-              1½ Plaza
-            </button>
-            <button
-              onClick={() => setCategoriaActiva('queen')}
-              className={`
-                px-4 py-2 rounded-lg font-semibold text-sm transition-all
-                ${categoriaActiva === 'queen' 
-                  ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-white text-zinc-700 border border-zinc-300 hover:border-blue-500'
-                }
-              `}
-            >
-              Queen
-            </button>
-            <button
-              onClick={() => setCategoriaActiva('king')}
-              className={`
-                px-4 py-2 rounded-lg font-semibold text-sm transition-all
-                ${categoriaActiva === 'king' 
-                  ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'bg-white text-zinc-700 border border-zinc-300 hover:border-blue-500'
-                }
-              `}
-            >
-              King
-            </button>
-            <button
-              onClick={() => setCategoriaActiva('accesorios')}
-              className={`
-                px-4 py-2 rounded-lg font-semibold text-sm transition-all
-                ${categoriaActiva === 'accesorios' 
-                  ? 'bg-green-600 text-white shadow-lg' 
-                  : 'bg-white text-zinc-700 border border-zinc-300 hover:border-green-500'
-                }
-              `}
-            >
-              💎 Accesorios
-            </button>
+        {/* Filtros Refinados */}
+        <div className="mb-12 overflow-x-auto pb-4 scrollbar-hide">
+          <div className="flex gap-3 min-w-max justify-center px-4">
+            {[
+              { id: 'todos', label: 'Todos', count: todosLosProductos.length },
+              { id: 'plaza', label: '1 Plaza', count: null },
+              { id: 'plaza-media', label: '1½ Plaza', count: null },
+              { id: 'queen', label: 'Queen', count: null },
+              { id: 'king', label: 'King', count: null },
+              { id: 'accesorios', label: '💎 Accesorios', count: null },
+            ].map((filtro) => (
+              <button
+                key={filtro.id}
+                onClick={() => setCategoriaActiva(filtro.id as any)}
+                className={`
+                  px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300
+                  ${categoriaActiva === filtro.id
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/30 scale-105' 
+                    : 'bg-zinc-800/50 text-zinc-400 border border-zinc-700/50 hover:border-blue-500/50 hover:text-white'
+                  }
+                `}
+              >
+                {filtro.label} {filtro.count && `(${filtro.count})`}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* CONTADOR DE PRODUCTOS FILTRADOS */}
-        <div className="text-center mb-6">
-          <p className="text-sm text-zinc-600">
-            Mostrando <strong className="text-zinc-900">{productosAMostrar.length}</strong> de <strong className="text-zinc-900">{productosFiltrados.length}</strong> productos
+        {/* Contador de Productos */}
+        <div className="text-center mb-8">
+          <p className="text-sm text-zinc-500">
+            Mostrando <strong className="text-white">{productosFiltrados.length}</strong> productos
           </p>
         </div>
 
-        {/* Grid - Mobile-first optimizado */}
+        {/* Grid Principal */}
         <div 
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8"
+          className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mb-16"
           role="list"
         >
-          {productosAMostrar.map((producto, index) => (
+          {productosFiltrados.map((producto, index) => (
             <div key={`${producto.nombre}-${producto.tamaño}-${index}`} role="listitem">
               <ProductCard {...producto} />
             </div>
           ))}
         </div>
 
-        {/* INFO BOX: Accesorios complementan rentabilidad */}
-        {categoriaActiva === 'accesorios' && (
-          <div className="mb-8 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6">
-            <div className="flex items-start gap-4">
-              <div className="text-4xl">💎</div>
-              <div>
-                <h3 className="text-xl font-bold text-green-900 mb-2">
-                  Accesorios: La rentabilidad oculta
-                </h3>
-                <p className="text-green-800 mb-3">
-                  Los accesorios tienen <strong>márgenes del 20-26%</strong> y se venden en el 70% de las compras de colchones.
-                </p>
-                <ul className="space-y-1 text-sm text-green-700">
-                  <li>✅ Protector: Argumento "Protege tu inversión"</li>
-                  <li>✅ Almohadas: "Están vencidas después de 2 años"</li>
-                  <li>✅ Sábanas Bamboo: Premium 600 hilos</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* CTA Final - Thumb-friendly */}
-        <div className="mt-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 sm:p-8 text-center shadow-xl">
-          <div className="max-w-2xl mx-auto space-y-4">
-            <h3 className="text-xl sm:text-2xl font-bold text-white">
-              ¿No encontrás tu modelo o medida?
-            </h3>
-            <p className="text-sm sm:text-base text-blue-100">
-              Consultanos por cualquier producto PIERO en cualquier medida al precio de fábrica
-            </p>
-            <a
-              href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20por%20productos%20Piero%20Fábrica"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                inline-flex items-center justify-center gap-2
-                min-h-[56px] px-8 py-4
-                bg-white hover:bg-zinc-50 active:bg-zinc-100
-                text-blue-700 font-bold text-base
-                rounded-xl
-                transition-colors duration-200
-                focus:outline-none focus:ring-4 focus:ring-white/50
-                w-full sm:w-auto
-              "
-              aria-label="Consultar por WhatsApp"
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-              </svg>
-              <span>Consultar Ahora</span>
-            </a>
-          </div>
+        {/* CTA Final Refinado */}
+        <div className="bg-gradient-to-br from-blue-950/50 to-purple-950/50 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-8 md:p-12 text-center">
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            ¿No encontrás tu modelo?
+          </h3>
+          <p className="text-lg text-zinc-300 mb-8 max-w-2xl mx-auto">
+            Consultanos por cualquier producto PIERO en cualquier medida al precio de fábrica
+          </p>
+          <a
+            href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20por%20productos%20Piero%20Fábrica"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              inline-flex items-center justify-center gap-3
+              min-h-[56px] px-10 py-4
+              bg-gradient-to-r from-green-600 to-green-700
+              hover:from-green-700 hover:to-green-800
+              text-white font-bold text-lg
+              rounded-xl
+              transition-all duration-300
+              shadow-2xl shadow-green-500/40 hover:shadow-green-500/60
+              hover:scale-105
+              focus:outline-none focus:ring-4 focus:ring-green-500/50
+            "
+          >
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            <span>Consultar Ahora</span>
+          </a>
         </div>
 
       </div>

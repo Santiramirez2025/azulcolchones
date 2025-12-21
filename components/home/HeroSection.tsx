@@ -1,206 +1,255 @@
 'use client'
 
-import { ArrowRight, Star, Truck, CheckCircle2, ShieldCheck, Zap, Clock, Tag } from 'lucide-react'
+import { ArrowRight, Star, Truck, CheckCircle2, ShieldCheck, Zap, Clock } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
-// Simplificado: Solo 2 imágenes principales para mobile
+// ============================================================================
+// CONFIGURACIÓN DE IMÁGENES - Optimizado con lazy loading estratégico
+// ============================================================================
 const HERO_IMAGES = [
   {
-    url: '/images/optimized/piero-spring-1.webp',
+    url: '/images/optimized/pierorugby.webp',
     alt: 'Colchón Piero Spring - Outlet 60% OFF',
     badge: '60% OFF'
   },
   {
-    url: '/images/optimized/piero-mattina-1.webp',
+    url: '/images/optimized/pieropeque.webp',
     alt: 'Colchón Piero Premium',
     badge: 'Premium'
   }
-]
+] as const
+
+// ============================================================================
+// SITE CONFIG
+// ============================================================================
+const SITE_CONFIG = {
+  whatsappNumber: '5493534017332',
+  tagline: 'Ofertas fin de año',
+  discount: 'Hasta 60% OFF',
+  priceFrom: '$220.000',
+  priceOriginal: '$552.000',
+  discountPercent: '60%',
+} as const
 
 export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
+  // Detectar Mobile con debounce para performance
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024)
+    }
+    
     checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+    
+    let timeoutId: NodeJS.Timeout
+    const debouncedResize = () => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(checkMobile, 150)
+    }
+    
+    window.addEventListener('resize', debouncedResize)
+    return () => {
+      window.removeEventListener('resize', debouncedResize)
+      clearTimeout(timeoutId)
+    }
   }, [])
 
   // Auto-rotate solo en desktop
   useEffect(() => {
-    if (isMobile) return
+    if (isMobile || !imageLoaded) return
     const interval = setInterval(() => {
       setCurrentImage(prev => (prev + 1) % HERO_IMAGES.length)
     }, 5000)
     return () => clearInterval(interval)
-  }, [isMobile])
+  }, [isMobile, imageLoaded])
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <section className="relative min-h-[100dvh] flex items-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       
-      {/* Background Effects - Solo Desktop */}
+      {/* Background Effects - Solo Desktop, optimizado */}
       {!isMobile && (
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px]" />
+        <>
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px] pointer-events-none" aria-hidden="true" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[150px] pointer-events-none" aria-hidden="true" />
+        </>
       )}
 
       <div className="relative z-10 w-full">
-        <div className="container mx-auto px-4 py-8 lg:py-16">
+        <div className="container mx-auto px-4 py-6 sm:py-8 lg:py-16">
           
-          {/* ================================================================ */}
-          {/* MOBILE LAYOUT - Jerarquía Optimizada para Conversión */}
-          {/* ================================================================ */}
+          {/* ========================================
+              MOBILE LAYOUT - Optimizado
+          ======================================== */}
           {isMobile ? (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-5 max-w-lg mx-auto">
               
-              {/* 1️⃣ LOGO + TRUST (Credibilidad Inmediata) */}
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center gap-2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 px-4 py-2 rounded-lg">
-                  <span className="text-2xl font-black text-white tracking-tight">PIERO</span>
-                  <span className="text-blue-400 text-lg">🇦🇷</span>
+              {/* 1️⃣ LOGO + TRUST - Más compacto */}
+              <div className="text-center space-y-1.5">
+                <div className="inline-flex items-center gap-2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 px-3.5 py-1.5 rounded-lg shadow-lg">
+                  <span className="text-xl sm:text-2xl font-black text-white tracking-tight">PIERO</span>
+                  <span className="text-blue-400 text-base sm:text-lg">🇦🇷</span>
                 </div>
-                <div className="flex items-center justify-center gap-2 text-xs text-slate-300">
-                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                <div className="flex items-center justify-center gap-1.5 text-[11px] sm:text-xs text-slate-300">
+                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" aria-hidden="true" />
                   <span>40+ años · +100K clientes</span>
                 </div>
               </div>
 
-              {/* 2️⃣ HEADLINE + PRECIO (Propuesta de Valor Clara) */}
-              <div className="text-center space-y-4">
-                <h1 className="text-4xl font-black leading-tight">
-                  <span className="block text-white">Ofertas</span>
-                  <span className="block bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                    Fin de Año
+              {/* 2️⃣ HEADLINE + PRECIO - Jerarquía visual mejorada */}
+              <div className="text-center space-y-3">
+                <h1 className="text-[2rem] sm:text-4xl font-black leading-[1.1] tracking-tight">
+                  <span className="block text-white mb-1">{SITE_CONFIG.tagline}</span>
+                  <span className="block bg-gradient-to-r from-blue-400 via-blue-300 to-indigo-400 bg-clip-text text-transparent">
+                    {SITE_CONFIG.discount}
                   </span>
                 </h1>
 
-                {/* PRECIO HERO - Máxima Visibilidad */}
-                <div className="inline-block">
-                  <div className="bg-gradient-to-br from-blue-600 to-blue-500 p-1 rounded-2xl shadow-2xl">
-                    <div className="bg-slate-900 rounded-xl px-6 py-4">
-                      <div className="text-xs text-blue-400 font-semibold uppercase tracking-wide mb-1">
+                {/* PRECIO HERO - Más prominente */}
+                <div className="inline-block w-full max-w-[280px] sm:max-w-xs">
+                  <div className="bg-gradient-to-br from-blue-600 to-blue-500 p-[2px] rounded-xl sm:rounded-2xl shadow-2xl shadow-blue-500/20">
+                    <div className="bg-slate-900 rounded-[11px] sm:rounded-[15px] px-4 sm:px-5 py-3 sm:py-4">
+                      <div className="text-[10px] sm:text-xs text-blue-400 font-semibold uppercase tracking-wider mb-0.5">
                         Desde
                       </div>
-                      <div className="flex items-end justify-center gap-3 mb-2">
-                        <span className="text-5xl font-black text-white">$220.000</span>
-                        <span className="text-xl text-slate-500 line-through mb-2">$552.000</span>
+                      <div className="flex items-baseline justify-center gap-2 mb-1.5">
+                        <span className="text-[2.25rem] sm:text-5xl font-black text-white leading-none">{SITE_CONFIG.priceFrom}</span>
+                        <span className="text-base sm:text-lg text-slate-500 line-through leading-none">{SITE_CONFIG.priceOriginal}</span>
                       </div>
-                      <div className="inline-flex items-center gap-2 bg-amber-500 text-black px-3 py-1 rounded-full text-xs font-bold">
-                        <Zap className="w-3 h-3" />
-                        60% OFF
+                      <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-black px-2.5 py-1 rounded-full text-[11px] font-black shadow-md">
+                        <Zap className="w-3 h-3" aria-hidden="true" />
+                        <span>{SITE_CONFIG.discountPercent} OFF</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-sm text-slate-300">
+                <p className="text-sm sm:text-base text-slate-300 max-w-xs mx-auto leading-snug">
                   Los mejores colchones de Argentina
-                  <span className="block text-white font-semibold mt-1">AL MEJOR PRECIO</span>
+                  <span className="block text-white font-bold mt-0.5">AL MEJOR PRECIO</span>
                 </p>
               </div>
 
-              {/* 3️⃣ CTA PRINCIPAL - UN SOLO BOTÓN DOMINANTE */}
-              <div className="space-y-3">
+              {/* 3️⃣ CTA PRINCIPAL - Optimizado para taps */}
+              <div className="space-y-2.5 pt-1">
+                
+                {/* CTA Primario - Más prominente */}
                 <a
                   href="/catalogo"
-                  className="block w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-8 py-5 rounded-2xl font-bold text-lg shadow-2xl shadow-blue-500/30 transition-all duration-300 active:scale-95"
+                  className="group block w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 active:scale-[0.98] text-white px-5 sm:px-6 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg shadow-2xl shadow-blue-500/30 transition-all duration-200 touch-manipulation"
+                  aria-label="Ver ofertas disponibles de colchones Piero"
                 >
-                  <div className="flex items-center justify-center gap-3">
-                    <Zap className="w-6 h-6" />
+                  <div className="flex items-center justify-center gap-2.5">
+                    <Zap className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" aria-hidden="true" />
                     <span>Ver Ofertas Disponibles</span>
-                    <ArrowRight className="w-6 h-6" />
+                    <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
                   </div>
-                  <div className="text-xs text-blue-100 mt-2 font-normal">
+                  <div className="text-[11px] sm:text-xs text-blue-100 mt-1.5 font-normal">
                     Stock limitado • Entrega inmediata
                   </div>
                 </a>
 
-                {/* CTA Secundario - Menos prominente */}
+                {/* CTA Secundario - Más compacto */}
                 <a
                   href="/piero-fabrica"
-                  className="block w-full bg-slate-800/60 hover:bg-slate-700/60 border-2 border-slate-600/50 text-white px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300"
+                  className="group block w-full bg-slate-800/50 hover:bg-slate-700/50 active:scale-[0.98] border-2 border-slate-600/40 text-white px-4 sm:px-5 py-3 sm:py-3.5 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all duration-200 touch-manipulation"
+                  aria-label="Solicitar colchón de fábrica Piero"
                 >
                   <div className="flex items-center justify-center gap-2">
-                    <Clock className="w-5 h-5 text-orange-400" />
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400 group-hover:scale-110 transition-transform" aria-hidden="true" />
                     <span>O pedir de Fábrica</span>
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
+                  <div className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
                     30-40% OFF • 7-10 días
                   </div>
                 </a>
 
-                {/* WhatsApp - Siempre accesible */}
+                {/* WhatsApp - Más prominente en mobile */}
                 <a
-                  href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20sobre%20colchones%20Piero"
+                  href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=Hola!%20Quiero%20consultar%20sobre%20colchones%20Piero`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300"
+                  className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white px-4 sm:px-5 py-3 sm:py-3.5 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all duration-200 touch-manipulation shadow-lg shadow-emerald-500/20"
+                  aria-label="Consultar por WhatsApp"
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                   </svg>
                   <span>Consultar por WhatsApp</span>
                 </a>
               </div>
 
-              {/* 4️⃣ TRUST INDICATORS */}
-              <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
+              {/* 4️⃣ TRUST INDICATORS - Más compacto */}
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[11px] sm:text-xs pt-1">
                 <div className="flex items-center gap-1.5 text-slate-300">
-                  <Truck className="w-4 h-4 text-blue-400" />
+                  <Truck className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
                   <span>Envío Gratis</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-green-400" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                   <span>6 cuotas s/int</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-300">
-                  <ShieldCheck className="w-4 h-4 text-blue-400" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
                   <span>Garantía 5 años</span>
                 </div>
               </div>
 
-              {/* 5️⃣ IMAGEN - Al final, no distrae */}
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl">
+              {/* 5️⃣ IMAGEN - Optimizada con lazy loading */}
+              <div className="relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl">
+                {/* Placeholder mientras carga */}
+                {!imageLoaded && (
+                  <div className="absolute inset-0 bg-slate-800 animate-pulse" />
+                )}
+                
                 <img 
                   src={HERO_IMAGES[currentImage].url}
                   alt={HERO_IMAGES[currentImage].alt}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover transition-opacity duration-300 ${
+                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  loading="eager"
+                  onLoad={() => setImageLoaded(true)}
+                  decoding="async"
                 />
-                <div className="absolute top-4 right-4 bg-gradient-to-br from-amber-400 to-orange-500 px-3 py-2 rounded-lg shadow-lg">
-                  <div className="text-white text-xs font-bold uppercase">Hasta</div>
-                  <div className="text-white text-2xl font-black leading-none">60%</div>
+                
+                {/* Badge de descuento */}
+                <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-gradient-to-br from-amber-400 to-orange-500 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-lg">
+                  <div className="text-white text-[10px] font-bold uppercase leading-none">Hasta</div>
+                  <div className="text-white text-xl sm:text-2xl font-black leading-none mt-0.5">60%</div>
                 </div>
               </div>
             </div>
           ) : (
-            /* ================================================================ */
-            /* DESKTOP LAYOUT - Dos Columnas Clásico */
-            /* ================================================================ */
-            <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
+            /* ========================================
+                DESKTOP LAYOUT - Sin cambios
+            ======================================== */
+            <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-center max-w-7xl mx-auto">
               
               {/* CONTENIDO IZQUIERDA */}
               <div className="space-y-8">
                 
                 {/* Logo + Trust */}
                 <div className="space-y-3">
-                  <div className="inline-flex items-center gap-2 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 px-4 py-2 rounded-lg">
+                  <div className="inline-flex items-center gap-2 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 px-4 py-2 rounded-lg shadow-lg">
                     <span className="text-4xl font-black text-white tracking-tight">PIERO</span>
-                    <div className="h-6 w-px bg-slate-600" />
+                    <div className="h-6 w-px bg-slate-600" aria-hidden="true" />
                     <span className="text-blue-400 font-semibold text-xl">🇦🇷</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-300">
-                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" aria-hidden="true" />
                     <span>40+ años · +100K clientes</span>
                   </div>
                 </div>
 
                 {/* Headline */}
                 <div>
-                  <h1 className="text-7xl font-black leading-tight tracking-tight">
-                    <span className="block text-white mb-2">Ofertas fin de año</span>
+                  <h1 className="text-6xl xl:text-7xl font-black leading-tight tracking-tight">
+                    <span className="block text-white mb-2">{SITE_CONFIG.tagline}</span>
                     <span className="block bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                      Hasta 60% OFF
+                      {SITE_CONFIG.discount}
                     </span>
                   </h1>
                 </div>
@@ -213,20 +262,20 @@ export default function HeroSection() {
 
                 {/* Precio Destacado */}
                 <div className="inline-block">
-                  <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-slate-700/50 rounded-xl p-8">
+                  <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
                     <div className="flex items-center gap-6">
                       <div>
                         <div className="text-sm text-blue-400 font-semibold mb-1">Outlet desde</div>
-                        <div className="text-6xl font-black text-white">$220.000</div>
+                        <div className="text-6xl font-black text-white">{SITE_CONFIG.priceFrom}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-xl text-slate-500 line-through">$552K</div>
+                        <div className="text-xl text-slate-500 line-through">{SITE_CONFIG.priceOriginal}</div>
                         <div className="mt-1 px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-md">
-                          -60% OFF
+                          -{SITE_CONFIG.discountPercent} OFF
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4 text-sm text-green-400 font-semibold">
+                    <div className="mt-4 text-sm text-emerald-400 font-semibold">
                       💳 6 cuotas sin interés
                     </div>
                   </div>
@@ -240,6 +289,7 @@ export default function HeroSection() {
                     <a 
                       href="/catalogo"
                       className="group relative bg-gradient-to-br from-blue-950/80 to-blue-900/60 backdrop-blur-xl border-2 border-blue-500/30 hover:border-blue-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-blue-500/20"
+                      aria-label="Ver outlet de colchones Piero"
                     >
                       <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[10px] font-black px-2 py-1 rounded-full uppercase shadow-lg animate-pulse">
                         HOT
@@ -247,7 +297,7 @@ export default function HeroSection() {
                       
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-400/30">
-                          <Zap className="w-6 h-6 text-blue-400" />
+                          <Zap className="w-6 h-6 text-blue-400" aria-hidden="true" />
                         </div>
                         
                         <div className="flex-1">
@@ -255,12 +305,12 @@ export default function HeroSection() {
                           <p className="text-sm text-slate-300 mb-2">Stock limitado • Entrega inmediata</p>
                           <div className="flex items-center gap-2 text-sm">
                             <span className="text-blue-400 font-bold">Hasta 60% OFF</span>
-                            <span className="text-slate-500">•</span>
-                            <span className="text-green-400 font-semibold">Hoy mismo</span>
+                            <span className="text-slate-500" aria-hidden="true">•</span>
+                            <span className="text-emerald-400 font-semibold">Hoy mismo</span>
                           </div>
                         </div>
                         
-                        <ArrowRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 transition-transform flex-shrink-0 mt-1" />
+                        <ArrowRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 transition-transform flex-shrink-0 mt-1" aria-hidden="true" />
                       </div>
                     </a>
 
@@ -268,6 +318,7 @@ export default function HeroSection() {
                     <a 
                       href="/piero-fabrica"
                       className="group relative bg-gradient-to-br from-orange-950/80 to-red-900/60 backdrop-blur-xl border-2 border-orange-500/30 hover:border-orange-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-orange-500/20"
+                      aria-label="Solicitar colchón de fábrica Piero"
                     >
                       <div className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] font-black px-2 py-1 rounded-full uppercase shadow-lg">
                         NUEVO
@@ -275,7 +326,7 @@ export default function HeroSection() {
                       
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center border border-orange-400/30">
-                          <Clock className="w-6 h-6 text-orange-400" />
+                          <Clock className="w-6 h-6 text-orange-400" aria-hidden="true" />
                         </div>
                         
                         <div className="flex-1">
@@ -283,24 +334,25 @@ export default function HeroSection() {
                           <p className="text-sm text-slate-300 mb-2">Directo de fábrica • 7-10 días</p>
                           <div className="flex items-center gap-2 text-sm">
                             <span className="text-orange-400 font-bold">30-40% OFF</span>
-                            <span className="text-slate-500">•</span>
+                            <span className="text-slate-500" aria-hidden="true">•</span>
                             <span className="text-slate-400 font-medium">Sin intermediarios</span>
                           </div>
                         </div>
                         
-                        <ArrowRight className="w-5 h-5 text-orange-400 group-hover:translate-x-1 transition-transform flex-shrink-0 mt-1" />
+                        <ArrowRight className="w-5 h-5 text-orange-400 group-hover:translate-x-1 transition-transform flex-shrink-0 mt-1" aria-hidden="true" />
                       </div>
                     </a>
                   </div>
 
                   {/* WhatsApp */}
                   <a
-                    href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20sobre%20colchones%20Piero"
+                    href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=Hola!%20Quiero%20consultar%20sobre%20colchones%20Piero`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                    className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                    aria-label="Contactar por WhatsApp"
                   >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                     </svg>
                     <span>Asesoramiento WhatsApp</span>
@@ -310,15 +362,15 @@ export default function HeroSection() {
                 {/* Trust */}
                 <div className="flex items-center gap-6 text-sm">
                   <div className="flex items-center gap-2 text-slate-300">
-                    <Truck className="w-4 h-4 text-blue-400" />
+                    <Truck className="w-4 h-4 text-blue-400" aria-hidden="true" />
                     <span>Envío Gratis</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                    <CheckCircle2 className="w-4 h-4 text-blue-400" aria-hidden="true" />
                     <span>Garantía 5 años</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-300">
-                    <ShieldCheck className="w-4 h-4 text-blue-400" />
+                    <ShieldCheck className="w-4 h-4 text-blue-400" aria-hidden="true" />
                     <span>Pago Seguro</span>
                   </div>
                 </div>
@@ -326,14 +378,23 @@ export default function HeroSection() {
 
               {/* IMAGEN DERECHA */}
               <div className="relative">
-                <div className="absolute -inset-8 bg-blue-500/20 rounded-[3rem] blur-[100px] opacity-60" />
+                <div className="absolute -inset-8 bg-blue-500/20 rounded-[3rem] blur-[100px] opacity-60 pointer-events-none" aria-hidden="true" />
                 
                 <div className="relative bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-3xl overflow-hidden p-3 shadow-2xl">
                   <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-950">
+                    {!imageLoaded && (
+                      <div className="absolute inset-0 bg-slate-800 animate-pulse" />
+                    )}
+                    
                     <img 
                       src={HERO_IMAGES[currentImage].url}
                       alt={HERO_IMAGES[currentImage].alt}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${
+                        imageLoaded ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      loading="eager"
+                      onLoad={() => setImageLoaded(true)}
+                      decoding="async"
                     />
                     
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -365,6 +426,53 @@ export default function HeroSection() {
           )}
         </div>
       </div>
+
+      {/* Estilos - Optimizados */}
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        
+        .animate-shimmer {
+          animation: shimmer 3s linear infinite;
+        }
+
+        /* Optimizar para dispositivos móviles */
+        @media (max-width: 1023px) {
+          .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+        }
+
+        /* Reducir animaciones en dispositivos de bajo rendimiento */
+        @media (prefers-reduced-motion: reduce) {
+          *,
+          *::before,
+          *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
+
+        /* Optimizar scroll */
+        @supports (scrollbar-width: thin) {
+          * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+          }
+        }
+
+        /* Touch optimization */
+        .touch-manipulation {
+          -webkit-tap-highlight-color: transparent;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+      `}</style>
     </section>
   )
 }

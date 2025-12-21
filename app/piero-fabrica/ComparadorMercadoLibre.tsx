@@ -209,7 +209,7 @@ export default function ComparadorMercadoLibre() {
               </div>
             </div>
 
-            {/* Columna DERECHA: Azul Fábrica */}
+            {/* Columna DERECHA: Azul */}
             <div className="relative">
               <div className="bg-gradient-to-br from-green-950/40 to-blue-950/40 backdrop-blur-sm border-2 border-green-500/50 rounded-2xl p-6 md:p-8 shadow-2xl shadow-green-500/20">
                 

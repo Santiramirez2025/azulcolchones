@@ -186,7 +186,7 @@ function HeroFabrica() {
               {/* Azul Fábrica */}
               <div className="bg-green-950/30 border-2 border-green-500/50 rounded-xl p-5 relative">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-green-500 text-white text-xs font-bold rounded-full whitespace-nowrap">
-                  ✅ AZUL FÁBRICA
+                  ✅ AZUL
                 </div>
                 
                 <div className="flex items-center justify-between mb-3 mt-2">
