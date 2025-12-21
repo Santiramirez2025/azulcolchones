@@ -106,6 +106,20 @@ export default function ProductClient({
     return Array.isArray(product.variants) ? product.variants : []
   }, [product.variants])
   
+  // ✅ FIX: Normalizar reviews para convertir Date a string y null a undefined
+  const normalizedReviews = useMemo(() => {
+    return reviews.map(review => ({
+      ...review,
+      createdAt: review.createdAt instanceof Date 
+        ? review.createdAt.toISOString() 
+        : review.createdAt,
+      updatedAt: review.updatedAt instanceof Date 
+        ? review.updatedAt.toISOString() 
+        : review.updatedAt,
+      title: review.title ?? undefined, // Normalizar null a undefined
+    }))
+  }, [reviews])
+  
   // ============================================================================
   // STATE
   // ============================================================================
@@ -135,8 +149,8 @@ export default function ProductClient({
   // ============================================================================
   
   const averageRatings = useMemo(
-    () => calculateRatings(reviews, product.rating), 
-    [reviews, product.rating]
+    () => calculateRatings(normalizedReviews, product.rating), 
+    [normalizedReviews, product.rating]
   )
   
   const faqs = useMemo(() => generateFaqs(product), [product])
@@ -169,10 +183,30 @@ export default function ProductClient({
     ? images[imageIndex] 
     : product.images[0] || PLACEHOLDER_IMAGE
 
-  const enhancedProduct = useMemo(() => ({
-    ...product,
-    features: features
-  }), [product, features])
+  // ✅ FIX: Enhanced product con normalización de tipos null a undefined
+  const enhancedProduct = useMemo(() => {
+    const base: any = {
+      ...product,
+      features: features,
+    }
+    
+    // Normalizar null a undefined solo para propiedades que existen
+    const nullableProps = [
+      'firmness', 'comfort', 'support', 'breathability', 'durability',
+      'originalPrice', 'compareAtPrice', 'discount', 'warranty', 
+      'trialNights', 'sku', 'brand', 'material', 'height', 'weight',
+      'certifications', 'careInstructions', 'shippingInfo', 'returnPolicy',
+      'seoTitle', 'seoDescription', 'seoKeywords'
+    ]
+    
+    nullableProps.forEach(prop => {
+      if (prop in product) {
+        base[prop] = (product as any)[prop] ?? undefined
+      }
+    })
+    
+    return base
+  }, [product, features])
 
   // ============================================================================
   // HANDLERS
@@ -648,7 +682,7 @@ export default function ProductClient({
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             product={enhancedProduct}
-            reviews={reviews}
+            reviews={normalizedReviews}
             averageRatings={averageRatings}
             faqs={faqs}
             expandedFaq={expandedFaq}
