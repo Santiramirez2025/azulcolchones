@@ -571,6 +571,75 @@ export default function RootLayout({
           media="(min-width: 768px)"
         />
         
+        {/* ⚡ DYNAMIC FAVICON & TITLE - Dual Strategy Animation */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+(function() {
+  let currentIcon = 0;
+  const icons = [
+    { emoji: '🔵', title: 'Azul Colchones Villa María' },
+    { emoji: '⚡', title: 'Outlet 60% OFF | Azul Colchones' },
+    { emoji: '🏭', title: 'Piero Fábrica 40% | Azul Colchones' },
+    { emoji: '💙', title: 'Envío Gratis | Azul Colchones' }
+  ];
+  
+  function updateFavicon() {
+    const icon = icons[currentIcon];
+    
+    // Update title
+    document.title = icon.title;
+    
+    // Create canvas for emoji favicon
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, 64, 64);
+    
+    // Draw emoji
+    ctx.font = '52px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(icon.emoji, 32, 34);
+    
+    // Update or create favicon link
+    let link = document.querySelector("link[rel*='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = canvas.toDataURL('image/png');
+    
+    // Next icon
+    currentIcon = (currentIcon + 1) % icons.length;
+  }
+  
+  // Initial load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateFavicon);
+  } else {
+    updateFavicon();
+  }
+  
+  // Rotate every 3 seconds (sutil, no invasivo)
+  setInterval(updateFavicon, 3000);
+  
+  // Reset when tab becomes visible
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+      currentIcon = 0;
+      updateFavicon();
+    }
+  });
+})();
+            `
+          }}
+        />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -365,7 +365,7 @@ export default function ProductosGridOptimizado() {
     // ========== 1½ PLAZA ==========
     {
       nombre: 'Meditare EP',
-      tamaño: '190x140 (1½ plaza)',
+      tamaño: '190x140 (2 plazas)',
       precioFabrica: 469000,
       precioOnline: 506000,
       ahorro: 37000,
@@ -376,7 +376,7 @@ export default function ProductosGridOptimizado() {
     },
     {
       nombre: 'Nirvana',
-      tamaño: '190x140 (1½ plaza)',
+      tamaño: '190x140 (2 plazas)',
       precioFabrica: 799000,
       precioOnline: 877628,
       ahorro: 78628,
@@ -395,7 +395,7 @@ export default function ProductosGridOptimizado() {
       ahorroPorc: 13,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: '/images/nirvana-160.jpg'
+      imagen: '/images/nirvana-1600.jpg'
     },
     // ========== KING ==========
     {
@@ -407,7 +407,7 @@ export default function ProductosGridOptimizado() {
       ahorroPorc: 5,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: '/images/nirvana-200.jpg'
+      imagen: '/images/nirvana-2000.jpg'
     },
   ]
 
@@ -438,7 +438,7 @@ export default function ProductosGridOptimizado() {
     // ========== 1½ PLAZA ==========
     {
       nombre: 'Sonno EP',
-      tamaño: '190x140 (1½ plaza)',
+      tamaño: '190x140 (2 plazas)',
       precioFabrica: 599000,
       precioOnline: 652703,
       ahorro: 53703,
@@ -450,7 +450,7 @@ export default function ProductosGridOptimizado() {
     },
     {
       nombre: 'Gravita',
-      tamaño: '190x140 (1½ plaza)',
+      tamaño: '190x140 (2 plazas)',
       precioFabrica: 899000,
       precioOnline: 942966,
       ahorro: 43966,
@@ -461,7 +461,7 @@ export default function ProductosGridOptimizado() {
     },
     {
       nombre: 'Regno Pillow Top',
-      tamaño: '190x140 (1½ plaza)',
+      tamaño: '190x140 (2 plazas)',
       precioFabrica: 799000,
       precioOnline: 871000,
       ahorro: 72000,
@@ -491,7 +491,7 @@ export default function ProductosGridOptimizado() {
       ahorroPorc: 5,
       categoria: 'equilibrio',
       stock: 'disponible',
-      imagen: '/images/gravita-160.jpg'
+      imagen: '/images/gravita-1600.jpg'
     },
   ]
 
@@ -499,7 +499,7 @@ export default function ProductosGridOptimizado() {
     // ========== 1½ PLAZA ==========
     {
       nombre: 'Montreaux',
-      tamaño: '190x140 (1½ plaza)',
+      tamaño: '190x140 (2 plazas)',
       precioFabrica: 1399000,
       precioOnline: 1547475,
       ahorro: 148475,
@@ -510,18 +510,18 @@ export default function ProductosGridOptimizado() {
     },
     {
       nombre: 'Montreaux Pillow Top',
-      tamaño: '190x140 (1½ plaza)',
+      tamaño: '190x140 (2 plazas)',
       precioFabrica: 1599000,
       precioOnline: 1747558,
       ahorro: 148558,
       ahorroPorc: 9,
       categoria: 'premium',
       stock: 'consultar',
-      imagen: '/images/montreaux-pillow-140.jpg'
+      imagen: '/images/montreaux-pillow-1400.jpg'
     },
     {
       nombre: 'Dream Fit Pocket',
-      tamaño: '190x140 (1½ plaza)',
+      tamaño: '190x140 (2 plazas)',
       precioFabrica: 1699000,
       precioOnline: 1747558,
       ahorro: 48558,
@@ -540,7 +540,7 @@ export default function ProductosGridOptimizado() {
       ahorroPorc: 7,
       categoria: 'premium',
       stock: 'consultar',
-      imagen: '/images/montreaux-pillow-160.jpg'
+      imagen: '/images/montreaux-pillow-1600.jpg'
     },
     {
       nombre: 'Dream Fit Pocket Queen',
@@ -551,7 +551,7 @@ export default function ProductosGridOptimizado() {
       ahorroPorc: 6,
       categoria: 'premium',
       stock: 'consultar',
-      imagen: '/images/dreamfit-pocket-160.jpg'
+      imagen: '/images/dreamfit-pocket-140.jpg'
     },
   ]
 
