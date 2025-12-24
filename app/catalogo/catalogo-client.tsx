@@ -32,6 +32,67 @@ const CATEGORY_CONFIG = [
 ] as const
 
 // ============================================================================
+// ✅ FUNCIÓN DE ORDENAMIENTO INTELIGENTE - MEJORES PRODUCTOS PRIMERO
+// ============================================================================
+
+function sortProducts(products: NormalizedProduct[], sortBy: string): NormalizedProduct[] {
+  return [...products].sort((a, b) => {
+    switch (sortBy) {
+      case 'price-asc': 
+        return a.price - b.price
+      
+      case 'price-desc': 
+        return b.price - a.price
+      
+      case 'rating': 
+        return (b.rating || 0) - (a.rating || 0)
+      
+      case 'newest':
+        // Nuevos primero
+        if (a.isNew && !b.isNew) return -1
+        if (!a.isNew && b.isNew) return 1
+        return 0
+      
+      case 'discount':
+        // ✅ NUEVO: Ordenar por descuento
+        const discountAsc = a.discount || 0
+        const discountDesc = b.discount || 0
+        if (discountDesc !== discountAsc) return discountDesc - discountAsc
+        // Si tienen mismo descuento, ordenar por rating
+        return (b.rating || 0) - (a.rating || 0)
+      
+      case 'featured':
+      default:
+        // ✅ ALGORITMO MEJORADO: MEJORES PRODUCTOS PRIMERO
+        
+        // 1. Best Sellers siempre primero
+        if (a.isBestSeller && !b.isBestSeller) return -1
+        if (!a.isBestSeller && b.isBestSeller) return 1
+        
+        // 2. Productos Nuevos segundo
+        if (a.isNew && !b.isNew) return -1
+        if (!a.isNew && b.isNew) return 1
+        
+        // 3. Por rating (productos mejor calificados)
+        const ratingDiff = (b.rating || 0) - (a.rating || 0)
+        if (Math.abs(ratingDiff) > 0.1) return ratingDiff
+        
+        // 4. Por número de reviews (más reviews = más confiables)
+        const reviewDiff = (b.reviewCount || 0) - (a.reviewCount || 0)
+        if (reviewDiff !== 0) return reviewDiff
+        
+        // 5. Por descuento (mayor descuento)
+        const featDiscountA = a.discount || 0
+        const featDiscountB = b.discount || 0
+        if (featDiscountB !== featDiscountA) return featDiscountB - featDiscountA
+        
+        // 6. Finalmente por precio (más caros primero, asumiendo mejor calidad)
+        return b.price - a.price
+    }
+  })
+}
+
+// ============================================================================
 // MAIN COMPONENT - ✅ OPTIMIZADO MOBILE-FIRST
 // ============================================================================
 
@@ -60,7 +121,7 @@ export default function CatalogoClient({
   // ============================================================================
   
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortBy, setSortBy] = useState('featured')
+  const [sortBy, setSortBy] = useState('featured') // ✅ Por defecto: mejores productos
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [activeCategory, setActiveCategory] = useState('todos')
@@ -152,7 +213,7 @@ export default function CatalogoClient({
   }, [selectedCategories])
 
   // ============================================================================
-  // LÓGICA DE FILTRADO Y ORDENAMIENTO
+  // ✅ LÓGICA DE FILTRADO Y ORDENAMIENTO MEJORADA
   // ============================================================================
   
   const filteredProducts = useMemo(() => {
@@ -161,6 +222,7 @@ export default function CatalogoClient({
     const minPricePesos = priceRange[0] / 100
     const maxPricePesos = priceRange[1] / 100
     
+    // PASO 1: FILTRAR
     const filtered = productsToFilter.filter(product => {
       if (product.isActive === false) return false
       
@@ -197,25 +259,9 @@ export default function CatalogoClient({
       return true
     })
     
-    // Ordenamiento
-    return [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case 'price-asc': return a.price - b.price
-        case 'price-desc': return b.price - a.price
-        case 'rating': return (b.rating || 0) - (a.rating || 0)
-        case 'newest':
-          if (a.isNew && !b.isNew) return -1
-          if (!a.isNew && b.isNew) return 1
-          return 0
-        case 'featured':
-        default:
-          if (a.isBestSeller && !b.isBestSeller) return -1
-          if (!a.isBestSeller && b.isBestSeller) return 1
-          if (a.isNew && !b.isNew) return -1
-          if (!a.isNew && b.isNew) return 1
-          return (b.rating || 0) - (a.rating || 0)
-      }
-    })
+    // PASO 2: ORDENAR CON ALGORITMO MEJORADO
+    return sortProducts(filtered, sortBy)
+    
   }, [productsToFilter, activeCategory, selectedCategories, searchTerm, sortBy, priceRange, minRating])
 
   // ============================================================================

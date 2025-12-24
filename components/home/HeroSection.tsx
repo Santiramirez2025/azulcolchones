@@ -8,12 +8,12 @@ import { useState, useEffect } from 'react'
 // ============================================================================
 const HERO_IMAGES = [
   {
-    url: '/images/optimized/pierorugby.webp',
+    url: '/images/optimized/ppierorugby.webp',
     alt: 'Colchón Piero Spring - Outlet 60% OFF',
     badge: '60% OFF'
   },
   {
-    url: '/images/optimized/pieropeque.webp',
+    url: '/images/optimized/ppieropeque.webp',
     alt: 'Colchón Piero Premium',
     badge: 'Premium'
   }

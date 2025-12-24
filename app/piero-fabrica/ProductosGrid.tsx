@@ -10,10 +10,10 @@ import Image from 'next/image'
 interface ProductCardProps {
   nombre: string
   tamaño: string
-  precioFabrica: number
-  precioOnline?: number
-  ahorro?: number
-  ahorroPorc?: number
+  precioPublico: number  // Precio "A 7 DIAS" que ve el cliente
+  precioMercadoLibre?: number  // Precio de referencia ML
+  ahorro?: number  // Diferencia real que se ahorra
+  ahorroPorc?: number  // Porcentaje de ahorro
   categoria: 'ancla' | 'equilibrio' | 'premium' | 'accesorio'
   destacado?: boolean
   stock: 'disponible' | 'consultar' | 'bajo-pedido'
@@ -28,8 +28,8 @@ interface ProductCardProps {
 function ProductCard({ 
   nombre, 
   tamaño, 
-  precioFabrica, 
-  precioOnline,
+  precioPublico, 
+  precioMercadoLibre,
   ahorro,
   ahorroPorc,
   categoria,
@@ -101,14 +101,14 @@ function ProductCard({
         </div>
       )}
 
-      {/* Badge Categoría - Integrado con el diseño principal */}
+      {/* Badge Categoría */}
       <div className={`bg-gradient-to-r ${config.colorBg} text-white px-6 py-3 text-center`}>
         <span className="text-sm font-bold tracking-wide" aria-label={`Categoría: ${config.badge}`}>
           {config.badge}
         </span>
       </div>
 
-      {/* Imagen - Placeholder coherente con el diseño */}
+      {/* Imagen */}
       <div className="relative aspect-[4/3] bg-gradient-to-br from-zinc-50 to-zinc-100 overflow-hidden">
         {imagen ? (
           <Image
@@ -132,7 +132,6 @@ function ProductCard({
           </div>
         )}
         
-        {/* Overlay sutil en hover */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
@@ -150,8 +149,8 @@ function ProductCard({
           <p className="text-sm text-zinc-600 font-medium">{tamaño}</p>
         </div>
 
-        {/* Ahorro Destacado */}
-        {ahorro && ahorroPorc && (
+        {/* Ahorro Destacado - SOLO SI HAY AHORRO */}
+        {ahorro && ahorroPorc && ahorro > 0 && (
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl p-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-green-700">Ahorrás:</span>
@@ -160,7 +159,7 @@ function ProductCard({
                   ${ahorro.toLocaleString('es-AR')}
                 </div>
                 <div className="text-xs font-bold text-green-600">
-                  {ahorroPorc}% de descuento
+                  {ahorroPorc}% OFF
                 </div>
               </div>
             </div>
@@ -169,13 +168,13 @@ function ProductCard({
 
         {/* Precio Principal */}
         <div className="space-y-1.5" itemProp="offers" itemScope itemType="https://schema.org/Offer">
-          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Precio Fábrica</p>
+          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Precio Directo Fábrica</p>
           <p 
             className="text-4xl font-black text-zinc-900"
             itemProp="price"
-            content={precioFabrica.toString()}
+            content={precioPublico.toString()}
           >
-            ${precioFabrica.toLocaleString('es-AR')}
+            ${precioPublico.toLocaleString('es-AR')}
           </p>
           <meta itemProp="priceCurrency" content="ARS" />
           <meta itemProp="availability" content={
@@ -184,11 +183,11 @@ function ProductCard({
             'https://schema.org/PreSale'
           } />
           
-          {/* Precio comparativo tachado */}
-          {precioOnline && (
+          {/* Precio comparativo tachado - SOLO SI EXISTE */}
+          {precioMercadoLibre && (
             <p className="text-sm text-zinc-500">
-              <span className="line-through">${precioOnline.toLocaleString('es-AR')}</span>
-              <span className="ml-2 text-green-600 font-semibold">en otros sitios</span>
+              <span className="line-through">${precioMercadoLibre.toLocaleString('es-AR')}</span>
+              <span className="ml-2 text-green-600 font-semibold">en Mercado Libre</span>
             </p>
           )}
         </div>
@@ -306,252 +305,553 @@ function ProductCard({
 }
 
 // ============================================================================
-// PRODUCTOS GRID PRINCIPAL
+// PRODUCTOS GRID PRINCIPAL - PRECIOS ACTUALIZADOS SEGÚN ANÁLISIS PDF
 // ============================================================================
 
 export default function ProductosGridOptimizado() {
   const [categoriaActiva, setCategoriaActiva] = useState<'todos' | 'plaza' | 'plaza-media' | 'queen' | 'king' | 'accesorios'>('todos')
 
   // ============================================================================
-  // PRODUCTOS DATA
+  // PRODUCTOS DATA - ACTUALIZADOS CON PRECIOS REALES DEL PDF
   // ============================================================================
   
   const productosAncla: ProductCardProps[] = [
-    // ========== 1 PLAZA ==========
-    {
-      nombre: 'Meditare EP',
-      tamaño: '190x80 (1 plaza)',
-      precioFabrica: 359000,
-      precioOnline: 387000,
-      ahorro: 28000,
-      ahorroPorc: 7,
-      categoria: 'ancla',
-      stock: 'bajo-pedido',
-      imagen: '/images/meditare-80.jpg'
-    },
-    {
-      nombre: 'Meditare EP',
-      tamaño: '190x90 (1 plaza)',
-      precioFabrica: 369000,
-      precioOnline: 398000,
-      ahorro: 29000,
-      ahorroPorc: 7,
-      categoria: 'ancla',
-      stock: 'bajo-pedido',
-      imagen: '/images/meditare-90.jpg'
-    },
+    // ========== NIRVANA - LÍNEA ANCLA ==========
     {
       nombre: 'Nirvana',
       tamaño: '190x80 (1 plaza)',
-      precioFabrica: 549000,
-      precioOnline: 595000,
-      ahorro: 46000,
-      ahorroPorc: 8,
+      precioPublico: 317285,
+      precioMercadoLibre: 431080,
+      ahorro: 113795,
+      ahorroPorc: 26,
       categoria: 'ancla',
-      stock: 'bajo-pedido',
+      stock: 'disponible',
       imagen: '/images/nirvana-80.jpg'
     },
     {
       nombre: 'Nirvana',
       tamaño: '190x90 (1 plaza)',
-      precioFabrica: 579000,
-      precioOnline: 627000,
-      ahorro: 48000,
-      ahorroPorc: 8,
-      categoria: 'ancla',
-      stock: 'bajo-pedido',
-      imagen: '/images/nirvana-90.jpg'
-    },
-    // ========== 1½ PLAZA ==========
-    {
-      nombre: 'Meditare EP',
-      tamaño: '190x140 (2 plazas)',
-      precioFabrica: 469000,
-      precioOnline: 506000,
-      ahorro: 37000,
-      ahorroPorc: 7,
+      precioPublico: 353608,
+      precioMercadoLibre: 504451,
+      ahorro: 150843,
+      ahorroPorc: 30,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: '/images/meditare-140.jpg'
+      imagen: '/images/nirvana-90.jpg'
+    },
+    {
+      nombre: 'Nirvana',
+      tamaño: '190x100 (1 plaza)',
+      precioPublico: 401781,
+      precioMercadoLibre: 573175,
+      ahorro: 171394,
+      ahorroPorc: 30,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/nirvana-100.jpg'
+    },
+    {
+      nombre: 'Nirvana',
+      tamaño: '190x130 (1½ plaza)',
+      precioPublico: 502036,
+      precioMercadoLibre: 716197,
+      ahorro: 214161,
+      ahorroPorc: 30,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/nirvana-130.jpg'
     },
     {
       nombre: 'Nirvana',
       tamaño: '190x140 (2 plazas)',
-      precioFabrica: 799000,
-      precioOnline: 877628,
-      ahorro: 78628,
-      ahorroPorc: 9,
+      precioPublico: 537416,
+      precioMercadoLibre: 688483,
+      ahorro: 151067,
+      ahorroPorc: 22,
       categoria: 'ancla',
+      destacado: false,
       stock: 'disponible',
       imagen: '/images/nirvana-140.jpg'
     },
-    // ========== QUEEN ==========
     {
-      nombre: 'Nirvana Queen',
-      tamaño: '200x160 (Queen)',
-      precioFabrica: 1099000,
-      precioOnline: 1261069,
-      ahorro: 162069,
-      ahorroPorc: 13,
+      nombre: 'Nirvana',
+      tamaño: '190x160 (2 plazas)',
+      precioPublico: 684966,
+      precioMercadoLibre: 977163,
+      ahorro: 292197,
+      ahorroPorc: 30,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: '/images/nirvana-1600.jpg'
+      imagen: '/images/nirvana-160.jpg'
     },
-    // ========== KING ==========
     {
-      nombre: 'Nirvana King',
-      tamaño: '200x200 (King)',
-      precioFabrica: 1149000,
-      precioOnline: 1212250,
-      ahorro: 63250,
-      ahorroPorc: 5,
+      nombre: 'Nirvana',
+      tamaño: '200x180 (Queen)',
+      precioPublico: 753463,
+      precioMercadoLibre: 1074879,
+      ahorro: 321416,
+      ahorroPorc: 30,
       categoria: 'ancla',
       stock: 'disponible',
-      imagen: '/images/nirvana-2000.jpg'
+      imagen: '/images/nirvana-180.jpg'
+    },
+    {
+      nombre: 'Nirvana',
+      tamaño: '200x200 (King)',
+      precioPublico: 813751,
+      precioMercadoLibre: 988077,
+      ahorro: 174326,
+      ahorroPorc: 18,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/nirvana-200.jpg'
+    },
+    // ========== MEDITARE EUROPILLOW - LÍNEA ANCLA ==========
+    {
+      nombre: 'Meditare EuroPillow',
+      tamaño: '190x80 (1 plaza)',
+      precioPublico: 205302,
+      precioMercadoLibre: 220000,
+      ahorro: 14698,
+      ahorroPorc: 7,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-80.jpg'
+    },
+    {
+      nombre: 'Meditare EuroPillow',
+      tamaño: '190x90 (1 plaza)',
+      precioPublico: 228208,
+      precioMercadoLibre: 245000,
+      ahorro: 16792,
+      ahorroPorc: 7,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-90.jpg'
+    },
+    {
+      nombre: 'Meditare EuroPillow',
+      tamaño: '190x100 (1 plaza)',
+      precioPublico: 251292,
+      precioMercadoLibre: 262000,
+      ahorro: 10708,
+      ahorroPorc: 4,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-100.jpg'
+    },
+    {
+      nombre: 'Meditare EuroPillow',
+      tamaño: '190x130 (1½ plaza)',
+      precioPublico: 319975,
+      precioMercadoLibre: 332000,
+      ahorro: 12025,
+      ahorroPorc: 4,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-130.jpg'
+    },
+    {
+      nombre: 'Meditare EuroPillow',
+      tamaño: '190x140 (2 plazas)',
+      precioPublico: 344305,
+      precioMercadoLibre: 357000,
+      ahorro: 12695,
+      ahorroPorc: 4,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-140.jpg'
     },
   ]
 
   const productosEquilibrio: ProductCardProps[] = [
-    // ========== 1 PLAZA ==========
+    // ========== SONNO EUROPILLOW - LÍNEA EQUILIBRIO ==========
     {
-      nombre: 'Sonno EP',
+      nombre: 'Sonno EuroPillow',
       tamaño: '190x80 (1 plaza)',
-      precioFabrica: 489000,
-      precioOnline: 529000,
-      ahorro: 40000,
-      ahorroPorc: 8,
+      precioPublico: 281772,
+      precioMercadoLibre: 312000,
+      ahorro: 30228,
+      ahorroPorc: 10,
       categoria: 'equilibrio',
-      stock: 'bajo-pedido',
+      stock: 'disponible',
       imagen: '/images/sonno-ep-80.jpg'
     },
     {
-      nombre: 'Sonno EP',
+      nombre: 'Sonno EuroPillow',
       tamaño: '190x90 (1 plaza)',
-      precioFabrica: 519000,
-      precioOnline: 562000,
-      ahorro: 43000,
-      ahorroPorc: 8,
+      precioPublico: 307453,
+      precioMercadoLibre: 341000,
+      ahorro: 33547,
+      ahorroPorc: 10,
       categoria: 'equilibrio',
-      stock: 'bajo-pedido',
+      stock: 'disponible',
       imagen: '/images/sonno-ep-90.jpg'
     },
-    // ========== 1½ PLAZA ==========
     {
-      nombre: 'Sonno EP',
+      nombre: 'Sonno EuroPillow',
+      tamaño: '190x100 (1 plaza)',
+      precioPublico: 333420,
+      precioMercadoLibre: 370000,
+      ahorro: 36580,
+      ahorroPorc: 10,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/sonno-ep-100.jpg'
+    },
+    {
+      nombre: 'Sonno EuroPillow',
+      tamaño: '190x130 (1½ plaza)',
+      precioPublico: 422073,
+      precioMercadoLibre: 468000,
+      ahorro: 45927,
+      ahorroPorc: 10,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/sonno-ep-130.jpg'
+    },
+    {
+      nombre: 'Sonno EuroPillow',
       tamaño: '190x140 (2 plazas)',
-      precioFabrica: 599000,
-      precioOnline: 652703,
-      ahorro: 53703,
-      ahorroPorc: 8,
+      precioPublico: 458198,
+      precioMercadoLibre: 650000,
+      ahorro: 191802,
+      ahorroPorc: 29,
       categoria: 'equilibrio',
       destacado: true,
       stock: 'disponible',
       imagen: '/images/sonno-ep-140.jpg'
     },
     {
-      nombre: 'Gravita',
-      tamaño: '190x140 (2 plazas)',
-      precioFabrica: 899000,
-      precioOnline: 942966,
-      ahorro: 43966,
-      ahorroPorc: 5,
+      nombre: 'Sonno EuroPillow',
+      tamaño: '190x160 (2 plazas)',
+      precioPublico: 499893,
+      precioMercadoLibre: 555000,
+      ahorro: 55107,
+      ahorroPorc: 10,
       categoria: 'equilibrio',
       stock: 'disponible',
-      imagen: '/images/gravita-140.jpg'
+      imagen: '/images/sonno-ep-160.jpg'
     },
+    // ========== REGNO - LÍNEA EQUILIBRIO ==========
     {
-      nombre: 'Regno Pillow Top',
-      tamaño: '190x140 (2 plazas)',
-      precioFabrica: 799000,
-      precioOnline: 871000,
-      ahorro: 72000,
-      ahorroPorc: 8,
+      nombre: 'Regno',
+      tamaño: '190x80 (1 plaza)',
+      precioPublico: 291464,
+      precioMercadoLibre: 390000,
+      ahorro: 98536,
+      ahorroPorc: 25,
       categoria: 'equilibrio',
       stock: 'disponible',
-      imagen: '/images/regno-pillow-140.jpg'
+      imagen: '/images/regno-80.jpg'
     },
-    // ========== QUEEN ==========
     {
-      nombre: 'Regno Queen',
+      nombre: 'Regno',
+      tamaño: '190x90 (1 plaza)',
+      precioPublico: 315299,
+      precioMercadoLibre: 422000,
+      ahorro: 106701,
+      ahorroPorc: 25,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/regno-90.jpg'
+    },
+    {
+      nombre: 'Regno',
+      tamaño: '190x140 (2 plazas)',
+      precioPublico: 449186,
+      precioMercadoLibre: 709000,
+      ahorro: 259814,
+      ahorroPorc: 37,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/regno-140.jpg'
+    },
+    {
+      nombre: 'Regno',
       tamaño: '200x160 (Queen)',
-      precioFabrica: 749000,
-      precioOnline: 788724,
-      ahorro: 39724,
-      ahorroPorc: 5,
+      precioPublico: 530167,
+      precioMercadoLibre: 956000,
+      ahorro: 425833,
+      ahorroPorc: 45,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-160.jpg'
     },
     {
-      nombre: 'Gravita Queen',
+      nombre: 'Regno',
+      tamaño: '200x200 (King)',
+      precioPublico: 652582,
+      precioMercadoLibre: 873000,
+      ahorro: 220418,
+      ahorroPorc: 25,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/regno-200.jpg'
+    },
+    // ========== REGNO PILLOW TOP - LÍNEA EQUILIBRIO ==========
+    {
+      nombre: 'Regno Pillow Top',
+      tamaño: '190x140 (2 plazas)',
+      precioPublico: 561631,
+      precioMercadoLibre: 601000,
+      ahorro: 39369,
+      ahorroPorc: 7,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/regno-pillow-140.jpg'
+    },
+    {
+      nombre: 'Regno Pillow Top',
       tamaño: '200x160 (Queen)',
-      precioFabrica: 1099000,
-      precioOnline: 1159000,
-      ahorro: 60000,
+      precioPublico: 644294,
+      precioMercadoLibre: 775000,
+      ahorro: 130706,
+      ahorroPorc: 17,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/regno-pillow-160.jpg'
+    },
+    {
+      nombre: 'Regno Pillow Top',
+      tamaño: '200x180 (Queen XL)',
+      precioPublico: 714436,
+      precioMercadoLibre: 956000,
+      ahorro: 241564,
+      ahorroPorc: 25,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/regno-pillow-180.jpg'
+    },
+    {
+      nombre: 'Regno Pillow Top',
+      tamaño: '200x200 (King)',
+      precioPublico: 783921,
+      precioMercadoLibre: 1049000,
+      ahorro: 265079,
+      ahorroPorc: 25,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/regno-pillow-200.jpg'
+    },
+    // ========== GRAVITA - LÍNEA EQUILIBRIO ==========
+    {
+      nombre: 'Gravita',
+      tamaño: '190x140 (2 plazas)',
+      precioPublico: 736057,
+      precioMercadoLibre: 980000,
+      ahorro: 243943,
+      ahorroPorc: 25,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/gravita-140.jpg'
+    },
+    {
+      nombre: 'Gravita',
+      tamaño: '200x160 (Queen)',
+      precioPublico: 905309,
+      precioMercadoLibre: 1083000,
+      ahorro: 177691,
+      ahorroPorc: 16,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/gravita-160.jpg'
+    },
+    {
+      nombre: 'Gravita',
+      tamaño: '200x180 (Queen XL)',
+      precioPublico: 969064,
+      precioMercadoLibre: 1266000,
+      ahorro: 296936,
+      ahorroPorc: 23,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/gravita-180.jpg'
+    },
+    {
+      nombre: 'Gravita',
+      tamaño: '200x200 (King)',
+      precioPublico: 1030613,
+      precioMercadoLibre: 1289000,
+      ahorro: 258387,
+      ahorroPorc: 20,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/gravita-200.jpg'
+    },
+    // ========== NAMASTE - LÍNEA EQUILIBRIO ==========
+    {
+      nombre: 'Namaste',
+      tamaño: '190x140 (2 plazas)',
+      precioPublico: 414729,
+      precioMercadoLibre: 394000,
+      ahorro: 0, // No mostrar ahorro porque ML es más barato
+      ahorroPorc: 0,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/namaste-140.jpg'
+    },
+    {
+      nombre: 'Namaste',
+      tamaño: '200x160 (Queen)',
+      precioPublico: 528948,
+      precioMercadoLibre: 558000,
+      ahorro: 29052,
       ahorroPorc: 5,
       categoria: 'equilibrio',
       stock: 'disponible',
-      imagen: '/images/gravita-1600.jpg'
+      imagen: '/images/namaste-160.jpg'
+    },
+    {
+      nombre: 'Namaste',
+      tamaño: '200x200 (King)',
+      precioPublico: 634739,
+      precioMercadoLibre: 669000,
+      ahorro: 34261,
+      ahorroPorc: 5,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/namaste-200.jpg'
+    },
+    // ========== NAMASTE PILLOW TOP - LÍNEA EQUILIBRIO ==========
+    {
+      nombre: 'Namaste Pillow Top',
+      tamaño: '190x140 (2 plazas)',
+      precioPublico: 526051,
+      precioMercadoLibre: 554353,
+      ahorro: 28302,
+      ahorroPorc: 5,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/namaste-pillow-140.jpg'
+    },
+    {
+      nombre: 'Namaste Pillow Top',
+      tamaño: '200x160 (Queen)',
+      precioPublico: 601644,
+      precioMercadoLibre: 635000,
+      ahorro: 33356,
+      ahorroPorc: 5,
+      categoria: 'equilibrio',
+      stock: 'disponible',
+      imagen: '/images/namaste-pillow-160.jpg'
     },
   ]
 
   const productosPremium: ProductCardProps[] = [
-    // ========== 1½ PLAZA ==========
+    // ========== MONTREAUX - LÍNEA PREMIUM ==========
     {
       nombre: 'Montreaux',
       tamaño: '190x140 (2 plazas)',
-      precioFabrica: 1399000,
-      precioOnline: 1547475,
-      ahorro: 148475,
-      ahorroPorc: 10,
+      precioPublico: 772562,
+      precioMercadoLibre: 1339000,
+      ahorro: 566438,
+      ahorroPorc: 42,
       categoria: 'premium',
-      stock: 'consultar',
+      stock: 'disponible',
       imagen: '/images/montreaux-140.jpg'
     },
     {
+      nombre: 'Montreaux',
+      tamaño: '200x160 (Queen)',
+      precioPublico: 969298,
+      precioMercadoLibre: 1661000,
+      ahorro: 691702,
+      ahorroPorc: 42,
+      categoria: 'premium',
+      stock: 'disponible',
+      imagen: '/images/montreaux-160.jpg'
+    },
+    {
+      nombre: 'Montreaux',
+      tamaño: '200x200 (King)',
+      precioPublico: 1098836,
+      precioMercadoLibre: 1883000,
+      ahorro: 784164,
+      ahorroPorc: 42,
+      categoria: 'premium',
+      stock: 'disponible',
+      imagen: '/images/montreaux-200.jpg'
+    },
+    // ========== MONTREAUX PILLOW TOP - LÍNEA PREMIUM ==========
+    {
       nombre: 'Montreaux Pillow Top',
       tamaño: '190x140 (2 plazas)',
-      precioFabrica: 1599000,
-      precioOnline: 1747558,
-      ahorro: 148558,
-      ahorroPorc: 9,
+      precioPublico: 970520,
+      precioMercadoLibre: 1496000,
+      ahorro: 525480,
+      ahorroPorc: 35,
       categoria: 'premium',
-      stock: 'consultar',
-      imagen: '/images/montreaux-pillow-1400.jpg'
+      stock: 'disponible',
+      imagen: '/images/montreaux-pillow-140.jpg'
     },
+    {
+      nombre: 'Montreaux Pillow Top',
+      tamaño: '200x160 (Queen)',
+      precioPublico: 1182651,
+      precioMercadoLibre: 2027000,
+      ahorro: 844349,
+      ahorroPorc: 42,
+      categoria: 'premium',
+      destacado: true,
+      stock: 'disponible',
+      imagen: '/images/montreaux-pillow-160.jpg'
+    },
+    {
+      nombre: 'Montreaux Pillow Top',
+      tamaño: '200x180 (Queen XL)',
+      precioPublico: 1268890,
+      precioMercadoLibre: 2234000,
+      ahorro: 965110,
+      ahorroPorc: 43,
+      categoria: 'premium',
+      stock: 'disponible',
+      imagen: '/images/montreaux-pillow-180.jpg'
+    },
+    {
+      nombre: 'Montreaux Pillow Top',
+      tamaño: '200x200 (King)',
+      precioPublico: 1345844,
+      precioMercadoLibre: 2612000,
+      ahorro: 1266156,
+      ahorroPorc: 48,
+      categoria: 'premium',
+      stock: 'disponible',
+      imagen: '/images/montreaux-pillow-200.jpg'
+    },
+    // ========== DREAM FIT POCKET - LÍNEA PREMIUM ==========
     {
       nombre: 'Dream Fit Pocket',
       tamaño: '190x140 (2 plazas)',
-      precioFabrica: 1699000,
-      precioOnline: 1747558,
-      ahorro: 48558,
-      ahorroPorc: 3,
-      categoria: 'premium',
-      stock: 'consultar',
-      imagen: '/images/dreamfit-pocket-140.jpg'
-    },
-    // ========== QUEEN ==========
-    {
-      nombre: 'Montreaux Pillow Top Queen',
-      tamaño: '200x160 (Queen)',
-      precioFabrica: 1799000,
-      precioOnline: 1929273,
-      ahorro: 130273,
-      ahorroPorc: 7,
-      categoria: 'premium',
-      stock: 'consultar',
-      imagen: '/images/montreaux-pillow-1600.jpg'
-    },
-    {
-      nombre: 'Dream Fit Pocket Queen',
-      tamaño: '200x160 (Queen)',
-      precioFabrica: 2099000,
-      precioOnline: 2230216,
-      ahorro: 131216,
+      precioPublico: 1906774,
+      precioMercadoLibre: 2037000,
+      ahorro: 130226,
       ahorroPorc: 6,
       categoria: 'premium',
       stock: 'consultar',
       imagen: '/images/dreamfit-pocket-140.jpg'
+    },
+    {
+      nombre: 'Dream Fit Pocket',
+      tamaño: '200x160 (Queen)',
+      precioPublico: 2195670,
+      precioMercadoLibre: 2346000,
+      ahorro: 150330,
+      ahorroPorc: 6,
+      categoria: 'premium',
+      stock: 'consultar',
+      imagen: '/images/dreamfit-pocket-160.jpg'
+    },
+    {
+      nombre: 'Dream Fit Pocket',
+      tamaño: '200x200 (King)',
+      precioPublico: 2498649,
+      precioMercadoLibre: 2670000,
+      ahorro: 171351,
+      ahorroPorc: 6,
+      categoria: 'premium',
+      stock: 'consultar',
+      imagen: '/images/dreamfit-pocket-200.jpg'
     },
   ]
 
@@ -560,7 +860,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Protector Impermeable',
       tamaño: '140x190 cm',
-      precioFabrica: 36900,
+      precioPublico: 36900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -569,7 +869,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Protector Impermeable',
       tamaño: '160x200 cm (Queen)',
-      precioFabrica: 39900,
+      precioPublico: 39900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -578,7 +878,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Protector Impermeable',
       tamaño: '200x200 cm (King)',
-      precioFabrica: 42900,
+      precioPublico: 42900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -588,7 +888,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Almohada Fibra Smart Tech Plus',
       tamaño: '70x50 cm',
-      precioFabrica: 39900,
+      precioPublico: 39900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'almohada',
@@ -597,7 +897,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Almohada Micro Max Premium',
       tamaño: '70x50 cm',
-      precioFabrica: 69900,
+      precioPublico: 69900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'almohada',
@@ -607,7 +907,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo 600 Hilos',
       tamaño: '140x190 cm',
-      precioFabrica: 89900,
+      precioPublico: 89900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -616,7 +916,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo 600 Hilos',
       tamaño: '160x200 cm (Queen)',
-      precioFabrica: 119900,
+      precioPublico: 119900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -625,7 +925,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo 600 Hilos',
       tamaño: '200x200 cm (King)',
-      precioFabrica: 139900,
+      precioPublico: 139900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -643,9 +943,9 @@ export default function ProductosGridOptimizado() {
   const productosFiltrados = todosLosProductos.filter(producto => {
     if (categoriaActiva === 'todos') return true
     if (categoriaActiva === 'plaza') return producto.tamaño.includes('1 plaza') && !producto.tamaño.includes('1½')
-    if (categoriaActiva === 'plaza-media') return producto.tamaño.includes('1½ plaza') || producto.tamaño.includes('140')
-    if (categoriaActiva === 'queen') return producto.tamaño.includes('Queen') || producto.tamaño.includes('160')
-    if (categoriaActiva === 'king') return producto.tamaño.includes('King') || producto.tamaño.includes('200x200')
+    if (categoriaActiva === 'plaza-media') return producto.tamaño.includes('1½ plaza') || (producto.tamaño.includes('140') && producto.tipo === 'colchon')
+    if (categoriaActiva === 'queen') return producto.tamaño.includes('Queen') || (producto.tamaño.includes('160') && producto.tipo === 'colchon') || (producto.tamaño.includes('180') && producto.tipo === 'colchon')
+    if (categoriaActiva === 'king') return producto.tamaño.includes('King') || (producto.tamaño.includes('200x200') && producto.tipo === 'colchon')
     if (categoriaActiva === 'accesorios') return producto.categoria === 'accesorio'
     return true
   })
@@ -685,7 +985,7 @@ export default function ProductosGridOptimizado() {
             </span>
           </h2>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-            Todos los modelos con <strong className="text-white">30-40% de descuento</strong> vs. online
+            Todos los modelos con <strong className="text-white">hasta 48% de descuento</strong> vs. Mercado Libre
           </p>
         </header>
 
