@@ -3,15 +3,18 @@
 import { ArrowRight, Star, Truck, CheckCircle2, ShieldCheck, Zap, Clock } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
+// ✅ IMÁGENES CORREGIDAS CON MÚLTIPLES FALLBACKS
 const HERO_IMAGES = [
   {
-    url: '/images/optimized/ppierorugby.webp',
+    url: '/images/optimized/hero-colchon-1.jpg',
+    fallback: '/images/optimized/hero-colchon-2.jpg',
     alt: 'Colchón Piero Spring - Outlet 60% OFF',
     badge: '60% OFF'
   },
   {
-    url: '/images/optimized/ppieropeque.webp',
-    alt: 'Colchón Piero Premium',
+    url: '/images/optimized/hero-colchon-2.jpg',
+    fallback: '/images/optimized/hero-colchon-1.jpg',
+    alt: 'Colchón Piero Premium Memory Foam',
     badge: 'Premium'
   }
 ] as const
@@ -30,8 +33,10 @@ const SITE_CONFIG = {
 export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState<Record<number, boolean>>({})
+  const [imageError, setImageError] = useState<Record<number, boolean>>({})
 
+  // Detectar mobile
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024)
@@ -52,13 +57,61 @@ export default function HeroSection() {
     }
   }, [])
 
+  // Pre-cargar TODAS las imágenes antes de iniciar el carrusel
   useEffect(() => {
-    if (isMobile || !imageLoaded) return
+    const preloadImages = async () => {
+      const loadPromises = HERO_IMAGES.map((img, index) => {
+        return new Promise((resolve) => {
+          const image = new Image()
+          image.onload = () => {
+            setImageLoaded(prev => ({ ...prev, [index]: true }))
+            resolve(true)
+          }
+          image.onerror = () => {
+            // Si falla, intenta con el fallback
+            const fallbackImage = new Image()
+            fallbackImage.onload = () => {
+              setImageLoaded(prev => ({ ...prev, [index]: true }))
+              resolve(true)
+            }
+            fallbackImage.onerror = () => {
+              setImageError(prev => ({ ...prev, [index]: true }))
+              resolve(false)
+            }
+            fallbackImage.src = img.fallback
+          }
+          image.src = img.url
+        })
+      })
+
+      await Promise.all(loadPromises)
+    }
+
+    preloadImages()
+  }, [])
+
+  // Carrusel automático SOLO en desktop Y SOLO si las imágenes están cargadas
+  useEffect(() => {
+    if (isMobile) return
+    
+    // Verificar que al menos 2 imágenes estén cargadas
+    const loadedCount = Object.values(imageLoaded).filter(Boolean).length
+    if (loadedCount < 2) return
+
     const interval = setInterval(() => {
       setCurrentImage(prev => (prev + 1) % HERO_IMAGES.length)
     }, 5000)
+    
     return () => clearInterval(interval)
   }, [isMobile, imageLoaded])
+
+  // Función para obtener la URL correcta (con fallback si hubo error)
+  const getImageUrl = (index: number) => {
+    if (imageError[index]) {
+      return HERO_IMAGES[index].fallback
+    }
+    return HERO_IMAGES[index].url
+  }
 
   return (
     <section className="relative min-h-[100dvh] flex items-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -152,9 +205,19 @@ export default function HeroSection() {
                 </div>
               </div>
 
+              {/* MOBILE IMAGE - Imagen estática, sin carrusel */}
               <div className="relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl">
-                {!imageLoaded && <div className="absolute inset-0 bg-slate-800 animate-pulse" />}
-                <img src={HERO_IMAGES[currentImage].url} alt={HERO_IMAGES[currentImage].alt} className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} loading="eager" onLoad={() => setImageLoaded(true)} />
+                {!imageLoaded[0] && !imageError[0] && (
+                  <div className="absolute inset-0 bg-slate-800 animate-pulse" />
+                )}
+                <img 
+                  src={getImageUrl(0)} 
+                  alt={HERO_IMAGES[0].alt} 
+                  className={`w-full h-full object-cover transition-opacity duration-500 ${
+                    imageLoaded[0] ? 'opacity-100' : 'opacity-0'
+                  }`} 
+                  loading="eager"
+                />
                 <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-gradient-to-br from-amber-400 to-orange-500 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-lg">
                   <div className="text-white text-[10px] font-bold uppercase leading-none">Hasta</div>
                   <div className="text-white text-xl sm:text-2xl font-black leading-none mt-0.5">60%</div>
@@ -267,16 +330,47 @@ export default function HeroSection() {
                 </div>
               </div>
 
+              {/* DESKTOP IMAGE CAROUSEL - Con transición suave */}
               <div className="relative">
                 <div className="absolute -inset-8 bg-blue-500/20 rounded-[3rem] blur-[100px] opacity-60 pointer-events-none" aria-hidden="true" />
                 <div className="relative bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-3xl overflow-hidden p-3 shadow-2xl">
                   <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-950">
-                    {!imageLoaded && <div className="absolute inset-0 bg-slate-800 animate-pulse" />}
-                    <img src={HERO_IMAGES[currentImage].url} alt={HERO_IMAGES[currentImage].alt} className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} loading="eager" onLoad={() => setImageLoaded(true)} />
+                    {/* Loading placeholder */}
+                    {!imageLoaded[currentImage] && !imageError[currentImage] && (
+                      <div className="absolute inset-0 bg-slate-800 animate-pulse" />
+                    )}
+                    
+                    {/* Imagen actual con transición suave */}
+                    <img 
+                      key={currentImage}
+                      src={getImageUrl(currentImage)} 
+                      alt={HERO_IMAGES[currentImage].alt} 
+                      className={`w-full h-full object-cover transition-opacity duration-700 ${
+                        imageLoaded[currentImage] ? 'opacity-100' : 'opacity-0'
+                      }`} 
+                      loading="eager"
+                    />
+                    
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <div className="absolute top-4 right-4 bg-gradient-to-br from-amber-400 to-orange-500 px-4 py-3 rounded-lg shadow-lg">
                       <div className="text-white text-xs font-bold uppercase leading-none">Hasta</div>
                       <div className="text-white text-2xl font-black leading-none mt-0.5">60%</div>
+                    </div>
+                    
+                    {/* Indicadores del carrusel */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                      {HERO_IMAGES.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImage(index)}
+                          className={`h-1.5 rounded-full transition-all ${
+                            index === currentImage 
+                              ? 'w-8 bg-white' 
+                              : 'w-1.5 bg-white/40 hover:bg-white/60'
+                          }`}
+                          aria-label={`Ver imagen ${index + 1}`}
+                        />
+                      ))}
                     </div>
                   </div>
 
