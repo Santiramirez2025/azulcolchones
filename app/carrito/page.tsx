@@ -11,7 +11,6 @@ import { getMejorCuota, calcularTodasLasCuotas } from '@/lib/utils/pricing'
 
 // ✅ LAZY LOAD COMPONENTS (performance crítica)
 const CheckoutForm = lazy(() => import('@/components/cart/CheckoutForm'))
-const Upsell = lazy(() => import('@/components/cart/CartComponents').then(mod => ({ default: mod.Upsell })))
 
 // ✅ COMPONENTS CRÍTICOS (no lazy)
 import {
@@ -22,7 +21,7 @@ import {
   CheckoutSteps
 } from '@/components/cart/CartComponents'
 
-// ✅ Iconos inline SVG optimizados (sin cambios - ya están bien)
+// ✅ Iconos inline SVG optimizados
 const Icons = {
   ShoppingBag: ({ className = "w-6 h-6" }: { className?: string }) => (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -67,11 +66,6 @@ const Icons = {
   Shield: ({ className = "w-4 h-4" }: { className?: string }) => (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-    </svg>
-  ),
-  Heart: ({ className = "w-6 h-6" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
     </svg>
   ),
   CheckCircle2: ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -132,7 +126,7 @@ const LoadingSkeleton = () => (
 )
 
 export default function CarritoPage() {
-  const [checkoutStep, setCheckoutStep] = useState<1 | 2 | 3 | 4>(1)
+  const [checkoutStep, setCheckoutStep] = useState<1 | 2 | 3>(1)
   const [couponCode, setCouponCode] = useState('')
   const [couponError, setCouponError] = useState('')
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false)
@@ -238,7 +232,7 @@ export default function CarritoPage() {
           step={checkoutStep}
           total={finalTotal}
           onBack={() => setCheckoutStep(1)}
-          onNext={() => setCheckoutStep((prev) => Math.min(4, prev + 1) as 1 | 2 | 3 | 4)}
+          onNext={() => setCheckoutStep((prev) => Math.min(3, prev + 1) as 1 | 2 | 3)}
         />
       </Suspense>
     )
@@ -458,22 +452,6 @@ export default function CarritoPage() {
                     )
                   })}
                 </AnimatePresence>
-
-                {/* Recommended products - LAZY LOADED */}
-                <Suspense fallback={<div className="h-48 bg-zinc-900 rounded-2xl animate-pulse" />}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 border border-blue-500/20"
-                  >
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
-                      <Icons.Heart className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
-                      También te puede interesar
-                    </h3>
-                    <Upsell onAdd={() => console.log('Add upsell')} />
-                  </motion.div>
-                </Suspense>
               </div>
 
               {/* Summary Sidebar - MOBILE OPTIMIZED */}

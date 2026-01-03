@@ -654,8 +654,7 @@ export const CheckoutSteps = memo(function CheckoutSteps({ currentStep }: Checko
   const steps = useMemo(() => [
     { number: 1, label: 'Carrito', labelShort: 'Cart' },
     { number: 2, label: 'Datos', labelShort: 'Data' },
-    { number: 3, label: 'Pago', labelShort: 'Pay' },
-    { number: 4, label: 'OK', labelShort: 'OK' }
+    { number: 3, label: 'Confirmar', labelShort: 'OK' }
   ], [])
   
   return (

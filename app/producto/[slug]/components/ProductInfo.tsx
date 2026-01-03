@@ -1,15 +1,50 @@
-// app/producto/[slug]/components/ProductInfo.tsx - ✅ OPTIMIZADO SIN DROPDOWN
+// app/producto/[slug]/components/ProductInfo.tsx - ✅ SOLO RESERVA POR WHATSAPP
 'use client'
 
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Star, Heart, Share2, ShoppingCart, Plus, Minus, Check,
-  Truck, Shield, RotateCcw, CreditCard, DollarSign, X
+  Star, Heart, Share2, Plus, Minus, Check,
+  Truck, Shield, RotateCcw, MessageCircle, X
 } from 'lucide-react'
 import { formatARS } from '@/lib/utils/currency'
 import type { ProductWithRelations, StockInfo } from '@/lib/types/product'
 import type { ProductVariant } from '@prisma/client'
+
+// ============================================================================
+// CONFIGURACIÓN WHATSAPP
+// ============================================================================
+const WHATSAPP_NUMBER = '5493534017332' // Tu número de WhatsApp con código de país
+
+function generateWhatsAppMessage(product: {
+  name: string
+  subtitle?: string | null
+  price: number
+  variant?: string
+  quantity: number
+  slug: string
+  selectedPayment?: string
+}): string {
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://azulcolchones.com'
+  const productUrl = `${baseUrl}/producto/${product.slug}`
+  
+  const paymentInfo = product.selectedPayment 
+    ? `\n💳 Forma de pago: *${product.selectedPayment}*`
+    : ''
+  
+  const message = `¡Hola! 👋 Quiero reservar:
+
+🛏️ *${product.name}*
+${product.subtitle ? `📝 ${product.subtitle}\n` : ''}📏 Medida: *${product.variant || 'A confirmar'}*
+📦 Cantidad: *${product.quantity}*
+💰 Precio: *${formatARS(product.price)}*${paymentInfo}
+
+🔗 ${productUrl}
+
+¿Está disponible para entrega inmediata?`
+
+  return encodeURIComponent(message)
+}
 
 interface CuotaOption {
   cuotas: number
@@ -146,7 +181,7 @@ function PaymentOption({
 }
 
 // ============================================================================
-// ✅ MODAL DE TODAS LAS CUOTAS (solo cuando usuario hace click en "Ver más")
+// ✅ MODAL DE TODAS LAS CUOTAS
 // ============================================================================
 function AllPaymentPlansModal({ 
   isOpen, 
@@ -330,6 +365,56 @@ export default function ProductInfo({
     return todasLasCuotas.find(c => c.cuotas === 6) || todasLasCuotas[1]
   }, [todasLasCuotas])
 
+  // ✅ Handler para reservar por WhatsApp
+  const handleReserveWhatsApp = () => {
+    if (!selectedVariant) {
+      alert('Por favor seleccioná un tamaño primero')
+      return
+    }
+
+    // Determinar el texto del método de pago seleccionado
+    let paymentText = ''
+    if (selectedCuotas === null) {
+      paymentText = 'Contado - ' + formatARS(basePrice)
+    } else {
+      const cuota = todasLasCuotas.find(c => c.cuotas === selectedCuotas)
+      if (cuota) {
+        paymentText = `${selectedCuotas} cuotas de ${cuota.formatted.precioCuota} (Total: ${cuota.formatted.precioTotal})`
+      }
+    }
+
+    const message = generateWhatsAppMessage({
+      name: product.name,
+      subtitle: product.subtitle,
+      price: currentPrice * quantity,
+      variant: selectedVariant.size,
+      quantity: quantity,
+      slug: product.slug,
+      selectedPayment: paymentText
+    })
+    
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`
+    
+    // Track analytics
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'reserve_whatsapp', {
+        event_category: 'engagement',
+        event_label: product.name,
+        value: currentPrice * quantity,
+        currency: 'ARS',
+        items: [{
+          item_id: product.id,
+          item_name: product.name,
+          item_variant: selectedVariant.size,
+          price: currentPrice,
+          quantity: quantity
+        }]
+      })
+    }
+    
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
@@ -397,7 +482,7 @@ export default function ProductInfo({
       </div>
 
       {/* ============================================================================ */}
-      {/* ✅ SECCIÓN DE PRECIOS OPTIMIZADA - SIEMPRE VISIBLE */}
+      {/* ✅ SECCIÓN DE PRECIOS OPTIMIZADA */}
       {/* ============================================================================ */}
       <div className="space-y-4 sm:space-y-5 p-4 sm:p-6 bg-gradient-to-br from-blue-500/5 via-cyan-500/5 to-blue-500/5 border border-blue-500/20 rounded-xl sm:rounded-2xl">
         
@@ -413,7 +498,7 @@ export default function ProductInfo({
           </div>
         )}
 
-        {/* ✅ 3 OPCIONES PRINCIPALES - GRID SIEMPRE VISIBLE */}
+        {/* ✅ 3 OPCIONES PRINCIPALES */}
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {/* CONTADO */}
           <PaymentOption
@@ -449,7 +534,7 @@ export default function ProductInfo({
           />
         </div>
 
-        {/* ✅ LINK DISCRETO PARA VER MÁS OPCIONES */}
+        {/* ✅ LINK PARA VER MÁS OPCIONES */}
         <div className="text-center pt-2">
           <button
             onClick={() => setShowAllPlans(true)}
@@ -566,16 +651,16 @@ export default function ProductInfo({
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="grid grid-cols-1 gap-3 sm:gap-4">
-        {/* Add to Cart - Main CTA */}
+      {/* ✅ ACTION BUTTONS - SOLO RESERVAR POR WHATSAPP */}
+      <div className="space-y-3 sm:space-y-4">
+        {/* ✅ Reservar por WhatsApp - CTA PRINCIPAL */}
         <button
-          onClick={handleAddToCart}
+          onClick={handleReserveWhatsApp}
           disabled={isOutOfStock}
-          className="w-full px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold text-base sm:text-lg rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-blue-500/25 flex items-center justify-center gap-2 sm:gap-3 min-h-[56px] sm:min-h-[60px]"
+          className="w-full px-6 sm:px-8 py-5 sm:py-6 bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-lg sm:text-xl rounded-xl hover:from-emerald-700 hover:to-green-700 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-emerald-500/25 flex items-center justify-center gap-3 min-h-[64px] sm:min-h-[72px]"
         >
-          <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
-          <span>{isOutOfStock ? 'Agotado' : 'Agregar al Carrito'}</span>
+          <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
+          <span>{isOutOfStock ? 'Agotado' : 'Reservar por WhatsApp'}</span>
         </button>
 
         {/* Secondary Actions */}

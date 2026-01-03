@@ -1,13 +1,39 @@
-// app/catalogo/components/ProductCard.tsx - ✅ CON NAVEGACIÓN EN IMAGEN Y TÍTULO
+// app/catalogo/components/ProductCard.tsx - ✅ CON RESERVA DIRECTA POR WHATSAPP
 'use client'
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
-import { Star, Heart, TrendingUp, Sparkles, ShoppingBag, Zap, Package, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Star, Heart, TrendingUp, Sparkles, Zap, Package, AlertCircle, MessageCircle } from 'lucide-react'
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { formatARS } from '@/lib/utils/currency'
 import { getMejorCuota } from '@/lib/utils/pricing'
-import { useCartStore } from '@/lib/store/cart-store'
+
+// ============================================================================
+// CONFIGURACIÓN WHATSAPP
+// ============================================================================
+const WHATSAPP_NUMBER = '5493534017332' // Tu número de WhatsApp con código de país
+
+function generateWhatsAppMessage(product: {
+  name: string
+  price: number
+  variant?: string
+  slug: string
+}): string {
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://azulcolchones.com'
+  const productUrl = `${baseUrl}/producto/${product.slug}`
+  
+  const message = `¡Hola! 👋 Quiero reservar:
+
+🛏️ *${product.name}*
+📏 Medida: *${product.variant || 'A confirmar'}*
+💰 Precio: *${formatARS(product.price)}*
+
+🔗 ${productUrl}
+
+¿Está disponible para entrega inmediata?`
+
+  return encodeURIComponent(message)
+}
 
 // ============================================================================
 // TYPES
@@ -93,7 +119,7 @@ function useFavorites() {
 }
 
 // ============================================================================
-// SELECTOR DE MEDIDAS - ✅ HOOKS CORREGIDOS
+// SELECTOR DE MEDIDAS
 // ============================================================================
 function SizeSelector({ 
   variants, 
@@ -151,7 +177,7 @@ function SizeSelector({
                 type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={(e) => {
-                  e.stopPropagation() // ✅ Evitar que propague al card
+                  e.stopPropagation()
                   onSelectVariant(variant)
                 }}
                 className={`
@@ -202,16 +228,12 @@ export default function ProductCard({
   const router = useRouter()
   const { favorites, toggleFavorite } = useFavorites()
   
-  const addItem = useCartStore(state => state.addItem)
-  
   const isFavorite = favorites.has(product.id)
   
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null)
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number}>>([])
-  const [addedToCart, setAddedToCart] = useState(false)
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
   
   const cardRef = useRef<HTMLDivElement>(null)
   const particleIdRef = useRef(0)
@@ -321,75 +343,48 @@ export default function ProductCard({
     toggleFavorite(product.id)
   }, [toggleFavorite, product.id])
   
-  // ✅ NUEVO: Handler para navegar al producto
   const handleNavigateToProduct = useCallback((e: React.MouseEvent) => {
-    // No prevenir default ni stopPropagation para que el click funcione normal
     const url = `/producto/${product.slug}${selectedVariant ? `?variant=${selectedVariant.id}` : ''}`
     router.push(url)
   }, [product.slug, selectedVariant, router])
   
-  const handleAddToCart = useCallback(async (e: React.MouseEvent) => {
+  // ✅ NUEVO: Handler para reservar por WhatsApp
+  const handleReserveWhatsApp = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     
     if (!selectedVariant) {
-      alert('Por favor seleccioná una medida')
+      alert('Por favor seleccioná una medida primero')
       return
     }
     
-    if (isAddingToCart) return
+    const message = generateWhatsAppMessage({
+      name: product.name,
+      price: finalPrice,
+      variant: selectedVariant.size,
+      slug: product.slug
+    })
     
-    setIsAddingToCart(true)
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`
     
-    try {
-      addItem({
-        productId: product.id,
-        name: product.name,
-        size: selectedVariant.size,
-        price: finalPrice,
-        originalPrice: originalPrice || undefined,
-        quantity: 1,
-        image: productImage,
-        slug: product.slug,
-        variant: selectedVariant.size
+    // Track analytics
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'reserve_whatsapp', {
+        event_category: 'engagement',
+        event_label: product.name,
+        value: finalPrice,
+        currency: 'ARS',
+        items: [{
+          item_id: product.id,
+          item_name: product.name,
+          item_variant: selectedVariant.size,
+          price: finalPrice,
+        }]
       })
-      
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'add_to_cart', {
-          currency: 'ARS',
-          value: finalPrice,
-          items: [{
-            item_id: product.id,
-            item_name: product.name,
-            item_variant: selectedVariant.size,
-            price: finalPrice,
-            quantity: 1
-          }]
-        })
-      }
-      
-      setAddedToCart(true)
-      
-      setTimeout(() => {
-        router.push('/carrito')
-      }, 1500)
-      
-    } catch (error) {
-      console.error('Error adding to cart:', error)
-      alert('Error al agregar al carrito. Intentá de nuevo.')
-      setIsAddingToCart(false)
-      setAddedToCart(false)
     }
-  }, [
-    selectedVariant, 
-    isAddingToCart, 
-    product, 
-    finalPrice, 
-    originalPrice, 
-    productImage, 
-    addItem, 
-    router
-  ])
+    
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+  }, [selectedVariant, product, finalPrice])
   
   const handleImageError = useCallback(() => {
     console.warn(`Image load error for product: ${product.id}`)
@@ -456,32 +451,6 @@ export default function ProductCard({
               </div>
             )}
             
-            <AnimatePresence>
-              {addedToCart && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className="absolute inset-0 bg-emerald-500/95 z-40 flex flex-col items-center justify-center backdrop-blur-sm"
-                >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.1, type: 'spring' }}
-                  >
-                    <CheckCircle2 className="w-16 h-16 text-white mb-4" />
-                  </motion.div>
-                  <p className="text-xl font-black text-white mb-2">¡Agregado al carrito!</p>
-                  <p className="text-sm text-white/90">Redirigiendo...</p>
-                  <div className="mt-4 flex gap-1">
-                    <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            
             <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 flex flex-col gap-1 sm:gap-2">
               {product.isBestSeller && (
                 <motion.div
@@ -536,7 +505,6 @@ export default function ProductCard({
               />
             </motion.button>
             
-            {/* ✅ IMAGEN CLICKEABLE */}
             <div 
               onClick={handleNavigateToProduct}
               className="relative h-64 sm:h-80 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden cursor-pointer"
@@ -586,7 +554,6 @@ export default function ProductCard({
                 </span>
               </div>
               
-              {/* ✅ TÍTULO CLICKEABLE */}
               <div>
                 <h3 
                   onClick={handleNavigateToProduct}
@@ -672,37 +639,18 @@ export default function ProductCard({
                 
                 {hasStock && (
                   <motion.button
-                    onClick={handleAddToCart}
+                    onClick={handleReserveWhatsApp}
                     whileTap={{ scale: 0.97 }}
-                    disabled={!selectedVariant || isAddingToCart || addedToCart}
+                    disabled={!selectedVariant}
                     className={`py-3 rounded-xl font-bold text-white text-xs sm:text-sm text-center transition-all ${
-                      selectedVariant && !isAddingToCart && !addedToCart
-                        ? 'bg-gradient-to-r from-blue-600 to-cyan-600 shadow-md hover:shadow-lg hover:from-blue-700 hover:to-cyan-700'
+                      selectedVariant
+                        ? 'bg-gradient-to-r from-emerald-600 to-green-600 shadow-md hover:shadow-lg hover:from-emerald-700 hover:to-green-700'
                         : 'bg-gray-300 cursor-not-allowed'
                     }`}
                   >
                     <span className="flex items-center justify-center gap-1.5">
-                      {isAddingToCart ? (
-                        <>
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                          >
-                            <Package className="w-4 h-4" />
-                          </motion.div>
-                          <span>Agregando...</span>
-                        </>
-                      ) : addedToCart ? (
-                        <>
-                          <CheckCircle2 className="w-4 h-4" />
-                          <span>¡Agregado!</span>
-                        </>
-                      ) : (
-                        <>
-                          <ShoppingBag className="w-4 h-4" />
-                          <span>Agregar</span>
-                        </>
-                      )}
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Reservar</span>
                     </span>
                   </motion.button>
                 )}

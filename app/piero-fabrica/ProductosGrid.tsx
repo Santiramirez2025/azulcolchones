@@ -310,628 +310,628 @@ function ProductCard({
 
 export default function ProductosGridOptimizado() {
   const [categoriaActiva, setCategoriaActiva] = useState<'todos' | 'plaza' | 'plaza-media' | 'queen' | 'king' | 'accesorios'>('todos')
-
-  // ============================================================================
-  // PRODUCTOS DATA - ACTUALIZADOS CON PRECIOS REALES DEL PDF
-  // ============================================================================
   
-  const productosAncla: ProductCardProps[] = [
-    // ========== NIRVANA - LÍNEA ANCLA ==========
-    {
-      nombre: 'Nirvana',
-      tamaño: '190x80 (1 plaza)',
-      precioPublico: 317285,
-      precioMercadoLibre: 431080,
-      ahorro: 113795,
-      ahorroPorc: 26,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/nirvana-80.jpg'
-    },
-    {
-      nombre: 'Nirvana',
-      tamaño: '190x90 (1 plaza)',
-      precioPublico: 353608,
-      precioMercadoLibre: 504451,
-      ahorro: 150843,
-      ahorroPorc: 30,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/nirvana-90.jpg'
-    },
-    {
-      nombre: 'Nirvana',
-      tamaño: '190x100 (1 plaza)',
-      precioPublico: 401781,
-      precioMercadoLibre: 573175,
-      ahorro: 171394,
-      ahorroPorc: 30,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/nirvana-100.jpg'
-    },
-    {
-      nombre: 'Nirvana',
-      tamaño: '190x130 (1½ plaza)',
-      precioPublico: 502036,
-      precioMercadoLibre: 716197,
-      ahorro: 214161,
-      ahorroPorc: 30,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/nirvana-130.jpg'
-    },
-    {
-      nombre: 'Nirvana',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 537416,
-      precioMercadoLibre: 688483,
-      ahorro: 151067,
-      ahorroPorc: 22,
-      categoria: 'ancla',
-      destacado: false,
-      stock: 'disponible',
-      imagen: '/images/nirvana-140.jpg'
-    },
-    {
-      nombre: 'Nirvana',
-      tamaño: '190x160 (2 plazas)',
-      precioPublico: 684966,
-      precioMercadoLibre: 977163,
-      ahorro: 292197,
-      ahorroPorc: 30,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/nirvana-160.jpg'
-    },
-    {
-      nombre: 'Nirvana',
-      tamaño: '200x180 (Queen)',
-      precioPublico: 753463,
-      precioMercadoLibre: 1074879,
-      ahorro: 321416,
-      ahorroPorc: 30,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/nirvana-180.jpg'
-    },
-    {
-      nombre: 'Nirvana',
-      tamaño: '200x200 (King)',
-      precioPublico: 813751,
-      precioMercadoLibre: 988077,
-      ahorro: 174326,
-      ahorroPorc: 18,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/nirvana-200.jpg'
-    },
-    // ========== MEDITARE EUROPILLOW - LÍNEA ANCLA ==========
-    {
-      nombre: 'Meditare EuroPillow',
-      tamaño: '190x80 (1 plaza)',
-      precioPublico: 205302,
-      precioMercadoLibre: 220000,
-      ahorro: 14698,
-      ahorroPorc: 7,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-80.jpg'
-    },
-    {
-      nombre: 'Meditare EuroPillow',
-      tamaño: '190x90 (1 plaza)',
-      precioPublico: 228208,
-      precioMercadoLibre: 245000,
-      ahorro: 16792,
-      ahorroPorc: 7,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-90.jpg'
-    },
-    {
-      nombre: 'Meditare EuroPillow',
-      tamaño: '190x100 (1 plaza)',
-      precioPublico: 251292,
-      precioMercadoLibre: 262000,
-      ahorro: 10708,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-100.jpg'
-    },
-    {
-      nombre: 'Meditare EuroPillow',
-      tamaño: '190x130 (1½ plaza)',
-      precioPublico: 319975,
-      precioMercadoLibre: 332000,
-      ahorro: 12025,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-130.jpg'
-    },
-    {
-      nombre: 'Meditare EuroPillow',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 344305,
-      precioMercadoLibre: 357000,
-      ahorro: 12695,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-140.jpg'
-    },
-  ]
+  // ============================================================================
+// PRODUCTOS DATA - CON NOMBRES OPTIMIZADOS PARA BÚSQUEDA
+// ============================================================================
 
-  const productosEquilibrio: ProductCardProps[] = [
-    // ========== SONNO EUROPILLOW - LÍNEA EQUILIBRIO ==========
-    {
-      nombre: 'Sonno EuroPillow',
-      tamaño: '190x80 (1 plaza)',
-      precioPublico: 281772,
-      precioMercadoLibre: 312000,
-      ahorro: 30228,
-      ahorroPorc: 10,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/sonno-ep-80.jpg'
-    },
-    {
-      nombre: 'Sonno EuroPillow',
-      tamaño: '190x90 (1 plaza)',
-      precioPublico: 307453,
-      precioMercadoLibre: 341000,
-      ahorro: 33547,
-      ahorroPorc: 10,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/sonno-ep-90.jpg'
-    },
-    {
-      nombre: 'Sonno EuroPillow',
-      tamaño: '190x100 (1 plaza)',
-      precioPublico: 333420,
-      precioMercadoLibre: 370000,
-      ahorro: 36580,
-      ahorroPorc: 10,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/sonno-ep-100.jpg'
-    },
-    {
-      nombre: 'Sonno EuroPillow',
-      tamaño: '190x130 (1½ plaza)',
-      precioPublico: 422073,
-      precioMercadoLibre: 468000,
-      ahorro: 45927,
-      ahorroPorc: 10,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/sonno-ep-130.jpg'
-    },
-    {
-      nombre: 'Sonno EuroPillow',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 458198,
-      precioMercadoLibre: 650000,
-      ahorro: 191802,
-      ahorroPorc: 29,
-      categoria: 'equilibrio',
-      destacado: true,
-      stock: 'disponible',
-      imagen: '/images/sonno-ep-140.jpg'
-    },
-    {
-      nombre: 'Sonno EuroPillow',
-      tamaño: '190x160 (2 plazas)',
-      precioPublico: 499893,
-      precioMercadoLibre: 555000,
-      ahorro: 55107,
-      ahorroPorc: 10,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/sonno-ep-160.jpg'
-    },
-    // ========== REGNO - LÍNEA EQUILIBRIO ==========
-    {
-      nombre: 'Regno',
-      tamaño: '190x80 (1 plaza)',
-      precioPublico: 291464,
-      precioMercadoLibre: 390000,
-      ahorro: 98536,
-      ahorroPorc: 25,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-80.jpg'
-    },
-    {
-      nombre: 'Regno',
-      tamaño: '190x90 (1 plaza)',
-      precioPublico: 315299,
-      precioMercadoLibre: 422000,
-      ahorro: 106701,
-      ahorroPorc: 25,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-90.jpg'
-    },
-    {
-      nombre: 'Regno',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 449186,
-      precioMercadoLibre: 709000,
-      ahorro: 259814,
-      ahorroPorc: 37,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-140.jpg'
-    },
-    {
-      nombre: 'Regno',
-      tamaño: '200x160 (Queen)',
-      precioPublico: 530167,
-      precioMercadoLibre: 956000,
-      ahorro: 425833,
-      ahorroPorc: 45,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-160.jpg'
-    },
-    {
-      nombre: 'Regno',
-      tamaño: '200x200 (King)',
-      precioPublico: 652582,
-      precioMercadoLibre: 873000,
-      ahorro: 220418,
-      ahorroPorc: 25,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-200.jpg'
-    },
-    // ========== REGNO PILLOW TOP - LÍNEA EQUILIBRIO ==========
-    {
-      nombre: 'Regno Pillow Top',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 561631,
-      precioMercadoLibre: 601000,
-      ahorro: 39369,
-      ahorroPorc: 7,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-pillow-140.jpg'
-    },
-    {
-      nombre: 'Regno Pillow Top',
-      tamaño: '200x160 (Queen)',
-      precioPublico: 644294,
-      precioMercadoLibre: 775000,
-      ahorro: 130706,
-      ahorroPorc: 17,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-pillow-160.jpg'
-    },
-    {
-      nombre: 'Regno Pillow Top',
-      tamaño: '200x180 (Queen XL)',
-      precioPublico: 714436,
-      precioMercadoLibre: 956000,
-      ahorro: 241564,
-      ahorroPorc: 25,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-pillow-180.jpg'
-    },
-    {
-      nombre: 'Regno Pillow Top',
-      tamaño: '200x200 (King)',
-      precioPublico: 783921,
-      precioMercadoLibre: 1049000,
-      ahorro: 265079,
-      ahorroPorc: 25,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/regno-pillow-200.jpg'
-    },
-    // ========== GRAVITA - LÍNEA EQUILIBRIO ==========
-    {
-      nombre: 'Gravita',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 736057,
-      precioMercadoLibre: 980000,
-      ahorro: 243943,
-      ahorroPorc: 25,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/gravita-140.jpg'
-    },
-    {
-      nombre: 'Gravita',
-      tamaño: '200x160 (Queen)',
-      precioPublico: 905309,
-      precioMercadoLibre: 1083000,
-      ahorro: 177691,
-      ahorroPorc: 16,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/gravita-160.jpg'
-    },
-    {
-      nombre: 'Gravita',
-      tamaño: '200x180 (Queen XL)',
-      precioPublico: 969064,
-      precioMercadoLibre: 1266000,
-      ahorro: 296936,
-      ahorroPorc: 23,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/gravita-180.jpg'
-    },
-    {
-      nombre: 'Gravita',
-      tamaño: '200x200 (King)',
-      precioPublico: 1030613,
-      precioMercadoLibre: 1289000,
-      ahorro: 258387,
-      ahorroPorc: 20,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/gravita-200.jpg'
-    },
-    // ========== NAMASTE - LÍNEA EQUILIBRIO ==========
-    {
-      nombre: 'Namaste',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 414729,
-      precioMercadoLibre: 394000,
-      ahorro: 0, // No mostrar ahorro porque ML es más barato
-      ahorroPorc: 0,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/namaste-140.jpg'
-    },
-    {
-      nombre: 'Namaste',
-      tamaño: '200x160 (Queen)',
-      precioPublico: 528948,
-      precioMercadoLibre: 558000,
-      ahorro: 29052,
-      ahorroPorc: 5,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/namaste-160.jpg'
-    },
-    {
-      nombre: 'Namaste',
-      tamaño: '200x200 (King)',
-      precioPublico: 634739,
-      precioMercadoLibre: 669000,
-      ahorro: 34261,
-      ahorroPorc: 5,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/namaste-200.jpg'
-    },
-    // ========== NAMASTE PILLOW TOP - LÍNEA EQUILIBRIO ==========
-    {
-      nombre: 'Namaste Pillow Top',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 526051,
-      precioMercadoLibre: 554353,
-      ahorro: 28302,
-      ahorroPorc: 5,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/namaste-pillow-140.jpg'
-    },
-    {
-      nombre: 'Namaste Pillow Top',
-      tamaño: '200x160 (Queen)',
-      precioPublico: 601644,
-      precioMercadoLibre: 635000,
-      ahorro: 33356,
-      ahorroPorc: 5,
-      categoria: 'equilibrio',
-      stock: 'disponible',
-      imagen: '/images/namaste-pillow-160.jpg'
-    },
-  ]
+const productosAncla: ProductCardProps[] = [
+  // ========== NIRVANA - LÍNEA ANCLA ==========
+  {
+    nombre: 'Colchón Piero Nirvana',
+    tamaño: '190x80 (1 plaza)',
+    precioPublico: 317285,
+    precioMercadoLibre: 431080,
+    ahorro: 113795,
+    ahorroPorc: 26,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/nirvana-80.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Nirvana',
+    tamaño: '190x90 (1 plaza)',
+    precioPublico: 353608,
+    precioMercadoLibre: 504451,
+    ahorro: 150843,
+    ahorroPorc: 30,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/nirvana-90.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Nirvana',
+    tamaño: '190x100 (1 plaza)',
+    precioPublico: 401781,
+    precioMercadoLibre: 573175,
+    ahorro: 171394,
+    ahorroPorc: 30,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/nirvana-100.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Nirvana',
+    tamaño: '190x130 (1½ plaza)',
+    precioPublico: 502036,
+    precioMercadoLibre: 716197,
+    ahorro: 214161,
+    ahorroPorc: 30,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/nirvana-130.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Nirvana',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 537416,
+    precioMercadoLibre: 688483,
+    ahorro: 151067,
+    ahorroPorc: 22,
+    categoria: 'ancla',
+    destacado: false,
+    stock: 'disponible',
+    imagen: '/images/nirvana-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Nirvana',
+    tamaño: '190x160 (2 plazas)',
+    precioPublico: 684966,
+    precioMercadoLibre: 977163,
+    ahorro: 292197,
+    ahorroPorc: 30,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/nirvana-160.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Nirvana',
+    tamaño: '200x180 (Queen)',
+    precioPublico: 753463,
+    precioMercadoLibre: 1074879,
+    ahorro: 321416,
+    ahorroPorc: 30,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/nirvana-180.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Nirvana',
+    tamaño: '200x200 (King)',
+    precioPublico: 813751,
+    precioMercadoLibre: 988077,
+    ahorro: 174326,
+    ahorroPorc: 18,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/nirvana-200.jpg'
+  },
+  // ========== MEDITARE EUROPILLOW - LÍNEA ANCLA ==========
+  {
+    nombre: 'Colchón Piero Meditare EuroPillow',
+    tamaño: '190x80 (1 plaza)',
+    precioPublico: 205302,
+    precioMercadoLibre: 220000,
+    ahorro: 14698,
+    ahorroPorc: 7,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/meditare-ep-80.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Meditare EuroPillow',
+    tamaño: '190x90 (1 plaza)',
+    precioPublico: 228208,
+    precioMercadoLibre: 245000,
+    ahorro: 16792,
+    ahorroPorc: 7,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/meditare-ep-90.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Meditare EuroPillow',
+    tamaño: '190x100 (1 plaza)',
+    precioPublico: 251292,
+    precioMercadoLibre: 262000,
+    ahorro: 10708,
+    ahorroPorc: 4,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/meditare-ep-100.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Meditare EuroPillow',
+    tamaño: '190x130 (1½ plaza)',
+    precioPublico: 319975,
+    precioMercadoLibre: 332000,
+    ahorro: 12025,
+    ahorroPorc: 4,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/meditare-ep-130.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Meditare EuroPillow',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 344305,
+    precioMercadoLibre: 357000,
+    ahorro: 12695,
+    ahorroPorc: 4,
+    categoria: 'ancla',
+    stock: 'disponible',
+    imagen: '/images/meditare-ep-140.jpg'
+  },
+]
 
-  const productosPremium: ProductCardProps[] = [
-    // ========== MONTREAUX - LÍNEA PREMIUM ==========
-    {
-      nombre: 'Montreaux',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 772562,
-      precioMercadoLibre: 1339000,
-      ahorro: 566438,
-      ahorroPorc: 42,
-      categoria: 'premium',
-      stock: 'disponible',
-      imagen: '/images/montreaux-140.jpg'
-    },
-    {
-      nombre: 'Montreaux',
-      tamaño: '200x160 (Queen)',
-      precioPublico: 969298,
-      precioMercadoLibre: 1661000,
-      ahorro: 691702,
-      ahorroPorc: 42,
-      categoria: 'premium',
-      stock: 'disponible',
-      imagen: '/images/montreaux-160.jpg'
-    },
-    {
-      nombre: 'Montreaux',
-      tamaño: '200x200 (King)',
-      precioPublico: 1098836,
-      precioMercadoLibre: 1883000,
-      ahorro: 784164,
-      ahorroPorc: 42,
-      categoria: 'premium',
-      stock: 'disponible',
-      imagen: '/images/montreaux-200.jpg'
-    },
-    // ========== MONTREAUX PILLOW TOP - LÍNEA PREMIUM ==========
-    {
-      nombre: 'Montreaux Pillow Top',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 970520,
-      precioMercadoLibre: 1496000,
-      ahorro: 525480,
-      ahorroPorc: 35,
-      categoria: 'premium',
-      stock: 'disponible',
-      imagen: '/images/montreaux-pillow-140.jpg'
-    },
-    {
-      nombre: 'Montreaux Pillow Top',
-      tamaño: '200x160 (Queen)',
-      precioPublico: 1182651,
-      precioMercadoLibre: 2027000,
-      ahorro: 844349,
-      ahorroPorc: 42,
-      categoria: 'premium',
-      destacado: true,
-      stock: 'disponible',
-      imagen: '/images/montreaux-pillow-160.jpg'
-    },
-    {
-      nombre: 'Montreaux Pillow Top',
-      tamaño: '200x180 (Queen XL)',
-      precioPublico: 1268890,
-      precioMercadoLibre: 2234000,
-      ahorro: 965110,
-      ahorroPorc: 43,
-      categoria: 'premium',
-      stock: 'disponible',
-      imagen: '/images/montreaux-pillow-180.jpg'
-    },
-    {
-      nombre: 'Montreaux Pillow Top',
-      tamaño: '200x200 (King)',
-      precioPublico: 1345844,
-      precioMercadoLibre: 2612000,
-      ahorro: 1266156,
-      ahorroPorc: 48,
-      categoria: 'premium',
-      stock: 'disponible',
-      imagen: '/images/montreaux-pillow-200.jpg'
-    },
-    // ========== DREAM FIT POCKET - LÍNEA PREMIUM ==========
-    {
-      nombre: 'Dream Fit Pocket',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 1906774,
-      precioMercadoLibre: 2037000,
-      ahorro: 130226,
-      ahorroPorc: 6,
-      categoria: 'premium',
-      stock: 'consultar',
-      imagen: '/images/dreamfit-pocket-140.jpg'
-    },
-    {
-      nombre: 'Dream Fit Pocket',
-      tamaño: '200x160 (Queen)',
-      precioPublico: 2195670,
-      precioMercadoLibre: 2346000,
-      ahorro: 150330,
-      ahorroPorc: 6,
-      categoria: 'premium',
-      stock: 'consultar',
-      imagen: '/images/dreamfit-pocket-160.jpg'
-    },
-    {
-      nombre: 'Dream Fit Pocket',
-      tamaño: '200x200 (King)',
-      precioPublico: 2498649,
-      precioMercadoLibre: 2670000,
-      ahorro: 171351,
-      ahorroPorc: 6,
-      categoria: 'premium',
-      stock: 'consultar',
-      imagen: '/images/dreamfit-pocket-200.jpg'
-    },
-  ]
+const productosEquilibrio: ProductCardProps[] = [
+  // ========== SONNO EUROPILLOW - LÍNEA EQUILIBRIO ==========
+  {
+    nombre: 'Colchón Piero Sonno EuroPillow',
+    tamaño: '190x80 (1 plaza)',
+    precioPublico: 281772,
+    precioMercadoLibre: 312000,
+    ahorro: 30228,
+    ahorroPorc: 10,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/sonno-ep-80.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Sonno EuroPillow',
+    tamaño: '190x90 (1 plaza)',
+    precioPublico: 307453,
+    precioMercadoLibre: 341000,
+    ahorro: 33547,
+    ahorroPorc: 10,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/sonno-ep-90.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Sonno EuroPillow',
+    tamaño: '190x100 (1 plaza)',
+    precioPublico: 333420,
+    precioMercadoLibre: 370000,
+    ahorro: 36580,
+    ahorroPorc: 10,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/sonno-ep-100.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Sonno EuroPillow',
+    tamaño: '190x130 (1½ plaza)',
+    precioPublico: 422073,
+    precioMercadoLibre: 468000,
+    ahorro: 45927,
+    ahorroPorc: 10,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/sonno-ep-130.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Sonno EuroPillow',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 458198,
+    precioMercadoLibre: 650000,
+    ahorro: 191802,
+    ahorroPorc: 29,
+    categoria: 'equilibrio',
+    destacado: true,
+    stock: 'disponible',
+    imagen: '/images/sonno-ep-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Sonno EuroPillow',
+    tamaño: '190x160 (2 plazas)',
+    precioPublico: 499893,
+    precioMercadoLibre: 555000,
+    ahorro: 55107,
+    ahorroPorc: 10,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/sonno-ep-160.jpg'
+  },
+  // ========== REGNO - LÍNEA EQUILIBRIO ==========
+  {
+    nombre: 'Colchón Piero Regno',
+    tamaño: '190x80 (1 plaza)',
+    precioPublico: 291464,
+    precioMercadoLibre: 390000,
+    ahorro: 98536,
+    ahorroPorc: 25,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-80.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Regno',
+    tamaño: '190x90 (1 plaza)',
+    precioPublico: 315299,
+    precioMercadoLibre: 422000,
+    ahorro: 106701,
+    ahorroPorc: 25,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-90.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Regno',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 449186,
+    precioMercadoLibre: 709000,
+    ahorro: 259814,
+    ahorroPorc: 37,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Regno',
+    tamaño: '200x160 (Queen)',
+    precioPublico: 530167,
+    precioMercadoLibre: 956000,
+    ahorro: 425833,
+    ahorroPorc: 45,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-160.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Regno',
+    tamaño: '200x200 (King)',
+    precioPublico: 652582,
+    precioMercadoLibre: 873000,
+    ahorro: 220418,
+    ahorroPorc: 25,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-200.jpg'
+  },
+  // ========== REGNO PILLOW TOP - LÍNEA EQUILIBRIO ==========
+  {
+    nombre: 'Colchón Piero Regno Pillow Top',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 561631,
+    precioMercadoLibre: 601000,
+    ahorro: 39369,
+    ahorroPorc: 7,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-pillow-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Regno Pillow Top',
+    tamaño: '200x160 (Queen)',
+    precioPublico: 644294,
+    precioMercadoLibre: 775000,
+    ahorro: 130706,
+    ahorroPorc: 17,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-pillow-160.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Regno Pillow Top',
+    tamaño: '200x180 (Queen XL)',
+    precioPublico: 714436,
+    precioMercadoLibre: 956000,
+    ahorro: 241564,
+    ahorroPorc: 25,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-pillow-180.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Regno Pillow Top',
+    tamaño: '200x200 (King)',
+    precioPublico: 783921,
+    precioMercadoLibre: 1049000,
+    ahorro: 265079,
+    ahorroPorc: 25,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/regno-pillow-200.jpg'
+  },
+  // ========== GRAVITA - LÍNEA EQUILIBRIO ==========
+  {
+    nombre: 'Colchón Piero Gravita',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 736057,
+    precioMercadoLibre: 980000,
+    ahorro: 243943,
+    ahorroPorc: 25,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/gravita-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Gravita',
+    tamaño: '200x160 (Queen)',
+    precioPublico: 905309,
+    precioMercadoLibre: 1083000,
+    ahorro: 177691,
+    ahorroPorc: 16,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/gravita-160.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Gravita',
+    tamaño: '200x180 (Queen XL)',
+    precioPublico: 969064,
+    precioMercadoLibre: 1266000,
+    ahorro: 296936,
+    ahorroPorc: 23,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/gravita-180.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Gravita',
+    tamaño: '200x200 (King)',
+    precioPublico: 1030613,
+    precioMercadoLibre: 1289000,
+    ahorro: 258387,
+    ahorroPorc: 20,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/gravita-200.jpg'
+  },
+  // ========== NAMASTE - LÍNEA EQUILIBRIO ==========
+  {
+    nombre: 'Colchón Piero Namaste',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 414729,
+    precioMercadoLibre: 394000,
+    ahorro: 0,
+    ahorroPorc: 0,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/namaste-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Namaste',
+    tamaño: '200x160 (Queen)',
+    precioPublico: 528948,
+    precioMercadoLibre: 558000,
+    ahorro: 29052,
+    ahorroPorc: 5,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/namaste-160.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Namaste',
+    tamaño: '200x200 (King)',
+    precioPublico: 634739,
+    precioMercadoLibre: 669000,
+    ahorro: 34261,
+    ahorroPorc: 5,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/namaste-200.jpg'
+  },
+  // ========== NAMASTE PILLOW TOP - LÍNEA EQUILIBRIO ==========
+  {
+    nombre: 'Colchón Piero Namaste Pillow Top',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 526051,
+    precioMercadoLibre: 554353,
+    ahorro: 28302,
+    ahorroPorc: 5,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/namaste-pillow-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Namaste Pillow Top',
+    tamaño: '200x160 (Queen)',
+    precioPublico: 601644,
+    precioMercadoLibre: 635000,
+    ahorro: 33356,
+    ahorroPorc: 5,
+    categoria: 'equilibrio',
+    stock: 'disponible',
+    imagen: '/images/namaste-pillow-160.jpg'
+  },
+]
 
-  const accesorios: ProductCardProps[] = [
-    // ========== PROTECTORES ==========
-    {
-      nombre: 'Protector Impermeable',
-      tamaño: '140x190 cm',
-      precioPublico: 36900,
-      categoria: 'accesorio',
-      stock: 'disponible',
-      tipo: 'protector',
-      imagen: '/images/protector-140.jpg'
-    },
-    {
-      nombre: 'Protector Impermeable',
-      tamaño: '160x200 cm (Queen)',
-      precioPublico: 39900,
-      categoria: 'accesorio',
-      stock: 'disponible',
-      tipo: 'protector',
-      imagen: '/images/protector-160.jpg'
-    },
-    {
-      nombre: 'Protector Impermeable',
-      tamaño: '200x200 cm (King)',
-      precioPublico: 42900,
-      categoria: 'accesorio',
-      stock: 'disponible',
-      tipo: 'protector',
-      imagen: '/images/protector-200.jpg'
-    },
-    // ========== ALMOHADAS ==========
-    {
-      nombre: 'Almohada Fibra Smart Tech Plus',
-      tamaño: '70x50 cm',
-      precioPublico: 39900,
-      categoria: 'accesorio',
-      stock: 'disponible',
-      tipo: 'almohada',
-      imagen: '/images/almohada-fibra.jpg'
-    },
-    {
-      nombre: 'Almohada Micro Max Premium',
-      tamaño: '70x50 cm',
-      precioPublico: 69900,
-      categoria: 'accesorio',
-      stock: 'disponible',
-      tipo: 'almohada',
-      imagen: '/images/almohada-micro.jpg'
-    },
-    // ========== SÁBANAS BAMBOO ==========
-    {
-      nombre: 'Sábanas Bamboo 600 Hilos',
-      tamaño: '140x190 cm',
-      precioPublico: 89900,
-      categoria: 'accesorio',
-      stock: 'disponible',
-      tipo: 'sabanas',
-      imagen: '/images/sabanas-140.jpg'
-    },
-    {
-      nombre: 'Sábanas Bamboo 600 Hilos',
-      tamaño: '160x200 cm (Queen)',
-      precioPublico: 119900,
-      categoria: 'accesorio',
-      stock: 'disponible',
-      tipo: 'sabanas',
-      imagen: '/images/sabanas-160.jpg'
-    },
-    {
-      nombre: 'Sábanas Bamboo 600 Hilos',
-      tamaño: '200x200 cm (King)',
-      precioPublico: 139900,
-      categoria: 'accesorio',
-      stock: 'disponible',
-      tipo: 'sabanas',
-      imagen: '/images/sabanas-200.jpg'
-    },
-  ]
+const productosPremium: ProductCardProps[] = [
+  // ========== MONTREAUX - LÍNEA PREMIUM ==========
+  {
+    nombre: 'Colchón Piero Montreaux',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 772562,
+    precioMercadoLibre: 1339000,
+    ahorro: 566438,
+    ahorroPorc: 42,
+    categoria: 'premium',
+    stock: 'disponible',
+    imagen: '/images/montreaux-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Montreaux',
+    tamaño: '200x160 (Queen)',
+    precioPublico: 969298,
+    precioMercadoLibre: 1661000,
+    ahorro: 691702,
+    ahorroPorc: 42,
+    categoria: 'premium',
+    stock: 'disponible',
+    imagen: '/images/montreaux-160.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Montreaux',
+    tamaño: '200x200 (King)',
+    precioPublico: 1098836,
+    precioMercadoLibre: 1883000,
+    ahorro: 784164,
+    ahorroPorc: 42,
+    categoria: 'premium',
+    stock: 'disponible',
+    imagen: '/images/montreaux-200.jpg'
+  },
+  // ========== MONTREAUX PILLOW TOP - LÍNEA PREMIUM ==========
+  {
+    nombre: 'Colchón Piero Montreaux Pillow Top',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 970520,
+    precioMercadoLibre: 1496000,
+    ahorro: 525480,
+    ahorroPorc: 35,
+    categoria: 'premium',
+    stock: 'disponible',
+    imagen: '/images/montreaux-pillow-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Montreaux Pillow Top',
+    tamaño: '200x160 (Queen)',
+    precioPublico: 1182651,
+    precioMercadoLibre: 2027000,
+    ahorro: 844349,
+    ahorroPorc: 42,
+    categoria: 'premium',
+    destacado: true,
+    stock: 'disponible',
+    imagen: '/images/montreaux-pillow-160.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Montreaux Pillow Top',
+    tamaño: '200x180 (Queen XL)',
+    precioPublico: 1268890,
+    precioMercadoLibre: 2234000,
+    ahorro: 965110,
+    ahorroPorc: 43,
+    categoria: 'premium',
+    stock: 'disponible',
+    imagen: '/images/montreaux-pillow-180.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Montreaux Pillow Top',
+    tamaño: '200x200 (King)',
+    precioPublico: 1345844,
+    precioMercadoLibre: 2612000,
+    ahorro: 1266156,
+    ahorroPorc: 48,
+    categoria: 'premium',
+    stock: 'disponible',
+    imagen: '/images/montreaux-pillow-200.jpg'
+  },
+  // ========== DREAM FIT POCKET - LÍNEA PREMIUM ==========
+  {
+    nombre: 'Colchón Piero Dream Fit Pocket',
+    tamaño: '190x140 (2 plazas)',
+    precioPublico: 1906774,
+    precioMercadoLibre: 2037000,
+    ahorro: 130226,
+    ahorroPorc: 6,
+    categoria: 'premium',
+    stock: 'consultar',
+    imagen: '/images/dreamfit-pocket-140.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Dream Fit Pocket',
+    tamaño: '200x160 (Queen)',
+    precioPublico: 2195670,
+    precioMercadoLibre: 2346000,
+    ahorro: 150330,
+    ahorroPorc: 6,
+    categoria: 'premium',
+    stock: 'consultar',
+    imagen: '/images/dreamfit-pocket-160.jpg'
+  },
+  {
+    nombre: 'Colchón Piero Dream Fit Pocket',
+    tamaño: '200x200 (King)',
+    precioPublico: 2498649,
+    precioMercadoLibre: 2670000,
+    ahorro: 171351,
+    ahorroPorc: 6,
+    categoria: 'premium',
+    stock: 'consultar',
+    imagen: '/images/dreamfit-pocket-200.jpg'
+  },
+]
+
+const accesorios: ProductCardProps[] = [
+  // ========== PROTECTORES ==========
+  {
+    nombre: 'Protector Impermeable Piero',
+    tamaño: '140x190 cm',
+    precioPublico: 36900,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'protector',
+    imagen: '/images/protector-140.jpg'
+  },
+  {
+    nombre: 'Protector Impermeable Piero',
+    tamaño: '160x200 cm (Queen)',
+    precioPublico: 39900,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'protector',
+    imagen: '/images/protector-160.jpg'
+  },
+  {
+    nombre: 'Protector Impermeable Piero',
+    tamaño: '200x200 cm (King)',
+    precioPublico: 42900,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'protector',
+    imagen: '/images/protector-200.jpg'
+  },
+  // ========== ALMOHADAS ==========
+  {
+    nombre: 'Almohada Piero Fibra Smart Tech Plus',
+    tamaño: '70x50 cm',
+    precioPublico: 39900,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-fibra.jpg'
+  },
+  {
+    nombre: 'Almohada Piero Micro Max Premium',
+    tamaño: '70x50 cm',
+    precioPublico: 69900,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-micro.jpg'
+  },
+  // ========== SÁBANAS BAMBOO ==========
+  {
+    nombre: 'Sábanas Bamboo Piero 600 Hilos',
+    tamaño: '140x190 cm',
+    precioPublico: 89900,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'sabanas',
+    imagen: '/images/sabanas-140.jpg'
+  },
+  {
+    nombre: 'Sábanas Bamboo Piero 600 Hilos',
+    tamaño: '160x200 cm (Queen)',
+    precioPublico: 119900,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'sabanas',
+    imagen: '/images/sabanas-160.jpg'
+  },
+  {
+    nombre: 'Sábanas Bamboo Piero 600 Hilos',
+    tamaño: '200x200 cm (King)',
+    precioPublico: 139900,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'sabanas',
+    imagen: '/images/sabanas-200.jpg'
+  },
+]
 
   const todosLosProductos = [
     ...productosAncla,

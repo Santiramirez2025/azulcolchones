@@ -20,11 +20,7 @@ export default function FAQOptimizada() {
     },
     {
       q: '¿Puedo pagar en cuotas?',
-      a: 'Sí, hasta 12 cuotas sin interés con tarjetas habilitadas. También aceptamos MercadoPago, transferencia bancaria y efectivo (con descuento adicional del 5%).'
-    },
-    {
-      q: '¿Qué pasa si no me gusta cuando llega?',
-      a: 'Tenés 30 días de prueba en tu casa. Si no te convence, lo cambiamos por otro modelo o te devolvemos el 100% del dinero. Sin preguntas. Pero esto casi nunca pasa porque te asesoramos personalmente antes de comprar.'
+      a: 'Sí aceptamos MercadoPago, transferencia bancaria y efectivo.'
     },
     {
       q: '¿El envío tiene costo adicional?',

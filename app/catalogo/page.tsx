@@ -302,6 +302,43 @@ function EmptyState() {
 }
 
 // ============================================================================
+// ✅ FUNCIÓN DE ORDENAMIENTO PERSONALIZADO
+// ============================================================================
+function sortProducts(products: any[]): any[] {
+  return [...products].sort((a, b) => {
+    // 1️⃣ PRIORIDAD MÁXIMA: Colchones Piero
+    const aIsPiero = a.name.toLowerCase().includes('piero')
+    const bIsPiero = b.name.toLowerCase().includes('piero')
+    
+    if (aIsPiero && !bIsPiero) return -1
+    if (!aIsPiero && bIsPiero) return 1
+    
+    // 2️⃣ SEGUNDA PRIORIDAD: Otros colchones (excepto cuna)
+    const aIsColchon = (
+      a.name.toLowerCase().includes('colchón') || 
+      a.name.toLowerCase().includes('colchon')
+    ) && !a.name.toLowerCase().includes('cuna')
+    
+    const bIsColchon = (
+      b.name.toLowerCase().includes('colchón') || 
+      b.name.toLowerCase().includes('colchon')
+    ) && !b.name.toLowerCase().includes('cuna')
+    
+    if (aIsColchon && !bIsColchon) return -1
+    if (!aIsColchon && bIsColchon) return 1
+    
+    // 3️⃣ TERCERA PRIORIDAD: Stock total disponible
+    const aStock = a.variants?.reduce((sum: number, v: any) => sum + (v.stock || 0), 0) || 0
+    const bStock = b.variants?.reduce((sum: number, v: any) => sum + (v.stock || 0), 0) || 0
+    
+    if (aStock !== bStock) return bStock - aStock
+    
+    // 4️⃣ ÚLTIMA PRIORIDAD: Orden alfabético
+    return a.name.localeCompare(b.name, 'es')
+  })
+}
+
+// ============================================================================
 // MAIN PAGE COMPONENT - ULTRA OPTIMIZED ⚡
 // ============================================================================
 
@@ -315,8 +352,11 @@ export default async function CatalogoPage() {
       return <EmptyState />
     }
 
+    // ✅ ORDENAR PRODUCTOS ANTES DE CONVERTIR PRECIOS
+    const sortedProducts = sortProducts(products)
+
     // ✅ CONVERSIÓN OPTIMIZADA DE PRECIOS
-    const productsWithPrices: NormalizedProduct[] = products.map((product: any) => ({
+    const productsWithPrices: NormalizedProduct[] = sortedProducts.map((product: any) => ({
       ...product,
       // Convert product prices
       price: centavosToARS(product.price),
@@ -365,7 +405,7 @@ export default async function CatalogoPage() {
                     '@type': 'Offer',
                     price: product.price,
                     priceCurrency: 'ARS',
-                    availability: 'https://schema.org/InStock', // ✅ Productos activos siempre en stock
+                    availability: 'https://schema.org/InStock',
                     seller: {
                       '@type': 'Organization',
                       name: 'Azul Colchones'

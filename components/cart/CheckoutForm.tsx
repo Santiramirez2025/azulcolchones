@@ -1,12 +1,15 @@
-// components/cart/CheckoutForm.tsx - RESERVA POR WHATSAPP 🚀
+// components/cart/CheckoutForm.tsx - COMPLETO Y LISTO 🚀
 'use client'
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  ArrowLeft, Lock, CheckCircle2, Loader2, AlertCircle,
-  Shield, Package, Phone, Mail, User, MessageCircle
+  ArrowLeft, 
+  CheckCircle2, 
+  Loader2, 
+  AlertCircle, 
+  MessageCircle,
+  ExternalLink
 } from 'lucide-react'
 import Link from 'next/link'
 import { useCartStore } from '@/lib/store/cart-store'
@@ -15,7 +18,7 @@ import { formatARS } from '@/lib/utils/currency'
 import { CheckoutSteps, TrustBadges } from './CartComponents'
 
 interface CheckoutFormProps {
-  step: 1 | 2 | 3 | 4
+  step: 1 | 2 | 3
   total: number
   onBack: () => void
   onNext: () => void
@@ -116,20 +119,17 @@ export default function CheckoutForm({ step, total, onBack, onNext }: CheckoutFo
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-2 sm:mb-3">
             {step === 2 && 'Tus datos'}
             {step === 3 && 'Confirmar pedido'}
-            {step === 4 && '¡Reserva confirmada! 🎉'}
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-zinc-400">
             {step === 2 && 'Completá tus datos de contacto'}
             {step === 3 && 'Revisá y confirmá tu pedido'}
-            {step === 4 && 'Te contactamos por WhatsApp'}
           </p>
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
           <div className="lg:col-span-2">
             {step === 2 && <ShippingForm onNext={onNext} />}
-            {step === 3 && <ReservaForm total={total} onNext={onNext} />}
-            {step === 4 && <ConfirmationView />}
+            {step === 3 && <ReservaForm total={total} />}
           </div>
 
           <div className="lg:col-span-1">
@@ -323,55 +323,79 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
 }
 
 // ============================================================================
-// RESERVA FORM - WHATSAPP
+// RESERVA FORM - WHATSAPP (ULTRA ROBUST) 🔥
 // ============================================================================
 
-function ReservaForm({ total, onNext }: { total: number; onNext: () => void }) {
+function ReservaForm({ total }: { total: number }) {
   const clearCart = useCartStore(state => state.clearCart)
   const items = useCartStore(state => state.items)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [whatsappURL, setWhatsappURL] = useState<string | null>(null)
+  const [showManualLink, setShowManualLink] = useState(false)
   
   const { trackStep } = useCheckoutAnalytics()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!acceptedTerms) {
-      setErrorMessage('Aceptá los términos para continuar')
-      return
-    }
-
+    console.log('🚀 [RESERVA] Iniciando proceso...')
+    console.log('📦 [RESERVA] Items en carrito:', items.length)
+    console.log('💰 [RESERVA] Total:', total)
+    
     setIsProcessing(true)
+    setErrorMessage('')
+    setShowManualLink(false)
 
     try {
       const shippingData = sessionStorage.getItem('shippingData')
+      console.log('📋 [RESERVA] Datos de envío encontrados:', !!shippingData)
+      
       const shipping = shippingData ? JSON.parse(shippingData) : null
       
-      const orderId = `RES-${Date.now()}`
-      
-      // 🔥 LLAMAR A LA API DE WHATSAPP
-      const response = await fetch('/api/reservas/whatsapp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items,
-          total,
-          shipping,
-          orderId,
-          timestamp: new Date().toISOString()
-        })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Error al procesar la reserva')
+      if (!shipping) {
+        console.error('❌ [RESERVA] No hay datos de envío')
+        setErrorMessage('Datos de envío no encontrados')
+        setIsProcessing(false)
+        return
       }
-
-      const data = await response.json()
       
-      // Guardar orden localmente
+      const orderId = `RES-${Date.now()}`
+      console.log('🆔 [RESERVA] Order ID generado:', orderId)
+      
+      const productList = items.map((item: any) => 
+        `• ${item.name} (${item.size}) x${item.quantity} - $${(item.price * item.quantity).toLocaleString('es-AR')}`
+      ).join('\n')
+
+      const whatsappMessage = `🛏️ *NUEVA RESERVA - Azul Colchones*
+
+📋 *Pedido:* #${orderId}
+
+👤 *Mis datos:*
+Nombre: ${shipping.firstName} ${shipping.lastName}
+Email: ${shipping.email}
+Teléfono: ${shipping.phone}
+
+📦 *Productos:*
+${productList}
+
+💰 *Total: $${total.toLocaleString('es-AR')}*
+
+📍 *Dirección de entrega:*
+${shipping.address}
+${shipping.city}${shipping.notes ? `\nNotas: ${shipping.notes}` : ''}
+
+✅ Quiero confirmar esta reserva y coordinar la entrega.`
+
+      const phoneNumber = '5493534017332'
+      const encodedMessage = encodeURIComponent(whatsappMessage)
+      const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
+      
+      console.log('💬 [RESERVA] URL generada (primeros 100 chars):', url.substring(0, 100) + '...')
+      console.log('📏 [RESERVA] Longitud total de la URL:', url.length)
+      setWhatsappURL(url)
+
+      // Guardar orden
       sessionStorage.setItem('lastOrder', JSON.stringify({
         orderId,
         paymentMethod: 'reserva_whatsapp',
@@ -380,22 +404,73 @@ function ReservaForm({ total, onNext }: { total: number; onNext: () => void }) {
         items,
         date: new Date().toISOString()
       }))
+      console.log('💾 [RESERVA] Orden guardada')
 
-      trackStep(4, {
+      trackStep(3, {
         payment_method: 'reserva_whatsapp',
         value: total,
         items_count: items.length
       })
+      console.log('📊 [RESERVA] Analytics tracked')
 
+      // Limpiar carrito
       clearCart()
       sessionStorage.removeItem('shippingData')
-      onNext()
+      console.log('🧹 [RESERVA] Carrito limpiado')
+
+      // INTENTAR ABRIR WHATSAPP
+      console.log('🔄 [RESERVA] Intentando abrir WhatsApp...')
+      
+      // Estrategia 1: window.open
+      console.log('🪟 [RESERVA] Método 1: window.open()')
+      const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+      
+      if (newWindow && !newWindow.closed) {
+        console.log('✅ [RESERVA] window.open EXITOSO - WhatsApp abierto')
+        setTimeout(() => {
+          setIsProcessing(false)
+          setShowManualLink(true)
+          console.log('🎯 [RESERVA] Mostrando enlaces manuales como backup')
+        }, 1500)
+      } else {
+        console.log('⚠️ [RESERVA] window.open BLOQUEADO - Intentando redirección...')
+        
+        // Estrategia 2: location.href
+        console.log('🌐 [RESERVA] Método 2: location.href')
+        window.location.href = url
+        
+        setTimeout(() => {
+          setIsProcessing(false)
+          setShowManualLink(true)
+          console.log('🔗 [RESERVA] Redirección ejecutada, mostrando backup')
+        }, 2000)
+      }
 
     } catch (err) {
-      console.error('[Reserva] Error:', err)
-      setErrorMessage(err instanceof Error ? err.message : 'Error al procesar. Intentá de nuevo.')
+      console.error('❌ [RESERVA] ERROR CRÍTICO:', err)
+      console.error('📍 [RESERVA] Stack trace:', (err as Error).stack)
+      setErrorMessage('Error al procesar. Por favor, contactanos directamente.')
       setIsProcessing(false)
+      setShowManualLink(true)
     }
+  }
+
+  const copyToClipboard = () => {
+    if (!whatsappURL) {
+      console.log('⚠️ [COPY] No hay URL para copiar')
+      return
+    }
+    
+    console.log('📋 [COPY] Copiando al portapapeles...')
+    navigator.clipboard.writeText(whatsappURL)
+      .then(() => {
+        console.log('✅ [COPY] URL copiada exitosamente')
+        alert('✅ Link copiado! Ahora abrí WhatsApp y pegá el link.')
+      })
+      .catch((err) => {
+        console.error('❌ [COPY] Error al copiar:', err)
+        alert('No se pudo copiar. Probá abrir el link manualmente.')
+      })
   }
 
   return (
@@ -410,21 +485,21 @@ function ReservaForm({ total, onNext }: { total: number; onNext: () => void }) {
           <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
             <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
           </div>
-          <h3 className="text-xl sm:text-2xl font-black text-white mb-1 sm:mb-2">Reservar Pedido</h3>
-          <p className="text-sm sm:text-base text-zinc-400">Te contactamos por WhatsApp para coordinar</p>
+          <h3 className="text-xl sm:text-2xl font-black text-white mb-1 sm:mb-2">Reservar por WhatsApp</h3>
+          <p className="text-sm sm:text-base text-zinc-400">Se abrirá WhatsApp con tu pedido completo</p>
         </div>
 
         {/* Cómo funciona */}
-        <div className="p-4 sm:p-6 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-lg sm:rounded-xl">
-          <p className="text-xs sm:text-sm text-blue-300 font-semibold mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2">
-            <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <div className="p-4 sm:p-6 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 rounded-lg sm:rounded-xl">
+          <p className="text-xs sm:text-sm text-emerald-300 font-semibold mb-2 sm:mb-3 flex items-center gap-1.5 sm:gap-2">
+            <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             ¿Cómo funciona?
           </p>
           <ol className="text-xs sm:text-sm text-zinc-300 space-y-1.5 sm:space-y-2 list-decimal list-inside leading-tight">
-            <li>Confirmás tu reserva ahora</li>
-            <li>Se abre WhatsApp con tu pedido</li>
+            <li>Confirmás tu reserva</li>
+            <li>Se abre WhatsApp automáticamente</li>
+            <li>Enviás el mensaje</li>
             <li>Coordinamos entrega y pago</li>
-            <li>Recibís tu colchón</li>
           </ol>
         </div>
 
@@ -432,15 +507,15 @@ function ReservaForm({ total, onNext }: { total: number; onNext: () => void }) {
         <div className="space-y-2 sm:space-y-3">
           <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-emerald-300">
             <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="font-semibold">✅ Confirmación inmediata</span>
+            <span className="font-semibold">✅ Atención directa e inmediata</span>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-zinc-300">
-            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-            <span>📱 Atención personalizada</span>
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+            <span>📱 Tu pedido ya viene armado</span>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-zinc-300">
-            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-            <span>💬 Coordinamos todo por WhatsApp</span>
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+            <span>💬 Coordinamos todo al instante</span>
           </div>
         </div>
 
@@ -453,20 +528,16 @@ function ReservaForm({ total, onNext }: { total: number; onNext: () => void }) {
         </div>
 
         {/* Terms */}
-        <div className="flex items-start gap-2 sm:gap-3">
-          <input
-            type="checkbox"
-            id="terms"
-            checked={acceptedTerms}
-            onChange={(e) => setAcceptedTerms(e.target.checked)}
-            className="mt-1 w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 border-zinc-700 bg-zinc-800 rounded focus:ring-emerald-500 focus:ring-2"
-            disabled={isProcessing}
-          />
-          <label htmlFor="terms" className="text-xs sm:text-sm text-zinc-400 leading-tight">
-            Acepto los{' '}
-            <Link href="/terminos" className="text-emerald-400 hover:underline font-semibold">términos</Link>
-            {' '}y entiendo que me contactarán por WhatsApp
-          </label>
+        <div className="p-3 sm:p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-lg sm:rounded-xl">
+          <p className="text-xs sm:text-sm text-zinc-400 leading-tight flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <span>
+              Al confirmar aceptás nuestros{' '}
+              <Link href="/terminos" className="text-emerald-400 hover:underline font-semibold">
+                términos y condiciones
+              </Link>
+            </span>
+          </p>
         </div>
 
         {/* Error */}
@@ -484,76 +555,77 @@ function ReservaForm({ total, onNext }: { total: number; onNext: () => void }) {
           )}
         </AnimatePresence>
 
-        {/* Submit */}
+        {/* Submit Button */}
         <motion.button
           type="submit"
           disabled={isProcessing}
           whileHover={{ scale: isProcessing ? 1 : 1.01 }}
           whileTap={{ scale: isProcessing ? 1 : 0.99 }}
-          className="w-full py-4 sm:py-5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl font-bold text-base sm:text-lg shadow-2xl shadow-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3"
+          className="w-full py-4 sm:py-5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl font-bold text-base sm:text-lg shadow-2xl shadow-emerald-500/30 transition-all disabled:opacity-75 disabled:cursor-wait flex items-center justify-center gap-2 sm:gap-3"
         >
           {isProcessing ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span>Procesando...</span>
+              <span>Abriendo WhatsApp...</span>
             </>
           ) : (
             <>
               <MessageCircle className="w-5 h-5" />
-              <span>Reservar por WhatsApp</span>
+              <span>Enviar por WhatsApp</span>
             </>
           )}
         </motion.button>
+
+        {/* Manual Links */}
+        <AnimatePresence>
+          {showManualLink && whatsappURL && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="space-y-3"
+            >
+              <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                <p className="text-sm text-blue-400 mb-3 flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span>Si WhatsApp no se abrió automáticamente:</span>
+                </p>
+
+                <div className="space-y-2">
+                  <a
+                    href={whatsappURL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => console.log('🔗 [CLICK] Link manual de WhatsApp clickeado')}
+                    className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Abrir WhatsApp manualmente</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={copyToClipboard}
+                    className="w-full py-3 px-4 bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all"
+                  >
+                    📋 Copiar link de WhatsApp
+                  </button>
+
+                  <a
+                    href="https://wa.me/5493534017332"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => console.log('📞 [CLICK] Contacto directo clickeado')}
+                    className="w-full py-3 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-all border border-zinc-700"
+                  >
+                    💬 Contactar directamente (353 401 7332)
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </form>
-    </motion.div>
-  )
-}
-
-// ============================================================================
-// CONFIRMATION
-// ============================================================================
-
-function ConfirmationView() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-xl sm:rounded-2xl p-8 sm:p-10 md:p-12 shadow-2xl border border-emerald-500/30 text-center"
-    >
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.2, type: 'spring' }}
-        className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center"
-      >
-        <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
-      </motion.div>
-
-      <h2 className="text-2xl sm:text-3xl font-black text-white mb-3 sm:mb-4">¡Reserva confirmada! 🎉</h2>
-
-      <p className="text-base sm:text-lg text-zinc-300 mb-2">Tu pedido está reservado.</p>
-      <p className="text-sm sm:text-base text-zinc-400 mb-6 sm:mb-8">
-        Te contactamos por WhatsApp para coordinar la entrega.
-      </p>
-
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-        <Link href="/">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-bold shadow-2xl shadow-blue-500/30 transition-all"
-          >
-            Volver al inicio
-          </motion.button>
-        </Link>
-
-        <a href={`https://wa.me/5493534017332?text=${encodeURIComponent('Hola, necesito ayuda con mi pedido')}`} target="_blank" rel="noopener noreferrer">
-          <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
-            <MessageCircle className="w-5 h-5" />
-            Abrir WhatsApp
-          </button>
-        </a>
-      </div>
     </motion.div>
   )
 }
