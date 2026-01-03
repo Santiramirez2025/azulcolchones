@@ -1,6 +1,7 @@
 // app/piero-fabrica/page.tsx - REDISEÑO AGRESIVO 🎯
 // ACTUALIZADO CON DATOS REALES DEL ANÁLISIS PDF
 // Conversion Rate Target: 12-18% | Estrategia 3 Pilares | Mobile-First
+// PRODUCTOS INMEDIATAMENTE DESPUÉS DE TRUST BADGES ⚡
 
 import type { Metadata } from 'next'
 import ProductosGridOptimizado from './ProductosGrid'
@@ -76,7 +77,6 @@ function HeroFabrica() {
   return (
     <section className="relative bg-gradient-to-br from-zinc-900 via-blue-950/30 to-zinc-900">
       
-      {/* Particles efecto */}
       <div className="absolute inset-0 overflow-hidden opacity-20">
         <div className="absolute w-96 h-96 bg-blue-500/30 rounded-full blur-3xl -top-48 -right-48"></div>
         <div className="absolute w-96 h-96 bg-purple-500/20 rounded-full blur-3xl -bottom-48 -left-48"></div>
@@ -87,10 +87,8 @@ function HeroFabrica() {
           
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
-            {/* Columna Izquierda: Propuesta de Valor */}
             <div className="space-y-6 text-center lg:text-left">
               
-              {/* Badge Premium */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-medium">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -99,7 +97,6 @@ function HeroFabrica() {
                 Programa Exclusivo Fábrica PIERO
               </div>
 
-              {/* Headline Principal - ACTUALIZADO */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
                 Mismo Colchón Piero,
                 <br />
@@ -110,7 +107,6 @@ function HeroFabrica() {
                 Más Barato
               </h1>
 
-              {/* Subheadline - Manejo de objeción */}
               <div className="space-y-3">
                 <p className="text-xl md:text-2xl text-zinc-300 font-medium">
                   El secreto: <span className="text-white font-bold">comprás directo de fábrica</span>
@@ -121,7 +117,6 @@ function HeroFabrica() {
                 </p>
               </div>
 
-              {/* CTAs Principales */}
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <a 
                   href="#productos"
@@ -144,7 +139,6 @@ function HeroFabrica() {
                 </a>
               </div>
 
-              {/* Social Proof */}
               <div className="flex items-center gap-4 pt-4 justify-center lg:justify-start">
                 <div className="flex -space-x-2">
                   {[1,2,3,4].map((i) => (
@@ -161,14 +155,12 @@ function HeroFabrica() {
 
             </div>
 
-            {/* Columna Derecha: Comparación Visual - ACTUALIZADA CON DATOS REALES */}
             <div className="bg-gradient-to-br from-zinc-800/50 to-zinc-900/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 shadow-2xl">
               
               <h3 className="text-2xl font-bold text-white mb-6 text-center">
                 Ejemplo Real: Montreaux Pillow Top King
               </h3>
 
-              {/* MercadoLibre - DATOS REALES */}
               <div className="bg-red-950/30 border border-red-500/30 rounded-xl p-5 mb-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium text-zinc-400">MercadoLibre</span>
@@ -184,7 +176,6 @@ function HeroFabrica() {
                 </div>
               </div>
 
-              {/* Azul Fábrica - DATOS REALES */}
               <div className="bg-green-950/30 border-2 border-green-500/50 rounded-xl p-5 relative">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-green-500 text-white text-xs font-bold rounded-full whitespace-nowrap">
                   ✅ AZUL FÁBRICA
@@ -203,7 +194,6 @@ function HeroFabrica() {
                   Montreaux Pillow Top King | 7-10 días
                 </div>
 
-                {/* Ahorro destacado - DATOS REALES */}
                 <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-center">
                   <div className="text-sm text-green-400 font-medium mb-1">
                     Te ahorrás
@@ -217,7 +207,6 @@ function HeroFabrica() {
                 </div>
               </div>
 
-              {/* Conclusión */}
               <div className="mt-6 text-center">
                 <p className="text-sm text-zinc-400">
                   Mismo producto, misma garantía, <strong className="text-white">CASI LA MITAD de precio</strong>
@@ -299,7 +288,6 @@ function PorQueFabrica() {
           ))}
         </div>
 
-        {/* Testimonio breve - ACTUALIZADO CON DATO REAL */}
         <div className="mt-16 max-w-3xl mx-auto bg-gradient-to-r from-blue-950/30 to-purple-950/30 border border-blue-500/20 rounded-2xl p-8">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
@@ -359,7 +347,6 @@ function StatsImpactantes() {
   return (
     <section className="relative bg-zinc-950 py-16 md:py-20 overflow-hidden">
       
-      {/* Background decorativo */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute w-96 h-96 bg-green-500 rounded-full blur-3xl top-0 left-0"></div>
         <div className="absolute w-96 h-96 bg-blue-500 rounded-full blur-3xl bottom-0 right-0"></div>
@@ -382,7 +369,6 @@ function StatsImpactantes() {
               key={index}
               className="group relative bg-gradient-to-br from-zinc-900/90 to-zinc-800/90 border border-zinc-700/50 rounded-2xl p-8 hover:border-zinc-600 transition-all duration-300"
             >
-              {/* Gradiente de fondo en hover */}
               <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}></div>
               
               <div className="relative">
@@ -413,7 +399,6 @@ function FinalCTAOptimizada() {
   return (
     <section className="relative bg-gradient-to-br from-blue-950 via-purple-950 to-zinc-950 overflow-hidden">
       
-      {/* Efectos visuales de fondo */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute w-96 h-96 bg-blue-500/40 rounded-full blur-3xl top-0 right-0"></div>
         <div className="absolute w-96 h-96 bg-purple-500/30 rounded-full blur-3xl bottom-0 left-0"></div>
@@ -422,7 +407,6 @@ function FinalCTAOptimizada() {
       <div className="relative max-w-screen-2xl mx-auto px-4 py-20 md:py-32">
         <div className="max-w-5xl mx-auto">
           
-          {/* Headline */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
               Comprá Inteligente:
@@ -436,7 +420,6 @@ function FinalCTAOptimizada() {
             </p>
           </div>
 
-          {/* Beneficios en Grid - ACTUALIZADOS */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             
             <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 text-center hover:border-blue-500/50 transition-all">
@@ -471,7 +454,6 @@ function FinalCTAOptimizada() {
 
           </div>
 
-          {/* CTA Principal */}
           <div className="text-center space-y-6">
             <a
               href="https://wa.me/5493534017332?text=Hola!%20Quiero%20comprar%20directo%20de%20fábrica%20PIERO"
@@ -499,7 +481,6 @@ function FinalCTAOptimizada() {
               </div>
             </div>
 
-            {/* Garantía final */}
             <div className="pt-8 border-t border-zinc-700/30 max-w-2xl mx-auto">
               <div className="flex items-center justify-center gap-3 text-zinc-400">
                 <svg className="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -520,7 +501,7 @@ function FinalCTAOptimizada() {
 }
 
 // ============================================================================
-// MAIN PAGE COMPONENT
+// MAIN PAGE COMPONENT - PRODUCTOS INMEDIATAMENTE DESPUÉS DE BADGES ⚡
 // ============================================================================
 
 export default function PieroFabricaPage() {
@@ -530,20 +511,20 @@ export default function PieroFabricaPage() {
       {/* Trust Badges */}
       <TrustBadges />
       
-      {/* Hero */}
+      {/* ⚡ PRODUCTOS GRID - INMEDIATAMENTE DESPUÉS DE BADGES */}
+      <ProductosGridOptimizado />
+      
+      {/* Hero con contexto - Ahora después de productos */}
       <HeroFabrica />
       
-      {/* Nueva sección: ¿Por Qué Fábrica? */}
+      {/* ¿Por Qué Fábrica? */}
       <PorQueFabrica />
       
-      {/* NUEVA: Stats Impactantes */}
+      {/* Stats Impactantes */}
       <StatsImpactantes />
       
       {/* Comparador MercadoLibre */}
       <ComparadorMercadoLibre />
-      
-      {/* Productos Grid con Estrategia 3 Pilares */}
-      <ProductosGridOptimizado />
       
       {/* FAQ Optimizada */}
       <FAQOptimizada />
