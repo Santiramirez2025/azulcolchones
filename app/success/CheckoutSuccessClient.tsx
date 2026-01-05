@@ -146,7 +146,7 @@ const NextSteps = memo(() => (
       </li>
       <li className="flex items-start gap-3">
         <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
-        <span>Si tenés alguna duda, contactanos por WhatsApp al 353 401 7332</span>
+        <span>Si tenés alguna duda, contactanos por WhatsApp al +54 9 3534 09-6566</span>
       </li>
     </ul>
   </motion.div>
@@ -167,8 +167,8 @@ const ContactSection = memo(() => (
         <Phone className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
         <div>
           <p className="text-sm font-semibold text-white mb-1">WhatsApp</p>
-          <a href="tel:+5493534017332" className="text-sm text-zinc-400 hover:text-white transition-colors">
-            +54 9 353 401 7332
+          <a href="tel:+54 9 3534 09-6566" className="text-sm text-zinc-400 hover:text-white transition-colors">
+          +54 9 3534 09-6566
           </a>
         </div>
       </div>

@@ -14,7 +14,7 @@ import type { ProductVariant } from '@prisma/client'
 // ============================================================================
 // CONFIGURACIÓN WHATSAPP
 // ============================================================================
-const WHATSAPP_NUMBER = '5493534017332' // Tu número de WhatsApp con código de país
+const WHATSAPP_NUMBER = '+54 9 3534 09-6566' // Tu número de WhatsApp con código de país
 
 function generateWhatsAppMessage(product: {
   name: string

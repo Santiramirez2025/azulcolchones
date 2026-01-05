@@ -53,16 +53,6 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
-  Fire: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 23a7.5 7.5 0 01-5.138-12.963C8.204 8.774 11.5 6.5 11 1.5c6 4 9 8 3 14 1 0 2.5 0 5-2.47.27.773.5 1.604.5 2.47A7.5 7.5 0 0112 23z" />
-    </svg>
-  ),
-  Tag: ({ className = "w-4 h-4" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-    </svg>
-  ),
   Moon: ({ className = "w-6 h-6" }: { className?: string }) => (
     <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M21.64 13a1 1 0 00-1.05-.14 8.05 8.05 0 01-3.37.73 8.15 8.15 0 01-8.14-8.1 8.59 8.59 0 01.25-2A1 1 0 008 2.36a10.14 10.14 0 1014 11.69 1 1 0 00-.36-1.05z" />
@@ -92,67 +82,16 @@ const Icons = {
 }
 
 // ============================================================================
-// 🇦🇷 SISTEMA DE CAMPAÑAS ARGENTINA
+// CONFIG ARGENTINA 🇦🇷
 // ============================================================================
-const getCurrentCampaign = () => {
-  const now = new Date()
-  const month = now.getMonth() + 1
-  const day = now.getDate()
-  
-  // Hot Sale Argentina (Mayo)
-  if (month === 5 && day >= 20 && day <= 31) {
-    return {
-      tagline: 'HOT SALE -40%',
-      code: 'HOTSALE40',
-      description: 'Descuentos especiales Hot Sale Argentina',
-      endDate: new Date(now.getFullYear(), 4, 31, 23, 59, 59),
-      showCountdown: true,
-      theme: 'hotsale'
-    }
-  }
-  
-  // Cyber Monday Argentina (Noviembre)
-  if (month === 11 && day >= 1 && day <= 10) {
-    return {
-      tagline: 'CYBER -45%',
-      code: 'CYBER45',
-      description: 'Ofertas exclusivas Cyber Monday',
-      endDate: new Date(now.getFullYear(), 10, 10, 23, 59, 59),
-      showCountdown: true,
-      theme: 'cyber'
-    }
-  }
-  
-  // Campaña permanente
-  return {
-    tagline: 'Ofertas fin de año Hasta 50% OFF',
-    code: 'VILLAMARIA',
-    description: 'Financiación especial',
-    endDate: null,
-    showCountdown: false,
-    theme: 'default'
-  }
-}
-
-// ============================================================================
-// CONFIG ARGENTINA 🇦🇷 - Memoizada
-// ============================================================================
-const campaign = getCurrentCampaign()
-
 const SITE_CONFIG = {
-  phone: '+5493534017332',
-  phoneDisplay: '3534017332',
-  whatsappNumber: '5493534017332',
+  phone: '+54 9 3534 09-6566',
+  phoneDisplay: '+54 9 3534 09-6566',
+  whatsappNumber: '+54 9 3534 09-6566',
   email: 'info@azulcolchones.com.ar',
   brandName: 'Azul Colchones',
   location: 'Villa María, Córdoba',
   schedule: 'Lun-Vie: 9:00-19:00hs | Sáb: 9:00-13:00hs',
-  tagline: campaign.tagline,
-  promoCode: campaign.code,
-  campaignDescription: campaign.description,
-  showCountdown: campaign.showCountdown,
-  endDate: campaign.endDate,
-  theme: campaign.theme,
   socialMedia: [
     { name: 'Instagram', href: 'https://instagram.com/azulcolchones', icon: Icons.Instagram },
     { name: 'Facebook', href: 'https://facebook.com/azulcolchones', icon: Icons.Facebook },
@@ -169,7 +108,7 @@ const organizationSchema = {
   "name": "Azul Colchones",
   "description": "Tienda de colchones premium en Villa María, Córdoba. Más de 35 años de experiencia.",
   "url": "https://azulcolchones.com",
-  "telephone": "+5493534017332",
+  "telephone": "+54 9 3534 09-6566",
   "email": "info@azulcolchones.com.ar",
   "address": {
     "@type": "PostalAddress",
@@ -214,19 +153,15 @@ const organizationSchema = {
 export default function Footer() {
   const pathname = usePathname()
   
-  // Estados
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  // Handlers
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || isSubmitting || submitted) return
     
     setIsSubmitting(true)
-    
-    // Simulación de envío (reemplazar con tu API)
     setTimeout(() => {
       setSubmitted(true)
       setEmail('')
@@ -237,7 +172,6 @@ export default function Footer() {
     }, 1000)
   }
 
-  // Links memoizados
   const quickLinks = useMemo(() => [
     { href: '/catalogo', label: 'Ver Ofertas', hot: true },
     { href: '/guia-compra', label: 'Guía de compra' },
@@ -265,7 +199,7 @@ export default function Footer() {
     {
       icon: Icons.Shield,
       title: 'Garantía Extendida',
-      description: 'Hasta 10 años',
+      description: 'Hasta 5 años',
       gradient: 'from-emerald-600 to-teal-600'
     },
     {
@@ -276,67 +210,33 @@ export default function Footer() {
     },
     {
       icon: Icons.CreditCard,
-      title: '12 Cuotas Sin Interés',
+      title: 'Precios de Fabrica',
       description: 'Todas las tarjetas',
       gradient: 'from-purple-600 to-pink-600'
     }
   ], [])
 
-  // Early return para admin
   if (pathname?.startsWith('/admin')) {
     return null
   }
 
-  // Renderizado
   return (
     <>
-      {/* SEO - Datos estructurados */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
 
       <footer className="relative bg-zinc-950 text-zinc-400 border-t border-blue-500/20 overflow-hidden">
-        {/* Efectos de fondo - simplificados en mobile */}
         <div className="absolute inset-0 bg-gradient-to-b from-blue-950/10 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
         <div className="hidden sm:block absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse-slow" aria-hidden="true" />
         <div className="hidden sm:block absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse-slow" style={{animationDelay: '1s'}} aria-hidden="true" />
 
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
           
-          {/* BANNER DE CAMPAÑA ARGENTINA 🇦🇷 - MOBILE OPTIMIZADO */}
-          <section className="py-6 sm:py-8 md:py-10 border-b border-blue-500/10">
-            <div className="relative overflow-hidden bg-gradient-to-r from-blue-600/20 via-cyan-600/20 to-blue-600/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-blue-500/30">
-              <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,.15)_50%,transparent_75%)] bg-[length:250%_250%] animate-shimmer" aria-hidden="true" />
-              
-              <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-                <div className="flex items-center gap-3 sm:gap-4 text-center sm:text-left">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
-                    <Icons.Fire className="w-6 h-6 sm:w-7 sm:h-7 text-white animate-pulse" />
-                  </div>
-                  <div>
-                    <div className="text-lg sm:text-xl md:text-2xl font-black text-transparent bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-300 bg-clip-text mb-0.5 sm:mb-1">
-                      {SITE_CONFIG.tagline} 🇦🇷
-                    </div>
-                    <div className="text-xs sm:text-sm text-blue-300 font-bold">
-                      {SITE_CONFIG.campaignDescription} · Código: <span className="px-1.5 sm:px-2 py-0.5 bg-yellow-500 text-black rounded font-black text-[10px] sm:text-xs">{SITE_CONFIG.promoCode}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <Link 
-                  href="/catalogo"
-                  className="flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:scale-105 active:scale-95 whitespace-nowrap w-full sm:w-auto justify-center"
-                >
-                  <Icons.Tag className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>Ver Catálogo</span>
-                  <Icons.ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </Link>
-              </div>
-            </div>
-          </section>
+          {/* ⚠️ BANNER DE CAMPAÑA ELIMINADO ⚠️ */}
 
-          {/* BADGES DE CONFIANZA - GRID RESPONSIVE */}
+          {/* BADGES DE CONFIANZA */}
           <section className="py-8 sm:py-10 md:py-14 border-b border-blue-500/10">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
               {trustBadges.map((badge, index) => (
@@ -360,13 +260,12 @@ export default function Footer() {
             </div>
           </section>
 
-          {/* NEWSLETTER - MOBILE OPTIMIZADO */}
+          {/* NEWSLETTER */}
           <section className="py-8 sm:py-10 md:py-14 border-b border-blue-500/10">
             <div className="max-w-3xl mx-auto">
               <div className="relative overflow-hidden bg-gradient-to-br from-blue-950/30 via-cyan-950/20 to-transparent rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 border border-blue-500/30">
                 <div className="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-blue-500/10 rounded-full blur-3xl" aria-hidden="true" />
                 <div className="absolute bottom-0 left-0 w-32 sm:w-48 h-32 sm:h-48 bg-cyan-600/10 rounded-full blur-3xl" aria-hidden="true" />
-                <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,.05)_50%,transparent_75%)] bg-[length:200%_200%] animate-shimmer" aria-hidden="true" />
                 
                 <div className="relative z-10">
                   <div className="flex items-start gap-3 sm:gap-4 mb-5 sm:mb-6">
@@ -439,7 +338,7 @@ export default function Footer() {
             </div>
           </section>
 
-          {/* CONTACTO DIRECTO ARGENTINA 🇦🇷 - STACK EN MOBILE */}
+          {/* CONTACTO DIRECTO */}
           <section className="py-8 sm:py-10 md:py-14 border-b border-blue-500/10">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-4xl mx-auto">
               
@@ -491,7 +390,7 @@ export default function Footer() {
             </div>
           </section>
 
-          {/* ENLACES ÚTILES - GRID RESPONSIVE */}
+          {/* ENLACES */}
           <section className="py-8 sm:py-10 md:py-14 border-b border-blue-500/10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
               <div>
@@ -593,7 +492,7 @@ export default function Footer() {
             </div>
           </section>
 
-          {/* FOOTER FINAL 🇦🇷 - MOBILE OPTIMIZADO */}
+          {/* FOOTER FINAL */}
           <section className="py-6 sm:py-8 md:py-10">
             <div className="flex flex-col gap-4 sm:gap-6">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 sm:gap-6">
@@ -685,8 +584,6 @@ export default function Footer() {
                   <span className="font-medium">© {new Date().getFullYear()} Azul Colchones</span>
                   <span className="hidden sm:inline text-zinc-800">·</span>
                   <span>Villa María, Córdoba, Argentina</span>
-                  <span className="hidden sm:inline text-zinc-800">·</span>
-                  <span className="text-blue-500 font-medium">{SITE_CONFIG.tagline}</span>
                 </div>
                 
                 <div className="flex items-center gap-1.5 sm:gap-2">
@@ -713,19 +610,13 @@ export default function Footer() {
             0%, 100% { opacity: 0.3; }
             50% { opacity: 0.6; }
           }
-          @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-          }
           
           .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
           .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
-          .animate-shimmer { animation: shimmer 3s linear infinite; }
           
           @media (prefers-reduced-motion: reduce) {
             .animate-pulse-slow,
-            .animate-pulse-glow,
-            .animate-shimmer { animation: none !important; }
+            .animate-pulse-glow { animation: none !important; }
           }
 
           @supports (scrollbar-width: thin) {

@@ -415,11 +415,11 @@ export default function GarantiaPage() {
                   info@azulcolchones.com
                 </a>
                 <a 
-                  href="tel:+5493534017332"
+                  href="tel:+54 9 3534 09-6566"
                   className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white px-6 py-3 rounded-xl font-semibold transition-all"
                 >
                   <Phone className="w-5 h-5" />
-                  +54 353 4017332
+                  +54 9 3534 09-6566
                 </a>
               </div>
               <p className="text-xs text-zinc-500 mt-6">

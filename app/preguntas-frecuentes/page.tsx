@@ -431,7 +431,7 @@ export default function PreguntasFrecuentesPage() {
         <h2>Contacto y Asesoramiento</h2>
         <address>
           <p>Showroom: Balerdi 855, Villa María, Córdoba, Argentina</p>
-          <p>WhatsApp: +54 9 353 401-7332</p>
+          <p>WhatsApp: +54 9 3534 09-6566</p>
           <p>Email: ventas@azulcolchones.com.ar</p>
           <p>Horarios: Lunes a Viernes 9:00-19:00 | Sábados 9:00-13:00</p>
         </address>

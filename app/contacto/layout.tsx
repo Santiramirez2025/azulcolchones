@@ -5,7 +5,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://azulcolchones.com'
 
 export const metadata: Metadata = {
   title: 'Contacto | Azul Colchones Villa María | Showroom y Atención al Cliente',
-  description: '📞 Contactá con Azul Colchones en Villa María. ✅ Showroom en Balerdi 855 ✅ WhatsApp +54 353 4017332 ✅ Atención personalizada ✅ 35+ años de experiencia ✅ Lun-Vie 9-18hs. ¡Te asesoramos!',
+  description: '📞 Contactá con Azul Colchones en Villa María. ✅ Showroom en Balerdi 855 ✅ WhatsApp +54 9 3534 09-6566 ✅ Atención personalizada ✅ 35+ años de experiencia ✅ Lun-Vie 9-18hs. ¡Te asesoramos!',
   
   keywords: [
     // === CORE ===

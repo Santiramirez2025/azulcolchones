@@ -232,7 +232,7 @@ function generateProductSchema(product: any) {
         '@id': 'https://azulcolchones.com.ar',
         name: 'Azul Colchones',
         image: 'https://azulcolchones.com.ar/logo.png',
-        telephone: '+54-353-401-7332',
+        telephone: '+54 9 3534 09-6566',
         address: {
           '@type': 'PostalAddress',
           streetAddress: 'Balerdi 855',
@@ -352,7 +352,7 @@ function generateOrganizationSchema() {
     name: 'Azul Colchones',
     image: 'https://azulcolchones.com.ar/logo.png',
     url: 'https://azulcolchones.com.ar',
-    telephone: '+54-353-401-7332',
+    telephone: '+54 9 3534 09-6566',
     email: 'ventas@azulcolchones.com.ar',
     address: {
       '@type': 'PostalAddress',

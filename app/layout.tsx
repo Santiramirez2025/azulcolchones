@@ -186,7 +186,7 @@ export const metadata: Metadata = {
     'price': '$$',
     'availability': 'in stock',
     'currency': 'ARS',
-    'og:phone_number': '+54-9-353-4017332',
+    'og:phone_number': '+54 9 3534 09-6566',
     'og:email': 'info@azulcolchones.com',
     'og:latitude': '-32.4115',
     'og:longitude': '-63.2407',
@@ -239,7 +239,7 @@ const jsonLd = {
       
       description: 'Colchones Piero en Villa María con dos modalidades: Outlet (60% OFF, entrega inmediata) y Piero Fábrica (30-40% OFF, directo de fábrica en 7-10 días). 35+ años de experiencia.',
       
-      telephone: '+54-9-353-4017332',
+      telephone: '+54 9 3534 09-6566',
       email: 'info@azulcolchones.com',
       
       address: {
@@ -282,7 +282,7 @@ const jsonLd = {
       contactPoint: [
         {
           '@type': 'ContactPoint',
-          telephone: '+54-9-353-4017332',
+          telephone: '+54 9 3534 09-6566',
           contactType: 'Ventas',
           areaServed: 'AR',
           availableLanguage: ['Spanish', 'es'],
@@ -480,7 +480,7 @@ const faqJsonLd = {
       name: '¿El envío es gratis en ambas modalidades (Outlet y Fábrica)?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, el envío es GRATIS en Villa María tanto para compras en Outlet (entrega en 24-48hs) como en Piero Fábrica (entrega en 7-10 días). Para otras ciudades de Córdoba y Argentina también tenemos envío sin cargo adicional. Coordinamos día y horario por WhatsApp: +54 9 353 4017332.'
+        text: 'Sí, el envío es GRATIS en Villa María tanto para compras en Outlet (entrega en 24-48hs) como en Piero Fábrica (entrega en 7-10 días). Para otras ciudades de Córdoba y Argentina también tenemos envío sin cargo adicional. Coordinamos día y horario por WhatsApp: +54 9 3534 09-6566.'
       }
     },
     // FINANCIACIÓN
@@ -507,7 +507,7 @@ const faqJsonLd = {
       name: '¿Puedo ver los colchones del Outlet en el showroom?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, visitá nuestro showroom en Balerdi 855, Villa María para ver y probar los colchones disponibles en Outlet. También te mostramos catálogos de todos los modelos Piero que podés pedir directo de Fábrica. Atendemos lunes a viernes 9-19hs, sábados 9-13hs. WhatsApp: +54 9 353 4017332.'
+        text: 'Sí, visitá nuestro showroom en Balerdi 855, Villa María para ver y probar los colchones disponibles en Outlet. También te mostramos catálogos de todos los modelos Piero que podés pedir directo de Fábrica. Atendemos lunes a viernes 9-19hs, sábados 9-13hs. WhatsApp: +54 9 3534 09-6566.'
       }
     },
     // STOCK
@@ -516,7 +516,7 @@ const faqJsonLd = {
       name: '¿Cómo sé si hay stock en Outlet del colchón que quiero?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Nuestro stock de Outlet se actualiza en tiempo real en la web (azulcolchones.com/catalogo). También podés consultarnos por WhatsApp (+54 9 353 4017332) para verificar disponibilidad inmediata. Si el modelo que querés no está en Outlet, te ofrecemos comprarlo por Piero Fábrica con mejor precio y entrega en 7-10 días.'
+        text: 'Nuestro stock de Outlet se actualiza en tiempo real en la web (azulcolchones.com/catalogo). También podés consultarnos por WhatsApp (+54 9 3534 09-6566) para verificar disponibilidad inmediata. Si el modelo que querés no está en Outlet, te ofrecemos comprarlo por Piero Fábrica con mejor precio y entrega en 7-10 días.'
       }
     },
   ]
@@ -687,7 +687,7 @@ export default function RootLayout({
           <Footer />
 
           <WhatsAppButton 
-            phoneNumber="5493534017332"
+            phoneNumber="+54 9 3534 09-6566"
             message="¡Hola! Me interesa consultar por colchones Piero. ¿Podrían asesorarme sobre Outlet vs Piero Fábrica?"
             position="right"
             showTooltip={true}

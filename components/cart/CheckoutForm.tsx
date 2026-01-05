@@ -387,7 +387,7 @@ ${shipping.city}${shipping.notes ? `\nNotas: ${shipping.notes}` : ''}
 
 ✅ Quiero confirmar esta reserva y coordinar la entrega.`
 
-      const phoneNumber = '5493534017332'
+      const phoneNumber = '+54 9 3534 09-6566'
       const encodedMessage = encodeURIComponent(whatsappMessage)
       const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
       
@@ -612,13 +612,13 @@ ${shipping.city}${shipping.notes ? `\nNotas: ${shipping.notes}` : ''}
                   </button>
 
                   <a
-                    href="https://wa.me/5493534017332"
+                    href="https://wa.me/5493534096566"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => console.log('📞 [CLICK] Contacto directo clickeado')}
                     className="w-full py-3 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-all border border-zinc-700"
                   >
-                    💬 Contactar directamente (353 401 7332)
+                    💬 Contactar directamente (+54 9 3534 09-6566
                   </a>
                 </div>
               </div>

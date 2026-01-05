@@ -86,12 +86,12 @@ const ContactSection = memo(() => (
         privacidad@azulcolchones.com.ar
       </a>
       <a 
-        href="tel:+5493534017332"
+        href="tel:+54 9 3534 09-6566"
         className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all border border-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
         aria-label="Llamar por teléfono"
       >
         <Phone className="w-5 h-5" aria-hidden="true" />
-        +54 9 353 401-7332
+        +54 9 3534 09-6566
       </a>
     </address>
   </section>

@@ -133,7 +133,7 @@ const catalogStructuredData = {
       postalCode: '5900',
       addressCountry: 'AR'
     },
-    telephone: '+54-9-353-4017332',
+    telephone: '+54 9 3534 09-6566',
   },
   breadcrumb: {
     '@type': 'BreadcrumbList',

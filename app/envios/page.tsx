@@ -104,7 +104,7 @@ const shippingStructuredData = {
       postalCode: '5900',
       addressCountry: 'AR'
     },
-    telephone: '+54-9-353-4017332',
+    telephone: '+54 9 3534 09-6566',
     areaServed: {
       '@type': 'City',
       name: 'Villa María'
@@ -378,11 +378,11 @@ export default function EnviosPage() {
                 hola@azulcolchones.com
               </a>
               <a 
-                href="tel:+5493534017332"
+                href="tel:+54 9 3534 09-6566"
                 className="inline-flex items-center gap-2 bg-blue-600 hover:bg-500 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg"
               >
                 <Truck className="w-5 h-5" />
-                +54 353 4017332
+                +54 9 3534 09-6566
               </a>
             </div>
           </section>

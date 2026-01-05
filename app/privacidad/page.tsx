@@ -70,7 +70,7 @@ export default function PrivacidadPage() {
     logo: 'https://azulcolchones.com.ar/logo.png',
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+54-353-401-7332',
+      telephone: '+54 9 3534 09-6566',
       contactType: 'customer service',
       email: 'privacidad@azulcolchones.com.ar',
       areaServed: 'AR',
@@ -119,7 +119,7 @@ export default function PrivacidadPage() {
           <strong>Razón Social:</strong> Azul Colchones<br />
           <strong>Domicilio:</strong> Balerdi 855, Villa María, Córdoba, Argentina CP 5900<br />
           <strong>Email:</strong> privacidad@azulcolchones.com.ar<br />
-          <strong>Teléfono:</strong> +54 9 353 401-7332
+          <strong>Teléfono:</strong> +54 9 3534 09-6566
         </p>
 
         <h2>Información que Recopilamos</h2>
@@ -327,7 +327,7 @@ export default function PrivacidadPage() {
         </p>
         <ul>
           <li>Email: privacidad@azulcolchones.com.ar</li>
-          <li>WhatsApp: +54 9 353 401-7332</li>
+          <li>WhatsApp: +54 9 3534 09-6566</li>
           <li>Presencialmente: Balerdi 855, Villa María, Córdoba</li>
         </ul>
         <p>
@@ -406,7 +406,7 @@ export default function PrivacidadPage() {
         <address>
           <p><strong>Azul Colchones - Departamento de Privacidad</strong></p>
           <p>Email: privacidad@azulcolchones.com.ar</p>
-          <p>WhatsApp: +54 9 353 401-7332</p>
+          <p>WhatsApp: +54 9 3534 09-6566</p>
           <p>Dirección: Balerdi 855, Villa María, Córdoba, Argentina CP 5900</p>
           <p>Horario: Lunes a Viernes 9:00-19:00 | Sábados 9:00-13:00</p>
         </address>

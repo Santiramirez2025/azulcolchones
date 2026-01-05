@@ -71,7 +71,7 @@ export default function TerminosPage() {
     logo: 'https://azulcolchones.com.ar/logo.png',
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+54-353-401-7332',
+      telephone: '+54 9 3534 09-6566',
       contactType: 'customer service',
       email: 'info@azulcolchones.com.ar',
       areaServed: 'AR',
@@ -155,7 +155,7 @@ export default function TerminosPage() {
           Realizamos envíos GRATIS a: Villa María, Villa Nueva, Bell Ville, San Francisco,
           Río Tercero y localidades cercanas dentro de un radio de 100km. Para otras zonas
           de Córdoba y provincias vecinas, consultá costos de envío por WhatsApp al
-          353 401 7332.
+          +54 9 3534 09-6566.
         </p>
 
         <h3>Tiempos de Entrega</h3>
@@ -190,7 +190,7 @@ export default function TerminosPage() {
 
         <h3>Procedimiento de Devolución</h3>
         <p>
-          Para ejercer tu derecho de arrepentimiento, contactanos por WhatsApp al 353 401 7332
+          Para ejercer tu derecho de arrepentimiento, contactanos por WhatsApp al +54 9 3534 09-6566
           o por email a info@azulcolchones.com.ar indicando número de pedido. Los gastos de
           devolución corren por cuenta del comprador. Te reintegraremos el importe total
           (precio del producto) dentro de los 5 días hábiles posteriores a recibir el producto
@@ -318,7 +318,7 @@ export default function TerminosPage() {
         <address>
           <p><strong>Azul Colchones</strong></p>
           <p>Dirección: Balerdi 855, Villa María, Córdoba, Argentina CP 5900</p>
-          <p>WhatsApp: +54 9 353 401 7332</p>
+          <p>WhatsApp: +54 9 3534 09-6566</p>
           <p>Email: info@azulcolchones.com.ar</p>
           <p>Horarios: Lunes a Viernes 9:00-19:00 | Sábados 9:00-13:00</p>
         </address>

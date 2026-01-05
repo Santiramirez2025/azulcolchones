@@ -92,7 +92,7 @@ const legalStructuredData = {
       postalCode: '5900',
       addressCountry: 'AR'
     },
-    telephone: '+54-9-353-4017332'
+    telephone: '+54 9 3534 09-6566'
   }
 }
 
@@ -117,8 +117,8 @@ export default function AvisoLegalPage() {
       title: 'Contacto',
       items: [
         'Email: info@tiendacolchon.com.ar',
-        'Teléfono: +54 3534017332',
-        'WhatsApp: +54 9 3534017332',
+        'Teléfono: +54 9 3534 09-6566',
+        'WhatsApp: +54 9 3534 09-6566',
         'Horario: Lunes a Viernes de 9:00 a 18:00hs'
       ]
     },

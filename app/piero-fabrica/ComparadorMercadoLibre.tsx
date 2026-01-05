@@ -352,7 +352,7 @@ export default function ComparadorMercadoLibre() {
 
                 {/* CTA WhatsApp */}
                 <a
-                  href={`https://wa.me/5493534017332?text=Hola!%20Vi%20que%20el%20${encodeURIComponent(productoComparacion.producto)}%20está%20$${productoComparacion.ahorro.toLocaleString('es-AR')}%20más%20barato%20que%20en%20MercadoLibre.%20Quiero%20comprarlo!`}
+                  href={`https://wa.me/5493534096566?text=Hola!%20Vi%20que%20el%20${encodeURIComponent(productoComparacion.producto)}%20está%20$${productoComparacion.ahorro.toLocaleString('es-AR')}%20más%20barato%20que%20en%20MercadoLibre.%20Quiero%20comprarlo!`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="

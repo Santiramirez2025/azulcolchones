@@ -1,7 +1,6 @@
 // app/piero-fabrica/page.tsx - REDISEÑO AGRESIVO 🎯
-// ACTUALIZADO CON DATOS REALES DEL ANÁLISIS PDF
+// NUEVO ORDEN: CTA PRIMERO → PRODUCTOS → TRUST BADGES AL FINAL
 // Conversion Rate Target: 12-18% | Estrategia 3 Pilares | Mobile-First
-// PRODUCTOS INMEDIATAMENTE DESPUÉS DE TRUST BADGES ⚡
 
 import type { Metadata } from 'next'
 import ProductosGridOptimizado from './ProductosGrid'
@@ -22,55 +21,116 @@ export const metadata: Metadata = {
 }
 
 // ============================================================================
-// TRUST BADGES - REDISEÑADAS PARA IMPACTO 🏆
+// FINAL CTA - PRIMER IMPACTO 🎯
 // ============================================================================
 
-function TrustBadges() {
+function FinalCTAOptimizada() {
   return (
-    <div className="bg-gradient-to-r from-blue-950/60 via-zinc-900/60 to-blue-950/60 border-y border-blue-700/40">
-      <div className="max-w-screen-2xl mx-auto px-4 py-5">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+    <section className="relative bg-gradient-to-br from-blue-950 via-purple-950 to-zinc-950 overflow-hidden">
+      
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute w-96 h-96 bg-blue-500/40 rounded-full blur-3xl top-0 right-0"></div>
+        <div className="absolute w-96 h-96 bg-purple-500/30 rounded-full blur-3xl bottom-0 left-0"></div>
+      </div>
+
+      <div className="relative max-w-screen-2xl mx-auto px-4 py-20 md:py-32">
+        <div className="max-w-5xl mx-auto">
           
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-1">
-              <span className="text-3xl">🏭</span>
-            </div>
-            <p className="text-base font-bold text-white">Precio Directo</p>
-            <p className="text-xs text-zinc-400">Sin intermediarios</p>
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
+              Comprá Inteligente:
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+                Mismo Producto, Mejor Precio
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-zinc-300">
+              No pagues de más por el mismo colchón y el mismo tiempo de espera
+            </p>
           </div>
 
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-1">
-              <span className="text-3xl">💰</span>
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            
+            <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 text-center hover:border-blue-500/50 transition-all">
+              <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl">🏭</span>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Directo de Fábrica</h3>
+              <p className="text-zinc-400">
+                Sin intermediarios que inflan el precio hasta un 48%
+              </p>
             </div>
-            <p className="text-base font-bold text-white">Hasta 48% OFF</p>
-            <p className="text-xs text-zinc-400">vs. MercadoLibre</p>
+
+            <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 text-center hover:border-green-500/50 transition-all">
+              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl">💰</span>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Hasta 48% OFF</h3>
+              <p className="text-zinc-400">
+                Ahorro real de $113k hasta $1.266k según el modelo
+              </p>
+            </div>
+
+            <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 text-center hover:border-purple-500/50 transition-all">
+              <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl">✅</span>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Garantía Oficial</h3>
+              <p className="text-zinc-400">
+                La misma garantía PIERO de 5-10 años
+              </p>
+            </div>
+
           </div>
 
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-1">
-              <span className="text-3xl">📦</span>
-            </div>
-            <p className="text-base font-bold text-white">7-10 Días</p>
-            <p className="text-xs text-zinc-400">Producción directa</p>
-          </div>
+          <div className="text-center space-y-6">
+            <a
+              href="#productos"
+              className="inline-flex items-center gap-4 px-12 py-6 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 hover:from-blue-700 hover:via-blue-600 hover:to-cyan-700 text-white text-2xl font-black rounded-2xl transition-all duration-300 shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 hover:scale-105"
+            >
+              <span>Ver Productos Disponibles</span>
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
 
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center mb-1">
-              <span className="text-3xl">✅</span>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-400">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Respondemos en menos de 5 minutos</span>
+              </div>
+              <div className="hidden sm:block text-zinc-600">•</div>
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+                <span>Lun-Vie 9-19hs | Sáb 9-13hs</span>
+              </div>
             </div>
-            <p className="text-base font-bold text-white">Garantía Oficial</p>
-            <p className="text-xs text-zinc-400">Misma que cualquier lado</p>
+
+            <div className="pt-8 border-t border-zinc-700/30 max-w-2xl mx-auto">
+              <div className="flex items-center justify-center gap-3 text-zinc-400">
+                <svg className="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <p className="text-sm">
+                  <strong className="text-white">Garantía de mejor precio</strong> • Si encontrás más barato, te igualamos + 5% OFF
+                </p>
+              </div>
+            </div>
+
           </div>
 
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
 // ============================================================================
-// HERO SECTION - REDISEÑADO PARA IMPACTO INMEDIATO 🎯
+// HERO SECTION - CONTEXTO Y BENEFICIOS 🎯
 // ============================================================================
 
 function HeroFabrica() {
@@ -97,7 +157,7 @@ function HeroFabrica() {
                 Programa Exclusivo Fábrica PIERO
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
                 Mismo Colchón Piero,
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-purple-500">
@@ -105,7 +165,7 @@ function HeroFabrica() {
                 </span>
                 <br />
                 Más Barato
-              </h1>
+              </h2>
 
               <div className="space-y-3">
                 <p className="text-xl md:text-2xl text-zinc-300 font-medium">
@@ -129,7 +189,7 @@ function HeroFabrica() {
                 </a>
                 
                 <a 
-                  href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20por%20Piero%20Fábrica"
+                  href="https://wa.me/5493534096566?text=Hola!%20Quiero%20consultar%20por%20Piero%20Fábrica"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-all duration-300 shadow-xl shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center gap-2"
@@ -313,7 +373,7 @@ function PorQueFabrica() {
 }
 
 // ============================================================================
-// STATS SECTION - NUEVA SECCIÓN CON DATOS IMPACTANTES 📊
+// STATS SECTION - DATOS IMPACTANTES 📊
 // ============================================================================
 
 function StatsImpactantes() {
@@ -392,145 +452,86 @@ function StatsImpactantes() {
 }
 
 // ============================================================================
-// FINAL CTA - OPTIMIZADO PARA CONVERSIÓN 🎯
+// TRUST BADGES - AL FINAL 🏆
 // ============================================================================
 
-function FinalCTAOptimizada() {
+function TrustBadges() {
   return (
-    <section className="relative bg-gradient-to-br from-blue-950 via-purple-950 to-zinc-950 overflow-hidden">
-      
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute w-96 h-96 bg-blue-500/40 rounded-full blur-3xl top-0 right-0"></div>
-        <div className="absolute w-96 h-96 bg-purple-500/30 rounded-full blur-3xl bottom-0 left-0"></div>
-      </div>
-
-      <div className="relative max-w-screen-2xl mx-auto px-4 py-20 md:py-32">
-        <div className="max-w-5xl mx-auto">
+    <div className="bg-gradient-to-r from-blue-950/60 via-zinc-900/60 to-blue-950/60 border-y border-blue-700/40">
+      <div className="max-w-screen-2xl mx-auto px-4 py-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
-              Comprá Inteligente:
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
-                Mismo Producto, Mejor Precio
-              </span>
-            </h2>
-            <p className="text-xl md:text-2xl text-zinc-300">
-              No pagues de más por el mismo colchón y el mismo tiempo de espera
-            </p>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-1">
+              <span className="text-3xl">🏭</span>
+            </div>
+            <p className="text-base font-bold text-white">Precio Directo</p>
+            <p className="text-xs text-zinc-400">Sin intermediarios</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            
-            <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 text-center hover:border-blue-500/50 transition-all">
-              <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4">
-                <span className="text-4xl">🏭</span>
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Directo de Fábrica</h3>
-              <p className="text-zinc-400">
-                Sin intermediarios que inflan el precio hasta un 48%
-              </p>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-1">
+              <span className="text-3xl">💰</span>
             </div>
-
-            <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 text-center hover:border-green-500/50 transition-all">
-              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
-                <span className="text-4xl">💰</span>
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Hasta 48% OFF</h3>
-              <p className="text-zinc-400">
-                Ahorro real de $113k hasta $1.266k según el modelo
-              </p>
-            </div>
-
-            <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-8 text-center hover:border-purple-500/50 transition-all">
-              <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
-                <span className="text-4xl">✅</span>
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Garantía Oficial</h3>
-              <p className="text-zinc-400">
-                La misma garantía PIERO de 5-10 años
-              </p>
-            </div>
-
+            <p className="text-base font-bold text-white">Hasta 48% OFF</p>
+            <p className="text-xs text-zinc-400">vs. MercadoLibre</p>
           </div>
 
-          <div className="text-center space-y-6">
-            <a
-              href="https://wa.me/5493534017332?text=Hola!%20Quiero%20comprar%20directo%20de%20fábrica%20PIERO"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 px-12 py-6 bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-white text-2xl font-black rounded-2xl transition-all duration-300 shadow-2xl shadow-green-500/40 hover:shadow-green-500/60 hover:scale-105"
-            >
-              <span className="text-3xl">💬</span>
-              <span>Consultá Ahora por WhatsApp</span>
-            </a>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-zinc-400">
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span>Respondemos en menos de 5 minutos</span>
-              </div>
-              <div className="hidden sm:block text-zinc-600">•</div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                </svg>
-                <span>Lun-Vie 9-19hs | Sáb 9-13hs</span>
-              </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-1">
+              <span className="text-3xl">📦</span>
             </div>
+            <p className="text-base font-bold text-white">7-10 Días</p>
+            <p className="text-xs text-zinc-400">Producción directa</p>
+          </div>
 
-            <div className="pt-8 border-t border-zinc-700/30 max-w-2xl mx-auto">
-              <div className="flex items-center justify-center gap-3 text-zinc-400">
-                <svg className="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-sm">
-                  <strong className="text-white">Garantía de mejor precio</strong> • Si encontrás más barato, te igualamos + 5% OFF
-                </p>
-              </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center mb-1">
+              <span className="text-3xl">✅</span>
             </div>
-
+            <p className="text-base font-bold text-white">Garantía Oficial</p>
+            <p className="text-xs text-zinc-400">Misma que cualquier lado</p>
           </div>
 
         </div>
       </div>
-    </section>
+    </div>
   )
 }
 
 // ============================================================================
-// MAIN PAGE COMPONENT - PRODUCTOS INMEDIATAMENTE DESPUÉS DE BADGES ⚡
+// MAIN PAGE COMPONENT - NUEVO ORDEN ⚡
 // ============================================================================
 
 export default function PieroFabricaPage() {
   return (
     <div className="min-h-screen w-full bg-zinc-950 overflow-x-hidden antialiased">
       
-      {/* Trust Badges */}
-      <TrustBadges />
+      {/* 🎯 1. FINAL CTA - PRIMER IMPACTO */}
+      <FinalCTAOptimizada />
       
-      {/* ⚡ PRODUCTOS GRID - INMEDIATAMENTE DESPUÉS DE BADGES */}
-      <ProductosGridOptimizado />
+      {/* ⚡ 2. PRODUCTOS GRID - SEGUNDO */}
+      <section id="productos">
+        <ProductosGridOptimizado />
+      </section>
       
-      {/* Hero con contexto - Ahora después de productos */}
+      {/* 3. Hero con contexto */}
       <HeroFabrica />
       
-      {/* ¿Por Qué Fábrica? */}
+      {/* 4. ¿Por Qué Fábrica? */}
       <PorQueFabrica />
       
-      {/* Stats Impactantes */}
+      {/* 5. Stats Impactantes */}
       <StatsImpactantes />
       
-      {/* Comparador MercadoLibre */}
+      {/* 6. Comparador MercadoLibre */}
       <ComparadorMercadoLibre />
       
-      {/* FAQ Optimizada */}
+      {/* 7. FAQ Optimizada */}
       <FAQOptimizada />
       
-      {/* Final CTA */}
-      <FinalCTAOptimizada />
+      {/* 🏆 8. Trust Badges - AL FINAL */}
+      <TrustBadges />
       
     </div>
   )

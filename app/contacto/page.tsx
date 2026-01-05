@@ -27,8 +27,8 @@ const CONTACT_INFO: ContactInfoItem[] = [
   {
     icon: Phone,
     title: 'Teléfono',
-    value: '+54 353 4017332',
-    link: 'tel:+5493534017332'
+    value: '+54 9 3534 09-6566',
+    link: 'tel:+54 9 3534 09-6566'
   },
   {
     icon: Mail,
@@ -91,7 +91,7 @@ const contactStructuredData = {
       postalCode: '5900',
       addressCountry: 'AR'
     },
-    telephone: '+54-9-353-4017332',
+    telephone: '+54 9 3534 09-6566',
     email: 'info@azulcolchones.com',
     openingHoursSpecification: [
       {
@@ -408,7 +408,7 @@ export default function ContactoPage() {
                     Escribinos por WhatsApp
                   </p>
                   <a
-                    href="https://wa.me/5493534017332"
+                    href="https://wa.me/5493534096566"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 text-white px-6 py-3 rounded-xl font-bold transition-all"

@@ -117,11 +117,11 @@ export default function CheckoutSuccessPage() {
           <li>Recibirás email de confirmación con detalles del pedido</li>
           <li>Te enviaremos número de seguimiento cuando se despache</li>
           <li>Podés hacer seguimiento desde tu cuenta</li>
-          <li>Contactanos por WhatsApp: 353 401 7332</li>
+          <li>Contactanos por WhatsApp: +54 9 3534 09-6566</li>
         </ul>
         <h2>Información de Contacto</h2>
         <p>
-          WhatsApp: 353 401 7332<br />
+          WhatsApp: +54 9 3534 09-6566<br />
           Email: hola@azulcolchones.com.ar<br />
           Ubicación: Villa María, Córdoba, Argentina
         </p>

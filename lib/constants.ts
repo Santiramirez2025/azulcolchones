@@ -29,11 +29,11 @@ export const SITE_CONFIG = {
   
   // Contact - CONSISTENCY ACROSS ALL PLATFORMS
   phone: {
-    number: '+5493534017332', // E.164 format for schema
-    display: '353 401 7332', // User-friendly format
-    displayInternational: '+54 9 353 401 7332',
-    whatsapp: '5493534017332', // Sin + para WhatsApp API
-    link: 'tel:+5493534017332' // Para href
+    number: '+54 9 3534 09-6566', // E.164 format for schema
+    display: '+54 9 3534 09-6566', // User-friendly format
+    displayInternational: '+54 9 3534 09-6566',
+    whatsapp: '+54 9 3534 09-6566', // Sin + para WhatsApp API
+    link: 'tel:+54 9 3534 09-6566' // Para href
   },
   email: {
     primary: 'info@azulcolchones.com.ar',
@@ -46,7 +46,7 @@ export const SITE_CONFIG = {
   social: {
     facebook: 'https://facebook.com/azulcolchones',
     instagram: 'https://instagram.com/azulcolchones',
-    whatsapp: 'https://wa.me/5493534017332',
+    whatsapp: 'https://wa.me/5493534096566',
     youtube: '', // Opcional: videos de productos
     linkedin: '', // Opcional: B2B
     tiktok: '', // Opcional: contenido viral

@@ -150,7 +150,7 @@ export default function Home() {
             
             <address>
               <p>Dirección: Balerdi 855, Villa María, Córdoba, Argentina</p>
-              <p>WhatsApp: +54 9 353 4017332</p>
+              <p>WhatsApp: +54 9 3534 09-6566</p>
               <p>Email: info@azulcolchones.com</p>
               <p>Horarios: Lunes a Viernes: 9:00 - 19:00hs, Sábados: 9:00 - 13:00hs</p>
               <p>Zona de envío: Villa María, Villa Nueva, Bell Ville, San Francisco y toda Argentina</p>

@@ -88,7 +88,7 @@ export default function FAQOptimizada() {
             ¿Tenés otra pregunta?
           </p>
           <a
-            href="https://wa.me/5493534017332?text=Hola!%20Tengo%20una%20consulta%20sobre%20Piero%20Fábrica"
+            href="https://wa.me/5493534096566?text=Hola!%20Tengo%20una%20consulta%20sobre%20Piero%20Fábrica"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all duration-200"

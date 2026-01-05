@@ -17,7 +17,7 @@ const CONFIG = {
   ciudad: 'Villa María',
   provincia: 'Córdoba',
   pais: 'Argentina',
-  telefono: '+54-353-401-7332',
+  telefono: '3534 09-6566',
   direccion: 'Balerdi 855',
   codigoPostal: '5900',
   

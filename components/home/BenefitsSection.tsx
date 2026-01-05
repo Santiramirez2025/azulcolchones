@@ -265,7 +265,7 @@ export function BenefitsSection() {
           className="text-center mt-8 sm:mt-10 md:mt-12"
         >
           <a 
-            href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20sobre%20formas%20de%20pago"
+            href="https://wa.me/5493534096566?text=Hola!%20Quiero%20consultar%20sobre%20formas%20de%20pago"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300"

@@ -31,7 +31,7 @@ const successStructuredData = {
   provider: {
     '@type': 'Organization',
     name: 'Azul Colchones',
-    telephone: '+54-9-353-4017332'
+    telephone: '+54 9 3534 09-6566'
   }
 }
 
@@ -371,7 +371,7 @@ function SuccessContent() {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                  <span>Si tenés alguna duda, contactanos por WhatsApp al 3534017332</span>
+                  <span>Si tenés alguna duda, contactanos por WhatsApp al 3534 09-6566</span>
                 </li>
               </ul>
             </motion.div>
@@ -390,7 +390,7 @@ function SuccessContent() {
                   <Phone className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-semibold text-white mb-1">WhatsApp</p>
-                    <p className="text-sm text-zinc-400">3534017332</p>
+                    <p className="text-sm text-zinc-400">+54 9 3534 09-6566</p>
                   </div>
                 </div>
                 

@@ -32,7 +32,7 @@ const STORE_CONFIG = {
   },
   contact: {
     email: 'ventas@azulcolchones.com',
-    phone: '+54 9 353 4017332'
+    phone: '+54 9 3534 09-6566'
   },
   rating: {
     value: 4.9,

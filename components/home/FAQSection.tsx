@@ -88,7 +88,7 @@ export default function FAQSection() {
           ¿No encontraste lo que buscabas?
         </p>
         <a 
-          href="https://wa.me/5493534017332"
+          href="https://wa.me/5493534096566"
           className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

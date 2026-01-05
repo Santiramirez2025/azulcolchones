@@ -527,7 +527,7 @@ export const structuredData = {
           name: '¿Hacen envíos a Villa María?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Sí, realizamos envíos GRATIS en Villa María en 24-48 horas hábiles. También enviamos a toda Córdoba y el resto del país con costos preferenciales. Coordinamos el día y horario de entrega por WhatsApp (+54 9 353 4017332) para asegurarnos que estés en casa.',
+            text: 'Sí, realizamos envíos GRATIS en Villa María en 24-48 horas hábiles. También enviamos a toda Córdoba y el resto del país con costos preferenciales. Coordinamos el día y horario de entrega por WhatsApp (3534 09-6566) para asegurarnos que estés en casa.',
           },
         },
         {
@@ -591,7 +591,7 @@ export const structuredData = {
           name: '¿Retiran el colchón viejo gratis?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Sí, ofrecemos retiro del colchón viejo sin cargo en compras superiores a $400.000 en Villa María y zonas aledañas. Coordinamos el retiro junto con la entrega de tu colchón nuevo el mismo día. Consultá disponibilidad por WhatsApp: +54 9 353 4017332.',
+            text: 'Sí, ofrecemos retiro del colchón viejo sin cargo en compras superiores a $400.000 en Villa María y zonas aledañas. Coordinamos el retiro junto con la entrega de tu colchón nuevo el mismo día. Consultá disponibilidad por WhatsApp: 3534 09-6566.',
           },
         },
         {
