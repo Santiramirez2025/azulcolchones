@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
-import { trackWhatsAppClick } from '@/lib/pixel' // 👈 META PIXEL IMPORT
+import { trackWhatsAppClick, trackViewContent, trackSearch } from '@/lib/pixel'
 
 // ============================================================================
 // TYPES
@@ -11,10 +11,10 @@ import { trackWhatsAppClick } from '@/lib/pixel' // 👈 META PIXEL IMPORT
 interface ProductCardProps {
   nombre: string
   tamaño: string
-  precioPublico: number  // Precio "A 7 DIAS" que ve el cliente
-  precioMercadoLibre?: number  // Precio de referencia ML
-  ahorro?: number  // Diferencia real que se ahorra
-  ahorroPorc?: number  // Porcentaje de ahorro
+  precioPublico: number
+  precioMercadoLibre?: number
+  ahorro?: number
+  ahorroPorc?: number
   categoria: 'ancla' | 'equilibrio' | 'premium' | 'accesorio'
   destacado?: boolean
   stock: 'disponible' | 'consultar' | 'bajo-pedido'
@@ -23,7 +23,7 @@ interface ProductCardProps {
 }
 
 // ============================================================================
-// PRODUCT CARD - DISEÑO PROFESIONAL CON TRACKING 🎯
+// PRODUCT CARD - CON TRACKING COMPLETO 🎯
 // ============================================================================
 
 function ProductCard({ 
@@ -40,6 +40,38 @@ function ProductCard({
   tipo = 'colchon'
 }: ProductCardProps) {
   
+  const cardRef = useRef<HTMLElement>(null)
+  const hasTrackedView = useRef(false)
+
+  // =========================================================================
+  // 🎯 TRACK VIEW CONTENT - Cuando el producto entra en viewport
+  // =========================================================================
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasTrackedView.current) {
+            hasTrackedView.current = true
+            trackViewContent({
+              producto: nombre,
+              tamaño: tamaño,
+              precio: precioPublico,
+              categoria: categoria,
+              precioMercadoLibre: precioMercadoLibre
+            })
+          }
+        })
+      },
+      { threshold: 0.5 } // 50% visible
+    )
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [nombre, tamaño, precioPublico, categoria, precioMercadoLibre])
+
   const categoriaConfig = {
     ancla: { 
       badge: 'Mejor Precio',
@@ -70,7 +102,6 @@ function ProductCard({
   const config = categoriaConfig[categoria]
   const urlWhatsApp = `https://wa.me/5493534017332?text=${encodeURIComponent(`Hola! Consulto por ${nombre} ${tamaño} a precio de fábrica`)}`
 
-  // Emoji según tipo de producto
   const tipoEmoji = {
     colchon: '🛏️',
     protector: '🛡️',
@@ -80,19 +111,21 @@ function ProductCard({
   }
 
   // =========================================================================
-  // 🎯 HANDLER DE TRACKING - EVENTO LEAD EN WHATSAPP
+  // 🎯 HANDLER WHATSAPP - EVENTO LEAD (CONVERSIÓN PRINCIPAL)
   // =========================================================================
   const handleWhatsAppClick = () => {
     trackWhatsAppClick({
       producto: nombre,
       tamaño: tamaño,
       precio: precioPublico,
-      categoria: categoria
+      categoria: categoria,
+      precioMercadoLibre: precioMercadoLibre
     })
   }
 
   return (
     <article 
+      ref={cardRef}
       className={`
         group relative bg-white rounded-2xl overflow-hidden
         border ${destacado ? 'border-blue-500 border-2' : 'border-zinc-200'}
@@ -162,7 +195,7 @@ function ProductCard({
           <p className="text-sm text-zinc-600 font-medium">{tamaño}</p>
         </div>
 
-        {/* Ahorro Destacado - SOLO SI HAY AHORRO */}
+        {/* Ahorro Destacado */}
         {ahorro && ahorroPorc && ahorro > 0 && (
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl p-3">
             <div className="flex items-center justify-between">
@@ -196,7 +229,6 @@ function ProductCard({
             'https://schema.org/PreSale'
           } />
           
-          {/* Precio comparativo tachado - SOLO SI EXISTE */}
           {precioMercadoLibre && (
             <p className="text-sm text-zinc-500">
               <span className="line-through">${precioMercadoLibre.toLocaleString('es-AR')}</span>
@@ -205,7 +237,7 @@ function ProductCard({
           )}
         </div>
 
-        {/* Opciones de Pago - Solo para colchones */}
+        {/* Opciones de Pago */}
         {tipo === 'colchon' && (
           <details className="group/cuotas border border-zinc-200 rounded-xl overflow-hidden">
             <summary className="flex items-center justify-between cursor-pointer list-none py-3 px-4 bg-zinc-50 hover:bg-zinc-100 transition-colors">
@@ -225,7 +257,6 @@ function ProductCard({
             
             <div className="bg-white border-t border-zinc-200">
               <div className="p-4 space-y-2.5">
-                {/* Métodos sin recargo */}
                 <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-2">
                     <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -239,7 +270,6 @@ function ProductCard({
                   </div>
                 </div>
                 
-                {/* Cuotas con recargo */}
                 <div className="space-y-1.5 text-xs">
                   <div className="flex items-center justify-between py-2 px-3 bg-zinc-50 rounded">
                     <span className="font-medium text-zinc-700">3 cuotas</span>
@@ -286,9 +316,7 @@ function ProductCard({
           )}
         </div>
 
-        {/* ================================================================= */}
-        {/* 🎯 CTA PRINCIPAL - CON TRACKING DE CONVERSIÓN META PIXEL         */}
-        {/* ================================================================= */}
+        {/* CTA Principal - CON TRACKING */}
         <a
           href={urlWhatsApp}
           target="_blank"
@@ -321,18 +349,17 @@ function ProductCard({
 }
 
 // ============================================================================
-// PRODUCTOS GRID PRINCIPAL - PRECIOS ACTUALIZADOS SEGÚN ANÁLISIS PDF
+// PRODUCTOS GRID - CON TRACKING DE FILTROS
 // ============================================================================
 
 export default function ProductosGridOptimizado() {
   const [categoriaActiva, setCategoriaActiva] = useState<'todos' | 'plaza' | 'plaza-media' | 'queen' | 'king' | 'accesorios'>('todos')
   
-  // ============================================================================
-  // PRODUCTOS DATA - CON NOMBRES OPTIMIZADOS PARA BÚSQUEDA
-  // ============================================================================
+  // =========================================================================
+  // PRODUCTOS DATA
+  // =========================================================================
 
   const productosAncla: ProductCardProps[] = [
-    // ========== NIRVANA - LÍNEA ANCLA ==========
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x80 (1 plaza)',
@@ -385,7 +412,6 @@ export default function ProductosGridOptimizado() {
       ahorro: 151067,
       ahorroPorc: 22,
       categoria: 'ancla',
-      destacado: false,
       stock: 'disponible',
       imagen: '/images/nirvana-140.jpg'
     },
@@ -422,7 +448,6 @@ export default function ProductosGridOptimizado() {
       stock: 'disponible',
       imagen: '/images/nirvana-200.jpg'
     },
-    // ========== MEDITARE EUROPILLOW - LÍNEA ANCLA ==========
     {
       nombre: 'Colchón Piero Meditare EuroPillow',
       tamaño: '190x80 (1 plaza)',
@@ -481,7 +506,6 @@ export default function ProductosGridOptimizado() {
   ]
 
   const productosEquilibrio: ProductCardProps[] = [
-    // ========== SONNO EUROPILLOW - LÍNEA EQUILIBRIO ==========
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x80 (1 plaza)',
@@ -549,7 +573,6 @@ export default function ProductosGridOptimizado() {
       stock: 'disponible',
       imagen: '/images/sonno-ep-160.jpg'
     },
-    // ========== REGNO - LÍNEA EQUILIBRIO ==========
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '190x80 (1 plaza)',
@@ -605,7 +628,6 @@ export default function ProductosGridOptimizado() {
       stock: 'disponible',
       imagen: '/images/regno-200.jpg'
     },
-    // ========== REGNO PILLOW TOP - LÍNEA EQUILIBRIO ==========
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '190x140 (2 plazas)',
@@ -650,7 +672,6 @@ export default function ProductosGridOptimizado() {
       stock: 'disponible',
       imagen: '/images/regno-pillow-200.jpg'
     },
-    // ========== GRAVITA - LÍNEA EQUILIBRIO ==========
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '190x140 (2 plazas)',
@@ -695,7 +716,6 @@ export default function ProductosGridOptimizado() {
       stock: 'disponible',
       imagen: '/images/gravita-200.jpg'
     },
-    // ========== NAMASTE - LÍNEA EQUILIBRIO ==========
     {
       nombre: 'Colchón Piero Namaste',
       tamaño: '190x140 (2 plazas)',
@@ -729,7 +749,6 @@ export default function ProductosGridOptimizado() {
       stock: 'disponible',
       imagen: '/images/namaste-200.jpg'
     },
-    // ========== NAMASTE PILLOW TOP - LÍNEA EQUILIBRIO ==========
     {
       nombre: 'Colchón Piero Namaste Pillow Top',
       tamaño: '190x140 (2 plazas)',
@@ -755,7 +774,6 @@ export default function ProductosGridOptimizado() {
   ]
 
   const productosPremium: ProductCardProps[] = [
-    // ========== MONTREAUX - LÍNEA PREMIUM ==========
     {
       nombre: 'Colchón Piero Montreaux',
       tamaño: '190x140 (2 plazas)',
@@ -789,7 +807,6 @@ export default function ProductosGridOptimizado() {
       stock: 'disponible',
       imagen: '/images/montreaux-200.jpg'
     },
-    // ========== MONTREAUX PILLOW TOP - LÍNEA PREMIUM ==========
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '190x140 (2 plazas)',
@@ -835,7 +852,6 @@ export default function ProductosGridOptimizado() {
       stock: 'disponible',
       imagen: '/images/montreaux-pillow-200.jpg'
     },
-    // ========== DREAM FIT POCKET - LÍNEA PREMIUM ==========
     {
       nombre: 'Colchón Piero Dream Fit Pocket',
       tamaño: '190x140 (2 plazas)',
@@ -872,7 +888,6 @@ export default function ProductosGridOptimizado() {
   ]
 
   const accesorios: ProductCardProps[] = [
-    // ========== PROTECTORES ==========
     {
       nombre: 'Protector Impermeable Piero',
       tamaño: '140x190 cm',
@@ -900,7 +915,6 @@ export default function ProductosGridOptimizado() {
       tipo: 'protector',
       imagen: '/images/protector-200.jpg'
     },
-    // ========== ALMOHADAS ==========
     {
       nombre: 'Almohada Piero Fibra Smart Tech Plus',
       tamaño: '70x50 cm',
@@ -919,7 +933,6 @@ export default function ProductosGridOptimizado() {
       tipo: 'almohada',
       imagen: '/images/almohada-micro.jpg'
     },
-    // ========== SÁBANAS BAMBOO ==========
     {
       nombre: 'Sábanas Bamboo Piero 600 Hilos',
       tamaño: '140x190 cm',
@@ -967,7 +980,26 @@ export default function ProductosGridOptimizado() {
   })
 
   // =========================================================================
-  // 🎯 HANDLER CTA FINAL - TRACKING CONSULTA GENERAL
+  // 🎯 TRACK FILTER CHANGE - Evento Search
+  // =========================================================================
+  const handleFilterChange = useCallback((filterId: string) => {
+    setCategoriaActiva(filterId as any)
+    
+    // Trackear como búsqueda/filtro
+    const filterLabels: Record<string, string> = {
+      'todos': 'Todos los productos',
+      'plaza': '1 Plaza',
+      'plaza-media': '1½ Plaza / 2 Plazas',
+      'queen': 'Queen',
+      'king': 'King',
+      'accesorios': 'Accesorios'
+    }
+    
+    trackSearch(filterLabels[filterId] || filterId, productosFiltrados.length)
+  }, [productosFiltrados.length])
+
+  // =========================================================================
+  // 🎯 TRACK CTA FINAL
   // =========================================================================
   const handleCtaFinalClick = () => {
     trackWhatsAppClick({
@@ -982,7 +1014,6 @@ export default function ProductosGridOptimizado() {
       className="relative bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950 py-20"
       aria-labelledby="productos-heading"
     >
-      {/* Efecto de fondo sutil */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute w-96 h-96 bg-blue-500 rounded-full blur-3xl top-0 right-0"></div>
         <div className="absolute w-96 h-96 bg-purple-500 rounded-full blur-3xl bottom-0 left-0"></div>
@@ -990,7 +1021,6 @@ export default function ProductosGridOptimizado() {
 
       <div className="relative max-w-7xl mx-auto px-4">
         
-        {/* Header Refinado */}
         <header className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-sm font-bold mb-6">
             <span className="relative flex h-2 w-2">
@@ -1015,7 +1045,7 @@ export default function ProductosGridOptimizado() {
           </p>
         </header>
 
-        {/* Filtros Refinados */}
+        {/* Filtros con tracking */}
         <div className="mb-12 overflow-x-auto pb-4 scrollbar-hide">
           <div className="flex gap-3 min-w-max justify-center px-4">
             {[
@@ -1028,7 +1058,7 @@ export default function ProductosGridOptimizado() {
             ].map((filtro) => (
               <button
                 key={filtro.id}
-                onClick={() => setCategoriaActiva(filtro.id as any)}
+                onClick={() => handleFilterChange(filtro.id)}
                 className={`
                   px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300
                   ${categoriaActiva === filtro.id
@@ -1043,14 +1073,12 @@ export default function ProductosGridOptimizado() {
           </div>
         </div>
 
-        {/* Contador de Productos */}
         <div className="text-center mb-8">
           <p className="text-sm text-zinc-500">
             Mostrando <strong className="text-white">{productosFiltrados.length}</strong> productos
           </p>
         </div>
 
-        {/* Grid Principal */}
         <div 
           className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mb-16"
           role="list"
@@ -1062,9 +1090,7 @@ export default function ProductosGridOptimizado() {
           ))}
         </div>
 
-        {/* ================================================================= */}
-        {/* 🎯 CTA FINAL - CON TRACKING META PIXEL                           */}
-        {/* ================================================================= */}
+        {/* CTA Final con tracking */}
         <div className="bg-gradient-to-br from-blue-950/50 to-purple-950/50 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-8 md:p-12 text-center">
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
             ¿No encontrás tu modelo?
