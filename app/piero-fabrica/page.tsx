@@ -1,11 +1,12 @@
-// app/piero-fabrica/page.tsx - REDISEÑO AGRESIVO 🎯
+// app/piero-fabrica/page.tsx - OPTIMIZADO CON META PIXEL 🎯
 // NUEVO ORDEN: CTA PRIMERO → PRODUCTOS → TRUST BADGES AL FINAL
-// Conversion Rate Target: 12-18% | Estrategia 3 Pilares | Mobile-First
+// Todos los CTAs de WhatsApp con tracking de conversión
 
 import type { Metadata } from 'next'
 import ProductosGridOptimizado from './ProductosGrid'
 import FAQOptimizada from './FAQSection'
 import ComparadorMercadoLibre from './ComparadorMercadoLibre'
+import WhatsAppCTA from '@/components/WhatsAppCTA' // 🎯 Componente con tracking
 
 // ============================================================================
 // METADATA - CONVERSION FOCUSED SEO 🚀
@@ -130,7 +131,7 @@ function FinalCTAOptimizada() {
 }
 
 // ============================================================================
-// HERO SECTION - CONTEXTO Y BENEFICIOS 🎯
+// HERO SECTION - CON CTA TRACKEADO 🎯
 // ============================================================================
 
 function HeroFabrica() {
@@ -177,6 +178,9 @@ function HeroFabrica() {
                 </p>
               </div>
 
+              {/* ============================================================ */}
+              {/* 🎯 CTAs - AHORA CON TRACKING                                 */}
+              {/* ============================================================ */}
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <a 
                   href="#productos"
@@ -188,15 +192,15 @@ function HeroFabrica() {
                   </svg>
                 </a>
                 
-                <a 
-                  href="https://wa.me/5493534096566?text=Hola!%20Quiero%20consultar%20por%20Piero%20Fábrica"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-all duration-300 shadow-xl shadow-green-500/30 hover:shadow-green-500/50 hover:scale-105 flex items-center justify-center gap-2"
-                >
-                  <span className="text-xl">💬</span>
-                  <span>Consultar WhatsApp</span>
-                </a>
+                {/* 🎯 WHATSAPP CTA CON TRACKING */}
+                <WhatsAppCTA 
+                  texto="Consultar WhatsApp"
+                  mensaje="Hola! Quiero consultar por Piero Fábrica"
+                  producto="Hero Section CTA"
+                  categoria="hero-piero-fabrica"
+                  variante="hero"
+                  icono={false}
+                />
               </div>
 
               <div className="flex items-center gap-4 pt-4 justify-center lg:justify-start">
@@ -510,12 +514,12 @@ export default function PieroFabricaPage() {
       {/* 🎯 1. FINAL CTA - PRIMER IMPACTO */}
       <FinalCTAOptimizada />
       
-      {/* ⚡ 2. PRODUCTOS GRID - SEGUNDO */}
+      {/* ⚡ 2. PRODUCTOS GRID - SEGUNDO (con tracking en ProductosGrid) */}
       <section id="productos">
         <ProductosGridOptimizado />
       </section>
       
-      {/* 3. Hero con contexto */}
+      {/* 3. Hero con contexto (con WhatsAppCTA trackeado) */}
       <HeroFabrica />
       
       {/* 4. ¿Por Qué Fábrica? */}
