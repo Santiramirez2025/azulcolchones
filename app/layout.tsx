@@ -1,5 +1,6 @@
 // app/layout.tsx - ULTRA OPTIMIZED ⚡ DUAL STRATEGY - Azul Colchones
 // SEO Level: SENIOR | Performance: A+ | Strategy: Outlet + Fábrica
+// ✅ META PIXEL INTEGRADO - ID: 521139968588985
 
 import type { Metadata, Viewport } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
@@ -10,6 +11,7 @@ import Footer from '../components/sections/Footer'
 import WhatsAppButton from '../components/WhatsAppButton'
 import { AuthProvider } from '@/lib/context/AuthContext'
 import { Analytics } from '@/components/analytics'
+import MetaPixel from '@/components/MetaPixel' // 👈 META PIXEL IMPORT
 
 // ============================================================================
 // FONTS - ULTRA OPTIMIZED ⚡
@@ -665,6 +667,9 @@ export default function RootLayout({
           textRendering: 'optimizeLegibility'
         }}
       >
+        {/* ✅ META PIXEL - TRACKING DE CONVERSIONES */}
+        <MetaPixel />
+        
         <a 
           href="#main-content" 
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-blue-600 focus:text-white focus:rounded-xl focus:font-semibold focus:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-zinc-950 transition-all duration-200"
