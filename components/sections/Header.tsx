@@ -46,7 +46,7 @@ const Icons = {
 // ============================================================================
 
 const SITE_CONFIG = {
-  whatsappNumber: '+54 9 3534 09-6566',
+  whatsappNumber: '5493534096566',
   brandName: 'Azul Colchones',
   location: 'Villa María',
 } as const
