@@ -1,6 +1,7 @@
 // app/layout.tsx - ULTRA OPTIMIZED ⚡ DUAL STRATEGY - Azul Colchones
 // SEO Level: SENIOR | Performance: A+ | Strategy: Outlet + Fábrica
 // ✅ META PIXEL INTEGRADO - ID: 521139968588985
+// ✅ VERCEL ANALYTICS INTEGRADO
 
 import type { Metadata, Viewport } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
@@ -10,8 +11,8 @@ import Header from '../components/sections/Header'
 import Footer from '../components/sections/Footer'
 import WhatsAppButton from '../components/WhatsAppButton'
 import { AuthProvider } from '@/lib/context/AuthContext'
-import { Analytics } from '@/components/analytics'
-import MetaPixel from '@/components/MetaPixel' // 👈 META PIXEL IMPORT
+import { Analytics } from "@vercel/analytics/next"
+import MetaPixel from '@/components/MetaPixel'
 
 // ============================================================================
 // FONTS - ULTRA OPTIMIZED ⚡
@@ -61,13 +62,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://azulcolchones.com'),
   
-  // ✅ TITLE DUAL STRATEGY (Outlet + Fábrica)
   title: {
     default: 'Azul Colchones Villa María | Outlet 60% + Piero Fábrica 40% | Envío Gratis',
     template: '%s | Azul Colchones Villa María'
   },
   
-  // ✅ DESCRIPTION OPTIMIZADA (Dual Strategy + Local)
   description: 'Colchones Piero en Villa María: Outlet (60% OFF, hoy) o Piero Fábrica (40% OFF, 7-10 días). Envío gratis, 12 cuotas. 35+ años experiencia. Showroom Balerdi 855.',
   
   applicationName: 'Azul Colchones',
@@ -82,7 +81,6 @@ export const metadata: Metadata = {
     telephone: false,
   },
   
-  // ✅ OPEN GRAPH DUAL STRATEGY
   openGraph: {
     type: 'website',
     locale: 'es_AR',
@@ -108,7 +106,6 @@ export const metadata: Metadata = {
     ],
   },
   
-  // ✅ TWITTER CARD
   twitter: {
     card: 'summary_large_image',
     site: '@azulcolchones',
@@ -121,7 +118,6 @@ export const metadata: Metadata = {
     },
   },
   
-  // ✅ ROBOTS - INDEXACIÓN AGRESIVA
   robots: {
     index: true,
     follow: true,
@@ -136,7 +132,6 @@ export const metadata: Metadata = {
     },
   },
   
-  // ✅ VERIFICACIÓN - ENV VARIABLES
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || 'ACTUALIZAR_CON_TU_CODIGO',
     other: {
@@ -144,7 +139,6 @@ export const metadata: Metadata = {
     },
   },
   
-  // ✅ CANONICAL + ALTERNATES
   alternates: {
     canonical: 'https://azulcolchones.com',
     languages: {
@@ -153,7 +147,6 @@ export const metadata: Metadata = {
     },
   },
   
-  // ✅ ICONS COMPLETOS
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '48x48' },
@@ -174,7 +167,6 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   category: 'shopping',
   
-  // ✅ ADDITIONAL META TAGS
   other: {
     'geo.region': 'AR-X',
     'geo.placename': 'Villa María',
@@ -328,7 +320,6 @@ const jsonLd = {
       
       hasMap: 'https://www.google.com/maps/place/Balerdi+855,+Villa+Mar%C3%ADa,+Córdoba',
       
-      // DUAL STRATEGY: Outlet + Fábrica
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Colchones Piero - Outlet y Fábrica',
@@ -451,15 +442,10 @@ const jsonLd = {
   ]
 }
 
-// ============================================================================
-// FAQ SCHEMA - DUAL STRATEGY 🎯
-// ============================================================================
-
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
-    // DUAL STRATEGY
     {
       '@type': 'Question',
       name: '¿Cuál es la diferencia entre Outlet y Piero Fábrica?',
@@ -476,7 +462,6 @@ const faqJsonLd = {
         text: 'Sí, si podés esperar 7-10 días, Piero Fábrica te ahorra entre $100.000 y $400.000 comparado con los precios de mercado. Es el mismo colchón Piero, con la misma garantía oficial, pero comprás directo de fábrica sin intermediarios. Ideal si estás planificando con tiempo y querés el mejor precio posible.'
       }
     },
-    // ENVÍOS
     {
       '@type': 'Question',
       name: '¿El envío es gratis en ambas modalidades (Outlet y Fábrica)?',
@@ -485,7 +470,6 @@ const faqJsonLd = {
         text: 'Sí, el envío es GRATIS en Villa María tanto para compras en Outlet (entrega en 24-48hs) como en Piero Fábrica (entrega en 7-10 días). Para otras ciudades de Córdoba y Argentina también tenemos envío sin cargo adicional. Coordinamos día y horario por WhatsApp: +54 9 3534 09-6566.'
       }
     },
-    // FINANCIACIÓN
     {
       '@type': 'Question',
       name: '¿Puedo pagar en 12 cuotas sin interés?',
@@ -494,7 +478,6 @@ const faqJsonLd = {
         text: 'Sí, ofrecemos hasta 12 cuotas sin interés tanto en Outlet como en Piero Fábrica, con Mercado Pago y tarjetas de crédito habilitadas. También aceptamos transferencia bancaria con 10% de descuento adicional, efectivo en showroom con 15% de descuento, y todas las tarjetas de débito.'
       }
     },
-    // GARANTÍAS
     {
       '@type': 'Question',
       name: '¿La garantía es la misma en Outlet y Piero Fábrica?',
@@ -503,7 +486,6 @@ const faqJsonLd = {
         text: 'Sí, todos los colchones Piero tienen la misma garantía oficial de fábrica (5-10 años según modelo), ya sea que los compres en Outlet o por Piero Fábrica. La garantía cubre defectos de fabricación, deformaciones y roturas de resortes. Además cumplimos con la Ley de Defensa del Consumidor Argentina.'
       }
     },
-    // SHOWROOM
     {
       '@type': 'Question',
       name: '¿Puedo ver los colchones del Outlet en el showroom?',
@@ -512,7 +494,6 @@ const faqJsonLd = {
         text: 'Sí, visitá nuestro showroom en Balerdi 855, Villa María para ver y probar los colchones disponibles en Outlet. También te mostramos catálogos de todos los modelos Piero que podés pedir directo de Fábrica. Atendemos lunes a viernes 9-19hs, sábados 9-13hs. WhatsApp: +54 9 3534 09-6566.'
       }
     },
-    // STOCK
     {
       '@type': 'Question',
       name: '¿Cómo sé si hay stock en Outlet del colchón que quiero?',
@@ -523,10 +504,6 @@ const faqJsonLd = {
     },
   ]
 }
-
-// ============================================================================
-// BREADCRUMB SCHEMA
-// ============================================================================
 
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
@@ -573,7 +550,6 @@ export default function RootLayout({
           media="(min-width: 768px)"
         />
         
-        {/* ⚡ DYNAMIC FAVICON & TITLE - Dual Strategy Animation */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -589,25 +565,20 @@ export default function RootLayout({
   function updateFavicon() {
     const icon = icons[currentIcon];
     
-    // Update title
     document.title = icon.title;
     
-    // Create canvas for emoji favicon
     const canvas = document.createElement('canvas');
     canvas.width = 64;
     canvas.height = 64;
     const ctx = canvas.getContext('2d');
     
-    // Clear canvas
     ctx.clearRect(0, 0, 64, 64);
     
-    // Draw emoji
     ctx.font = '52px Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(icon.emoji, 32, 34);
     
-    // Update or create favicon link
     let link = document.querySelector("link[rel*='icon']");
     if (!link) {
       link = document.createElement('link');
@@ -616,21 +587,17 @@ export default function RootLayout({
     }
     link.href = canvas.toDataURL('image/png');
     
-    // Next icon
     currentIcon = (currentIcon + 1) % icons.length;
   }
   
-  // Initial load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', updateFavicon);
   } else {
     updateFavicon();
   }
   
-  // Rotate every 3 seconds (sutil, no invasivo)
   setInterval(updateFavicon, 3000);
   
-  // Reset when tab becomes visible
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden) {
       currentIcon = 0;
@@ -667,7 +634,6 @@ export default function RootLayout({
           textRendering: 'optimizeLegibility'
         }}
       >
-        {/* ✅ META PIXEL - TRACKING DE CONVERSIONES */}
         <MetaPixel />
         
         <a 
@@ -699,9 +665,7 @@ export default function RootLayout({
           />
         </AuthProvider>
 
-        <Suspense fallback={null}>
-          <Analytics />
-        </Suspense>
+        <Analytics />
       </body>
     </html>
   )
