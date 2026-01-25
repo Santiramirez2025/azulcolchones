@@ -361,6 +361,63 @@ export default function ProductosGridOptimizado() {
 
   const productosAncla: ProductCardProps[] = [
     {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x80 (1 plaza)',
+      precioPublico: 205302,
+      precioMercadoLibre: 220000,
+      ahorro: 14698,
+      ahorroPorc: 7,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-80.jpg'
+    },
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x90 (1 plaza)',
+      precioPublico: 228208,
+      precioMercadoLibre: 245000,
+      ahorro: 16792,
+      ahorroPorc: 7,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-90.jpg'
+    },
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x100 (1 plaza)',
+      precioPublico: 251292,
+      precioMercadoLibre: 262000,
+      ahorro: 10708,
+      ahorroPorc: 4,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-100.jpg'
+    },
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x130 (1½ plaza)',
+      precioPublico: 319975,
+      precioMercadoLibre: 332000,
+      ahorro: 12025,
+      ahorroPorc: 4,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-130.jpg'
+    },
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x140 (2 plazas)',
+      precioPublico: 344305,
+      precioMercadoLibre: 357000,
+      ahorro: 12695,
+      ahorroPorc: 4,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-140.jpg'
+    },
+    
+    // ========== NIRVANA DESPUÉS ==========
+    {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x80 (1 plaza)',
       precioPublico: 317285,
@@ -447,61 +504,6 @@ export default function ProductosGridOptimizado() {
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-200.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x80 (1 plaza)',
-      precioPublico: 205302,
-      precioMercadoLibre: 220000,
-      ahorro: 14698,
-      ahorroPorc: 7,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-80.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x90 (1 plaza)',
-      precioPublico: 228208,
-      precioMercadoLibre: 245000,
-      ahorro: 16792,
-      ahorroPorc: 7,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-90.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x100 (1 plaza)',
-      precioPublico: 251292,
-      precioMercadoLibre: 262000,
-      ahorro: 10708,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-100.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x130 (1½ plaza)',
-      precioPublico: 319975,
-      precioMercadoLibre: 332000,
-      ahorro: 12025,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-130.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 344305,
-      precioMercadoLibre: 357000,
-      ahorro: 12695,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-140.jpg'
     },
   ]
 
