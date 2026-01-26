@@ -174,10 +174,10 @@ export default function HeroSection() {
                 </p>
               </div>
 
-              {/* CTAs - COHERENTE CON HEADER */}
+              {/* CTAs - AZUL Y NARANJA */}
               <div className="space-y-2.5 pt-1">
                 
-                {/* CTA 1: Stock Disponible - IGUAL QUE HEADER */}
+                {/* CTA 1: Stock Disponible - AZUL */}
                 <a 
                   href="/catalogo" 
                   className="group block w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 active:scale-[0.98] text-white px-5 py-4 rounded-xl font-bold text-base shadow-2xl shadow-blue-500/30 transition-all duration-200 touch-manipulation"
@@ -190,16 +190,17 @@ export default function HeroSection() {
                   <div className="text-xs text-blue-100 mt-1.5 font-normal">Entrega inmediata • Hasta 20% OFF</div>
                 </a>
 
-                {/* CTA 2: Pedido Fábrica - IGUAL QUE HEADER */}
+                {/* CTA 2: Pedido Fábrica - NARANJA */}
                 <a 
                   href="/piero-fabrica" 
-                  className="group block w-full bg-slate-800/50 hover:bg-slate-700/50 active:scale-[0.98] border-2 border-slate-600/40 text-white px-4 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 touch-manipulation"
+                  className="group block w-full bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 active:scale-[0.98] text-white px-5 py-4 rounded-xl font-bold text-base shadow-2xl shadow-orange-500/30 transition-all duration-200 touch-manipulation"
                 >
-                  <div className="flex items-center justify-center gap-2">
-                    <Clock className="w-4 h-4 text-orange-400 group-hover:scale-110 transition-transform" aria-hidden="true" />
+                  <div className="flex items-center justify-center gap-2.5">
+                    <Clock className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true" />
                     <span>Pedido de Fábrica</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
                   </div>
-                  <div className="text-xs text-slate-400 mt-0.5">7-10 días • Mejor precio (-40%)</div>
+                  <div className="text-xs text-orange-100 mt-1.5 font-normal">7-10 días • Mejor precio (-40%)</div>
                 </a>
 
                 {/* CTA 3: WhatsApp */}
@@ -299,16 +300,16 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                {/* CTAs - COHERENTE CON HEADER */}
+                {/* CTAs - AZUL Y NARANJA */}
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     
-                    {/* CTA 1: Stock Disponible - COHERENTE */}
+                    {/* CTA 1: Stock Disponible - AZUL */}
                     <a 
                       href="/catalogo" 
                       className="group relative bg-gradient-to-br from-blue-950/80 to-blue-900/60 backdrop-blur-xl border-2 border-blue-500/30 hover:border-blue-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-blue-500/20"
                     >
-                      {/* Badge HOT - IGUAL QUE HEADER */}
+                      {/* Badge HOT */}
                       <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[10px] font-black px-2 py-1 rounded-full uppercase shadow-lg animate-pulse">
                         HOT
                       </div>
@@ -328,10 +329,10 @@ export default function HeroSection() {
                       </div>
                     </a>
 
-                    {/* CTA 2: Pedido Fábrica - COHERENTE */}
+                    {/* CTA 2: Pedido Fábrica - NARANJA */}
                     <a 
                       href="/piero-fabrica" 
-                      className="group relative bg-gradient-to-br from-orange-950/80 to-red-900/60 backdrop-blur-xl border-2 border-orange-500/30 hover:border-orange-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-orange-500/20"
+                      className="group relative bg-gradient-to-br from-orange-950/80 to-orange-900/60 backdrop-blur-xl border-2 border-orange-500/30 hover:border-orange-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-orange-500/20"
                     >
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center border border-orange-400/30">
