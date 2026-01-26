@@ -349,81 +349,26 @@ function ProductCard({
 }
 
 // ============================================================================
-// PRODUCTOS GRID - CON TRACKING DE FILTROS
+// PRODUCTOS GRID - PRECIOS OPTIMIZADOS ENERO 2026 💰
 // ============================================================================
 
 export default function ProductosGridOptimizado() {
   const [categoriaActiva, setCategoriaActiva] = useState<'todos' | 'plaza' | 'plaza-media' | 'queen' | 'king' | 'accesorios'>('todos')
   
   // =========================================================================
-  // PRODUCTOS DATA
+  // PRODUCTOS DATA - PRECIOS OPTIMIZADOS 💰
+  // Estrategia: 17-20% ahorro visible, máximo margen capturado
   // =========================================================================
 
   const productosAncla: ProductCardProps[] = [
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x80 (1 plaza)',
-      precioPublico: 205302,
-      precioMercadoLibre: 220000,
-      ahorro: 14698,
-      ahorroPorc: 7,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-80.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x90 (1 plaza)',
-      precioPublico: 228208,
-      precioMercadoLibre: 245000,
-      ahorro: 16792,
-      ahorroPorc: 7,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-90.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x100 (1 plaza)',
-      precioPublico: 251292,
-      precioMercadoLibre: 262000,
-      ahorro: 10708,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-100.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x130 (1½ plaza)',
-      precioPublico: 319975,
-      precioMercadoLibre: 332000,
-      ahorro: 12025,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-130.jpg'
-    },
-    {
-      nombre: 'Colchón Piero Meditare EuroPillow',
-      tamaño: '190x140 (2 plazas)',
-      precioPublico: 344305,
-      precioMercadoLibre: 357000,
-      ahorro: 12695,
-      ahorroPorc: 4,
-      categoria: 'ancla',
-      stock: 'disponible',
-      imagen: '/images/meditare-ep-140.jpg'
-    },
-    
-    // ========== NIRVANA DESPUÉS ==========
+    // NIRVANA - PRECIOS OPTIMIZADOS
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x80 (1 plaza)',
-      precioPublico: 317285,
+      precioPublico: 349000,
       precioMercadoLibre: 431080,
-      ahorro: 113795,
-      ahorroPorc: 26,
+      ahorro: 82080,
+      ahorroPorc: 19,
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-80.jpg'
@@ -431,10 +376,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x90 (1 plaza)',
-      precioPublico: 353608,
+      precioPublico: 399000,
       precioMercadoLibre: 504451,
-      ahorro: 150843,
-      ahorroPorc: 30,
+      ahorro: 105451,
+      ahorroPorc: 21,
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-90.jpg'
@@ -442,10 +387,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x100 (1 plaza)',
-      precioPublico: 401781,
+      precioPublico: 459000,
       precioMercadoLibre: 573175,
-      ahorro: 171394,
-      ahorroPorc: 30,
+      ahorro: 114175,
+      ahorroPorc: 20,
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-100.jpg'
@@ -453,10 +398,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x130 (1½ plaza)',
-      precioPublico: 502036,
+      precioPublico: 569000,
       precioMercadoLibre: 716197,
-      ahorro: 214161,
-      ahorroPorc: 30,
+      ahorro: 147197,
+      ahorroPorc: 21,
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-130.jpg'
@@ -464,10 +409,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 537416,
+      precioPublico: 569000,
       precioMercadoLibre: 688483,
-      ahorro: 151067,
-      ahorroPorc: 22,
+      ahorro: 119483,
+      ahorroPorc: 17,
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-140.jpg'
@@ -475,10 +420,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x160 (2 plazas)',
-      precioPublico: 684966,
+      precioPublico: 789000,
       precioMercadoLibre: 977163,
-      ahorro: 292197,
-      ahorroPorc: 30,
+      ahorro: 188163,
+      ahorroPorc: 19,
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-160.jpg'
@@ -486,10 +431,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '200x180 (Queen)',
-      precioPublico: 753463,
+      precioPublico: 869000,
       precioMercadoLibre: 1074879,
-      ahorro: 321416,
-      ahorroPorc: 30,
+      ahorro: 205879,
+      ahorroPorc: 19,
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-180.jpg'
@@ -497,24 +442,81 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '200x200 (King)',
-      precioPublico: 813751,
+      precioPublico: 829000,
       precioMercadoLibre: 988077,
-      ahorro: 174326,
-      ahorroPorc: 18,
+      ahorro: 159077,
+      ahorroPorc: 16,
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-200.jpg'
     },
+    // MEDITARE EP - PRECIOS AJUSTADOS (ML bajo - verificar)
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x80 (1 plaza)',
+      precioPublico: 185000,
+      precioMercadoLibre: 220000,
+      ahorro: 35000,
+      ahorroPorc: 16,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-80.jpg'
+    },
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x90 (1 plaza)',
+      precioPublico: 205000,
+      precioMercadoLibre: 245000,
+      ahorro: 40000,
+      ahorroPorc: 16,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-90.jpg'
+    },
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x100 (1 plaza)',
+      precioPublico: 219000,
+      precioMercadoLibre: 262000,
+      ahorro: 43000,
+      ahorroPorc: 16,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-100.jpg'
+    },
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x130 (1½ plaza)',
+      precioPublico: 279000,
+      precioMercadoLibre: 332000,
+      ahorro: 53000,
+      ahorroPorc: 16,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-130.jpg'
+    },
+    {
+      nombre: 'Colchón Piero Meditare EuroPillow',
+      tamaño: '190x140 (2 plazas)',
+      precioPublico: 299000,
+      precioMercadoLibre: 357000,
+      ahorro: 58000,
+      ahorroPorc: 16,
+      categoria: 'ancla',
+      stock: 'disponible',
+      imagen: '/images/meditare-ep-140.jpg'
+    },
   ]
 
   const productosEquilibrio: ProductCardProps[] = [
+    // SONNO EP - OPTIMIZADO
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x80 (1 plaza)',
-      precioPublico: 281772,
+      precioPublico: 259000,
       precioMercadoLibre: 312000,
-      ahorro: 30228,
-      ahorroPorc: 10,
+      ahorro: 53000,
+      ahorroPorc: 17,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-80.jpg'
@@ -522,10 +524,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x90 (1 plaza)',
-      precioPublico: 307453,
+      precioPublico: 279000,
       precioMercadoLibre: 341000,
-      ahorro: 33547,
-      ahorroPorc: 10,
+      ahorro: 62000,
+      ahorroPorc: 18,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-90.jpg'
@@ -533,10 +535,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x100 (1 plaza)',
-      precioPublico: 333420,
+      precioPublico: 299000,
       precioMercadoLibre: 370000,
-      ahorro: 36580,
-      ahorroPorc: 10,
+      ahorro: 71000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-100.jpg'
@@ -544,10 +546,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x130 (1½ plaza)',
-      precioPublico: 422073,
+      precioPublico: 379000,
       precioMercadoLibre: 468000,
-      ahorro: 45927,
-      ahorroPorc: 10,
+      ahorro: 89000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-130.jpg'
@@ -555,10 +557,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 458198,
+      precioPublico: 529000,
       precioMercadoLibre: 650000,
-      ahorro: 191802,
-      ahorroPorc: 29,
+      ahorro: 121000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       destacado: true,
       stock: 'disponible',
@@ -567,21 +569,22 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x160 (2 plazas)',
-      precioPublico: 499893,
+      precioPublico: 449000,
       precioMercadoLibre: 555000,
-      ahorro: 55107,
-      ahorroPorc: 10,
+      ahorro: 106000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-160.jpg'
     },
+    // REGNO - OPTIMIZADO (TENÍA MUCHO MARGEN)
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '190x80 (1 plaza)',
-      precioPublico: 291464,
+      precioPublico: 319000,
       precioMercadoLibre: 390000,
-      ahorro: 98536,
-      ahorroPorc: 25,
+      ahorro: 71000,
+      ahorroPorc: 18,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-80.jpg'
@@ -589,10 +592,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '190x90 (1 plaza)',
-      precioPublico: 315299,
+      precioPublico: 349000,
       precioMercadoLibre: 422000,
-      ahorro: 106701,
-      ahorroPorc: 25,
+      ahorro: 73000,
+      ahorroPorc: 17,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-90.jpg'
@@ -600,10 +603,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 449186,
+      precioPublico: 569000,
       precioMercadoLibre: 709000,
-      ahorro: 259814,
-      ahorroPorc: 37,
+      ahorro: 140000,
+      ahorroPorc: 20,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-140.jpg'
@@ -611,10 +614,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '200x160 (Queen)',
-      precioPublico: 530167,
+      precioPublico: 749000,
       precioMercadoLibre: 956000,
-      ahorro: 425833,
-      ahorroPorc: 45,
+      ahorro: 207000,
+      ahorroPorc: 22,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-160.jpg'
@@ -622,21 +625,22 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '200x200 (King)',
-      precioPublico: 652582,
+      precioPublico: 699000,
       precioMercadoLibre: 873000,
-      ahorro: 220418,
-      ahorroPorc: 25,
+      ahorro: 174000,
+      ahorroPorc: 20,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-200.jpg'
     },
+    // REGNO PILLOW TOP
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 561631,
+      precioPublico: 499000,
       precioMercadoLibre: 601000,
-      ahorro: 39369,
-      ahorroPorc: 7,
+      ahorro: 102000,
+      ahorroPorc: 17,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-pillow-140.jpg'
@@ -644,10 +648,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '200x160 (Queen)',
-      precioPublico: 644294,
+      precioPublico: 629000,
       precioMercadoLibre: 775000,
-      ahorro: 130706,
-      ahorroPorc: 17,
+      ahorro: 146000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-pillow-160.jpg'
@@ -655,10 +659,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '200x180 (Queen XL)',
-      precioPublico: 714436,
+      precioPublico: 769000,
       precioMercadoLibre: 956000,
-      ahorro: 241564,
-      ahorroPorc: 25,
+      ahorro: 187000,
+      ahorroPorc: 20,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-pillow-180.jpg'
@@ -666,21 +670,22 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '200x200 (King)',
-      precioPublico: 783921,
+      precioPublico: 849000,
       precioMercadoLibre: 1049000,
-      ahorro: 265079,
-      ahorroPorc: 25,
+      ahorro: 200000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-pillow-200.jpg'
     },
+    // GRAVITA - OPTIMIZADO
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 736057,
+      precioPublico: 789000,
       precioMercadoLibre: 980000,
-      ahorro: 243943,
-      ahorroPorc: 25,
+      ahorro: 191000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/gravita-140.jpg'
@@ -688,10 +693,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '200x160 (Queen)',
-      precioPublico: 905309,
+      precioPublico: 879000,
       precioMercadoLibre: 1083000,
-      ahorro: 177691,
-      ahorroPorc: 16,
+      ahorro: 204000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/gravita-160.jpg'
@@ -699,10 +704,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '200x180 (Queen XL)',
-      precioPublico: 969064,
+      precioPublico: 1019000,
       precioMercadoLibre: 1266000,
-      ahorro: 296936,
-      ahorroPorc: 23,
+      ahorro: 247000,
+      ahorroPorc: 20,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/gravita-180.jpg'
@@ -710,21 +715,22 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '200x200 (King)',
-      precioPublico: 1030613,
+      precioPublico: 1039000,
       precioMercadoLibre: 1289000,
-      ahorro: 258387,
-      ahorroPorc: 20,
+      ahorro: 250000,
+      ahorroPorc: 19,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/gravita-200.jpg'
     },
+    // NAMASTE - AJUSTADO (precios ML muy bajos)
     {
       nombre: 'Colchón Piero Namaste',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 414729,
+      precioPublico: 329000,
       precioMercadoLibre: 394000,
-      ahorro: 0,
-      ahorroPorc: 0,
+      ahorro: 65000,
+      ahorroPorc: 16,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-140.jpg'
@@ -732,10 +738,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Namaste',
       tamaño: '200x160 (Queen)',
-      precioPublico: 528948,
+      precioPublico: 459000,
       precioMercadoLibre: 558000,
-      ahorro: 29052,
-      ahorroPorc: 5,
+      ahorro: 99000,
+      ahorroPorc: 18,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-160.jpg'
@@ -743,10 +749,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Namaste',
       tamaño: '200x200 (King)',
-      precioPublico: 634739,
+      precioPublico: 549000,
       precioMercadoLibre: 669000,
-      ahorro: 34261,
-      ahorroPorc: 5,
+      ahorro: 120000,
+      ahorroPorc: 18,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-200.jpg'
@@ -754,10 +760,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Namaste Pillow Top',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 526051,
+      precioPublico: 459000,
       precioMercadoLibre: 554353,
-      ahorro: 28302,
-      ahorroPorc: 5,
+      ahorro: 95353,
+      ahorroPorc: 17,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-pillow-140.jpg'
@@ -765,10 +771,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Namaste Pillow Top',
       tamaño: '200x160 (Queen)',
-      precioPublico: 601644,
+      precioPublico: 519000,
       precioMercadoLibre: 635000,
-      ahorro: 33356,
-      ahorroPorc: 5,
+      ahorro: 116000,
+      ahorroPorc: 18,
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-pillow-160.jpg'
@@ -776,13 +782,14 @@ export default function ProductosGridOptimizado() {
   ]
 
   const productosPremium: ProductCardProps[] = [
+    // MONTREAUX - OPTIMIZADO (MUCHO MARGEN CAPTURADO) 💰
     {
       nombre: 'Colchón Piero Montreaux',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 772562,
+      precioPublico: 1069000,
       precioMercadoLibre: 1339000,
-      ahorro: 566438,
-      ahorroPorc: 42,
+      ahorro: 270000,
+      ahorroPorc: 20,
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-140.jpg'
@@ -790,10 +797,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux',
       tamaño: '200x160 (Queen)',
-      precioPublico: 969298,
+      precioPublico: 1329000,
       precioMercadoLibre: 1661000,
-      ahorro: 691702,
-      ahorroPorc: 42,
+      ahorro: 332000,
+      ahorroPorc: 20,
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-160.jpg'
@@ -801,21 +808,22 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux',
       tamaño: '200x200 (King)',
-      precioPublico: 1098836,
+      precioPublico: 1499000,
       precioMercadoLibre: 1883000,
-      ahorro: 784164,
-      ahorroPorc: 42,
+      ahorro: 384000,
+      ahorroPorc: 20,
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-200.jpg'
     },
+    // MONTREAUX PILLOW TOP - MÁXIMO MARGEN 💰💰💰
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 970520,
+      precioPublico: 1199000,
       precioMercadoLibre: 1496000,
-      ahorro: 525480,
-      ahorroPorc: 35,
+      ahorro: 297000,
+      ahorroPorc: 20,
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-pillow-140.jpg'
@@ -823,10 +831,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '200x160 (Queen)',
-      precioPublico: 1182651,
+      precioPublico: 1619000,
       precioMercadoLibre: 2027000,
-      ahorro: 844349,
-      ahorroPorc: 42,
+      ahorro: 408000,
+      ahorroPorc: 20,
       categoria: 'premium',
       destacado: true,
       stock: 'disponible',
@@ -835,10 +843,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '200x180 (Queen XL)',
-      precioPublico: 1268890,
+      precioPublico: 1789000,
       precioMercadoLibre: 2234000,
-      ahorro: 965110,
-      ahorroPorc: 43,
+      ahorro: 445000,
+      ahorroPorc: 20,
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-pillow-180.jpg'
@@ -846,21 +854,22 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '200x200 (King)',
-      precioPublico: 1345844,
+      precioPublico: 2089000,
       precioMercadoLibre: 2612000,
-      ahorro: 1266156,
-      ahorroPorc: 48,
+      ahorro: 523000,
+      ahorroPorc: 20,
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-pillow-200.jpg'
     },
+    // DREAM FIT - AJUSTADO (bajo margen en ML)
     {
       nombre: 'Colchón Piero Dream Fit Pocket',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 1906774,
+      precioPublico: 1689000,
       precioMercadoLibre: 2037000,
-      ahorro: 130226,
-      ahorroPorc: 6,
+      ahorro: 348000,
+      ahorroPorc: 17,
       categoria: 'premium',
       stock: 'consultar',
       imagen: '/images/dreamfit-pocket-140.jpg'
@@ -868,10 +877,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Dream Fit Pocket',
       tamaño: '200x160 (Queen)',
-      precioPublico: 2195670,
+      precioPublico: 1949000,
       precioMercadoLibre: 2346000,
-      ahorro: 150330,
-      ahorroPorc: 6,
+      ahorro: 397000,
+      ahorroPorc: 17,
       categoria: 'premium',
       stock: 'consultar',
       imagen: '/images/dreamfit-pocket-160.jpg'
@@ -879,10 +888,10 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Dream Fit Pocket',
       tamaño: '200x200 (King)',
-      precioPublico: 2498649,
+      precioPublico: 2219000,
       precioMercadoLibre: 2670000,
-      ahorro: 171351,
-      ahorroPorc: 6,
+      ahorro: 451000,
+      ahorroPorc: 17,
       categoria: 'premium',
       stock: 'consultar',
       imagen: '/images/dreamfit-pocket-200.jpg'
@@ -890,10 +899,11 @@ export default function ProductosGridOptimizado() {
   ]
 
   const accesorios: ProductCardProps[] = [
+    // ACCESORIOS - PRECIOS SUBIDOS 💰
     {
       nombre: 'Protector Impermeable Piero',
       tamaño: '140x190 cm',
-      precioPublico: 36900,
+      precioPublico: 39900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -902,7 +912,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Protector Impermeable Piero',
       tamaño: '160x200 cm (Queen)',
-      precioPublico: 39900,
+      precioPublico: 44900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -911,7 +921,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Protector Impermeable Piero',
       tamaño: '200x200 cm (King)',
-      precioPublico: 42900,
+      precioPublico: 49900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -920,7 +930,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Almohada Piero Fibra Smart Tech Plus',
       tamaño: '70x50 cm',
-      precioPublico: 39900,
+      precioPublico: 44900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'almohada',
@@ -929,7 +939,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Almohada Piero Micro Max Premium',
       tamaño: '70x50 cm',
-      precioPublico: 69900,
+      precioPublico: 79900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'almohada',
@@ -938,7 +948,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo Piero 600 Hilos',
       tamaño: '140x190 cm',
-      precioPublico: 89900,
+      precioPublico: 99900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -947,7 +957,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo Piero 600 Hilos',
       tamaño: '160x200 cm (Queen)',
-      precioPublico: 119900,
+      precioPublico: 129900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -956,7 +966,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo Piero 600 Hilos',
       tamaño: '200x200 cm (King)',
-      precioPublico: 139900,
+      precioPublico: 154900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -987,7 +997,6 @@ export default function ProductosGridOptimizado() {
   const handleFilterChange = useCallback((filterId: string) => {
     setCategoriaActiva(filterId as any)
     
-    // Trackear como búsqueda/filtro
     const filterLabels: Record<string, string> = {
       'todos': 'Todos los productos',
       'plaza': '1 Plaza',
@@ -1043,7 +1052,7 @@ export default function ProductosGridOptimizado() {
             </span>
           </h2>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-            Todos los modelos con <strong className="text-white">hasta 48% de descuento</strong> vs. Mercado Libre
+            Todos los modelos con <strong className="text-white">hasta 22% de descuento</strong> vs. Mercado Libre
           </p>
         </header>
 
