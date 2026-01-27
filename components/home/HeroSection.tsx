@@ -1,58 +1,74 @@
 'use client'
 
-import { ArrowRight, Star, Truck, CheckCircle2, ShieldCheck, Zap, Clock } from 'lucide-react'
 import { useState, useEffect } from 'react'
-
-// ============================================================================
-// IMÁGENES - COHERENTE CON TUS ARCHIVOS
-// ============================================================================
-
-const HERO_IMAGES = [
-  {
-    url: '/images/optimized/hero-colchon-1.jpg',
-    fallback: '/images/optimized/hero-colchon-2.jpg',
-    alt: 'Colchón Piero - Stock Disponible',
-    badge: 'HOT'
-  },
-  {
-    url: '/images/optimized/hero-colchon-2.jpg',
-    fallback: '/images/optimized/hero-colchon-1.jpg',
-    alt: 'Colchón Piero Premium',
-    badge: 'Premium'
-  }
-] as const
 
 // ============================================================================
 // CONFIG - COHERENTE CON HEADER
 // ============================================================================
 
-const SITE_CONFIG = {
-  whatsappNumber: '+54 9 3534 09-6566',
-  tagline: 'Ofertas de Enero',
-  discount: 'Hasta 20% OFF',
-  priceFrom: '$220.000',
-  priceOriginal: '$552.000',
-  discountPercent: '60%',
-  yearsExperience: '35+',
+const CONFIG = {
+  whatsapp: '5493534096566',
+  whatsappMessage: 'Hola! Quiero consultar por colchones PIERO',
   location: 'Villa María, Córdoba',
+  years: '35+',
 } as const
 
 // ============================================================================
-// HERO SECTION - COHERENTE CON HEADER MINIMALISTA
+// ICONOS SVG INLINE
+// ============================================================================
+
+const Icons = {
+  Zap: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+    </svg>
+  ),
+  Clock: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  WhatsApp: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+    </svg>
+  ),
+  ArrowRight: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+    </svg>
+  ),
+  Check: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  ),
+  Truck: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+    </svg>
+  ),
+  Shield: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+    </svg>
+  ),
+  CreditCard: ({ className = "w-5 h-5" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+    </svg>
+  ),
+}
+
+// ============================================================================
+// HERO SECTION - COHERENTE CON HEADER
 // ============================================================================
 
 export default function HeroSection() {
-  const [currentImage, setCurrentImage] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState<Record<number, boolean>>({})
-  const [imageError, setImageError] = useState<Record<number, boolean>>({})
 
-  // Detectar mobile
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024)
-    }
-    
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
     checkMobile()
     
     let timeoutId: NodeJS.Timeout
@@ -68,379 +84,284 @@ export default function HeroSection() {
     }
   }, [])
 
-  // Pre-cargar imágenes
-  useEffect(() => {
-    const preloadImages = async () => {
-      const loadPromises = HERO_IMAGES.map((img, index) => {
-        return new Promise((resolve) => {
-          const image = new Image()
-          image.onload = () => {
-            setImageLoaded(prev => ({ ...prev, [index]: true }))
-            resolve(true)
-          }
-          image.onerror = () => {
-            const fallbackImage = new Image()
-            fallbackImage.onload = () => {
-              setImageLoaded(prev => ({ ...prev, [index]: true }))
-              resolve(true)
-            }
-            fallbackImage.onerror = () => {
-              setImageError(prev => ({ ...prev, [index]: true }))
-              resolve(false)
-            }
-            fallbackImage.src = img.fallback
-          }
-          image.src = img.url
-        })
-      })
-      await Promise.all(loadPromises)
-    }
-    preloadImages()
-  }, [])
-
-  // Carrusel automático
-  useEffect(() => {
-    if (isMobile) return
-    const loadedCount = Object.values(imageLoaded).filter(Boolean).length
-    if (loadedCount < 2) return
-
-    const interval = setInterval(() => {
-      setCurrentImage(prev => (prev + 1) % HERO_IMAGES.length)
-    }, 5000)
-    
-    return () => clearInterval(interval)
-  }, [isMobile, imageLoaded])
-
-  const getImageUrl = (index: number) => {
-    if (imageError[index]) return HERO_IMAGES[index].fallback
-    return HERO_IMAGES[index].url
-  }
+  const whatsappUrl = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.whatsappMessage)}`
 
   return (
-    <section className="relative min-h-[100dvh] flex items-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      {/* Efectos de fondo - Desktop only */}
+    <section className="relative min-h-[100dvh] flex items-center bg-zinc-950 overflow-hidden">
+      
+      {/* Background Effects - Desktop only */}
       {!isMobile && (
         <>
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px] pointer-events-none" aria-hidden="true" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[150px] pointer-events-none" aria-hidden="true" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-green-500/5 rounded-full blur-[100px] pointer-events-none" />
         </>
       )}
 
       <div className="relative z-10 w-full">
-        <div className="container mx-auto px-4 py-6 sm:py-8 lg:py-16">
+        <div className="max-w-6xl mx-auto px-4 py-8 lg:py-16">
           
-          {/* MOBILE LAYOUT */}
+          {/* ============================================================ */}
+          {/* MOBILE LAYOUT                                                */}
+          {/* ============================================================ */}
           {isMobile ? (
-            <div className="space-y-5 max-w-lg mx-auto">
+            <div className="space-y-6 max-w-md mx-auto">
               
               {/* Header */}
               <div className="text-center space-y-2">
-                <div className="inline-flex items-center gap-2 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 px-4 py-1.5 rounded-lg shadow-lg">
-                  <span className="text-xl font-black text-white tracking-tight">AZUL COLCHONES</span>
+                <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl">
+                  <span className="text-lg font-black text-white">AZUL COLCHONES</span>
                 </div>
-                <div className="flex items-center justify-center gap-1.5 text-xs text-slate-300">
-                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" aria-hidden="true" />
-                  <span>{SITE_CONFIG.yearsExperience} años · {SITE_CONFIG.location}</span>
-                </div>
-              </div>
-
-              {/* Título */}
-              <div className="text-center space-y-3">
-                <h1 className="text-[2rem] sm:text-4xl font-black leading-[1.1] tracking-tight">
-                  <span className="block text-white mb-1">{SITE_CONFIG.tagline}</span>
-                  <span className="block bg-gradient-to-r from-blue-400 via-blue-300 to-indigo-400 bg-clip-text text-transparent">{SITE_CONFIG.discount}</span>
-                </h1>
-
-                {/* Precio destacado */}
-                <div className="inline-block w-full max-w-[280px]">
-                  <div className="bg-gradient-to-br from-blue-600 to-blue-500 p-[2px] rounded-xl shadow-2xl shadow-blue-500/20">
-                    <div className="bg-slate-900 rounded-[11px] px-4 py-3">
-                      <div className="text-xs text-blue-400 font-semibold uppercase tracking-wider mb-0.5">Desde</div>
-                      <div className="flex items-baseline justify-center gap-2 mb-1.5">
-                        <span className="text-[2.25rem] font-black text-white leading-none">{SITE_CONFIG.priceFrom}</span>
-                        <span className="text-base text-slate-500 line-through leading-none">{SITE_CONFIG.priceOriginal}</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-black px-2.5 py-1 rounded-full text-[11px] font-black shadow-md">
-                        <Zap className="w-3 h-3" aria-hidden="true" />
-                        <span>{SITE_CONFIG.discountPercent} OFF</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-sm text-slate-300 max-w-xs mx-auto leading-snug">
-                  Directo de fábrica sin intermediarios
-                  <span className="block text-white font-bold mt-0.5">AL MEJOR PRECIO</span>
+                <p className="text-xs text-zinc-400">
+                  {CONFIG.years} años • {CONFIG.location}
                 </p>
               </div>
 
-              {/* CTAs - COHERENTE CON HEADER */}
-              <div className="space-y-2.5 pt-1">
+              {/* Headline */}
+              <div className="text-center">
+                <h1 id="hero-heading" className="text-3xl font-black text-white leading-tight mb-2">
+                  Colchones PIERO
+                  <span className="block text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text">
+                    Directo de Fábrica
+                  </span>
+                </h1>
+                <p className="text-base text-zinc-400">
+                  Elegí cómo comprar según tu urgencia
+                </p>
+              </div>
+
+              {/* Options Cards - COHERENTE CON HEADER */}
+              <div className="space-y-3">
                 
-                {/* CTA 1: Stock Disponible - IGUAL QUE HEADER */}
+                {/* Opción 1: Stock Inmediato */}
                 <a 
-                  href="/catalogo" 
-                  className="group block w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 active:scale-[0.98] text-white px-5 py-4 rounded-xl font-bold text-base shadow-2xl shadow-blue-500/30 transition-all duration-200 touch-manipulation"
+                  href="/catalogo"
+                  className="group block bg-zinc-900 border-2 border-blue-500/30 hover:border-blue-500/60 rounded-xl p-4 transition-all active:scale-[0.98]"
                 >
-                  <div className="flex items-center justify-center gap-2.5">
-                    <Zap className="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true" />
-                    <span>Stock Disponible</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+                  <div className="flex items-start gap-3">
+                    <div className="w-11 h-11 rounded-xl bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                      <Icons.Zap className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-white font-bold text-base">Stock Inmediato</h3>
+                      <p className="text-sm text-blue-400 font-medium">Entrega hoy</p>
+                      <p className="text-xs text-zinc-500 mt-1">Probá antes de comprar</p>
+                    </div>
+                    <Icons.ArrowRight className="w-5 h-5 text-zinc-600 group-hover:text-blue-400 transition-colors flex-shrink-0 mt-1" />
                   </div>
-                  <div className="text-xs text-blue-100 mt-1.5 font-normal">Entrega inmediata • Hasta 20% OFF</div>
                 </a>
 
-                {/* CTA 2: Pedido Fábrica - IGUAL QUE HEADER */}
+                {/* Opción 2: Piero Fábrica - COHERENTE CON HEADER */}
                 <a 
-                  href="/piero-fabrica" 
-                  className="group block w-full bg-slate-800/50 hover:bg-slate-700/50 active:scale-[0.98] border-2 border-slate-600/40 text-white px-4 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 touch-manipulation"
+                  href="/piero-fabrica"
+                  className="group block bg-zinc-900 border-2 border-green-500/30 hover:border-green-500/60 rounded-xl p-4 transition-all active:scale-[0.98]"
                 >
-                  <div className="flex items-center justify-center gap-2">
-                    <Clock className="w-4 h-4 text-orange-400 group-hover:scale-110 transition-transform" aria-hidden="true" />
-                    <span>Pedido de Fábrica</span>
+                  <div className="flex items-start gap-3">
+                    <div className="w-11 h-11 rounded-xl bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                      <Icons.Clock className="w-5 h-5 text-green-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-white font-bold text-base">Piero Fábrica</h3>
+                      <p className="text-sm text-green-400 font-medium">Hasta 22% OFF</p>
+                      <p className="text-xs text-zinc-500 mt-1">7-10 días • Sin intermediarios</p>
+                    </div>
+                    <Icons.ArrowRight className="w-5 h-5 text-zinc-600 group-hover:text-green-400 transition-colors flex-shrink-0 mt-1" />
                   </div>
-                  <div className="text-xs text-slate-400 mt-0.5">7-10 días • Mejor precio (-40%)</div>
                 </a>
 
-                {/* CTA 3: WhatsApp */}
-                <a 
-                  href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=Hola!%20Quiero%20consultar%20sobre%20colchones%20Piero`} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white px-4 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 touch-manipulation shadow-lg shadow-emerald-500/20"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                  </svg>
-                  <span>Consultar WhatsApp</span>
-                </a>
               </div>
 
-              {/* Trust badges */}
-              <div className="flex flex-wrap items-center justify-center gap-3 text-xs pt-1">
-                <div className="flex items-center gap-1.5 text-slate-300">
-                  <Truck className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
-                  <span>Envío Gratis</span>
+              {/* WhatsApp CTA */}
+              <a 
+                href={whatsappUrl}
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-500 text-white px-4 py-4 rounded-xl font-bold text-base transition-all active:scale-[0.98] shadow-lg shadow-green-500/25"
+              >
+                <Icons.WhatsApp className="w-5 h-5" />
+                <span>Consultar por WhatsApp</span>
+              </a>
+
+              {/* Trust Badges */}
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg py-3 px-2">
+                  <Icons.Truck className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+                  <p className="text-[10px] text-zinc-400 leading-tight">Envío Gratis</p>
                 </div>
-                <div className="flex items-center gap-1.5 text-slate-300">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
-                  <span>12 cuotas s/int</span>
+                <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg py-3 px-2">
+                  <Icons.CreditCard className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+                  <p className="text-[10px] text-zinc-400 leading-tight">12 Cuotas</p>
                 </div>
-                <div className="flex items-center gap-1.5 text-slate-300">
-                  <ShieldCheck className="w-3.5 h-3.5 text-blue-400" aria-hidden="true" />
-                  <span>Garantía 5 años</span>
+                <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg py-3 px-2">
+                  <Icons.Shield className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+                  <p className="text-[10px] text-zinc-400 leading-tight">Garantía 5 años</p>
                 </div>
               </div>
 
-              {/* Imagen */}
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-slate-700/50 shadow-2xl">
-                {!imageLoaded[0] && !imageError[0] && (
-                  <div className="absolute inset-0 bg-slate-800 animate-pulse" />
-                )}
+              {/* Image */}
+              <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-zinc-800">
                 <img 
-                  src={getImageUrl(0)} 
-                  alt={HERO_IMAGES[0].alt} 
-                  className={`w-full h-full object-cover transition-opacity duration-500 ${
-                    imageLoaded[0] ? 'opacity-100' : 'opacity-0'
-                  }`} 
+                  src="/images/optimized/hero-colchon-1.jpg" 
+                  alt="Colchón PIERO" 
+                  className="w-full h-full object-cover"
                   loading="eager"
                 />
-                <div className="absolute top-3 right-3 bg-gradient-to-br from-amber-400 to-orange-500 px-2.5 py-1.5 rounded-lg shadow-lg">
-                  <div className="text-white text-[10px] font-bold uppercase leading-none">Hasta</div>
-                  <div className="text-white text-xl font-black leading-none mt-0.5">60%</div>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 to-transparent" />
               </div>
+
             </div>
           ) : (
-            // DESKTOP LAYOUT
-            <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-center max-w-7xl mx-auto">
+            
+            /* ============================================================ */
+            /* DESKTOP LAYOUT                                               */
+            /* ============================================================ */
+            <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-center">
               
               {/* LEFT COLUMN - Content */}
               <div className="space-y-8">
                 
                 {/* Brand */}
-                <div className="space-y-3">
-                  <div className="inline-flex items-center gap-2 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 px-4 py-2 rounded-lg shadow-lg">
-                    <span className="text-4xl font-black text-white tracking-tight">AZUL COLCHONES</span>
+                <div className="space-y-2">
+                  <div className="inline-flex items-center gap-3 bg-zinc-900 border border-zinc-800 px-5 py-3 rounded-xl">
+                    <span className="text-3xl font-black text-white tracking-tight">AZUL COLCHONES</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-300">
-                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" aria-hidden="true" />
-                    <span>{SITE_CONFIG.yearsExperience} años en {SITE_CONFIG.location}</span>
-                  </div>
+                  <p className="text-sm text-zinc-400">
+                    {CONFIG.years} años en {CONFIG.location}
+                  </p>
                 </div>
 
                 {/* Headline */}
                 <div>
-                  <h1 className="text-6xl xl:text-7xl font-black leading-tight tracking-tight">
-                    <span className="block text-white mb-2">{SITE_CONFIG.tagline}</span>
-                    <span className="block bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">{SITE_CONFIG.discount}</span>
+                  <h1 id="hero-heading" className="text-5xl xl:text-6xl font-black leading-tight">
+                    <span className="text-white">Colchones PIERO</span>
+                    <span className="block text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text mt-2">
+                      Directo de Fábrica
+                    </span>
                   </h1>
+                  <p className="text-xl text-zinc-400 mt-4 max-w-lg">
+                    Elegí cómo comprar según tu urgencia y presupuesto
+                  </p>
                 </div>
 
-                <p className="text-xl text-slate-300 max-w-xl">
-                  Directo de fábrica sin intermediarios
-                  <span className="block text-white font-semibold mt-1">AL MEJOR PRECIO</span>
-                </p>
-
-                {/* Price Card */}
-                <div className="inline-block">
-                  <div className="bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
-                    <div className="flex items-center gap-6">
-                      <div>
-                        <div className="text-sm text-blue-400 font-semibold mb-1">Desde</div>
-                        <div className="text-6xl font-black text-white">{SITE_CONFIG.priceFrom}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xl text-slate-500 line-through">{SITE_CONFIG.priceOriginal}</div>
-                        <div className="mt-1 px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-md">-{SITE_CONFIG.discountPercent} OFF</div>
-                      </div>
-                    </div>
-                    <div className="mt-4 text-sm text-emerald-400 font-semibold">💳 12 cuotas sin interés</div>
-                  </div>
-                </div>
-
-                {/* CTAs - COHERENTE CON HEADER */}
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    
-                    {/* CTA 1: Stock Disponible - COHERENTE */}
-                    <a 
-                      href="/catalogo" 
-                      className="group relative bg-gradient-to-br from-blue-950/80 to-blue-900/60 backdrop-blur-xl border-2 border-blue-500/30 hover:border-blue-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-blue-500/20"
-                    >
-                      {/* Badge HOT - IGUAL QUE HEADER */}
-                      <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[10px] font-black px-2 py-1 rounded-full uppercase shadow-lg animate-pulse">
-                        HOT
-                      </div>
-                      
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-400/30">
-                          <Zap className="w-6 h-6 text-blue-400" aria-hidden="true" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-white font-bold text-base mb-1">Stock Disponible</h3>
-                          <p className="text-sm text-slate-300 mb-2">Entrega inmediata • Hasta 20% OFF</p>
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="text-emerald-400 font-semibold">Hoy mismo</span>
-                          </div>
-                        </div>
-                        <ArrowRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 transition-transform flex-shrink-0 mt-1" aria-hidden="true" />
-                      </div>
-                    </a>
-
-                    {/* CTA 2: Pedido Fábrica - COHERENTE */}
-                    <a 
-                      href="/piero-fabrica" 
-                      className="group relative bg-gradient-to-br from-orange-950/80 to-red-900/60 backdrop-blur-xl border-2 border-orange-500/30 hover:border-orange-400/60 rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-orange-500/20"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center border border-orange-400/30">
-                          <Clock className="w-6 h-6 text-orange-400" aria-hidden="true" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-white font-bold text-base mb-1">Pedido Fábrica</h3>
-                          <p className="text-sm text-slate-300 mb-2">7-10 días • Mejor precio</p>
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="text-orange-400 font-bold">30-40% OFF</span>
-                          </div>
-                        </div>
-                        <ArrowRight className="w-5 h-5 text-orange-400 group-hover:translate-x-1 transition-transform flex-shrink-0 mt-1" aria-hidden="true" />
-                      </div>
-                    </a>
-                  </div>
-
-                  {/* WhatsApp CTA */}
+                {/* Options Cards - COHERENTE CON HEADER */}
+                <div className="grid grid-cols-2 gap-4">
+                  
+                  {/* Opción 1: Stock Inmediato */}
                   <a 
-                    href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=Hola!%20Quiero%20consultar%20sobre%20colchones%20Piero`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                    href="/catalogo"
+                    className="group bg-zinc-900 border-2 border-blue-500/30 hover:border-blue-500/60 rounded-xl p-5 transition-all hover:scale-[1.02]"
                   >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                    </svg>
-                    <span>Asesoramiento WhatsApp</span>
+                    <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+                      <Icons.Zap className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <h3 className="text-white font-bold text-lg mb-1">Stock Inmediato</h3>
+                    <p className="text-blue-400 font-semibold text-sm mb-2">Entrega hoy</p>
+                    <ul className="space-y-1 text-xs text-zinc-500">
+                      <li className="flex items-center gap-1.5">
+                        <Icons.Check className="w-3 h-3 text-blue-400" />
+                        <span>Probá antes de comprar</span>
+                      </li>
+                      <li className="flex items-center gap-1.5">
+                        <Icons.Check className="w-3 h-3 text-blue-400" />
+                        <span>Retiro o envío inmediato</span>
+                      </li>
+                    </ul>
                   </a>
+
+                  {/* Opción 2: Piero Fábrica */}
+                  <a 
+                    href="/piero-fabrica"
+                    className="group bg-zinc-900 border-2 border-green-500/30 hover:border-green-500/60 rounded-xl p-5 transition-all hover:scale-[1.02]"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center mb-4">
+                      <Icons.Clock className="w-6 h-6 text-green-400" />
+                    </div>
+                    <h3 className="text-white font-bold text-lg mb-1">Piero Fábrica</h3>
+                    <p className="text-green-400 font-semibold text-sm mb-2">Hasta 22% OFF</p>
+                    <ul className="space-y-1 text-xs text-zinc-500">
+                      <li className="flex items-center gap-1.5">
+                        <Icons.Check className="w-3 h-3 text-green-400" />
+                        <span>7-10 días de espera</span>
+                      </li>
+                      <li className="flex items-center gap-1.5">
+                        <Icons.Check className="w-3 h-3 text-green-400" />
+                        <span>Sin intermediarios</span>
+                      </li>
+                    </ul>
+                  </a>
+
                 </div>
 
-                {/* Trust badges */}
-                <div className="flex items-center gap-6 text-sm">
-                  <div className="flex items-center gap-2 text-slate-300">
-                    <Truck className="w-4 h-4 text-blue-400" aria-hidden="true" />
+                {/* WhatsApp CTA */}
+                <a 
+                  href={whatsappUrl}
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg shadow-green-500/25"
+                >
+                  <Icons.WhatsApp className="w-5 h-5" />
+                  <span>Asesoramiento por WhatsApp</span>
+                </a>
+
+                {/* Trust Badges */}
+                <div className="flex items-center gap-6 text-sm text-zinc-400">
+                  <div className="flex items-center gap-2">
+                    <Icons.Truck className="w-4 h-4 text-blue-400" />
                     <span>Envío Gratis</span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-blue-400" aria-hidden="true" />
+                  <div className="flex items-center gap-2">
+                    <Icons.CreditCard className="w-4 h-4 text-blue-400" />
+                    <span>12 cuotas s/int</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icons.Shield className="w-4 h-4 text-blue-400" />
                     <span>Garantía 5 años</span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-300">
-                    <ShieldCheck className="w-4 h-4 text-blue-400" aria-hidden="true" />
-                    <span>Pago Seguro</span>
-                  </div>
                 </div>
+
               </div>
 
               {/* RIGHT COLUMN - Visual */}
               <div className="relative">
-                <div className="absolute -inset-8 bg-blue-500/20 rounded-[3rem] blur-[100px] opacity-60 pointer-events-none" aria-hidden="true" />
-                <div className="relative bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-3xl overflow-hidden p-3 shadow-2xl">
-                  <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-950">
-                    {!imageLoaded[currentImage] && !imageError[currentImage] && (
-                      <div className="absolute inset-0 bg-slate-800 animate-pulse" />
-                    )}
-                    
+                
+                {/* Glow Effect */}
+                <div className="absolute -inset-8 bg-blue-500/10 rounded-[3rem] blur-[80px] pointer-events-none" />
+                
+                {/* Image Card */}
+                <div className="relative bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden p-4">
+                  
+                  {/* Main Image */}
+                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-zinc-900">
                     <img 
-                      key={currentImage}
-                      src={getImageUrl(currentImage)} 
-                      alt={HERO_IMAGES[currentImage].alt} 
-                      className={`w-full h-full object-cover transition-opacity duration-700 ${
-                        imageLoaded[currentImage] ? 'opacity-100' : 'opacity-0'
-                      }`} 
+                      src="/images/optimized/hero-colchon-1.jpg" 
+                      alt="Colchón PIERO Premium" 
+                      className="w-full h-full object-cover"
                       loading="eager"
                     />
-                    
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                    <div className="absolute top-4 right-4 bg-gradient-to-br from-amber-400 to-orange-500 px-4 py-3 rounded-lg shadow-lg">
-                      <div className="text-white text-xs font-bold uppercase leading-none">Hasta</div>
-                      <div className="text-white text-2xl font-black leading-none mt-0.5">60%</div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/40 to-transparent" />
+                  </div>
+
+                  {/* Feature Cards */}
+                  <div className="grid grid-cols-3 gap-3 mt-4">
+                    <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-blue-400 font-medium">Resortes</p>
+                      <p className="text-sm text-white font-bold">Pocket</p>
                     </div>
-                    
-                    {/* Indicadores */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                      {HERO_IMAGES.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setCurrentImage(index)}
-                          className={`h-1.5 rounded-full transition-all ${
-                            index === currentImage 
-                              ? 'w-8 bg-white' 
-                              : 'w-1.5 bg-white/40 hover:bg-white/60'
-                          }`}
-                          aria-label={`Ver imagen ${index + 1}`}
-                        />
-                      ))}
+                    <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-blue-400 font-medium">Memory</p>
+                      <p className="text-sm text-white font-bold">Foam</p>
+                    </div>
+                    <div className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-blue-400 font-medium">Garantía</p>
+                      <p className="text-sm text-white font-bold">5 años</p>
                     </div>
                   </div>
 
-                  {/* Features cards */}
-                  <div className="grid grid-cols-3 gap-3 mt-4">
-                    <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-3 rounded-xl text-center">
-                      <div className="text-blue-400 text-xs font-semibold">Resortes</div>
-                      <div className="text-white text-sm font-bold mt-0.5">Pocket</div>
-                    </div>
-                    <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-3 rounded-xl text-center">
-                      <div className="text-blue-400 text-xs font-semibold">Memory</div>
-                      <div className="text-white text-sm font-bold mt-0.5">Foam</div>
-                    </div>
-                    <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-3 rounded-xl text-center">
-                      <div className="text-blue-400 text-xs font-semibold">Garantía</div>
-                      <div className="text-white text-sm font-bold mt-0.5">5 años</div>
-                    </div>
-                  </div>
                 </div>
               </div>
+
             </div>
           )}
+
         </div>
       </div>
     </section>
