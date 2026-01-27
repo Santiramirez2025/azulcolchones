@@ -43,9 +43,6 @@ function ProductCard({
   const cardRef = useRef<HTMLElement>(null)
   const hasTrackedView = useRef(false)
 
-  // =========================================================================
-  // 🎯 TRACK VIEW CONTENT - Cuando el producto entra en viewport
-  // =========================================================================
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -72,9 +69,6 @@ function ProductCard({
     return () => observer.disconnect()
   }, [nombre, tamaño, precioPublico, categoria, precioMercadoLibre])
 
-  // =========================================================================
-  // CONFIG DE CATEGORÍAS - Paleta unificada con landing
-  // =========================================================================
   const categoriaConfig = {
     ancla: { 
       badge: 'Mejor Precio',
@@ -103,7 +97,7 @@ function ProductCard({
   }
 
   const config = categoriaConfig[categoria]
-  const urlWhatsApp = `https://wa.me/5493534017332?text=${encodeURIComponent(`Hola! Consulto por ${nombre} ${tamaño} a precio de fábrica`)}`
+  const urlWhatsApp = `https://wa.me/5493534017332?text=${encodeURIComponent(`Hola! Consulto por ${nombre} ${tamaño} a $${precioPublico.toLocaleString('es-AR')}`)}`
 
   const tipoEmoji = {
     colchon: '🛏️',
@@ -113,9 +107,6 @@ function ProductCard({
     cubre: '🧵'
   }
 
-  // =========================================================================
-  // 🎯 HANDLER WHATSAPP - EVENTO LEAD
-  // =========================================================================
   const handleWhatsAppClick = () => {
     trackWhatsAppClick({
       producto: nombre,
@@ -145,7 +136,6 @@ function ProductCard({
       itemType="https://schema.org/Product"
     >
       
-      {/* Badge Destacado - Rediseñado sin pulse agresivo */}
       {destacado && (
         <div 
           className="absolute top-4 left-4 z-20 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold rounded-full shadow-lg shadow-blue-500/40"
@@ -155,14 +145,12 @@ function ProductCard({
         </div>
       )}
 
-      {/* Badge Categoría */}
       <div className={`bg-gradient-to-r ${config.colorBg} text-white px-6 py-3 text-center`}>
         <span className="text-sm font-bold tracking-wide uppercase" aria-label={`Categoría: ${config.badge}`}>
           {config.badge}
         </span>
       </div>
 
-      {/* Imagen */}
       <div className="relative aspect-[4/3] bg-gradient-to-br from-zinc-900 to-zinc-800 overflow-hidden">
         {imagen ? (
           <Image
@@ -189,10 +177,8 @@ function ProductCard({
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      {/* Contenido Principal */}
       <div className="p-5 md:p-6 flex-1 flex flex-col gap-3 md:gap-4">
         
-        {/* Header: Nombre + Tamaño */}
         <div>
           <h3 
             className="text-lg md:text-xl font-bold text-white leading-tight tracking-tight mb-1"
@@ -203,7 +189,6 @@ function ProductCard({
           <p className="text-sm text-zinc-400 font-medium">{tamaño}</p>
         </div>
 
-        {/* Ahorro Destacado - Dark Mode Coherente */}
         {ahorro && ahorroPorc && ahorro > 0 && (
           <div className="bg-green-950/40 border border-green-500/30 backdrop-blur-sm rounded-xl p-3">
             <div className="flex items-center justify-between">
@@ -220,7 +205,6 @@ function ProductCard({
           </div>
         )}
 
-        {/* Precio Principal */}
         <div className="space-y-1.5" itemProp="offers" itemScope itemType="https://schema.org/Offer">
           <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Precio Fábrica</p>
           <p 
@@ -245,7 +229,6 @@ function ProductCard({
           )}
         </div>
 
-        {/* Opciones de Pago - Dark Mode */}
         {tipo === 'colchon' && (
           <details className="group/cuotas border border-zinc-700/50 rounded-xl overflow-hidden">
             <summary className="flex items-center justify-between cursor-pointer list-none py-3 px-4 bg-zinc-800/80 hover:bg-zinc-700/50 transition-colors">
@@ -265,7 +248,6 @@ function ProductCard({
             
             <div className="bg-zinc-900/50 border-t border-zinc-700/50">
               <div className="p-4 space-y-3">
-                {/* Sin Recargo */}
                 <div className="bg-green-950/40 border border-green-500/30 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-2">
                     <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -279,7 +261,6 @@ function ProductCard({
                   </div>
                 </div>
                 
-                {/* Cuotas */}
                 <div className="space-y-1.5 text-xs">
                   {[
                     { cuotas: '3 cuotas', recargo: '+18%' },
@@ -298,7 +279,6 @@ function ProductCard({
           </details>
         )}
 
-        {/* Estado de Stock - Simplificado */}
         <div className="py-3 border-t border-zinc-700/50">
           {stock === 'disponible' ? (
             <div className="flex items-center gap-2.5 text-green-400">
@@ -321,7 +301,6 @@ function ProductCard({
           )}
         </div>
 
-        {/* CTA Principal - Unificado con Landing */}
         <a
           href={urlWhatsApp}
           target="_blank"
@@ -355,24 +334,34 @@ function ProductCard({
 }
 
 // ============================================================================
-// PRODUCTOS GRID - CON TRACKING DE FILTROS
+// HELPER: Calcular ahorro y porcentaje
+// ============================================================================
+function calcularAhorro(precioML: number, precioFabrica: number): { ahorro: number; ahorroPorc: number } {
+  const ahorro = precioML - precioFabrica
+  const ahorroPorc = Math.round((ahorro / precioML) * 100)
+  return { ahorro, ahorroPorc }
+}
+
+// ============================================================================
+// PRODUCTOS GRID - PRECIOS OPTIMIZADOS CON PSICOLOGÍA DE PRICING 🧠
+// Estrategia: Charm Pricing (.900) + Left-Digit Effect + Price Anchoring
 // ============================================================================
 
 export default function ProductosGridOptimizado() {
   const [categoriaActiva, setCategoriaActiva] = useState<'todos' | 'plaza' | 'plaza-media' | 'queen' | 'king' | 'accesorios'>('todos')
   
   // =========================================================================
-  // PRODUCTOS DATA
+  // PRODUCTOS DATA - PRECIOS CHARM PRICING (.900)
   // =========================================================================
 
   const productosAncla: ProductCardProps[] = [
+    // ========== MEDITARE EUROPILLOW - Entrada ==========
     {
       nombre: 'Colchón Piero Meditare EuroPillow',
       tamaño: '190x80 (1 plaza)',
-      precioPublico: 205302,
-      precioMercadoLibre: 220000,
-      ahorro: 14698,
-      ahorroPorc: 7,
+      precioPublico: 209900,
+      precioMercadoLibre: 249900,
+      ...calcularAhorro(249900, 209900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/meditare-ep-80.jpg'
@@ -380,10 +369,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Meditare EuroPillow',
       tamaño: '190x90 (1 plaza)',
-      precioPublico: 228208,
-      precioMercadoLibre: 245000,
-      ahorro: 16792,
-      ahorroPorc: 7,
+      precioPublico: 234900,
+      precioMercadoLibre: 279900,
+      ...calcularAhorro(279900, 234900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/meditare-ep-90.jpg'
@@ -391,10 +379,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Meditare EuroPillow',
       tamaño: '190x100 (1 plaza)',
-      precioPublico: 251292,
-      precioMercadoLibre: 262000,
-      ahorro: 10708,
-      ahorroPorc: 4,
+      precioPublico: 259900,
+      precioMercadoLibre: 299900,
+      ...calcularAhorro(299900, 259900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/meditare-ep-100.jpg'
@@ -402,10 +389,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Meditare EuroPillow',
       tamaño: '190x130 (1½ plaza)',
-      precioPublico: 319975,
-      precioMercadoLibre: 332000,
-      ahorro: 12025,
-      ahorroPorc: 4,
+      precioPublico: 329900,
+      precioMercadoLibre: 379900,
+      ...calcularAhorro(379900, 329900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/meditare-ep-130.jpg'
@@ -413,21 +399,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Meditare EuroPillow',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 344305,
-      precioMercadoLibre: 357000,
-      ahorro: 12695,
-      ahorroPorc: 4,
+      precioPublico: 354900,
+      precioMercadoLibre: 399900,
+      ...calcularAhorro(399900, 354900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/meditare-ep-140.jpg'
     },
+    
+    // ========== NIRVANA - Alta rotación ==========
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x80 (1 plaza)',
-      precioPublico: 317285,
-      precioMercadoLibre: 431080,
-      ahorro: 113795,
-      ahorroPorc: 26,
+      precioPublico: 324900,
+      precioMercadoLibre: 449900,
+      ...calcularAhorro(449900, 324900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-80.jpg'
@@ -435,10 +421,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x90 (1 plaza)',
-      precioPublico: 353608,
-      precioMercadoLibre: 504451,
-      ahorro: 150843,
-      ahorroPorc: 30,
+      precioPublico: 359900,
+      precioMercadoLibre: 519900,
+      ...calcularAhorro(519900, 359900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-90.jpg'
@@ -446,10 +431,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x100 (1 plaza)',
-      precioPublico: 401781,
-      precioMercadoLibre: 573175,
-      ahorro: 171394,
-      ahorroPorc: 30,
+      precioPublico: 409900,
+      precioMercadoLibre: 589900,
+      ...calcularAhorro(589900, 409900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-100.jpg'
@@ -457,10 +441,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x130 (1½ plaza)',
-      precioPublico: 502036,
-      precioMercadoLibre: 716197,
-      ahorro: 214161,
-      ahorroPorc: 30,
+      precioPublico: 514900,
+      precioMercadoLibre: 739900,
+      ...calcularAhorro(739900, 514900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-130.jpg'
@@ -468,10 +451,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 537416,
-      precioMercadoLibre: 688483,
-      ahorro: 151067,
-      ahorroPorc: 22,
+      precioPublico: 549900,
+      precioMercadoLibre: 709900,
+      ...calcularAhorro(709900, 549900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-140.jpg'
@@ -479,10 +461,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '190x160 (2 plazas)',
-      precioPublico: 684966,
-      precioMercadoLibre: 977163,
-      ahorro: 292197,
-      ahorroPorc: 30,
+      precioPublico: 699900,
+      precioMercadoLibre: 999900,
+      ...calcularAhorro(999900, 699900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-160.jpg'
@@ -490,10 +471,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '200x180 (Queen)',
-      precioPublico: 753463,
-      precioMercadoLibre: 1074879,
-      ahorro: 321416,
-      ahorroPorc: 30,
+      precioPublico: 769900,
+      precioMercadoLibre: 1099900,
+      ...calcularAhorro(1099900, 769900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-180.jpg'
@@ -501,10 +481,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Nirvana',
       tamaño: '200x200 (King)',
-      precioPublico: 813751,
-      precioMercadoLibre: 988077,
-      ahorro: 174326,
-      ahorroPorc: 18,
+      precioPublico: 829900,
+      precioMercadoLibre: 1019900,
+      ...calcularAhorro(1019900, 829900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/nirvana-200.jpg'
@@ -512,13 +491,13 @@ export default function ProductosGridOptimizado() {
   ]
 
   const productosEquilibrio: ProductCardProps[] = [
+    // ========== SONNO EUROPILLOW ==========
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x80 (1 plaza)',
-      precioPublico: 281772,
-      precioMercadoLibre: 312000,
-      ahorro: 30228,
-      ahorroPorc: 10,
+      precioPublico: 289900,
+      precioMercadoLibre: 339900,
+      ...calcularAhorro(339900, 289900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-80.jpg'
@@ -526,10 +505,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x90 (1 plaza)',
-      precioPublico: 307453,
-      precioMercadoLibre: 341000,
-      ahorro: 33547,
-      ahorroPorc: 10,
+      precioPublico: 314900,
+      precioMercadoLibre: 369900,
+      ...calcularAhorro(369900, 314900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-90.jpg'
@@ -537,10 +515,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x100 (1 plaza)',
-      precioPublico: 333420,
-      precioMercadoLibre: 370000,
-      ahorro: 36580,
-      ahorroPorc: 10,
+      precioPublico: 344900,
+      precioMercadoLibre: 399900,
+      ...calcularAhorro(399900, 344900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-100.jpg'
@@ -548,10 +525,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x130 (1½ plaza)',
-      precioPublico: 422073,
-      precioMercadoLibre: 468000,
-      ahorro: 45927,
-      ahorroPorc: 10,
+      precioPublico: 434900,
+      precioMercadoLibre: 499900,
+      ...calcularAhorro(499900, 434900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-130.jpg'
@@ -559,10 +535,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 458198,
-      precioMercadoLibre: 650000,
-      ahorro: 191802,
-      ahorroPorc: 29,
+      precioPublico: 469900,
+      precioMercadoLibre: 679900,
+      ...calcularAhorro(679900, 469900),
       categoria: 'equilibrio',
       destacado: true,
       stock: 'disponible',
@@ -571,21 +546,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Sonno EuroPillow',
       tamaño: '190x160 (2 plazas)',
-      precioPublico: 499893,
-      precioMercadoLibre: 555000,
-      ahorro: 55107,
-      ahorroPorc: 10,
+      precioPublico: 514900,
+      precioMercadoLibre: 579900,
+      ...calcularAhorro(579900, 514900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/sonno-ep-160.jpg'
     },
+    
+    // ========== REGNO ==========
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '190x80 (1 plaza)',
-      precioPublico: 291464,
-      precioMercadoLibre: 390000,
-      ahorro: 98536,
-      ahorroPorc: 25,
+      precioPublico: 299900,
+      precioMercadoLibre: 409900,
+      ...calcularAhorro(409900, 299900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-80.jpg'
@@ -593,10 +568,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '190x90 (1 plaza)',
-      precioPublico: 315299,
-      precioMercadoLibre: 422000,
-      ahorro: 106701,
-      ahorroPorc: 25,
+      precioPublico: 324900,
+      precioMercadoLibre: 449900,
+      ...calcularAhorro(449900, 324900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-90.jpg'
@@ -604,10 +578,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 449186,
-      precioMercadoLibre: 709000,
-      ahorro: 259814,
-      ahorroPorc: 37,
+      precioPublico: 459900,
+      precioMercadoLibre: 729900,
+      ...calcularAhorro(729900, 459900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-140.jpg'
@@ -615,10 +588,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '200x160 (Queen)',
-      precioPublico: 530167,
-      precioMercadoLibre: 956000,
-      ahorro: 425833,
-      ahorroPorc: 45,
+      precioPublico: 544900,
+      precioMercadoLibre: 979900,
+      ...calcularAhorro(979900, 544900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-160.jpg'
@@ -626,21 +598,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno',
       tamaño: '200x200 (King)',
-      precioPublico: 652582,
-      precioMercadoLibre: 873000,
-      ahorro: 220418,
-      ahorroPorc: 25,
+      precioPublico: 669900,
+      precioMercadoLibre: 899900,
+      ...calcularAhorro(899900, 669900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-200.jpg'
     },
+    
+    // ========== REGNO PILLOW TOP ==========
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 561631,
-      precioMercadoLibre: 601000,
-      ahorro: 39369,
-      ahorroPorc: 7,
+      precioPublico: 574900,
+      precioMercadoLibre: 629900,
+      ...calcularAhorro(629900, 574900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-pillow-140.jpg'
@@ -648,10 +620,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '200x160 (Queen)',
-      precioPublico: 644294,
-      precioMercadoLibre: 775000,
-      ahorro: 130706,
-      ahorroPorc: 17,
+      precioPublico: 659900,
+      precioMercadoLibre: 799900,
+      ...calcularAhorro(799900, 659900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-pillow-160.jpg'
@@ -659,10 +630,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '200x180 (Queen XL)',
-      precioPublico: 714436,
-      precioMercadoLibre: 956000,
-      ahorro: 241564,
-      ahorroPorc: 25,
+      precioPublico: 729900,
+      precioMercadoLibre: 979900,
+      ...calcularAhorro(979900, 729900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-pillow-180.jpg'
@@ -670,21 +640,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Regno Pillow Top',
       tamaño: '200x200 (King)',
-      precioPublico: 783921,
-      precioMercadoLibre: 1049000,
-      ahorro: 265079,
-      ahorroPorc: 25,
+      precioPublico: 799900,
+      precioMercadoLibre: 1079900,
+      ...calcularAhorro(1079900, 799900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/regno-pillow-200.jpg'
     },
+    
+    // ========== GRAVITA ==========
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 736057,
-      precioMercadoLibre: 980000,
-      ahorro: 243943,
-      ahorroPorc: 25,
+      precioPublico: 749900,
+      precioMercadoLibre: 999900,
+      ...calcularAhorro(999900, 749900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/gravita-140.jpg'
@@ -692,10 +662,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '200x160 (Queen)',
-      precioPublico: 905309,
-      precioMercadoLibre: 1083000,
-      ahorro: 177691,
-      ahorroPorc: 16,
+      precioPublico: 924900,
+      precioMercadoLibre: 1109900,
+      ...calcularAhorro(1109900, 924900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/gravita-160.jpg'
@@ -703,10 +672,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '200x180 (Queen XL)',
-      precioPublico: 969064,
-      precioMercadoLibre: 1266000,
-      ahorro: 296936,
-      ahorroPorc: 23,
+      precioPublico: 989900,
+      precioMercadoLibre: 1299900,
+      ...calcularAhorro(1299900, 989900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/gravita-180.jpg'
@@ -714,21 +682,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Gravita',
       tamaño: '200x200 (King)',
-      precioPublico: 1030613,
-      precioMercadoLibre: 1289000,
-      ahorro: 258387,
-      ahorroPorc: 20,
+      precioPublico: 1049900,
+      precioMercadoLibre: 1319900,
+      ...calcularAhorro(1319900, 1049900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/gravita-200.jpg'
     },
+    
+    // ========== NAMASTE ==========
     {
       nombre: 'Colchón Piero Namaste',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 414729,
-      precioMercadoLibre: 394000,
-      ahorro: 0,
-      ahorroPorc: 0,
+      precioPublico: 424900,
+      precioMercadoLibre: 449900,
+      ...calcularAhorro(449900, 424900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-140.jpg'
@@ -736,10 +704,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Namaste',
       tamaño: '200x160 (Queen)',
-      precioPublico: 528948,
-      precioMercadoLibre: 558000,
-      ahorro: 29052,
-      ahorroPorc: 5,
+      precioPublico: 539900,
+      precioMercadoLibre: 579900,
+      ...calcularAhorro(579900, 539900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-160.jpg'
@@ -747,21 +714,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Namaste',
       tamaño: '200x200 (King)',
-      precioPublico: 634739,
-      precioMercadoLibre: 669000,
-      ahorro: 34261,
-      ahorroPorc: 5,
+      precioPublico: 649900,
+      precioMercadoLibre: 699900,
+      ...calcularAhorro(699900, 649900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-200.jpg'
     },
+    
+    // ========== NAMASTE PILLOW TOP ==========
     {
       nombre: 'Colchón Piero Namaste Pillow Top',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 526051,
-      precioMercadoLibre: 554353,
-      ahorro: 28302,
-      ahorroPorc: 5,
+      precioPublico: 539900,
+      precioMercadoLibre: 579900,
+      ...calcularAhorro(579900, 539900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-pillow-140.jpg'
@@ -769,10 +736,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Namaste Pillow Top',
       tamaño: '200x160 (Queen)',
-      precioPublico: 601644,
-      precioMercadoLibre: 635000,
-      ahorro: 33356,
-      ahorroPorc: 5,
+      precioPublico: 619900,
+      precioMercadoLibre: 659900,
+      ...calcularAhorro(659900, 619900),
       categoria: 'equilibrio',
       stock: 'disponible',
       imagen: '/images/namaste-pillow-160.jpg'
@@ -780,13 +746,13 @@ export default function ProductosGridOptimizado() {
   ]
 
   const productosPremium: ProductCardProps[] = [
+    // ========== MONTREAUX - Premium ==========
     {
       nombre: 'Colchón Piero Montreaux',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 772562,
-      precioMercadoLibre: 1339000,
-      ahorro: 566438,
-      ahorroPorc: 42,
+      precioPublico: 789900,
+      precioMercadoLibre: 1369900,
+      ...calcularAhorro(1369900, 789900),
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-140.jpg'
@@ -794,10 +760,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux',
       tamaño: '200x160 (Queen)',
-      precioPublico: 969298,
-      precioMercadoLibre: 1661000,
-      ahorro: 691702,
-      ahorroPorc: 42,
+      precioPublico: 989900,
+      precioMercadoLibre: 1699900,
+      ...calcularAhorro(1699900, 989900),
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-160.jpg'
@@ -805,21 +770,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux',
       tamaño: '200x200 (King)',
-      precioPublico: 1098836,
-      precioMercadoLibre: 1883000,
-      ahorro: 784164,
-      ahorroPorc: 42,
+      precioPublico: 1119900,
+      precioMercadoLibre: 1929900,
+      ...calcularAhorro(1929900, 1119900),
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-200.jpg'
     },
+    
+    // ========== MONTREAUX PILLOW TOP - Flagship ==========
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 970520,
-      precioMercadoLibre: 1496000,
-      ahorro: 525480,
-      ahorroPorc: 35,
+      precioPublico: 989900,
+      precioMercadoLibre: 1529900,
+      ...calcularAhorro(1529900, 989900),
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-pillow-140.jpg'
@@ -827,10 +792,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '200x160 (Queen)',
-      precioPublico: 1182651,
-      precioMercadoLibre: 2027000,
-      ahorro: 844349,
-      ahorroPorc: 42,
+      precioPublico: 1199900,
+      precioMercadoLibre: 2079900,
+      ...calcularAhorro(2079900, 1199900),
       categoria: 'premium',
       destacado: true,
       stock: 'disponible',
@@ -839,10 +803,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '200x180 (Queen XL)',
-      precioPublico: 1268890,
-      precioMercadoLibre: 2234000,
-      ahorro: 965110,
-      ahorroPorc: 43,
+      precioPublico: 1289900,
+      precioMercadoLibre: 2289900,
+      ...calcularAhorro(2289900, 1289900),
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-pillow-180.jpg'
@@ -850,21 +813,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Montreaux Pillow Top',
       tamaño: '200x200 (King)',
-      precioPublico: 1345844,
-      precioMercadoLibre: 2612000,
-      ahorro: 1266156,
-      ahorroPorc: 48,
+      precioPublico: 1369900,
+      precioMercadoLibre: 2679900,
+      ...calcularAhorro(2679900, 1369900),
       categoria: 'premium',
       stock: 'disponible',
       imagen: '/images/montreaux-pillow-200.jpg'
     },
+    
+    // ========== DREAM FIT POCKET - Ultra Premium ==========
     {
       nombre: 'Colchón Piero Dream Fit Pocket',
       tamaño: '190x140 (2 plazas)',
-      precioPublico: 1906774,
-      precioMercadoLibre: 2037000,
-      ahorro: 130226,
-      ahorroPorc: 6,
+      precioPublico: 1949900,
+      precioMercadoLibre: 2099900,
+      ...calcularAhorro(2099900, 1949900),
       categoria: 'premium',
       stock: 'consultar',
       imagen: '/images/dreamfit-pocket-140.jpg'
@@ -872,10 +835,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Dream Fit Pocket',
       tamaño: '200x160 (Queen)',
-      precioPublico: 2195670,
-      precioMercadoLibre: 2346000,
-      ahorro: 150330,
-      ahorroPorc: 6,
+      precioPublico: 2249900,
+      precioMercadoLibre: 2399900,
+      ...calcularAhorro(2399900, 2249900),
       categoria: 'premium',
       stock: 'consultar',
       imagen: '/images/dreamfit-pocket-160.jpg'
@@ -883,21 +845,21 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Dream Fit Pocket',
       tamaño: '200x200 (King)',
-      precioPublico: 2498649,
-      precioMercadoLibre: 2670000,
-      ahorro: 171351,
-      ahorroPorc: 6,
+      precioPublico: 2549900,
+      precioMercadoLibre: 2749900,
+      ...calcularAhorro(2749900, 2549900),
       categoria: 'premium',
       stock: 'consultar',
       imagen: '/images/dreamfit-pocket-200.jpg'
     },
   ]
 
+  // ========== ACCESORIOS - Precios psicológicos ==========
   const accesorios: ProductCardProps[] = [
     {
       nombre: 'Protector Impermeable Piero',
       tamaño: '140x190 cm',
-      precioPublico: 36900,
+      precioPublico: 37900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -906,7 +868,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Protector Impermeable Piero',
       tamaño: '160x200 cm (Queen)',
-      precioPublico: 39900,
+      precioPublico: 42900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -915,7 +877,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Protector Impermeable Piero',
       tamaño: '200x200 cm (King)',
-      precioPublico: 42900,
+      precioPublico: 47900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'protector',
@@ -924,7 +886,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Almohada Piero Fibra Smart Tech Plus',
       tamaño: '70x50 cm',
-      precioPublico: 39900,
+      precioPublico: 42900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'almohada',
@@ -933,7 +895,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Almohada Piero Micro Max Premium',
       tamaño: '70x50 cm',
-      precioPublico: 69900,
+      precioPublico: 74900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'almohada',
@@ -942,7 +904,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo Piero 600 Hilos',
       tamaño: '140x190 cm',
-      precioPublico: 89900,
+      precioPublico: 94900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -951,7 +913,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo Piero 600 Hilos',
       tamaño: '160x200 cm (Queen)',
-      precioPublico: 119900,
+      precioPublico: 124900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -960,7 +922,7 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Sábanas Bamboo Piero 600 Hilos',
       tamaño: '200x200 cm (King)',
-      precioPublico: 139900,
+      precioPublico: 149900,
       categoria: 'accesorio',
       stock: 'disponible',
       tipo: 'sabanas',
@@ -985,9 +947,6 @@ export default function ProductosGridOptimizado() {
     return true
   })
 
-  // =========================================================================
-  // 🎯 TRACK FILTER CHANGE - Evento Search
-  // =========================================================================
   const handleFilterChange = useCallback((filterId: string) => {
     setCategoriaActiva(filterId as typeof categoriaActiva)
     
@@ -1003,9 +962,6 @@ export default function ProductosGridOptimizado() {
     trackSearch(filterLabels[filterId] || filterId, productosFiltrados.length)
   }, [productosFiltrados.length])
 
-  // =========================================================================
-  // 🎯 TRACK CTA FINAL
-  // =========================================================================
   const handleCtaFinalClick = () => {
     trackWhatsAppClick({
       producto: 'Consulta General',
@@ -1013,9 +969,6 @@ export default function ProductosGridOptimizado() {
     })
   }
 
-  // =========================================================================
-  // FILTROS CONFIG
-  // =========================================================================
   const filtros = [
     { id: 'todos', label: 'Todos', count: todosLosProductos.length },
     { id: 'plaza', label: '1 Plaza', count: null },
@@ -1031,7 +984,6 @@ export default function ProductosGridOptimizado() {
       className="relative bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950 py-16 md:py-20"
       aria-labelledby="productos-heading"
     >
-      {/* Background Effects - Match con Landing */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] -top-48 right-0"></div>
         <div className="absolute w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[120px] bottom-0 -left-24"></div>
@@ -1039,7 +991,6 @@ export default function ProductosGridOptimizado() {
 
       <div className="relative max-w-7xl mx-auto px-4">
         
-        {/* Header */}
         <header className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-sm font-bold mb-6">
             <span className="relative flex h-2 w-2">
@@ -1060,11 +1011,10 @@ export default function ProductosGridOptimizado() {
             </span>
           </h2>
           <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto">
-            Todos los modelos con <strong className="text-white">hasta 48% de descuento</strong> vs. Mercado Libre
+            Todos los modelos con <strong className="text-white">hasta 49% de descuento</strong> vs. Mercado Libre
           </p>
         </header>
 
-        {/* Filtros - Rediseñados */}
         <div className="mb-10 md:mb-12 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
           <div className="flex gap-2 md:gap-3 min-w-max justify-start md:justify-center">
             {filtros.map((filtro) => (
@@ -1085,14 +1035,12 @@ export default function ProductosGridOptimizado() {
           </div>
         </div>
 
-        {/* Counter */}
         <div className="text-center mb-8">
           <p className="text-sm text-zinc-500">
             Mostrando <strong className="text-white">{productosFiltrados.length}</strong> productos
           </p>
         </div>
 
-        {/* Grid de Productos */}
         <div 
           className="grid gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 mb-16"
           role="list"
@@ -1104,7 +1052,6 @@ export default function ProductosGridOptimizado() {
           ))}
         </div>
 
-        {/* CTA Final - Unificado con Landing */}
         <div className="bg-gradient-to-br from-blue-950/50 to-purple-950/50 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-8 md:p-12 text-center">
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
             ¿No encontrás tu modelo?
