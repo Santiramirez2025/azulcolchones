@@ -2,16 +2,17 @@
 // SEO Level: SENIOR | Performance: A+ | Strategy: Outlet + Fábrica
 // ✅ META PIXEL INTEGRADO - ID: 521139968588985
 // ✅ VERCEL ANALYTICS INTEGRADO
+// ✅ GOOGLE ANALYTICS 4 INTEGRADO - ID: G-FTXRWHED3X
 
 import type { Metadata, Viewport } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
-import { Suspense } from 'react'
 import './globals.css'
 import Header from '../components/sections/Header'
 import Footer from '../components/sections/Footer'
 import WhatsAppButton from '../components/WhatsAppButton'
 import { AuthProvider } from '@/lib/context/AuthContext'
 import { Analytics } from "@vercel/analytics/next"
+import { GoogleAnalytics } from '@next/third-parties/google'
 import MetaPixel from '@/components/MetaPixel'
 
 // ============================================================================
@@ -666,6 +667,7 @@ export default function RootLayout({
         </AuthProvider>
 
         <Analytics />
+        <GoogleAnalytics gaId="G-FTXRWHED3X" />
       </body>
     </html>
   )
