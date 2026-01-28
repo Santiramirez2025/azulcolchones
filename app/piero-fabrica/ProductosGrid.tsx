@@ -359,9 +359,9 @@ export default function ProductosGridOptimizado() {
     {
       nombre: 'Colchón Piero Meditare EuroPillow',
       tamaño: '190x80 (1 plaza)',
-      precioPublico: 209900,
+      precioPublico: 189900,
       precioMercadoLibre: 249900,
-      ...calcularAhorro(249900, 209900),
+      ...calcularAhorro(249900, 189900),
       categoria: 'ancla',
       stock: 'disponible',
       imagen: '/images/meditare-ep-80.jpg'

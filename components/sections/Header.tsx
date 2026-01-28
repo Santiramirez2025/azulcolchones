@@ -34,6 +34,12 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
     </svg>
   ),
+  // Ícono de verificación/check para el badge oficial
+  Verified: ({ className = "w-3.5 h-3.5" }: { className?: string }) => (
+    <svg className={className} fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+    </svg>
+  ),
 }
 
 // ============================================================================
@@ -65,6 +71,54 @@ const navItems = [
     highlight: false,
   },
 ]
+
+// ============================================================================
+// BADGE DISTRIBUIDOR OFICIAL - Componente reutilizable
+// ============================================================================
+
+const OfficialBadge = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' | 'menu' }) => {
+  if (variant === 'desktop') {
+    return (
+      <div className="hidden lg:flex items-center gap-3 pl-4 ml-4 border-l border-zinc-700/50">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-lg">
+          <Icons.Verified className="w-4 h-4 text-amber-400" />
+          <span className="text-xs font-semibold text-amber-200/90">
+            Distribuidor Oficial
+          </span>
+          <span className="text-xs font-bold text-white">
+            PIERO
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  if (variant === 'mobile') {
+    return (
+      <div className="flex lg:hidden items-center gap-1 px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded-md">
+        <Icons.Verified className="w-3 h-3 text-amber-400" />
+        <span className="text-[10px] font-semibold text-amber-200/90">
+          Oficial PIERO
+        </span>
+      </div>
+    )
+  }
+
+  // Variant: menu (para el menú móvil abierto)
+  return (
+    <div className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-500/20 rounded-xl">
+      <Icons.Verified className="w-5 h-5 text-amber-400" />
+      <div className="flex flex-col">
+        <span className="text-xs font-semibold text-amber-200/90">
+          Distribuidor Oficial
+        </span>
+        <span className="text-sm font-bold text-white tracking-wide">
+          PIERO
+        </span>
+      </div>
+    </div>
+  )
+}
 
 // ============================================================================
 // HEADER COMPONENT
@@ -115,22 +169,27 @@ export default function Header() {
         <nav className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16 lg:h-18">
             
-            {/* LOGO */}
-            <Link href="/" className="flex-shrink-0 group">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-shadow">
-                  <Icons.Moon className="w-5 h-5 text-white" />
+            {/* LOGO + BADGE OFICIAL (Desktop) */}
+            <div className="flex items-center">
+              <Link href="/" className="flex-shrink-0 group">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-shadow">
+                    <Icons.Moon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-base lg:text-lg font-black leading-none text-white">
+                      Azul<span className="text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text">Colchones</span>
+                    </span>
+                    <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-wider">
+                      {CONFIG.location}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-base lg:text-lg font-black leading-none text-white">
-                    Azul<span className="text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text">Colchones</span>
-                  </span>
-                  <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-wider">
-                    {CONFIG.location}
-                  </span>
-                </div>
-              </div>
-            </Link>
+              </Link>
+
+              {/* Badge Oficial - DESKTOP */}
+              <OfficialBadge variant="desktop" />
+            </div>
 
             {/* DESKTOP NAV */}
             <div className="hidden lg:flex items-center gap-1">
@@ -165,9 +224,12 @@ export default function Header() {
               </a>
             </div>
 
-            {/* MOBILE: CTA + MENU */}
+            {/* MOBILE: Badge Mini + CTA + MENU */}
             <div className="flex lg:hidden items-center gap-2">
               
+              {/* Badge Oficial - MOBILE (compacto) */}
+              <OfficialBadge variant="mobile" />
+
               {/* WhatsApp Mini */}
               <a
                 href={whatsappUrl}
@@ -211,6 +273,11 @@ export default function Header() {
           <div className="fixed inset-x-0 top-16 lg:hidden z-[70] bg-zinc-950 border-b border-zinc-800 shadow-xl animate-slideDown">
             <div className="max-w-7xl mx-auto px-4 py-4">
               
+              {/* Badge Oficial - MENU (destacado) */}
+              <div className="mb-4">
+                <OfficialBadge variant="menu" />
+              </div>
+
               {/* Nav Links */}
               <div className="space-y-1">
                 {navItems.map((item) => {
