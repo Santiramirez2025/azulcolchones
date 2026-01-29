@@ -73,7 +73,11 @@ export default function Home() {
       
       {/* Fixed UI Elements */}
       <ScrollProgressBar />
-      <TrustBar />
+      
+      {/* TrustBar - Solo visible en mobile */}
+      <div className="lg:hidden">
+        <TrustBar />
+      </div>
       
       {/* Hero Section */}
       <section className="w-full" aria-labelledby="hero-heading">
