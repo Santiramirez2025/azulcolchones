@@ -114,9 +114,28 @@
 }
 
 /* ============================================================================
-   ANIMATIONS
+   ANIMATIONS - Global
    ============================================================================ */
 
+/* Spin animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Bounce animation for dots */
+@keyframes bounce {
+  0%, 100% { 
+    transform: translateY(0); 
+    opacity: 1;
+  }
+  50% { 
+    transform: translateY(-4px); 
+    opacity: 0.6;
+  }
+}
+
+/* Fade animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -127,6 +146,7 @@
   to { opacity: 0; }
 }
 
+/* Slide animations */
 @keyframes slideDown {
   from { 
     opacity: 0; 
@@ -149,6 +169,7 @@
   }
 }
 
+/* Scale animation */
 @keyframes scaleIn {
   from {
     opacity: 0;
@@ -160,11 +181,13 @@
   }
 }
 
+/* Pulse animations */
 @keyframes pulse-soft {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
 }
 
+/* Shimmer effect */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
