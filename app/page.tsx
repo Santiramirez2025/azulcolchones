@@ -69,8 +69,7 @@ export const revalidate = 43200 // 12 hours
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-full bg-zinc-950 overflow-x-hidden antialiased">
-      
+    <>
       {/* Fixed UI Elements */}
       <ScrollProgressBar />
       
@@ -186,7 +185,6 @@ export default function Home() {
           
         </div>
       </section>
-      
-    </div>
+    </>
   )
 }

@@ -2,51 +2,199 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   BASE STYLES - DARK THEME AZUL COLCHONES
+   ============================================================================ */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 9 9 11; /* zinc-950 */
+    --foreground: 250 250 250; /* zinc-50 */
+    
+    /* Brand colors */
+    --brand-blue: 59 130 246; /* blue-500 */
+    --brand-cyan: 34 211 238; /* cyan-400 */
+    --brand-amber: 251 191 36; /* amber-400 */
   }
-  
+
+  /* ========================================
+     FIX: Scroll infinito en mobile
+     ======================================== */
+  html {
+    height: 100%;
+    overflow-x: hidden;
+  }
+
   body {
-    @apply bg-warm-50 text-gray-900;
+    @apply bg-zinc-950 text-white antialiased;
+    min-height: 100%;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Evitar scroll bounce en iOS */
+  html, body {
+    overscroll-behavior: none;
+  }
+
+  /* ========================================
+     Typography defaults
+     ======================================== */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold tracking-tight;
+  }
+
+  /* ========================================
+     Focus styles - Accessibility
+     ======================================== */
+  :focus-visible {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-zinc-950;
+  }
+
+  /* ========================================
+     Selection
+     ======================================== */
+  ::selection {
+    @apply bg-blue-500/30 text-white;
+  }
+
+  /* ========================================
+     Scrollbar - Desktop
+     ======================================== */
+  @media (min-width: 768px) {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      @apply bg-zinc-900;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      @apply bg-zinc-700 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      @apply bg-zinc-600;
+    }
   }
 }
 
+/* ============================================================================
+   UTILITIES
+   ============================================================================ */
+
 @layer utilities {
+  /* Text balance for headings */
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe area padding for notched devices */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
 }
-/* Agregar al final de tu globals.css */
 
 /* ============================================================================
-   HEADER ANIMATIONS
+   ANIMATIONS
    ============================================================================ */
 
-   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideDown {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ============================================================================
+   REDUCED MOTION - Accessibility
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+  body {
+    @apply bg-white text-black;
   }
   
-  @keyframes slideDown {
-    from { 
-      opacity: 0; 
-      transform: translateY(-10px); 
-    }
-    to { 
-      opacity: 1; 
-      transform: translateY(0); 
-    }
+  header, footer, .whatsapp-button {
+    display: none !important;
   }
-  
-  /* Respetar preferencias de movimiento reducido */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
+}
