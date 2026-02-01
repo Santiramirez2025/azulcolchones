@@ -1,457 +1,1126 @@
-// app/catalogo/page.tsx - ULTRA OPTIMIZED ⚡ - Azul Colchones
-import { Suspense } from 'react'
-import type { Metadata } from 'next'
-import { getProducts } from '@/lib/api/products'
-import { centavosToARS } from '@/lib/utils/currency'
-import CatalogoClient from './catalogo-client'
-import { NormalizedProduct } from './components/types'
+'use client'
+// app/catalogo/page.tsx — PRODUCT-FIRST | Static Data | Zero DB
+// Estructura: Filtros inline → Product Grid
+// Datos hardcoded desde planilla Balerdi 855 - Feb 2026
+
+import { useState, useMemo } from 'react'
 
 // ============================================================================
-// METADATA - SEO EXHAUSTIVO 🎯
+// TIPOS
 // ============================================================================
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://azulcolchones.com'
+type Category = 'todos' | 'colchones' | 'sommiers' | 'accesorios'
+type Size = 'todos' | '80' | '90' | '100' | '130' | '140' | '160' | '180' | '200'
 
-export const metadata: Metadata = {
-  title: 'Catálogo de Colchones Villa María | Envío GRATIS 24-48hs | 12 Cuotas',
-  description: '🛏️ Colchones premium en Villa María, Córdoba. ✅ Envío GRATIS 24-48hs ✅ Hasta 12 cuotas sin interés ✅ Todas las medidas ✅ Stock disponible ✅ Garantía extendida. 35+ años de experiencia. Comprá tu colchón ideal.',
-  
-  keywords: [
-    // === CORE LOCAL ===
-    'colchones villa maría',
-    'catálogo colchones villa maría',
-    'tienda colchones villa maría',
-    'comprar colchones villa maría',
-    'precios colchones villa maría',
-    
-    // === REGIONAL ===
-    'colchones córdoba',
-    'catálogo colchones córdoba',
-    'colchones premium córdoba',
-    
-    // === PRODUCTOS ESPECÍFICOS ===
-    'colchón matrimonial villa maría',
-    'colchón queen villa maría',
-    'colchón king villa maría',
-    'colchón 1 plaza villa maría',
-    'colchón 2 plazas villa maría',
-    'sommier villa maría',
-    
-    // === MATERIALES ===
-    'colchones memory foam villa maría',
-    'colchones resortes villa maría',
-    'colchones pocket villa maría',
-    'colchones viscoelásticos villa maría',
-    'colchones ortopédicos villa maría',
-    
-    // === BENEFICIOS (Purchase Intent) ===
-    'colchones envío gratis villa maría',
-    'colchones 12 cuotas villa maría',
-    'colchones cuotas sin interés',
-    'ofertas colchones villa maría',
-    'promociones colchones córdoba',
-    'colchones stock disponible',
-    
-    // === LONG TAIL ===
-    'mejor catálogo colchones villa maría',
-    'donde comprar colchones baratos villa maría',
-    'colchones calidad precio villa maría',
-    'tienda colchones online villa maría',
-    'catálogo completo colchones córdoba',
-  ].join(', '),
-  
-  openGraph: {
-    title: '🛏️ Catálogo Completo | Azul Colchones Villa María',
-    description: 'Todas las medidas | Envío GRATIS 24-48hs | 12 cuotas | Stock disponible',
-    type: 'website',
-    locale: 'es_AR',
-    url: `${BASE_URL}/catalogo`,
-    siteName: 'Azul Colchones Villa María',
-    images: [
-      {
-        url: `${BASE_URL}/og-catalogo.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'Catálogo de Colchones - Azul Colchones Villa María',
-      }
-    ],
-  },
-  
-  twitter: {
-    card: 'summary_large_image',
-    title: '🛏️ Catálogo Completo - Azul Colchones',
-    description: 'Envío GRATIS | 12 cuotas | Stock disponible',
-    images: [`${BASE_URL}/twitter-catalogo.jpg`],
-  },
-  
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  
-  alternates: {
-    canonical: `${BASE_URL}/catalogo`,
-  },
-  
-  other: {
-    'product:availability': 'in stock',
-    'product:condition': 'new',
-    'product:price:currency': 'ARS',
-  },
+interface Product {
+  id: string
+  name: string
+  category: Category
+  size: string        // e.g. "80x190"
+  sizeLabel: string   // e.g. "1 plaza"
+  price: number       // in ARS
+  stock: number
+  image: string | null // ruta en /images/ o null para placeholder
+  tag?: string        // "Más vendido", "Último", "Nueva línea", etc.
+  description?: string
 }
 
-// ✅ ISR: Regenerate every 1 hour
-export const revalidate = 3600
-
-// ✅ Dynamic rendering
-export const dynamic = 'force-dynamic'
-
 // ============================================================================
-// STRUCTURED DATA - CATALOG PAGE 🎯
+// DATA — Extraída de planilla Balerdi 855 Feb 2026
+// Precios en ARS (x1000 de la planilla)
 // ============================================================================
 
-const catalogStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Catálogo de Colchones - Azul Colchones Villa María',
-  description: 'Colección completa de colchones premium con envío gratis en Villa María',
-  url: `${BASE_URL}/catalogo`,
-  provider: {
-    '@type': 'LocalBusiness',
-    name: 'Azul Colchones',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Balerdi 855',
-      addressLocality: 'Villa María',
-      addressRegion: 'Córdoba',
-      postalCode: '5900',
-      addressCountry: 'AR'
-    },
-    telephone: '+54 9 3534 09-6566',
+const PRODUCTS: Product[] = [
+  // ─── COLCHONES 80cm (1 plaza) ─────────────────────────────────────────────
+  {
+    id: 'funcional-80',
+    name: 'Funcional',
+    category: 'colchones',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 130_000,
+    stock: 20,
+    image: null,
+    tag: 'Más vendido',
+    description: 'Espuma básica, ideal para ambientes secundarios.',
   },
-  breadcrumb: {
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Inicio',
-        item: BASE_URL
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Catálogo',
-        item: `${BASE_URL}/catalogo`
+  {
+    id: 'relax-80-20',
+    name: 'Relax Espuma 20cm',
+    category: 'colchones',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 130_000,
+    stock: 6,
+    image: null,
+    description: 'Espuma de 20cm de espesor, confort diario.',
+  },
+  {
+    id: 'relax-80-24',
+    name: 'Relax Espuma 24cm',
+    category: 'colchones',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 160_000,
+    stock: 22,
+    image: null,
+    tag: 'Stock alto',
+    description: 'Espuma de 24cm, mayor soporte y confort.',
+  },
+  {
+    id: 'meditare-80',
+    name: 'Meditare EP',
+    category: 'colchones',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 210_000,
+    stock: 3,
+    image: '/images/meditare-ep-80.jpg',
+    description: 'Línea premium con espuma de alta densidad.',
+  },
+  {
+    id: 'sonno-80',
+    name: 'Sonno',
+    category: 'colchones',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 280_000,
+    stock: 1,
+    image: '/images/sonno-ep-80.jpg',
+    tag: 'Último',
+    description: 'Tecnología pocket spring, confort superior.',
+  },
+  {
+    id: 'reino-80',
+    name: 'Reino',
+    category: 'colchones',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 300_000,
+    stock: 1,
+    image: '/images/reino-80.jpg',
+    tag: 'Último',
+    description: 'Línea premium, acabado de alta calidad.',
+  },
+  {
+    id: 'nirvana-80',
+    name: 'Nirvana',
+    category: 'colchones',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 320_000,
+    stock: 1,
+    image: '/images/nirvana-80.jpg',
+    tag: 'Último',
+    description: 'Máximo confort en la línea premium.',
+  },
+
+  // ─── COLCHONES 90cm (1.5 plaza) ───────────────────────────────────────────
+  {
+    id: 'relax-90-20',
+    name: 'Relax Espuma 20cm',
+    category: 'colchones',
+    size: '90x190',
+    sizeLabel: '1½ plaza',
+    price: 160_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Espuma 20cm en medida 1.5 plaza.',
+  },
+  {
+    id: 'virtus-90',
+    name: 'Virtus Espuma 26cm',
+    category: 'colchones',
+    size: '90x190',
+    sizeLabel: '1½ plaza',
+    price: 170_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Espuma de 26cm con mayor densidad y soporte.',
+  },
+  {
+    id: 'meditare-90',
+    name: 'Meditare',
+    category: 'colchones',
+    size: '90x190',
+    sizeLabel: '1½ plaza',
+    price: 230_000,
+    stock: 2,
+    image: '/images/meditare-ep-90.jpg',
+    description: 'Confort premium en medida 1.5 plaza.',
+  },
+  {
+    id: 'sonno-90',
+    name: 'Sonno',
+    category: 'colchones',
+    size: '90x190',
+    sizeLabel: '1½ plaza',
+    price: 300_000,
+    stock: 4,
+    image: '/images/sonno-ep-90.jpg',
+    description: 'Pocket spring, tecnología superior.',
+  },
+
+  // ─── COLCHONES 100cm (2 plazas) ───────────────────────────────────────────
+  {
+    id: 'relax-100-20',
+    name: 'Relax Espuma 20cm',
+    category: 'colchones',
+    size: '100x190',
+    sizeLabel: '2 plazas',
+    price: 170_000,
+    stock: 5,
+    image: null,
+    description: 'Espuma 20cm, excelente relación precio-calidad.',
+  },
+  {
+    id: 'ns-confort-100',
+    name: 'NS Confort 20cm',
+    category: 'colchones',
+    size: '100x190',
+    sizeLabel: '2 plazas',
+    price: 170_000,
+    stock: 4,
+    image: null,
+    description: 'Línea NS, espuma confort de 20cm.',
+  },
+  {
+    id: 'ns-virtus-100',
+    name: 'NS Virtus 26cm EP',
+    category: 'colchones',
+    size: '100x190',
+    sizeLabel: '2 plazas',
+    price: 190_000,
+    stock: 3,
+    image: null,
+    description: 'Espuma premium de 26cm, alta densidad.',
+  },
+  {
+    id: 'meditare-100',
+    name: 'Meditare',
+    category: 'colchones',
+    size: '100x190',
+    sizeLabel: '2 plazas',
+    price: 250_000,
+    stock: 1,
+    image: '/images/meditare-ep-100.jpg',
+    tag: 'Último',
+    description: 'Alta densidad y confort en 2 plazas.',
+  },
+  {
+    id: 'sonno-100',
+    name: 'Sonno',
+    category: 'colchones',
+    size: '100x190',
+    sizeLabel: '2 plazas',
+    price: 340_000,
+    stock: 2,
+    image: '/images/sonno-ep-100.jpg',
+    description: 'Pocket spring en medida 2 plazas.',
+  },
+
+  // ─── COLCHONES 130cm (2 plazas grande) ────────────────────────────────────
+  {
+    id: 'meditare-130',
+    name: 'Meditare',
+    category: 'colchones',
+    size: '130x190',
+    sizeLabel: '2 plazas grande',
+    price: 350_000,
+    stock: 1,
+    image: '/images/meditare-ep-130.jpg',
+    tag: 'Último',
+    description: 'Confort premium en medida grande.',
+  },
+  {
+    id: 'foam-130',
+    name: 'Foam',
+    category: 'colchones',
+    size: '130x190',
+    sizeLabel: '2 plazas grande',
+    price: 350_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Espuma de alta calidad en formato grande.',
+  },
+  {
+    id: 'sonno-130',
+    name: 'Sonno',
+    category: 'colchones',
+    size: '130x190',
+    sizeLabel: '2 plazas grande',
+    price: 460_000,
+    stock: 2,
+    image: '/images/sonno-ep-130.jpg',
+    description: 'Pocket spring en medida 130cm.',
+  },
+  {
+    id: 'nirvana-130',
+    name: 'Nirvana',
+    category: 'colchones',
+    size: '130x190',
+    sizeLabel: '2 plazas grande',
+    price: 540_000,
+    stock: 1,
+    image: '/images/nirvana-130.jpg',
+    tag: 'Último',
+    description: 'Máximo confort en formato grande.',
+  },
+
+  // ─── COLCHONES 140cm (matrimonial) ────────────────────────────────────────
+  {
+    id: 'sonno-140',
+    name: 'Sonno',
+    category: 'colchones',
+    size: '140x190',
+    sizeLabel: 'Matrimonial',
+    price: 500_000,
+    stock: 1,
+    image: '/images/sonno-ep-140.jpg',
+    tag: 'Último',
+    description: 'Pocket spring en medida matrimonial.',
+  },
+  {
+    id: 'namaste-140',
+    name: 'Namaste',
+    category: 'colchones',
+    size: '140x190',
+    sizeLabel: 'Matrimonial',
+    price: 530_000,
+    stock: 1,
+    image: '/images/namaste-140.jpg',
+    tag: 'Último',
+    description: 'Línea especial, confort matrimonial.',
+  },
+
+  // ─── COLCHONES 160cm (Queen) ──────────────────────────────────────────────
+  {
+    id: 'ns-confort-160',
+    name: 'NS Confort 28cm EP',
+    category: 'colchones',
+    size: '160x190',
+    sizeLabel: 'Queen',
+    price: 310_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Espuma premium 28cm en formato Queen.',
+  },
+  {
+    id: 'spring-160',
+    name: 'Spring',
+    category: 'colchones',
+    size: '160x190',
+    sizeLabel: 'Queen',
+    price: 500_000,
+    stock: 1,
+    image: '/images/sonno-ep-160.jpg',
+    tag: 'Último',
+    description: 'Tecnología spring en formato Queen.',
+  },
+  {
+    id: 'reino-pillow-160',
+    name: 'Reino Pillow',
+    category: 'colchones',
+    size: '160x190',
+    sizeLabel: 'Queen',
+    price: 650_000,
+    stock: 1,
+    image: '/images/reino-pillow-160.jpg',
+    tag: 'Último',
+    description: 'Acabado pillow top, máximo lujo.',
+  },
+
+  // ─── COLCHONES 180cm (King) ───────────────────────────────────────────────
+  {
+    id: 'ns-confort-180',
+    name: 'NS Confort 28cm EP',
+    category: 'colchones',
+    size: '180x190',
+    sizeLabel: 'King',
+    price: 350_000,
+    stock: 1,
+    image: '/images/reino-pillow-180.jpg',
+    tag: 'Último',
+    description: 'Espuma premium 28cm en formato King.',
+  },
+  {
+    id: 'nirvana-180',
+    name: 'Nirvana',
+    category: 'colchones',
+    size: '180x190',
+    sizeLabel: 'King',
+    price: 820_000,
+    stock: 1,
+    image: '/images/nirvana-180.jpg',
+    tag: 'Último',
+    description: 'Máximo confort en formato King.',
+  },
+  {
+    id: 'montreux-pillow-180',
+    name: 'Montreux Pillow',
+    category: 'colchones',
+    size: '180x200',
+    sizeLabel: 'King',
+    price: 1_200_000,
+    stock: 1,
+    image: '/images/montreaux-pillow-180.jpg',
+    tag: 'Último · Premium',
+    description: 'Línea Montreux con acabado pillow top.',
+  },
+
+  // ─── COLCHONES 200cm (Super King) ─────────────────────────────────────────
+  {
+    id: 'ns-confort-200',
+    name: 'NS Confort 28cm EP',
+    category: 'colchones',
+    size: '200x200',
+    sizeLabel: 'Super King',
+    price: 200_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Espuma premium en formato Super King.',
+  },
+  {
+    id: 'reino-pillow-200',
+    name: 'Reino Pillow',
+    category: 'colchones',
+    size: '200x190',
+    sizeLabel: 'Super King',
+    price: 790_000,
+    stock: 1,
+    image: '/images/reino-pillow-200.jpg',
+    tag: 'Último',
+    description: 'Acabado pillow top en formato Super King.',
+  },
+  {
+    id: 'montreux-pillow-200',
+    name: 'Montreux c/ Pillow',
+    category: 'colchones',
+    size: '200x200',
+    sizeLabel: 'Super King',
+    price: 970_000,
+    stock: 2,
+    image: '/images/montreaux-pillow-200.jpg',
+    description: 'Línea Montreux completa con pillow top.',
+  },
+  {
+    id: 'dreamfit-pocket-200',
+    name: 'DreamFit Pocket',
+    category: 'colchones',
+    size: '200x200',
+    sizeLabel: 'Super King',
+    price: 1_550_000,
+    stock: 1,
+    image: '/images/dreamfit-pocket-200.jpg',
+    tag: 'Último · Top',
+    description: 'Tecnología pocket spring de máxima gama.',
+  },
+
+  // ─── COLCHONES DE CUNA ────────────────────────────────────────────────────
+  {
+    id: 'mickey-cuna-130',
+    name: 'Mickey 130x60',
+    category: 'accesorios',
+    size: '130x60',
+    sizeLabel: 'Cuna',
+    price: 50_000,
+    stock: 2,
+    image: null,
+    description: 'Colchón de cuna Mickey, 8cm de espesor.',
+  },
+  {
+    id: 'mickey-cuna-97',
+    name: 'Mickey 97x65',
+    category: 'accesorios',
+    size: '97x65',
+    sizeLabel: 'Cuna',
+    price: 50_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Colchón de cuna Mickey, medida estándar.',
+  },
+  {
+    id: 'mickey-cuna-140',
+    name: 'Mickey 140x80',
+    category: 'accesorios',
+    size: '140x80',
+    sizeLabel: 'Cuna',
+    price: 60_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Colchón de cuna Mickey, formato grande.',
+  },
+
+  // ─── SOMMIERS ORIGINALES ──────────────────────────────────────────────────
+  {
+    id: 'sognare-80',
+    name: 'Sognare',
+    category: 'sommiers',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 165_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Sommier original línea Sognare.',
+  },
+  {
+    id: 'grey-80',
+    name: 'Grey',
+    category: 'sommiers',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 165_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Sommier original línea Grey.',
+  },
+  {
+    id: 'brown-80',
+    name: 'Brown',
+    category: 'sommiers',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 165_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Sommier original línea Brown.',
+  },
+  {
+    id: 'brown-140',
+    name: 'Brown',
+    category: 'sommiers',
+    size: '140x190',
+    sizeLabel: 'Matrimonial',
+    price: 190_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Sommier Brown en matrimonial.',
+  },
+  {
+    id: 'exclusivo-140',
+    name: 'Exclusivo',
+    category: 'sommiers',
+    size: '140x190',
+    sizeLabel: 'Matrimonial',
+    price: 190_000,
+    stock: 2,
+    image: null,
+    description: 'Sommier Exclusivo en matrimonial.',
+  },
+  {
+    id: 'legrand-100',
+    name: 'Legrand',
+    category: 'sommiers',
+    size: '100x200',
+    sizeLabel: '2 plazas',
+    price: 190_000,
+    stock: 4,
+    image: null,
+    description: 'Sommier Legrand, acabado fino.',
+  },
+  {
+    id: 'paraiso-lila-100',
+    name: 'Paraiso Lila',
+    category: 'sommiers',
+    size: '100x200',
+    sizeLabel: '2 plazas',
+    price: 190_000,
+    stock: 2,
+    image: null,
+    description: 'Sommier Paraiso en tono lila.',
+  },
+  {
+    id: 'montreux-80',
+    name: 'Montreux',
+    category: 'sommiers',
+    size: '80x200',
+    sizeLabel: '1 plaza',
+    price: 190_000,
+    stock: 4,
+    image: null,
+    description: 'Sommier Montreux, línea premium.',
+  },
+  // Olimpo Tela
+  {
+    id: 'olimpo-80',
+    name: 'Olimpo Tela',
+    category: 'sommiers',
+    size: '80x200',
+    sizeLabel: '1 plaza',
+    price: 85_000,
+    stock: 12,
+    image: null,
+    tag: 'Más vendido',
+    description: 'Sommier Olimpo en tela, muy buen precio.',
+  },
+  {
+    id: 'olimpo-90',
+    name: 'Olimpo Tela',
+    category: 'sommiers',
+    size: '90x200',
+    sizeLabel: '1½ plaza',
+    price: 85_000,
+    stock: 6,
+    image: null,
+    description: 'Sommier Olimpo Tela en 1.5 plaza.',
+  },
+  {
+    id: 'olimpo-100',
+    name: 'Olimpo Tela',
+    category: 'sommiers',
+    size: '100x200',
+    sizeLabel: '2 plazas',
+    price: 85_000,
+    stock: 6,
+    image: null,
+    description: 'Sommier Olimpo Tela en 2 plazas.',
+  },
+
+  // ─── BOX ECOCUERO ─────────────────────────────────────────────────────────
+  {
+    id: 'box-eco-80x190',
+    name: 'Box Ecocuero',
+    category: 'sommiers',
+    size: '80x190',
+    sizeLabel: '1 plaza',
+    price: 75_000,
+    stock: 2,
+    image: null,
+    description: 'Box en ecocuero, acabado moderno.',
+  },
+  {
+    id: 'box-eco-90x190',
+    name: 'Box Ecocuero',
+    category: 'sommiers',
+    size: '90x190',
+    sizeLabel: '1½ plaza',
+    price: 75_000,
+    stock: 9,
+    image: null,
+    tag: 'Stock alto',
+    description: 'Box ecocuero en 1.5 plaza.',
+  },
+  {
+    id: 'box-eco-100x190',
+    name: 'Box Ecocuero',
+    category: 'sommiers',
+    size: '100x190',
+    sizeLabel: '2 plazas',
+    price: 75_000,
+    stock: 13,
+    image: null,
+    tag: 'Más vendido',
+    description: 'Box ecocuero en 2 plazas, gran stock.',
+  },
+  {
+    id: 'box-eco-80x200',
+    name: 'Box Ecocuero',
+    category: 'sommiers',
+    size: '80x200',
+    sizeLabel: '1 plaza',
+    price: 80_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Box ecocuero en medida 80x200.',
+  },
+  {
+    id: 'box-eco-90x200',
+    name: 'Box Ecocuero',
+    category: 'sommiers',
+    size: '90x200',
+    sizeLabel: '1½ plaza',
+    price: 80_000,
+    stock: 4,
+    image: null,
+    description: 'Box ecocuero en 1.5 plaza largo.',
+  },
+  {
+    id: 'box-eco-100x200',
+    name: 'Box Ecocuero',
+    category: 'sommiers',
+    size: '100x200',
+    sizeLabel: '2 plazas',
+    price: 80_000,
+    stock: 2,
+    image: null,
+    description: 'Box ecocuero en 2 plazas largo.',
+  },
+  {
+    id: 'box-eco-140x190',
+    name: 'Box Ecocuero',
+    category: 'sommiers',
+    size: '140x190',
+    sizeLabel: 'Matrimonial',
+    price: 90_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Box ecocuero matrimonial.',
+  },
+  {
+    id: 'box-eco-130x190',
+    name: 'Box Ecocuero',
+    category: 'sommiers',
+    size: '130x190',
+    sizeLabel: '2 plazas grande',
+    price: 90_000,
+    stock: 1,
+    image: null,
+    tag: 'Último',
+    description: 'Box ecocuero en 130cm.',
+  },
+
+  // ─── ALMOHADAS ────────────────────────────────────────────────────────────
+  {
+    id: 'almohada-darling',
+    name: 'Almohada Darling',
+    category: 'accesorios',
+    size: '—',
+    sizeLabel: 'Almohada',
+    price: 15_000,
+    stock: 5,
+    image: '/images/almohada-fibra.jpg',
+    description: 'Almohada básica, muy accesible.',
+  },
+  {
+    id: 'almohada-cuore',
+    name: 'Almohada Cuore',
+    category: 'accesorios',
+    size: '—',
+    sizeLabel: 'Almohada',
+    price: 25_000,
+    stock: 16,
+    image: '/images/almohada-micro.jpg',
+    tag: 'Más vendido',
+    description: 'Almohada Cuore, gran stock disponible.',
+  },
+  {
+    id: 'almohada-confort-70',
+    name: 'Confort Plus 70',
+    category: 'accesorios',
+    size: '—',
+    sizeLabel: 'Almohada',
+    price: 30_000,
+    stock: 9,
+    image: '/images/almohada-fibra.jpg',
+    description: 'Almohada Confort Plus tamaño 70.',
+  },
+  {
+    id: 'almohada-confort-80',
+    name: 'Confort Plus 80',
+    category: 'accesorios',
+    size: '—',
+    sizeLabel: 'Almohada',
+    price: 40_000,
+    stock: 3,
+    image: '/images/almohada-micro.jpg',
+    description: 'Almohada Confort Plus tamaño 80.',
+  },
+  {
+    id: 'almohada-sensitive',
+    name: 'Sensitive Standard',
+    category: 'accesorios',
+    size: '—',
+    sizeLabel: 'Almohada',
+    price: 30_000,
+    stock: 1,
+    image: '/images/almohada-fibra.jpg',
+    tag: 'Último',
+    description: 'Almohada Sensitive, material especial.',
+  },
+  {
+    id: 'almohada-king-milan',
+    name: 'Sensitive King Milan',
+    category: 'accesorios',
+    size: '—',
+    sizeLabel: 'Almohada King',
+    price: 50_000,
+    stock: 7,
+    image: '/images/almohada-micro.jpg',
+    description: 'Almohada King Milan, formato grande.',
+  },
+
+  // ─── SABANAS ──────────────────────────────────────────────────────────────
+  {
+    id: 'sabana-classic-full',
+    name: 'Juego Sabanas Classic Full',
+    category: 'accesorios',
+    size: '140',
+    sizeLabel: 'Full (4 piezas)',
+    price: 100_000,
+    stock: 3,
+    image: '/images/sabanas-140.jpg',
+    description: 'Percal 144 hilos, 100% algodón con guarda.',
+  },
+  {
+    id: 'sabana-classic-queen',
+    name: 'Juego Sabanas Classic Queen',
+    category: 'accesorios',
+    size: '160',
+    sizeLabel: 'Queen (4 piezas)',
+    price: 110_000,
+    stock: 1,
+    image: '/images/sabanas-160.jpg',
+    tag: 'Último',
+    description: 'Percal 144 hilos, 100% algodón con guarda.',
+  },
+  {
+    id: 'sabana-classic-king',
+    name: 'Juego Sabanas Classic King',
+    category: 'accesorios',
+    size: '200',
+    sizeLabel: 'King (4 piezas)',
+    price: 130_000,
+    stock: 1,
+    image: '/images/sabanas-200.jpg',
+    tag: 'Último',
+    description: 'Percal 144 hilos, 100% algodón con guarda.',
+  },
+  {
+    id: 'sabana-supreme-king',
+    name: 'Juego Sabanas Supreme King',
+    category: 'accesorios',
+    size: '200',
+    sizeLabel: 'King (4 piezas)',
+    price: 200_000,
+    stock: 2,
+    image: '/images/sabanas-200.jpg',
+    tag: 'Premium',
+    description: '200 hilos, 100% algodón, línea Supreme.',
+  },
+
+  // ─── COVERS ───────────────────────────────────────────────────────────────
+  {
+    id: 'cover-tusor-queen',
+    name: 'Cover Tusor Liso Queen',
+    category: 'accesorios',
+    size: '160',
+    sizeLabel: 'Queen',
+    price: 150_000,
+    stock: 1,
+    image: '/images/protector-160.jpg',
+    tag: 'Último',
+    description: 'Cover Tusor liso línea Premium.',
+  },
+  {
+    id: 'cover-tusor-king',
+    name: 'Cover Tusor Liso King',
+    category: 'accesorios',
+    size: '200',
+    sizeLabel: 'King',
+    price: 180_000,
+    stock: 1,
+    image: '/images/protector-200.jpg',
+    tag: 'Último',
+    description: 'Cover Tusor liso línea Premium.',
+  },
+  {
+    id: 'cover-tusor-estampado-queen',
+    name: 'Cover Tusor Estampado Queen',
+    category: 'accesorios',
+    size: '160',
+    sizeLabel: 'Queen',
+    price: 200_000,
+    stock: 2,
+    image: '/images/protector-160.jpg',
+    description: 'Cover Tusor estampado línea Premium.',
+  },
+  {
+    id: 'cubre-matelaseado-140',
+    name: 'Cubre Matelaseado 2 plazas',
+    category: 'accesorios',
+    size: '140',
+    sizeLabel: '2 plazas',
+    price: 65_000,
+    stock: 2,
+    image: '/images/protector-140.jpg',
+    description: 'Cubre colchón matelaseado 140x190.',
+  },
+  {
+    id: 'cubre-matelaseado-200',
+    name: 'Cubre Matelaseado Super King',
+    category: 'accesorios',
+    size: '200',
+    sizeLabel: 'Super King',
+    price: 100_000,
+    stock: 2,
+    image: '/images/protector-200.jpg',
+    description: 'Cubre colchón matelaseado 200x200.',
+  },
+  {
+    id: 'cubre-impermeable-100',
+    name: 'Cubre Impermeable 1½ plaza',
+    category: 'accesorios',
+    size: '100',
+    sizeLabel: '1½ plaza',
+    price: 65_000,
+    stock: 4,
+    image: '/images/protector-140.jpg',
+    description: 'Cubre impermeable 100x190.',
+  },
+]
+
+// ============================================================================
+// UTILIDADES
+// ============================================================================
+
+function formatPrice(n: number): string {
+  return '$' + n.toLocaleString('es-AR')
+}
+
+// ============================================================================
+// COMPONENTE PRINCIPAL
+// ============================================================================
+
+export default function CatalogoPage() {
+  const [category, setCategory] = useState<Category>('todos')
+  const [size, setSize] = useState<Size>('todos')
+
+  // Categorías con conteo
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { todos: PRODUCTS.length }
+    PRODUCTS.forEach((p) => {
+      counts[p.category] = (counts[p.category] || 0) + 1
+    })
+    return counts
+  }, [])
+
+  // Tamaños disponibles según categoría activa
+  const availableSizes = useMemo(() => {
+    const filtered = category === 'todos' ? PRODUCTS : PRODUCTS.filter((p) => p.category === category)
+    const widths = new Set<string>()
+    filtered.forEach((p) => {
+      const w = p.size.split('x')[0]
+      if (w && w !== '—' && !isNaN(Number(w))) widths.add(w)
+    })
+    return Array.from(widths).sort((a, b) => Number(a) - Number(b))
+  }, [category])
+
+  // Reset size filter si el tamaño activo no existe en la nueva categoría
+  const effectiveSize: Size = availableSizes.includes(size) ? size : 'todos'
+
+  // Productos filtrados
+  const filtered = useMemo(() => {
+    return PRODUCTS.filter((p) => {
+      if (category !== 'todos' && p.category !== category) return false
+      if (effectiveSize !== 'todos') {
+        const w = p.size.split('x')[0]
+        if (w !== effectiveSize) return false
       }
-    ]
+      return true
+    })
+  }, [category, effectiveSize])
+
+  // Labels de tamaño
+  const sizeLabels: Record<string, string> = {
+    '80': '80cm · 1 plaza',
+    '90': '90cm · 1½',
+    '100': '100cm · 2 plazas',
+    '130': '130cm',
+    '140': '140cm · Matrimonial',
+    '160': '160cm · Queen',
+    '180': '180cm · King',
+    '200': '200cm · Super King',
   }
-}
 
-// ============================================================================
-// ICONOS INLINE SVG (optimizados)
-// ============================================================================
-
-const Icons = {
-  Sparkles: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-    </svg>
-  ),
-  Zap: ({ className = "w-8 h-8" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-    </svg>
-  ),
-  Package: ({ className = "w-5 h-5" }: { className?: string }) => (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-    </svg>
-  ),
-}
-
-// ============================================================================
-// LOADING SKELETON - OPTIMIZADO
-// ============================================================================
-
-function CatalogoLoading() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 overflow-x-hidden">
-      {/* Background effects - SOLO DESKTOP */}
-      <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
-      <div className="hidden md:block absolute inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" aria-hidden="true" />
+    <div className="min-h-screen bg-zinc-950">
 
-      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 pt-20 sm:pt-24 md:pt-32 pb-12 sm:pb-16 md:pb-24">
-        {/* Header Section */}
-        <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 rounded-full mb-4 sm:mb-5 md:mb-6 lg:mb-8 animate-pulse backdrop-blur-sm">
-            <Icons.Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-400 flex-shrink-0" />
-            <span className="text-[10px] sm:text-xs md:text-sm font-bold text-blue-300">
-              Cargando catálogo premium...
-            </span>
+      {/* ─── FILTROS ─────────────────────────────────────────────────────── */}
+      <div className="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800">
+        <div className="max-w-7xl mx-auto px-4 py-3 space-y-2.5">
+
+          {/* Categorías */}
+          <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+            {(['todos', 'colchones', 'sommiers', 'accesorios'] as Category[]).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => { setCategory(cat); setSize('todos') }}
+                className={[
+                  'flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200',
+                  category === cat
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700',
+                ].join(' ')}
+              >
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                <span className="ml-1.5 text-xs opacity-60">({categoryCounts[cat] || 0})</span>
+              </button>
+            ))}
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-2 sm:mb-3 md:mb-4 leading-tight">
-            Nuestros{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
-              Colchones
-            </span>
-          </h1>
-          
-          <p className="text-zinc-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
-            Villa María, Córdoba 🇦🇷
-          </p>
-        </div>
-
-        {/* Skeleton Grid */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="w-full animate-pulse">
-              <div className="w-full bg-white/5 border border-blue-500/20 rounded-2xl md:rounded-3xl overflow-hidden shadow-xl backdrop-blur-sm">
-                <div className="w-full aspect-square bg-gradient-to-br from-blue-500/10 to-cyan-500/10 relative">
-                  <div className="absolute top-3 left-3 right-3 flex justify-between">
-                    <div className="h-6 w-20 bg-blue-500/20 rounded-lg" />
-                    <div className="h-6 w-6 bg-blue-500/20 rounded-lg" />
-                  </div>
-                </div>
-                
-                <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                  <div className="space-y-2">
-                    <div className="h-5 sm:h-6 bg-blue-500/20 rounded-lg w-3/4" />
-                    <div className="h-3 sm:h-4 bg-blue-500/10 rounded w-1/2" />
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 sm:h-10 bg-blue-500/20 rounded-lg w-24" />
-                    <div className="h-6 sm:h-8 bg-blue-500/10 rounded w-16" />
-                  </div>
-                  
-                  <div className="pt-2">
-                    <div className="h-12 sm:h-14 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-xl w-full" />
-                  </div>
-                </div>
-              </div>
+          {/* Tamaños — solo si hay tamaños disponibles */}
+          {availableSizes.length > 0 && (
+            <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+              <button
+                onClick={() => setSize('todos')}
+                className={[
+                  'flex-shrink-0 px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200',
+                  effectiveSize === 'todos'
+                    ? 'bg-zinc-700 text-white'
+                    : 'text-zinc-500 hover:text-zinc-300',
+                ].join(' ')}
+              >
+                Todos
+              </button>
+              {availableSizes.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setSize(s as Size)}
+                  className={[
+                    'flex-shrink-0 px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200 whitespace-nowrap',
+                    effectiveSize === s
+                      ? 'bg-zinc-700 text-white'
+                      : 'text-zinc-500 hover:text-zinc-300',
+                  ].join(' ')}
+                >
+                  {sizeLabels[s] || s}
+                </button>
+              ))}
             </div>
+          )}
+        </div>
+      </div>
+
+      {/* ─── GRID ────────────────────────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
+
+        {/* Contador resultados */}
+        <p className="text-xs text-zinc-600 mb-4">
+          {filtered.length} producto{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
+        </p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+          {filtered.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        {/* Loading indicator */}
-        <div className="flex items-center justify-center gap-2 mt-10 sm:mt-12 text-blue-400">
-          <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+        {/* Empty state */}
+        {filtered.length === 0 && (
+          <div className="text-center py-24">
+            <p className="text-zinc-600 text-sm">No hay productos con ese filtro.</p>
+            <button
+              onClick={() => { setCategory('todos'); setSize('todos') }}
+              className="mt-3 text-blue-400 text-sm hover:text-blue-300 transition-colors"
+            >
+              Limpiar filtros
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* ─── CONDICIONES DE VENTA ────────────────────────────────────────── */}
+      <div className="border-t border-zinc-800 mt-4">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <h3 className="text-sm font-semibold text-zinc-400 mb-3">Condiciones de venta · Febrero 2026</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            {[
+              { label: 'Contado / Transferencia', detail: 'Sin recargo' },
+              { label: 'Débito y Crédito 1 pago', detail: 'Sin recargo' },
+              { label: '3 cuotas', detail: '+18%' },
+              { label: '6 cuotas', detail: '+27%' },
+              { label: '9 cuotas', detail: '+38%' },
+              { label: '12 cuotas', detail: '+52%' },
+            ].map((item, i) => (
+              <div key={i} className="bg-zinc-900 rounded-lg px-3 py-2.5">
+                <p className="text-xs text-zinc-300 font-medium">{item.label}</p>
+                <p className={`text-xs mt-0.5 ${item.detail === 'Sin recargo' ? 'text-green-400' : 'text-zinc-500'}`}>
+                  {item.detail}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* ─── FOOTER ──────────────────────────────────────────────────────── */}
+      <footer className="border-t border-zinc-800 py-5 mt-2">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-600">
+          <span>© 2025 Azul Colchones · Balerdi 855, Villa María, Córdoba</span>
+          <span>+35 años de experiencia</span>
+        </div>
+      </footer>
     </div>
   )
 }
 
 // ============================================================================
-// EMPTY STATE - OPTIMIZADO
+// PRODUCT CARD
 // ============================================================================
 
-function EmptyState() {
+function ProductCard({ product }: { product: Product }) {
+  const isLow = product.stock <= 2
+  const isHighStock = product.stock >= 6
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center relative overflow-x-hidden">
-      <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
-      <div className="hidden md:block absolute inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" aria-hidden="true" />
-      
-      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 relative z-10">
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 mb-6 sm:mb-8 shadow-2xl shadow-blue-500/50">
-            <Icons.Zap className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-          </div>
-          
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3 sm:mb-4 leading-tight">
-            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
-              Catálogo en construcción
-            </span>
-          </h1>
-          
-          <p className="text-zinc-400 text-base sm:text-lg mb-6 sm:mb-8 max-w-md mx-auto leading-relaxed">
-            Estamos preparando nuestra colección premium de colchones. Volvé pronto.
-          </p>
-          
-          <div className="w-full max-w-md mx-auto bg-white/5 border border-blue-500/20 rounded-2xl p-4 sm:p-6 backdrop-blur-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <Icons.Package className="w-5 h-5 text-blue-400 flex-shrink-0" />
-              <p className="text-zinc-300 text-sm font-bold">
-                💡 Desarrolladores: Ejecutá el seed
-              </p>
-            </div>
-            <code className="text-blue-400 font-mono text-xs sm:text-sm break-all block bg-zinc-900/50 p-3 rounded-lg border border-blue-500/20">
-              npm run db:seed
-            </code>
-          </div>
+    <div className="group bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-600 transition-all duration-200">
 
-          <div className="mt-8 p-4 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl backdrop-blur-sm max-w-sm mx-auto">
-            <p className="text-zinc-400 text-sm">
-              📍 <span className="text-white font-semibold">Villa María, Córdoba</span> 🇦🇷
-            </p>
+      {/* Imagen o placeholder */}
+      <div className="relative bg-zinc-800 aspect-square overflow-hidden">
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <svg className="w-12 h-12 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {product.category === 'sommiers' ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm4-2V2m8 2V2M4 10h16" />
+              ) : product.sizeLabel === 'Almohada' || product.sizeLabel === 'Almohada King' ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 6h12v6a6 6 0 01-12 0V6z" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7h18v10a3 3 0 01-3 3H6a3 3 0 01-3-3V7zm0 4h18M3 7a3 3 0 013-3h12a3 3 0 013 3" />
+              )}
+            </svg>
           </div>
+        )}
+
+        {/* Tag */}
+        {product.tag && (
+          <span className="absolute top-2 left-2 px-2 py-0.5 bg-zinc-950/80 border border-zinc-700 rounded-md text-[10px] font-semibold text-zinc-300">
+            {product.tag}
+          </span>
+        )}
+
+        {/* Stock bajo */}
+        {isLow && (
+          <span className="absolute bottom-2 right-2 px-2 py-0.5 bg-amber-500/15 border border-amber-500/30 rounded-md text-[10px] font-semibold text-amber-400">
+            ¡Solo {product.stock}!
+          </span>
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="p-3">
+        <p className="text-xs text-zinc-500 mb-0.5">{product.sizeLabel} · {product.size !== '—' ? product.size : ''}</p>
+        <h3 className="text-sm font-bold text-white leading-tight truncate">{product.name}</h3>
+        <p className="text-[11px] text-zinc-600 mt-0.5 line-clamp-2">{product.description}</p>
+
+        {/* precio */}
+        <div className="mt-2.5 flex items-center justify-between">
+          <span className="text-base font-bold text-white">{formatPrice(product.price)}</span>
+          {isHighStock && (
+            <span className="text-[10px] text-green-500 font-medium">Stock disponible</span>
+          )}
         </div>
       </div>
     </div>
   )
-}
-
-// ============================================================================
-// ✅ FUNCIÓN DE ORDENAMIENTO PERSONALIZADO
-// ============================================================================
-function sortProducts(products: any[]): any[] {
-  return [...products].sort((a, b) => {
-    // 1️⃣ PRIORIDAD MÁXIMA: Colchones Piero
-    const aIsPiero = a.name.toLowerCase().includes('piero')
-    const bIsPiero = b.name.toLowerCase().includes('piero')
-    
-    if (aIsPiero && !bIsPiero) return -1
-    if (!aIsPiero && bIsPiero) return 1
-    
-    // 2️⃣ SEGUNDA PRIORIDAD: Otros colchones (excepto cuna)
-    const aIsColchon = (
-      a.name.toLowerCase().includes('colchón') || 
-      a.name.toLowerCase().includes('colchon')
-    ) && !a.name.toLowerCase().includes('cuna')
-    
-    const bIsColchon = (
-      b.name.toLowerCase().includes('colchón') || 
-      b.name.toLowerCase().includes('colchon')
-    ) && !b.name.toLowerCase().includes('cuna')
-    
-    if (aIsColchon && !bIsColchon) return -1
-    if (!aIsColchon && bIsColchon) return 1
-    
-    // 3️⃣ TERCERA PRIORIDAD: Stock total disponible
-    const aStock = a.variants?.reduce((sum: number, v: any) => sum + (v.stock || 0), 0) || 0
-    const bStock = b.variants?.reduce((sum: number, v: any) => sum + (v.stock || 0), 0) || 0
-    
-    if (aStock !== bStock) return bStock - aStock
-    
-    // 4️⃣ ÚLTIMA PRIORIDAD: Orden alfabético
-    return a.name.localeCompare(b.name, 'es')
-  })
-}
-
-// ============================================================================
-// MAIN PAGE COMPONENT - ULTRA OPTIMIZED ⚡
-// ============================================================================
-
-export default async function CatalogoPage() {
-  try {
-    // ✅ Fetch products from API (with error handling)
-    const { data: products, total } = await getProducts().catch(() => ({ data: [], total: 0 }))
-
-    // Handle empty state
-    if (!products || products.length === 0) {
-      return <EmptyState />
-    }
-
-    // ✅ ORDENAR PRODUCTOS ANTES DE CONVERTIR PRECIOS
-    const sortedProducts = sortProducts(products)
-
-    // ✅ CONVERSIÓN OPTIMIZADA DE PRECIOS
-    const productsWithPrices: NormalizedProduct[] = sortedProducts.map((product: any) => ({
-      ...product,
-      // Convert product prices
-      price: centavosToARS(product.price),
-      originalPrice: product.originalPrice ? centavosToARS(product.originalPrice) : null,
-      compareAtPrice: product.compareAtPrice ? centavosToARS(product.compareAtPrice) : null,
-      shippingCost: centavosToARS(product.shippingCost || 0),
-      
-      // Convert variant prices if exist
-      ...(product.variants?.length > 0 && {
-        variants: product.variants.map((variant: any) => ({
-          ...variant,
-          price: centavosToARS(variant.price),
-          originalPrice: variant.originalPrice ? centavosToARS(variant.originalPrice) : null,
-        }))
-      })
-    }))
-
-    return (
-      <>
-        {/* ✅ STRUCTURED DATA - SEO */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(catalogStructuredData)
-          }}
-        />
-
-        {/* ✅ PRODUCT LIST STRUCTURED DATA */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'ItemList',
-              numberOfItems: productsWithPrices.length,
-              itemListElement: productsWithPrices.slice(0, 10).map((product, index) => ({
-                '@type': 'ListItem',
-                position: index + 1,
-                item: {
-                  '@type': 'Product',
-                  name: product.name,
-                  description: product.description,
-                  image: product.images?.[0] || `${BASE_URL}/placeholder.jpg`,
-                  url: `${BASE_URL}/producto/${product.slug}`,
-                  offers: {
-                    '@type': 'Offer',
-                    price: product.price,
-                    priceCurrency: 'ARS',
-                    availability: 'https://schema.org/InStock',
-                    seller: {
-                      '@type': 'Organization',
-                      name: 'Azul Colchones'
-                    }
-                  }
-                }
-              }))
-            })
-          }}
-        />
-
-        <Suspense fallback={<CatalogoLoading />}>
-          <CatalogoClient 
-            initialProducts={productsWithPrices}
-            totalProducts={total}
-          />
-        </Suspense>
-      </>
-    )
-  } catch (error) {
-    // ✅ ERROR HANDLING
-    console.error('❌ [CATALOG] Error loading catalog:', error)
-    
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center overflow-x-hidden">
-        <div className="w-full max-w-md mx-auto px-4 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-red-500/10 border border-red-500/20 mb-6">
-            <Icons.Zap className="w-8 h-8 text-red-400" />
-          </div>
-          
-          <h1 className="text-2xl md:text-3xl font-black text-white mb-3">
-            Error al cargar el catálogo
-          </h1>
-          
-          <p className="text-zinc-400 text-sm md:text-base mb-6">
-            Ocurrió un problema al cargar los productos. Por favor, intentá nuevamente.
-          </p>
-          
-          <button
-            onClick={() => window.location.reload()}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white rounded-xl font-bold text-sm transition-all hover:scale-105 active:scale-95"
-          >
-            Reintentar
-          </button>
-        </div>
-      </div>
-    )
-  }
 }

@@ -9,7 +9,6 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import Header from '../components/sections/Header'
 import Footer from '../components/sections/Footer'
-import WhatsAppButton from '../components/WhatsAppButton'
 import { AuthProvider } from '@/lib/context/AuthContext'
 import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from '@next/third-parties/google'
@@ -657,13 +656,6 @@ export default function RootLayout({
           </main>
           
           <Footer />
-
-          <WhatsAppButton 
-            phoneNumber="+54 9 3534 09-6566"
-            message="¡Hola! Me interesa consultar por colchones Piero. ¿Podrían asesorarme sobre Outlet vs Piero Fábrica?"
-            position="right"
-            showTooltip={true}
-          />
         </AuthProvider>
 
         <Analytics />
