@@ -1,26 +1,25 @@
-# Robots.txt optimizado para Tienda de Colchones
-# https://www.tiendacolchon.es/robots.txt
+# Robots.txt – Azul Colchones Villa María
+# https://azulcolchones.com/robots.txt
 
 # ============================================
-# ACCESO COMPLETO PARA TODOS LOS BOTS
+# ACCESO GENERAL
 # ============================================
 User-agent: *
 Allow: /
 
 # ============================================
-# BLOQUEAR RUTAS PRIVADAS/ADMIN
+# BLOQUEO DE RUTAS NO INDEXABLES
 # ============================================
 Disallow: /api/
 Disallow: /admin/
 Disallow: /dashboard/
-Disallow: /_next/
 Disallow: /carrito/
 Disallow: /checkout/
 Disallow: /cuenta/
 Disallow: /perfil/
 
 # ============================================
-# BLOQUEAR PARÁMETROS DE BÚSQUEDA
+# BLOQUEO DE PARÁMETROS INÚTILES (SEO CLEAN)
 # ============================================
 Disallow: /*?*utm_*
 Disallow: /*?*ref=*
@@ -29,31 +28,25 @@ Disallow: /*?sort=*
 Disallow: /*?filter=*
 
 # ============================================
-# BOTS ESPECÍFICOS - OPTIMIZACIÓN
+# GOOGLE
 # ============================================
-
-# Google Bot - Acceso completo
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 0
 
-# Google Image Bot
 User-agent: Googlebot-Image
 Allow: /
 Disallow: /admin/
 
-# Bing Bot
+# ============================================
+# BING
+# ============================================
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
 # ============================================
-# SITEMAP PRINCIPAL
+# SITEMAP
 # ============================================
-Sitemap: https://www.tiendacolchon.es/sitemap.xml
+Sitemap: https://azulcolchones.com/sitemap.xml
 
-# ============================================
-# INFORMACIÓN ADICIONAL
-# ============================================
-# Última actualización: Octubre 2025
-# Contacto: seo@tiendacolchon.es
+# Última actualización: Febrero 2026
