@@ -43,7 +43,7 @@ function HeroMinimal() {
         
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight tracking-tight">
           Colchones PIERO
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500"> Directo de Fábrica</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500"> Distribuidor Oficial</span>
         </h1>
         
         <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-6">
@@ -228,7 +228,7 @@ function Footer() {
   return (
     <footer className="bg-zinc-950 border-t border-zinc-800 py-5">
       <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-600">
-        <span>© 2025 Colchones PIERO Fábrica · Villa María, Córdoba</span>
+        <span>© 2026 Colchones PIERO Fábrica · Villa María, Córdoba</span>
         <span>+35 años de experiencia · Garantía de mejor precio</span>
       </div>
     </footer>
