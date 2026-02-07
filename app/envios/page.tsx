@@ -1,6 +1,6 @@
 // app/envios/page.tsx - ULTRA OPTIMIZED ⚡
 import { Metadata } from 'next'
-import { Truck, MapPin, Clock, Package, CheckCircle, AlertTriangle, Plane, Calendar } from 'lucide-react'
+import { Truck, MapPin, Clock, Package, CheckCircle, AlertTriangle, Plane, Calendar, DollarSign } from 'lucide-react'
 
 // ============================================================================
 // METADATA - SEO EXHAUSTIVO 🎯
@@ -10,7 +10,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://azulcolchones.com'
 
 export const metadata: Metadata = {
   title: 'Envíos y Entregas | Envío Gratis Villa María | Azul Colchones',
-  description: '🚚 Envío GRATIS en Villa María 24-48hs. ✅ Entrega rápida ✅ Seguimiento incluido ✅ Entrega a domicilio ✅ Fabricación bajo pedido. Consulta zonas y plazos de envío.',
+  description: '🚚 Envío GRATIS en Villa María 24-48hs. ✅ Cotización inmediata para Córdoba y CABA ✅ Seguimiento incluido ✅ Entrega a domicilio ✅ Fabricación bajo pedido.',
   
   keywords: [
     // === CORE ===
@@ -23,12 +23,14 @@ export const metadata: Metadata = {
     'envío gratis villa maría',
     'entrega colchones villa maría',
     'envío córdoba',
+    'envío córdoba capital',
+    'envío CABA',
     'entrega rápida villa maría',
     
     // === ZONAS ===
-    'envío colchones argentina',
-    'entrega interior país',
-    'zonas de envío',
+    'envío colchones córdoba provincia',
+    'envío colchones buenos aires',
+    'cotización envío colchones',
     
     // === TIEMPO ===
     'entrega 24 horas',
@@ -51,7 +53,7 @@ export const metadata: Metadata = {
   
   openGraph: {
     title: '🚚 Envíos y Entregas | Envío Gratis Villa María',
-    description: 'Envío GRATIS 24-48hs | Seguimiento incluido | Entrega a domicilio',
+    description: 'Envío GRATIS 24-48hs en Villa María | Cotización inmediata | Entrega a domicilio',
     type: 'website',
     locale: 'es_AR',
     url: `${BASE_URL}/envios`,
@@ -91,7 +93,7 @@ const shippingStructuredData = {
   about: {
     '@type': 'Service',
     name: 'Servicio de Envío',
-    description: 'Envío gratis en Villa María y zonas cercanas'
+    description: 'Envío gratis en Villa María y cotización inmediata para otras zonas'
   },
   provider: {
     '@type': 'LocalBusiness',
@@ -105,10 +107,16 @@ const shippingStructuredData = {
       addressCountry: 'AR'
     },
     telephone: '+54 9 3534 09-6566',
-    areaServed: {
-      '@type': 'City',
-      name: 'Villa María'
-    }
+    areaServed: [
+      {
+        '@type': 'City',
+        name: 'Villa María'
+      },
+      {
+        '@type': 'State',
+        name: 'Córdoba'
+      }
+    ]
   }
 }
 
@@ -124,37 +132,41 @@ interface ShippingZone {
   color: string
   highlight?: boolean
   note?: string
+  badge?: string
 }
 
 const SHIPPING_ZONES: ShippingZone[] = [
   {
-    zone: 'Villa María y alrededores',
+    zone: 'Villa María',
     icon: MapPin,
     price: 'GRATIS',
     days: '24-48 horas',
     color: 'emerald',
-    highlight: true
+    highlight: true,
+    badge: 'Envío Gratis'
+  },
+  {
+    zone: 'Córdoba Provincia',
+    icon: MapPin,
+    price: 'Cotizamos',
+    days: 'Respuesta inmediata',
+    color: 'blue',
+    note: 'Te cotizamos en el día'
   },
   {
     zone: 'Córdoba Capital',
     icon: MapPin,
-    price: 'GRATIS',
-    days: '2-3 días',
-    color: 'cyan'
+    price: 'Cotizamos',
+    days: 'Respuesta inmediata',
+    color: 'cyan',
+    note: 'Te cotizamos en el día'
   },
   {
-    zone: 'Interior Córdoba',
-    icon: MapPin,
-    price: 'Consultar',
-    days: '3-5 días',
-    color: 'blue'
-  },
-  {
-    zone: 'Resto del País',
+    zone: 'CABA',
     icon: Plane,
-    price: 'Consultar',
-    days: '5-10 días',
-    note: 'Según distancia y zona',
+    price: 'Cotizamos',
+    days: 'Respuesta inmediata',
+    note: 'Te cotizamos en el día',
     color: 'violet'
   }
 ]
@@ -221,7 +233,7 @@ export default function EnviosPage() {
             <h1 className="text-4xl md:text-6xl font-black text-white mb-4 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
               Envíos y Entregas
             </h1>
-            <p className="text-zinc-400 text-lg">Envío gratis en Villa María y alrededores</p>
+            <p className="text-zinc-400 text-lg">Envío gratis en Villa María • Cotización inmediata para otras zonas</p>
           </header>
 
           {/* Important Alert */}
@@ -252,9 +264,9 @@ export default function EnviosPage() {
                       : 'border-white/10'
                   } rounded-2xl p-6 hover:border-${zone.color}-500/30 transition-all text-center relative`}
                 >
-                  {zone.highlight && (
+                  {zone.badge && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                      Más Popular
+                      {zone.badge}
                     </div>
                   )}
                   
@@ -279,6 +291,21 @@ export default function EnviosPage() {
                   )}
                 </article>
               ))}
+            </div>
+
+            {/* Cotización Info */}
+            <div className="mt-8 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-2xl p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <DollarSign className="w-6 h-6 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-2">Cotización de Envíos</h3>
+                  <p className="text-sm text-zinc-300 leading-relaxed">
+                    Para Córdoba Provincia, Córdoba Capital y CABA, <strong className="text-white">te cotizamos el envío el mismo día</strong> que nos consultes. Envianos tu dirección exacta por WhatsApp o email y recibirás el presupuesto de envío de inmediato.
+                  </p>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -365,9 +392,9 @@ export default function EnviosPage() {
 
           {/* CTA */}
           <section className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-2xl p-8 text-center">
-            <h2 className="text-2xl font-bold text-white mb-4">¿Tienes dudas sobre tu envío?</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">¿Necesitas cotizar tu envío?</h2>
             <p className="text-zinc-300 mb-6">
-              Estamos aquí para ayudarte con cualquier consulta
+              Contáctanos y te respondemos en el día con el costo exacto de envío a tu zona
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a 
@@ -378,8 +405,8 @@ export default function EnviosPage() {
                 hola@azulcolchones.com
               </a>
               <a 
-                href="tel:+54 9 3534 09-6566"
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-500 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg"
+                href="tel:+5493534096566"
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg"
               >
                 <Truck className="w-5 h-5" />
                 +54 9 3534 09-6566
