@@ -1,7 +1,6 @@
 // app/layout.tsx - ULTRA OPTIMIZED ⚡ DUAL STRATEGY - Azul Colchones
 // SEO Level: SENIOR | Performance: A+ | Strategy: Outlet + Fábrica
 // ✅ META PIXEL INTEGRADO - ID: 521139968588985
-// ✅ TIKTOK PIXEL INTEGRADO - ID: D6556FJC77U9LKO4VEE0
 // ✅ VERCEL ANALYTICS INTEGRADO
 // ✅ GOOGLE ANALYTICS 4 INTEGRADO - ID: G-FTXRWHED3X
 
@@ -14,7 +13,6 @@ import { AuthProvider } from '@/lib/context/AuthContext'
 import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from '@next/third-parties/google'
 import MetaPixel from '@/components/MetaPixel'
-import TikTokPixel from '@/components/TikTokPixel'
 
 // ============================================================================
 // FONTS - ULTRA OPTIMIZED ⚡
@@ -536,16 +534,13 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* DNS Prefetch - Performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://analytics.tiktok.com" />
         <link rel="dns-prefetch" href="https://www.mercadopago.com" />
         
-        {/* Preload Critical Images */}
         <link 
           rel="preload" 
           href="/images/hero-colchon.webp" 
@@ -555,7 +550,6 @@ export default function RootLayout({
           media="(min-width: 768px)"
         />
         
-        {/* Animated Favicon Script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -615,7 +609,6 @@ export default function RootLayout({
           }}
         />
         
-        {/* Structured Data - JSON-LD */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -641,11 +634,8 @@ export default function RootLayout({
           textRendering: 'optimizeLegibility'
         }}
       >
-        {/* Pixels de Tracking */}
         <MetaPixel />
-        <TikTokPixel />
         
-        {/* Skip to Main Content - Accessibility */}
         <a 
           href="#main-content" 
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-blue-600 focus:text-white focus:rounded-xl focus:font-semibold focus:shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-zinc-950 transition-all duration-200"
@@ -668,7 +658,6 @@ export default function RootLayout({
           <Footer />
         </AuthProvider>
 
-        {/* Analytics */}
         <Analytics />
         <GoogleAnalytics gaId="G-BTPV00LG0N" />
       </body>
