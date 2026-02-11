@@ -265,7 +265,7 @@ export default function Header() {
               <Link href="/piero-fabrica" className={`relative px-5 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${isActivePieroFabrica ? 'text-white bg-gradient-to-r from-blue-600/90 to-blue-500/90 shadow-lg shadow-blue-500/20' : 'text-zinc-300 hover:text-white hover:bg-zinc-800/70'}`}>
                 <Icons.Tag className="w-4 h-4" />
                 <span>Piero Fábrica</span>
-                <span className="text-[11px] font-bold text-emerald-300">Hasta 22% OFF</span>
+                <span className="text-[11px] font-bold text-emerald-300">Hasta 49% OFF</span>
               </Link>
               
               <DesktopInfoDropdown />
