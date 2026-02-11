@@ -108,7 +108,7 @@ const BrandLogo = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) 
         <div className="flex flex-col">
           <div className="flex items-baseline gap-0.5">
             <span className={`font-black leading-none text-white ${isDesktop ? 'text-xl' : 'text-lg'}`}>AZUL</span>
-            <span className={`font-light leading-none text-blue-400 ${isDesktop ? 'text-xl' : 'text-lg'}`}>colchones</span>
+            <span className={`font-light leading-none text-blue-400 ${isDesktop ? 'text-xl' : 'text-lg'}`}>Colchones</span>
           </div>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide">{CONFIG.location}</span>
