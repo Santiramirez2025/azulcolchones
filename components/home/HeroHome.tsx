@@ -51,59 +51,36 @@ export default function HeroHome() {
           {/* Separador visual sutil */}
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent"></div>
-            <span className="text-xs font-bold text-zinc-600 uppercase tracking-wider">O explorá nuestro catálogo</span>
+            <span className="text-xs font-bold text-zinc-600 uppercase tracking-wider">O mirá el catálogo completo</span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent"></div>
           </div>
 
-          {/* CTAs secundarios - Discretos */}
-          <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-            
-            {/* Stock Inmediato */}
-            <Link 
-              href="/stock-inmediato"
-              className="group relative bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl p-6 transition-all"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg">Stock Inmediato</h3>
-                    <p className="text-green-400 text-sm font-semibold">Entrega hoy</p>
-                  </div>
-                </div>
-              </div>
-              <p className="text-sm text-zinc-500">
-                Llevátelo ahora mismo o envío en el día
-              </p>
-            </Link>
-
-            {/* Piero Fábrica */}
+          {/* CTA Piero Fábrica - Centrado */}
+          <div className="max-w-lg mx-auto">
             <Link 
               href="/piero-fabrica"
-              className="group relative bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 hover:border-emerald-600/30 rounded-xl p-6 transition-all"
+              className="group relative block bg-gradient-to-br from-emerald-600/90 to-emerald-500/80 hover:from-emerald-500 hover:to-emerald-600 border border-emerald-400/20 rounded-xl p-6 transition-all hover:scale-[1.02] shadow-xl shadow-emerald-500/20"
             >
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center">
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg">Piero Fábrica</h3>
-                    <p className="text-emerald-400 text-sm font-semibold">Hasta 22% OFF</p>
+                    <h3 className="text-white font-black text-xl">Piero Fábrica</h3>
+                    <p className="text-emerald-100 text-sm font-bold">Hasta 22% OFF</p>
                   </div>
                 </div>
+                <svg className="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
-              <p className="text-sm text-zinc-500">
-                Directo de fábrica • 7-10 días de espera
+              <p className="text-sm text-emerald-50">
+                Directo de fábrica • 7-10 días de espera • Garantía oficial
               </p>
             </Link>
-
           </div>
 
           {/* WhatsApp flotante discreto */}
