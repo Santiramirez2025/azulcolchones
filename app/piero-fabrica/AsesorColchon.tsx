@@ -153,7 +153,7 @@ export default function AsesorColchon() {
           
           <div className="flex-1 text-center sm:text-left">
             <h3 className="text-lg md:text-xl font-bold text-white mb-2">
-              ¿No sabés qué colchón elegir?
+            👋 HOLA, SOY TU ASESOR PERSONAL DE COLCHONES 
             </h3>
             <p className="text-sm md:text-base text-zinc-400 mb-4 leading-relaxed">
               <strong className="text-blue-300">Respondé 3 preguntas</strong> y encontrá tu colchón ideal en <strong className="text-white">30 segundos</strong>
