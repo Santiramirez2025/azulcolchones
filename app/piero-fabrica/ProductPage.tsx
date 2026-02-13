@@ -3,12 +3,18 @@
 import { useState, useCallback, useMemo } from 'react'
 import { trackSearch } from '@/lib/pixel'
 import { PRODUCTOS } from '@/data/productos'
-import { filtrarProductos, enrichProductWithSavings, type FiltroTamaño } from '@/lib/producto-utils'
+import { 
+  filtrarProductos, 
+  enrichProductWithSavings, 
+  contarProductosPorFiltro,
+  type FiltroTamaño 
+} from '@/lib/producto-utils'
 import ProductFilters from './ProductFilters'
 import ProductGrid from './ProductosGrid'
 
 export default function ProductosPage() {
   const [filtroActivo, setFiltroActivo] = useState<FiltroTamaño>('todos')
+  const [searchQuery, setSearchQuery] = useState('')
 
   // ========== ENRIQUECER PRODUCTOS CON AHORRO ==========
   const productosEnriquecidos = useMemo(() => {
@@ -17,8 +23,8 @@ export default function ProductosPage() {
 
   // ========== FILTRAR PRODUCTOS ==========
   const productosFiltrados = useMemo(() => {
-    return filtrarProductos(productosEnriquecidos, filtroActivo)
-  }, [productosEnriquecidos, filtroActivo])
+    return filtrarProductos(productosEnriquecidos, filtroActivo, searchQuery)
+  }, [productosEnriquecidos, filtroActivo, searchQuery])
 
   // ========== HANDLER DE FILTROS ==========
   const handleFiltroChange = useCallback(
@@ -28,9 +34,12 @@ export default function ProductosPage() {
       const filterLabels: Record<FiltroTamaño, string> = {
         todos: 'Todos los productos',
         plaza: '1 Plaza',
-        'plaza-media': '1½ Plaza / 2 Plazas',
+        'plaza-media': '1½ Plaza',
+        'dos-plazas': '2 Plazas',
         queen: 'Queen',
         king: 'King',
+        sommiers: 'Sommiers',
+        almohadas: 'Almohadas',
         accesorios: 'Accesorios'
       }
 
@@ -39,17 +48,68 @@ export default function ProductosPage() {
     [productosFiltrados.length]
   )
 
+  // ========== HANDLER DE BÚSQUEDA ==========
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query)
+    
+    if (query.trim() !== '') {
+      trackSearch(query, productosFiltrados.length)
+    }
+  }, [productosFiltrados.length])
+
   // ========== CONFIGURACIÓN DE FILTROS ==========
   const filtros = useMemo(
     () => [
-      { id: 'todos' as FiltroTamaño, label: 'Todos', count: productosEnriquecidos.length },
-      { id: 'plaza' as FiltroTamaño, label: '1 Plaza', count: null },
-      { id: 'plaza-media' as FiltroTamaño, label: '1½ Plaza', count: null },
-      { id: 'queen' as FiltroTamaño, label: 'Queen', count: null },
-      { id: 'king' as FiltroTamaño, label: 'King', count: null },
-      { id: 'accesorios' as FiltroTamaño, label: '💎 Accesorios', count: null }
+      { 
+        id: 'todos' as FiltroTamaño, 
+        label: 'Todos', 
+        count: productosEnriquecidos.length 
+      },
+      { 
+        id: 'plaza' as FiltroTamaño, 
+        label: '1 Plaza', 
+        count: contarProductosPorFiltro(productosEnriquecidos, 'plaza')
+      },
+      { 
+        id: 'plaza-media' as FiltroTamaño, 
+        label: '1½ Plaza', 
+        count: contarProductosPorFiltro(productosEnriquecidos, 'plaza-media')
+      },
+      { 
+        id: 'dos-plazas' as FiltroTamaño, 
+        label: '2 Plazas', 
+        count: contarProductosPorFiltro(productosEnriquecidos, 'dos-plazas')
+      },
+      { 
+        id: 'queen' as FiltroTamaño, 
+        label: 'Queen', 
+        count: contarProductosPorFiltro(productosEnriquecidos, 'queen')
+      },
+      { 
+        id: 'king' as FiltroTamaño, 
+        label: 'King', 
+        count: contarProductosPorFiltro(productosEnriquecidos, 'king')
+      },
+      { 
+        id: 'sommiers' as FiltroTamaño, 
+        label: 'Sommiers',
+        emoji: '📦',
+        count: contarProductosPorFiltro(productosEnriquecidos, 'sommiers')
+      },
+      { 
+        id: 'almohadas' as FiltroTamaño, 
+        label: 'Almohadas',
+        emoji: '💤',
+        count: contarProductosPorFiltro(productosEnriquecidos, 'almohadas')
+      },
+      { 
+        id: 'accesorios' as FiltroTamaño, 
+        label: 'Accesorios',
+        emoji: '✨',
+        count: contarProductosPorFiltro(productosEnriquecidos, 'accesorios')
+      }
     ],
-    [productosEnriquecidos.length]
+    [productosEnriquecidos]
   )
 
   return (
@@ -91,11 +151,14 @@ export default function ProductosPage() {
           </p>
         </header>
 
-        {/* Filtros */}
+        {/* Filtros y Buscador */}
         <ProductFilters
           filtros={filtros}
           filtroActivo={filtroActivo}
           onFiltroChange={handleFiltroChange}
+          onSearchChange={handleSearchChange}
+          searchQuery={searchQuery}
+          totalProductos={productosFiltrados.length}
         />
 
         {/* Grid de Productos */}

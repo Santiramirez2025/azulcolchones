@@ -1,93 +1,188 @@
-import { Producto } from '@/data/productos'
+// lib/producto-utils.ts
+import { Producto, StockStatus } from '@/data/productos'
 
 // ============================================================================
-// HELPERS DE CÁLCULO
+// TIPOS DE FILTROS
 // ============================================================================
 
-export function calcularAhorro(precioML: number, precioFabrica: number): {
-  ahorro: number
-  ahorroPorc: number
-} {
-  const ahorro = precioML - precioFabrica
-  const ahorroPorc = Math.round((ahorro / precioML) * 100)
-  return { ahorro, ahorroPorc }
-}
+export type FiltroTamaño = 
+  | 'todos' 
+  | 'plaza' 
+  | 'plaza-media' 
+  | 'dos-plazas'
+  | 'queen' 
+  | 'king' 
+  | 'sommiers'
+  | 'almohadas'
+  | 'accesorios'
+
+// ============================================================================
+// ENRIQUECER PRODUCTOS CON AHORRO
+// ============================================================================
 
 export function enrichProductWithSavings(producto: Producto): Producto {
-  if (producto.precioMercadoLibre) {
-    const { ahorro, ahorroPorc } = calcularAhorro(
-      producto.precioMercadoLibre,
-      producto.precioPublico
-    )
-    return { ...producto, ahorro, ahorroPorc }
+  if (!producto.precioMercadoLibre) {
+    return { ...producto, ahorro: undefined, ahorroPorc: undefined }
   }
-  return producto
+
+  const ahorro = producto.precioMercadoLibre - producto.precioPublico
+  const ahorroPorc = Math.round((ahorro / producto.precioMercadoLibre) * 100)
+
+  return {
+    ...producto,
+    ahorro,
+    ahorroPorc
+  }
 }
 
 // ============================================================================
-// HELPERS DE FILTRADO
+// DETECTAR TAMAÑO DEL PRODUCTO
 // ============================================================================
 
-export type FiltroTamaño = 'todos' | 'plaza' | 'plaza-media' | 'queen' | 'king' | 'accesorios'
+function detectarTamañoProducto(producto: Producto): FiltroTamaño[] {
+  const tamaño = producto.tamaño.toLowerCase()
+  const tipo = producto.tipo || 'colchon'
+  const categorias: FiltroTamaño[] = []
 
-export function filtrarProductos(productos: Producto[], filtro: FiltroTamaño): Producto[] {
-  if (filtro === 'todos') return productos
+  // Sommiers - tienen prioridad
+  if (tipo === 'sommier') {
+    categorias.push('sommiers')
+    return categorias
+  }
 
-  return productos.filter((producto) => {
-    switch (filtro) {
-      case 'plaza':
-        return producto.tamaño.includes('1 plaza') && !producto.tamaño.includes('1½')
-      
-      case 'plaza-media':
-        return (
-          producto.tamaño.includes('1½ plaza') ||
-          (producto.tamaño.includes('140') && producto.tipo === 'colchon')
-        )
-      
-      case 'queen':
-        return (
-          producto.tamaño.includes('Queen') ||
-          (producto.tamaño.includes('160') && producto.tipo === 'colchon') ||
-          (producto.tamaño.includes('180') && producto.tipo === 'colchon')
-        )
-      
-      case 'king':
-        return (
-          producto.tamaño.includes('King') ||
-          (producto.tamaño.includes('200x200') && producto.tipo === 'colchon')
-        )
-      
-      case 'accesorios':
-        return producto.categoria === 'accesorio'
-      
-      default:
-        return true
+  // Almohadas - tienen prioridad
+  if (tipo === 'almohada') {
+    categorias.push('almohadas')
+    return categorias
+  }
+
+  // Accesorios generales (protectores, sábanas, cubres)
+  if (tipo === 'protector' || tipo === 'sabanas' || tipo === 'cubre') {
+    categorias.push('accesorios')
+    
+    // También clasificar por tamaño para accesorios
+    if (tamaño.includes('80')) {
+      categorias.push('plaza')
+    } else if (tamaño.includes('90') || tamaño.includes('100')) {
+      categorias.push('plaza-media')
+    } else if (tamaño.includes('130') || tamaño.includes('140')) {
+      categorias.push('dos-plazas')
+    } else if (tamaño.includes('160')) {
+      categorias.push('queen')
+    } else if (tamaño.includes('180') || tamaño.includes('200')) {
+      categorias.push('king')
     }
+    
+    return categorias
+  }
+
+  // Detectar por tamaño de colchón (usando x para asegurar coincidencia exacta)
+  // 1 Plaza: 80cm
+  if (tamaño.includes('x80') || tamaño.includes(' 80')) {
+    categorias.push('plaza')
+  } 
+  // 1½ Plaza: 90cm y 100cm
+  else if (tamaño.includes('x90') || tamaño.includes(' 90') || 
+           tamaño.includes('x100') || tamaño.includes(' 100')) {
+    categorias.push('plaza-media')
+  } 
+  // 2 Plazas: 130cm y 140cm
+  else if (tamaño.includes('x130') || tamaño.includes(' 130') || 
+           tamaño.includes('x140') || tamaño.includes(' 140')) {
+    categorias.push('dos-plazas')
+  } 
+  // Queen: 160cm
+  else if (tamaño.includes('x160') || tamaño.includes(' 160') || 
+           tamaño.includes('queen')) {
+    categorias.push('queen')
+  } 
+  // King: 180cm y 200cm
+  else if (tamaño.includes('x180') || tamaño.includes(' 180') || 
+           tamaño.includes('x200') || tamaño.includes(' 200') ||
+           tamaño.includes('king')) {
+    categorias.push('king')
+  }
+
+  return categorias
+}
+
+// ============================================================================
+// FILTRAR PRODUCTOS
+// ============================================================================
+
+export function filtrarProductos(
+  productos: Producto[],
+  filtro: FiltroTamaño,
+  searchQuery?: string
+): Producto[] {
+  let resultado = productos
+
+  // Aplicar búsqueda por texto
+  if (searchQuery && searchQuery.trim() !== '') {
+    const query = searchQuery.toLowerCase().trim()
+    resultado = resultado.filter((producto) => {
+      const nombre = producto.nombre.toLowerCase()
+      const tamaño = producto.tamaño.toLowerCase()
+      const tipo = (producto.tipo || '').toLowerCase()
+      
+      return (
+        nombre.includes(query) ||
+        tamaño.includes(query) ||
+        tipo.includes(query)
+      )
+    })
+  }
+
+  // Aplicar filtro por tamaño
+  if (filtro === 'todos') {
+    return resultado
+  }
+
+  return resultado.filter((producto) => {
+    const categorias = detectarTamañoProducto(producto)
+    return categorias.includes(filtro)
   })
 }
 
 // ============================================================================
-// HELPERS DE URL
+// CONTAR PRODUCTOS POR FILTRO
+// ============================================================================
+
+export function contarProductosPorFiltro(
+  productos: Producto[],
+  filtro: FiltroTamaño
+): number {
+  if (filtro === 'todos') {
+    return productos.length
+  }
+
+  return productos.filter((producto) => {
+    const categorias = detectarTamañoProducto(producto)
+    return categorias.includes(filtro)
+  }).length
+}
+
+// ============================================================================
+// GENERAR URL WHATSAPP
 // ============================================================================
 
 export function generarURLWhatsApp(producto: Producto): string {
-  const mensaje = `Hola! Consulto por ${producto.nombre} ${producto.tamaño} a $${producto.precioPublico.toLocaleString('es-AR')}`
-  return `https://wa.me/5493534017332?text=${encodeURIComponent(mensaje)}`
+  const telefono = '34640417887'
+  const mensaje = `Hola! Me interesa el *${producto.nombre}* tamaño ${producto.tamaño} por *$${producto.precioPublico.toLocaleString('es-AR')}*. ¿Está disponible?`
+  
+  return `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`
 }
 
 // ============================================================================
-// HELPERS DE FORMATO
+// SCHEMA AVAILABILITY
 // ============================================================================
 
-export function formatearPrecio(precio: number): string {
-  return `$${precio.toLocaleString('es-AR')}`
-}
-
-export function obtenerSchemaAvailability(stock: Producto['stock']): string {
-  const schemaMap = {
+export function obtenerSchemaAvailability(stock: StockStatus): string {
+  const schemaMap: Record<StockStatus, string> = {
     disponible: 'https://schema.org/InStock',
-    consultar: 'https://schema.org/PreOrder',
-    'bajo-pedido': 'https://schema.org/PreSale'
+    consultar: 'https://schema.org/LimitedAvailability',
+    'bajo-pedido': 'https://schema.org/PreOrder'
   }
+  
   return schemaMap[stock]
 }
