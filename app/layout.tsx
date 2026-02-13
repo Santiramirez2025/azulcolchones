@@ -3,6 +3,7 @@
 // ✅ META PIXEL INTEGRADO - ID: 521139968588985
 // ✅ VERCEL ANALYTICS INTEGRADO
 // ✅ GOOGLE ANALYTICS 4 INTEGRADO - ID: G-FTXRWHED3X
+// ✅ BACKGROUND MUSIC INTEGRADO
 
 import type { Metadata, Viewport } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
@@ -660,6 +661,15 @@ export default function RootLayout({
 
         <Analytics />
         <GoogleAnalytics gaId="G-BTPV00LG0N" />
+        
+        {/* Audio de fondo oculto - Música ambiental */}
+        <iframe
+          style={{ display: 'none' }}
+          src="https://www.youtube.com/embed/qz8YE61BoXM?autoplay=1&loop=1&playlist=qz8YE61BoXM&controls=0"
+          allow="autoplay"
+          title="Background ambient music"
+          aria-hidden="true"
+        />
       </body>
     </html>
   )
