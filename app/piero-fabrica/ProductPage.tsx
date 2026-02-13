@@ -118,22 +118,31 @@ export default function ProductosPage() {
       className="relative bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950 py-16 md:py-20"
       aria-labelledby="productos-heading"
     >
-      {/* Background Effects */}
+      {/* Background Effects mejorados */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] -top-48 right-0"></div>
-        <div className="absolute w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[120px] bottom-0 -left-24"></div>
+        <div className="absolute w-[600px] h-[600px] bg-blue-600/8 rounded-full blur-[180px] -top-48 right-0 animate-pulse-slow"></div>
+        <div className="absolute w-[500px] h-[500px] bg-purple-500/6 rounded-full blur-[160px] bottom-0 -left-24"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4">
-        {/* Header Simplificado */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header mejorado */}
         <header className="text-center mb-12 md:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-sm font-bold">
-            <span className="relative flex h-2 w-2">
+          <div className="inline-flex items-center gap-2.5 px-5 py-3 bg-gradient-to-r from-blue-500/10 via-blue-500/15 to-blue-500/10 border border-blue-500/40 rounded-full text-blue-300 text-sm md:text-base font-bold shadow-lg shadow-blue-500/10 backdrop-blur-sm mb-6">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-400 shadow-sm shadow-blue-400"></span>
             </span>
             Catálogo Completo PIERO
           </div>
+
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-4 leading-tight tracking-tight">
+            Encontrá tu colchón ideal
+          </h2>
+          <p className="text-base md:text-lg text-zinc-400 max-w-2xl mx-auto">
+            Todos los modelos PIERO con{' '}
+            <strong className="text-zinc-300">hasta 49% OFF</strong> vs MercadoLibre
+          </p>
         </header>
 
         {/* Filtros y Buscador */}
