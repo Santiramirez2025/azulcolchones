@@ -136,7 +136,7 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || 'ACTUALIZAR_CON_TU_CODIGO',
     other: {
-      'facebook-domain-verification': process.env.NEXT_PUBLIC_FACEBOOK_VERIFICATION || 'ACTUALIZAR_CON_TU_CODIGO',
+      'facebook-domain-verification': '5nuiyy6kxib0j2xvithgxjish0uger',
     },
   },
   

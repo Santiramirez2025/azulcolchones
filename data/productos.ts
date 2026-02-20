@@ -7,7 +7,7 @@ export type StockStatus = 'disponible' | 'consultar' | 'bajo-pedido'
 export type TipoProducto = 'colchon' | 'protector' | 'almohada' | 'sabanas' | 'cubre' | 'sommier'
 
 export interface Producto {
-  id: string // Único identificador
+  id: string
   nombre: string
   tamaño: string
   precioPublico: number
@@ -17,7 +17,6 @@ export interface Producto {
   stock: StockStatus
   imagen?: string
   tipo?: TipoProducto
-  // Campos calculados (opcional)
   ahorro?: number
   ahorroPorc?: number
 }
@@ -753,7 +752,7 @@ const sommiers: Producto[] = [
     imagen: '/images/sommier-dreamfit-200.jpg',
     tipo: 'sommier'
   },
-  
+
   // BROWN
   {
     id: 'sommier-brown-80',
@@ -1013,9 +1012,13 @@ const sommiers: Producto[] = [
   }
 ]
 
-// ========== ACCESORIOS ==========
+// ============================================================================
+// ACCESORIOS
+// ============================================================================
+
 const accesorios: Producto[] = [
-  // PROTECTORES IMPERMEABLES (4 ELÁSTICOS)
+
+  // ========== PROTECTORES IMPERMEABLES (4 ELÁSTICOS) ==========
   {
     id: 'protector-80',
     nombre: 'Cubre Colchon Procol (4 elásticos)',
@@ -1087,7 +1090,7 @@ const accesorios: Producto[] = [
     imagen: '/images/protector-200.jpg'
   },
 
-  // PROTECTORES LATERALES DE SÁBANA
+  // ========== PROTECTORES LATERALES ==========
   {
     id: 'protector-lateral-80',
     nombre: 'Cubre Colchon Lateral',
@@ -1159,29 +1162,175 @@ const accesorios: Producto[] = [
     imagen: '/images/protector-lateral-200.jpg'
   },
 
-  // ALMOHADAS
+  // ========== ALMOHADAS ==========
+
+  // Visco Dream Fit Clásica
   {
-    id: 'almohada-fibra',
-    nombre: 'Almohada Piero Fibra Smart Tech Plus',
-    tamaño: '70x50 cm',
-    precioPublico: 42900,
+    id: 'almohada-visco-clasica-62',
+    nombre: 'Almohada Piero Visco Dream Fit Clásica',
+    tamaño: '62x40 cm',
+    precioPublico: 120000,
     categoria: 'accesorio',
     stock: 'disponible',
     tipo: 'almohada',
-    imagen: '/images/almohada-fibra.jpg'
+    imagen: '/images/almohada-visco-clasica-62.jpg'
   },
   {
-    id: 'almohada-micro',
-    nombre: 'Almohada Piero Micro Max Premium',
-    tamaño: '70x50 cm',
-    precioPublico: 74900,
+    id: 'almohada-visco-clasica-90',
+    nombre: 'Almohada Piero Visco Dream Fit Clásica',
+    tamaño: '90x40 cm',
+    precioPublico: 0,
     categoria: 'accesorio',
-    stock: 'disponible',
+    stock: 'consultar',
     tipo: 'almohada',
-    imagen: '/images/almohada-micro.jpg'
+    imagen: '/images/almohada-visco-clasica-90.jpg'
   },
 
-  // SÁBANAS
+  // Visco Dream Fit Cervical
+  {
+    id: 'almohada-visco-cervical-57',
+    nombre: 'Almohada Piero Visco Dream Fit Cervical',
+    tamaño: '57x37 cm',
+    precioPublico: 120000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-visco-cervical-57.jpg'
+  },
+
+  // Visco Dream Tech
+  {
+    id: 'almohada-visco-tech-70',
+    nombre: 'Almohada Piero Visco Dream Tech',
+    tamaño: '70x40 cm',
+    precioPublico: 115000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-visco-tech-70.jpg'
+  },
+
+  // Micro Max Tech Rollo
+  {
+    id: 'almohada-micro-rollo-70',
+    nombre: 'Almohada Piero Micro Max Tech Rollo',
+    tamaño: '70x50 cm',
+    precioPublico: 85000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-micro-rollo-70.jpg'
+  },
+  {
+    id: 'almohada-micro-rollo-80',
+    nombre: 'Almohada Piero Micro Max Tech Rollo',
+    tamaño: '80x50 cm',
+    precioPublico: 90000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-micro-rollo-80.jpg'
+  },
+  {
+    id: 'almohada-micro-rollo-90',
+    nombre: 'Almohada Piero Micro Max Tech Rollo',
+    tamaño: '90x50 cm',
+    precioPublico: 95000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-micro-rollo-90.jpg'
+  },
+
+  // Fibra Smart Tech Plus
+  {
+    id: 'almohada-fibra-plus-70',
+    nombre: 'Almohada Piero Fibra Smart Tech Plus',
+    tamaño: '70x50 cm',
+    precioPublico: 65000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-fibra-plus-70.jpg'
+  },
+  {
+    id: 'almohada-fibra-plus-80',
+    nombre: 'Almohada Piero Fibra Smart Tech Plus',
+    tamaño: '80x50 cm',
+    precioPublico: 67000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-fibra-plus-80.jpg'
+  },
+
+  // Micro Max Tech Núcleo
+  {
+    id: 'almohada-micro-nucleo-70',
+    nombre: 'Almohada Piero Micro Max Tech Núcleo',
+    tamaño: '70x40 cm',
+    precioPublico: 105000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-micro-nucleo-70.jpg'
+  },
+
+  // Fibra Smart Tech Confort
+  {
+    id: 'almohada-fibra-confort-70',
+    nombre: 'Almohada Piero Fibra Smart Tech Confort',
+    tamaño: '70x40 cm',
+    precioPublico: 60000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-fibra-confort-70.jpg'
+  },
+  {
+    id: 'almohada-fibra-confort-80',
+    nombre: 'Almohada Piero Fibra Smart Tech Confort',
+    tamaño: '80x40 cm',
+    precioPublico: 60000,
+    categoria: 'accesorio',
+    stock: 'disponible',
+    tipo: 'almohada',
+    imagen: '/images/almohada-fibra-confort-80.jpg'
+  },
+
+  // Pendientes (próximamente)
+  {
+    id: 'almohada-visco-dream-tech-pend',
+    nombre: 'Almohada Piero Visco Dream Tech',
+    tamaño: 'Próximamente',
+    precioPublico: 0,
+    categoria: 'accesorio',
+    stock: 'consultar',
+    tipo: 'almohada',
+    imagen: '/images/almohada-visco-dream-tech.jpg'
+  },
+  {
+    id: 'almohada-micro-nucleo-pend',
+    nombre: 'Almohada Piero Micro Max Tech Núcleo',
+    tamaño: 'Próximamente',
+    precioPublico: 0,
+    categoria: 'accesorio',
+    stock: 'consultar',
+    tipo: 'almohada',
+    imagen: '/images/almohada-micro-nucleo.jpg'
+  },
+  {
+    id: 'almohada-fibra-smart-pend',
+    nombre: 'Almohada Piero Fibra Smart Tech Confort',
+    tamaño: 'Próximamente',
+    precioPublico: 0,
+    categoria: 'accesorio',
+    stock: 'consultar',
+    tipo: 'almohada',
+    imagen: '/images/almohada-fibra-smart.jpg'
+  },
+
+  // ========== SÁBANAS ==========
   {
     id: 'sabanas-140',
     nombre: 'Sábanas Bamboo Piero 600 Hilos',
@@ -1235,7 +1384,6 @@ export const PRODUCTOS: Producto[] = [
   ...accesorios
 ]
 
-// Por si necesitás acceder a colecciones específicas
 export const COLECCIONES = {
   meditareEP,
   nirvana,
