@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 
@@ -47,43 +48,13 @@ const Icons = {
   ),
 }
 
-const BrandIcon = ({ className = "w-10 h-10", id = "" }: { className?: string; id?: string }) => {
-  const uniqueId = id || Math.random().toString(36).substr(2, 9)
-  return (
-    <svg className={className} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id={`brandGradient-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#3B82F6" />
-          <stop offset="50%" stopColor="#2563EB" />
-          <stop offset="100%" stopColor="#1D4ED8" />
-        </linearGradient>
-        <linearGradient id={`moonGradient-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFFFFF" />
-          <stop offset="100%" stopColor="#E0E7FF" />
-        </linearGradient>
-        <linearGradient id={`starGradient-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FCD34D" />
-          <stop offset="100%" stopColor="#FBBF24" />
-        </linearGradient>
-      </defs>
-      <rect x="2" y="2" width="44" height="44" rx="12" fill={`url(#brandGradient-${uniqueId})`} />
-      <rect x="2" y="2" width="44" height="44" rx="12" fill={`url(#brandGradient-${uniqueId})`} opacity="0.8" />
-      <path d="M28 12C28 19.732 21.732 26 14 26C12.783 26 11.604 25.847 10.48 25.56C12.63 30.51 17.52 34 23.2 34C30.827 34 37 27.732 37 20C37 14.32 33.51 9.43 28.56 7.28C28.847 8.404 29 9.583 29 10.8C29 11.21 28.98 11.61 28.94 12H28Z" fill={`url(#moonGradient-${uniqueId})`} />
-      <path d="M33 14L34.09 16.26L36.5 16.64L34.75 18.34L35.18 20.74L33 19.59L30.82 20.74L31.25 18.34L29.5 16.64L31.91 16.26L33 14Z" fill={`url(#starGradient-${uniqueId})`} />
-      <path d="M38 22L38.6 23.2L39.9 23.4L38.95 24.3L39.2 25.6L38 24.95L36.8 25.6L37.05 24.3L36.1 23.4L37.4 23.2L38 22Z" fill={`url(#starGradient-${uniqueId})`} opacity="0.7" />
-    </svg>
-  )
-}
-
 const CONFIG = {
   whatsapp: '5493534096566',
   whatsappMessage: 'Hola! Quiero consultar por colchones',
-  brand: 'Azul Colchones',
   location: 'Villa María',
   foundedYear: 1991,
 } as const
 
-// Navegación adicional
 const NAVIGATION_ITEMS = [
   { href: '/nosotros', label: 'Nosotros', icon: '👥' },
   { href: '/preguntas-frecuentes', label: 'Preguntas Frecuentes', icon: '❓' },
@@ -96,26 +67,65 @@ const NAVIGATION_ITEMS = [
 
 const yearsOfExperience = new Date().getFullYear() - CONFIG.foundedYear
 
+// ─────────────────────────────────────────────────────────────
+// FIX CLAVE: Logo a 56px (desktop) / 48px (mobile)
+// Sin texto duplicado — el nombre va solo al lado del isotipo
+// Archivo requerido: /public/logo-azul-colchones.png
+// ─────────────────────────────────────────────────────────────
 const BrandLogo = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) => {
   const isDesktop = variant === 'desktop'
+  const size = isDesktop ? 56 : 48
+
   return (
-    <Link href="/" className="flex-shrink-0 group">
-      <div className="flex items-center gap-3">
-        <div className="relative">
-          <BrandIcon className={isDesktop ? "w-11 h-11" : "w-10 h-10"} id={variant} />
-          <div className="absolute inset-0 rounded-xl bg-blue-500/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </div>
-        <div className="flex flex-col">
-          <div className="flex items-baseline gap-0.5">
-            <span className={`font-black leading-none text-white ${isDesktop ? 'text-xl' : 'text-lg'}`}>AZUL</span>
-            <span className={`font-light leading-none text-blue-400 ${isDesktop ? 'text-xl' : 'text-lg'}`}>Colchones</span>
+    <Link href="/" className="flex-shrink-0 group" aria-label="Azul Colchones — Inicio">
+      <div className="flex items-center gap-3.5">
+
+        {/* ISOTIPO — tamaño correcto para que luna y texto del logo se lean */}
+        <div className="relative flex-shrink-0">
+          <div
+            className="relative rounded-full overflow-hidden
+                        shadow-[0_0_0_2px_rgba(255,255,255,0.08)]
+                        group-hover:shadow-[0_0_0_2px_rgba(96,165,250,0.35)]
+                        transition-shadow duration-300"
+            style={{ width: size, height: size }}
+          >
+            <Image
+              src="/logo-azul-colchones.png"
+              alt="Azul Colchones"
+              width={size * 2}
+              height={size * 2}
+              className="w-full h-full object-cover"
+              priority
+            />
           </div>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wide">{CONFIG.location}</span>
-            <span className="w-1 h-1 rounded-full bg-zinc-600" />
-            <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wide">Desde {CONFIG.foundedYear}</span>
+          {/* Glow sutil */}
+          <div
+            className="absolute inset-0 rounded-full pointer-events-none
+                        bg-blue-400/0 blur-lg group-hover:bg-blue-400/20
+                        transition-all duration-500 scale-125"
+          />
+        </div>
+
+        {/* WORDMARK — solo el nombre, sin repetir lo del logo */}
+        <div className="flex flex-col leading-none">
+          <span
+            className={`font-black text-white tracking-tight ${
+              isDesktop ? 'text-[20px]' : 'text-[17px]'
+            }`}
+          >
+            Azul Colchones
+          </span>
+          <div className="flex items-center gap-1.5 mt-[5px]">
+            <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-[0.12em]">
+              {CONFIG.location}
+            </span>
+            <span className="w-[3px] h-[3px] rounded-full bg-zinc-700 flex-shrink-0" />
+            <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-[0.12em]">
+              Desde {CONFIG.foundedYear}
+            </span>
           </div>
         </div>
+
       </div>
     </Link>
   )
@@ -124,12 +134,16 @@ const BrandLogo = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) 
 const OfficialBadge = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' | 'menu' }) => {
   if (variant === 'desktop') {
     return (
-      <div className="hidden lg:flex items-center gap-3 pl-5 ml-5 border-l border-zinc-700/50">
+      <div className="hidden lg:flex items-center pl-5 ml-5 border-l border-zinc-700/50">
         <div className="flex items-center gap-2 px-3.5 py-2 bg-gradient-to-r from-amber-950/40 to-orange-950/40 border border-amber-500/30 rounded-xl shadow-lg shadow-amber-500/5">
-          <Icons.Verified className="w-4 h-4 text-amber-400" />
+          <Icons.Verified className="w-4 h-4 text-amber-400 flex-shrink-0" />
           <div className="flex flex-col">
-            <span className="text-[10px] font-medium text-amber-200/70 uppercase tracking-wider leading-none">Distribuidor Oficial</span>
-            <span className="text-sm font-bold text-white leading-none mt-0.5">PIERO</span>
+            <span className="text-[9px] font-semibold text-amber-200/60 uppercase tracking-widest leading-none">
+              Distribuidor Oficial
+            </span>
+            <span className="text-[13px] font-black text-white leading-none mt-0.5 tracking-wide">
+              PIERO
+            </span>
           </div>
         </div>
       </div>
@@ -139,25 +153,27 @@ const OfficialBadge = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile'
     return (
       <div className="flex lg:hidden items-center gap-1 px-2 py-1.5 bg-amber-950/40 border border-amber-500/30 rounded-lg">
         <Icons.Verified className="w-3 h-3 text-amber-400" />
-        <span className="text-[9px] font-bold text-amber-100 uppercase tracking-wide">PIERO</span>
+        <span className="text-[9px] font-black text-amber-100 uppercase tracking-wide">PIERO</span>
       </div>
     )
   }
+  // menu variant
   return (
-    <div className="flex items-center justify-center gap-3 px-4 py-3.5 bg-gradient-to-r from-amber-950/50 via-orange-950/50 to-amber-950/50 border border-amber-500/30 rounded-xl">
-      <Icons.Verified className="w-6 h-6 text-amber-400" />
+    <div className="flex items-center gap-3 px-4 py-3.5 bg-gradient-to-r from-amber-950/50 via-orange-950/50 to-amber-950/50 border border-amber-500/30 rounded-xl">
+      <Icons.Verified className="w-6 h-6 text-amber-400 flex-shrink-0" />
       <div className="flex flex-col">
-        <span className="text-[10px] font-medium text-amber-200/70 uppercase tracking-wider">Distribuidor Oficial</span>
-        <span className="text-base font-bold text-white tracking-wide">PIERO</span>
+        <span className="text-[9px] font-semibold text-amber-200/60 uppercase tracking-widest">
+          Distribuidor Oficial
+        </span>
+        <span className="text-base font-black text-white tracking-wide">PIERO</span>
       </div>
-      <div className="ml-auto flex items-center gap-1.5 px-2 py-1 bg-amber-500/20 rounded-md">
+      <div className="ml-auto flex items-center px-2.5 py-1 bg-amber-500/20 rounded-lg">
         <span className="text-[10px] font-bold text-amber-300">{yearsOfExperience}+ años</span>
       </div>
     </div>
   )
 }
 
-// Desktop Dropdown Component
 const DesktopInfoDropdown = () => {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -177,15 +193,18 @@ const DesktopInfoDropdown = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all text-zinc-300 hover:text-white hover:bg-zinc-800/70"
+        className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all
+                   text-zinc-400 hover:text-white hover:bg-zinc-800/60"
       >
         <Icons.Info className="w-4 h-4" />
         <span>Información</span>
-        <Icons.ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <Icons.ChevronDown
+          className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl shadow-black/40 py-2 z-50">
+        <div className="absolute top-full right-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl shadow-black/50 py-2 z-50">
           {NAVIGATION_ITEMS.map((item) => {
             const isActive = pathname === item.href
             return (
@@ -194,12 +213,12 @@ const DesktopInfoDropdown = () => {
                 href={item.href}
                 onClick={() => setIsOpen(false)}
                 className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${
-                  isActive 
-                    ? 'bg-blue-600/20 text-white' 
-                    : 'text-zinc-300 hover:bg-zinc-800/50 hover:text-white'
+                  isActive
+                    ? 'bg-blue-600/20 text-white'
+                    : 'text-zinc-400 hover:bg-zinc-800/60 hover:text-white'
                 }`}
               >
-                <span className="text-lg">{item.icon}</span>
+                <span className="text-base">{item.icon}</span>
                 <span className="text-sm font-medium">{item.label}</span>
               </Link>
             )
@@ -214,6 +233,14 @@ export default function Header() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const handleScroll = useCallback(() => {
     setScrolled(window.scrollY > 10)
@@ -223,10 +250,7 @@ export default function Header() {
     let ticking = false
     const onScroll = () => {
       if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll()
-          ticking = false
-        })
+        window.requestAnimationFrame(() => { handleScroll(); ticking = false })
         ticking = true
       }
     }
@@ -242,53 +266,93 @@ export default function Header() {
   if (pathname?.startsWith('/admin')) return null
 
   const whatsappUrl = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.whatsappMessage)}`
-  const headerClass = scrolled ? 'sticky top-0 z-50 transition-all duration-300 bg-zinc-950/98 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-zinc-800/50' : 'sticky top-0 z-50 transition-all duration-300 bg-zinc-950 border-b border-zinc-800/30'
+
+  const headerClass = scrolled
+    ? 'sticky top-0 z-50 transition-all duration-300 bg-zinc-950/95 backdrop-blur-xl shadow-lg shadow-black/30 border-b border-zinc-800/60'
+    : 'sticky top-0 z-50 transition-all duration-300 bg-zinc-950 border-b border-zinc-800/30'
+
   const isActivePieroFabrica = pathname === '/piero-fabrica'
 
   return (
     <>
       <header className={headerClass}>
-        <nav className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16 lg:h-[72px]">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-[72px] lg:h-[80px]">
+
+            {/* LOGO */}
             <div className="flex items-center">
-              <div className="hidden lg:block">
-                <BrandLogo variant="desktop" />
-              </div>
-              <div className="lg:hidden">
-                <BrandLogo variant="mobile" />
-              </div>
+              <BrandLogo variant={isMobile ? 'mobile' : 'desktop'} />
               <OfficialBadge variant="desktop" />
             </div>
 
             {/* DESKTOP NAV */}
-            <div className="hidden lg:flex items-center gap-1">
-              <Link href="/piero-fabrica" className={`relative px-5 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${isActivePieroFabrica ? 'text-white bg-gradient-to-r from-blue-600/90 to-blue-500/90 shadow-lg shadow-blue-500/20' : 'text-zinc-300 hover:text-white hover:bg-zinc-800/70'}`}>
+            <div className="hidden lg:flex items-center gap-0.5">
+              <Link
+                href="/piero-fabrica"
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+                  isActivePieroFabrica
+                    ? 'text-white bg-blue-600/80 shadow-md shadow-blue-500/20'
+                    : 'text-zinc-300 hover:text-white hover:bg-zinc-800/60'
+                }`}
+              >
                 <Icons.Tag className="w-4 h-4" />
                 <span>Piero Fábrica</span>
-                <span className="text-[11px] font-bold text-emerald-300">Hasta 49% OFF</span>
+                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded-md">
+                  49% OFF
+                </span>
               </Link>
-              
+
               <DesktopInfoDropdown />
             </div>
 
             {/* DESKTOP CTA */}
-            <div className="hidden lg:flex items-center gap-3">
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-green-500/25 hover:shadow-green-500/40 hover:scale-105 active:scale-95">
-                <Icons.WhatsApp className="w-4 h-4" />
-                <span>Consultar</span>
+            <div className="hidden lg:flex items-center">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 px-5 py-2.5
+                           bg-gradient-to-r from-green-600 to-green-500
+                           hover:from-green-500 hover:to-green-400
+                           text-white font-bold text-sm rounded-xl
+                           transition-all duration-200
+                           shadow-lg shadow-green-500/20
+                           hover:shadow-green-500/35 hover:scale-[1.03] active:scale-95"
+              >
+                <Icons.WhatsApp className="w-[18px] h-[18px]" />
+                <span>Consultar ahora</span>
               </a>
             </div>
 
-            {/* MOBILE: Badge + CTA + MENU */}
+            {/* MOBILE ACTIONS */}
             <div className="flex lg:hidden items-center gap-2">
               <OfficialBadge variant="mobile" />
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-green-600 to-green-500 rounded-xl transition-all shadow-lg shadow-green-500/25 active:scale-95" aria-label="Consultar por WhatsApp">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 flex items-center justify-center
+                           bg-gradient-to-br from-green-600 to-green-500
+                           rounded-xl shadow-md shadow-green-500/20 active:scale-95 transition-transform"
+                aria-label="Consultar por WhatsApp"
+              >
                 <Icons.WhatsApp className="w-5 h-5 text-white" />
               </a>
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-800/80 border border-zinc-700/50 active:scale-95 transition-transform" aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"} aria-expanded={isMenuOpen}>
-                {isMenuOpen ? <Icons.X className="w-5 h-5 text-white" /> : <Icons.Menu className="w-5 h-5 text-white" />}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="w-10 h-10 flex items-center justify-center rounded-xl
+                           bg-zinc-800/80 border border-zinc-700/50
+                           active:scale-95 transition-transform"
+                aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                aria-expanded={isMenuOpen}
+              >
+                {isMenuOpen
+                  ? <Icons.X className="w-5 h-5 text-white" />
+                  : <Icons.Menu className="w-5 h-5 text-white" />
+                }
               </button>
             </div>
+
           </div>
         </nav>
       </header>
@@ -296,29 +360,38 @@ export default function Header() {
       {/* MOBILE MENU */}
       {isMenuOpen && (
         <>
-          <div onClick={() => setIsMenuOpen(false)} className="fixed inset-0 bg-black/70 backdrop-blur-sm lg:hidden z-[60] animate-[fadeIn_0.2s_ease-out]" />
-          <div className="fixed inset-x-0 top-16 bottom-0 lg:hidden z-[70] bg-zinc-950 shadow-xl animate-[slideDown_0.25s_ease-out] overflow-y-auto">
-            <div className="max-w-7xl mx-auto px-4 py-4">
-              
-              <div className="mb-4">
-                <OfficialBadge variant="menu" />
-              </div>
+          <div
+            onClick={() => setIsMenuOpen(false)}
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm lg:hidden z-[60]"
+          />
+          <div className="fixed inset-x-0 top-[72px] bottom-0 lg:hidden z-[70] bg-zinc-950 overflow-y-auto">
+            <div className="px-4 py-5 space-y-3">
 
-              {/* Link Principal - Piero Fábrica */}
-              <Link href="/piero-fabrica" onClick={() => setIsMenuOpen(false)} className={`flex items-center justify-between px-4 py-4 rounded-xl transition-all active:scale-[0.98] mb-3 ${isActivePieroFabrica ? 'bg-gradient-to-r from-blue-600/90 to-blue-500/90 text-white shadow-lg' : 'bg-zinc-900/50 text-zinc-300 hover:bg-zinc-800/50'}`}>
+              <OfficialBadge variant="menu" />
+
+              <Link
+                href="/piero-fabrica"
+                onClick={() => setIsMenuOpen(false)}
+                className={`flex items-center justify-between px-4 py-4 rounded-xl transition-all active:scale-[0.98] ${
+                  isActivePieroFabrica
+                    ? 'bg-blue-600/80 text-white'
+                    : 'bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800/60'
+                }`}
+              >
                 <div className="flex items-center gap-3">
                   <Icons.Tag className="w-5 h-5" />
                   <div>
                     <span className="font-bold text-base block">Piero Fábrica</span>
-                    <span className="block text-sm font-medium mt-0.5 text-emerald-400">Hasta 22% OFF</span>
+                    <span className="text-sm font-medium text-emerald-400 mt-0.5 block">
+                      Hasta 49% OFF
+                    </span>
                   </div>
                 </div>
                 <Icons.ChevronRight className="w-5 h-5 text-zinc-500" />
               </Link>
 
-              <div className="border-t border-zinc-800 my-4" />
+              <div className="border-t border-zinc-800/80" />
 
-              {/* Navegación adicional */}
               <div className="space-y-1">
                 {NAVIGATION_ITEMS.map((item) => {
                   const isActive = pathname === item.href
@@ -328,34 +401,32 @@ export default function Header() {
                       href={item.href}
                       onClick={() => setIsMenuOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all active:scale-[0.98] ${
-                        isActive 
-                          ? 'bg-zinc-800/80 text-white' 
-                          : 'bg-zinc-900/30 text-zinc-300 hover:bg-zinc-800/50'
+                        isActive
+                          ? 'bg-zinc-800 text-white'
+                          : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white'
                       }`}
                     >
                       <span className="text-xl">{item.icon}</span>
                       <span className="font-medium text-sm">{item.label}</span>
-                      <Icons.ChevronRight className="w-4 h-4 ml-auto text-zinc-500" />
+                      <Icons.ChevronRight className="w-4 h-4 ml-auto text-zinc-600" />
                     </Link>
                   )
                 })}
               </div>
 
-              <div className="border-t border-zinc-800 my-4" />
+              <div className="border-t border-zinc-800/80" />
 
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="px-2 py-2.5 bg-zinc-900/50 rounded-lg">
-                  <span className="block text-base">📍</span>
-                  <span className="text-[10px] font-medium text-zinc-400">Villa María</span>
-                </div>
-                <div className="px-2 py-2.5 bg-zinc-900/50 rounded-lg">
-                  <span className="block text-base">🚚</span>
-                  <span className="text-[10px] font-medium text-zinc-400">Envío Gratis</span>
-                </div>
-                <div className="px-2 py-2.5 bg-zinc-900/50 rounded-lg">
-                  <span className="block text-base">💳</span>
-                  <span className="text-[10px] font-medium text-zinc-400">12 Cuotas</span>
-                </div>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { icon: '📍', label: 'Villa María' },
+                  { icon: '🚚', label: 'Envío Gratis' },
+                  { icon: '💳', label: '12 Cuotas' },
+                ].map((item) => (
+                  <div key={item.label} className="flex flex-col items-center gap-1.5 py-3 bg-zinc-900/50 rounded-xl">
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="text-[10px] font-medium text-zinc-400 text-center">{item.label}</span>
+                  </div>
+                ))}
               </div>
 
             </div>
