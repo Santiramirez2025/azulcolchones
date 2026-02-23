@@ -1298,38 +1298,6 @@ const accesorios: Producto[] = [
     imagen: '/images/almohada-fibra-confort-80.jpg'
   },
 
-  // Pendientes (próximamente)
-  {
-    id: 'almohada-visco-dream-tech-pend',
-    nombre: 'Almohada Piero Visco Dream Tech',
-    tamaño: 'Próximamente',
-    precioPublico: 0,
-    categoria: 'accesorio',
-    stock: 'consultar',
-    tipo: 'almohada',
-    imagen: '/images/almohada-visco-dream-tech.jpg'
-  },
-  {
-    id: 'almohada-micro-nucleo-pend',
-    nombre: 'Almohada Piero Micro Max Tech Núcleo',
-    tamaño: 'Próximamente',
-    precioPublico: 0,
-    categoria: 'accesorio',
-    stock: 'consultar',
-    tipo: 'almohada',
-    imagen: '/images/almohada-micro-nucleo.jpg'
-  },
-  {
-    id: 'almohada-fibra-smart-pend',
-    nombre: 'Almohada Piero Fibra Smart Tech Confort',
-    tamaño: 'Próximamente',
-    precioPublico: 0,
-    categoria: 'accesorio',
-    stock: 'consultar',
-    tipo: 'almohada',
-    imagen: '/images/almohada-fibra-smart.jpg'
-  },
-
   // ========== SÁBANAS ==========
   {
     id: 'sabanas-140',
