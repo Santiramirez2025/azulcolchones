@@ -1,6 +1,8 @@
 // app/page.tsx - HOME PAGE OPTIMIZADO
 import type { Metadata } from 'next'
 import HeroHome from '@/components/home/HeroHome'
+import PacksComerciales from '@/components/home/PacksComerciales'
+import ColchonesDestacados from '@/components/home/ColchonesDestacados'
 import { ScrollProgressBar } from '@/components/ScrollProgressBar'
 
 // ============================================================================
@@ -63,7 +65,7 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  
+
   verification: {
     // Agregar tus códigos de verificación aquí
     // google: 'tu-código-de-verificación',
@@ -74,16 +76,27 @@ export const revalidate = 43200 // 12 hours
 
 // ============================================================================
 // HOME PAGE COMPONENT
+//
+// Orden de secciones (flujo de conversión):
+//   1. HeroHome          → captura atención, presenta el asesor
+//   2. ColchonesDestacados → 3 productos ancla (1p / 2p / King)
+//   3. PacksComerciales  → combos con ahorro, sube ticket promedio
 // ============================================================================
 
 export default function Home() {
   return (
     <>
       <ScrollProgressBar />
-      
-      {/* Hero Section - Asesor como protagonista */}
+
+      {/* 1 · Hero — Asesor como protagonista */}
       <HeroHome />
-      
+
+      {/* 2 · Colchones Destacados — 3 productos estratégicos con anclaje de precio */}
+      <ColchonesDestacados />
+
+      {/* 3 · Packs Comerciales — combos que suben el ticket y simplifican la decisión */}
+      <PacksComerciales />
+
       {/* Structured Data JSON-LD para SEO */}
       <script
         type="application/ld+json"
@@ -125,7 +138,6 @@ export default function Home() {
               },
             ],
             sameAs: [
-              // Agregar tus redes sociales aquí
               // 'https://www.facebook.com/azulcolchones',
               // 'https://www.instagram.com/azulcolchones',
             ],
@@ -135,23 +147,34 @@ export default function Home() {
           }),
         }}
       />
-      
-      {/* SEO Content - Hidden but indexable */}
+
+      {/* SEO Content — oculto visualmente pero indexable por Google */}
       <section className="sr-only" aria-hidden="true">
         <h2>Colchones PIERO en Villa María - Distribuidores Oficiales</h2>
         <p>
-          Azul Colchones: Más de 35 años vendiendo descanso de calidad en Villa María, Córdoba. 
+          Azul Colchones: Más de 35 años vendiendo descanso de calidad en Villa María, Córdoba.
           Somos distribuidores oficiales de colchones PIERO, la marca líder en Argentina.
+        </p>
+        <h3>Colchones Más Vendidos</h3>
+        <p>
+          Nuestros colchones más vendidos: Piero Nirvana 1 plaza desde $359.900,
+          Piero Sonno EuroPillow 2 plazas desde $469.900, y Piero Montreaux Pillow Top
+          King 200x200 desde $1.369.900. Todos con garantía oficial PIERO.
         </p>
         <h3>Stock Inmediato y Piero Fábrica</h3>
         <p>
-          Ofrecemos dos opciones de compra: Stock inmediato para llevártelo el mismo día, 
+          Ofrecemos dos opciones de compra: Stock inmediato para llevártelo el mismo día,
           o Piero Fábrica directo de fábrica con hasta 49% de descuento (7-10 días de espera).
         </p>
         <h3>Asesor Inteligente de Colchones</h3>
         <p>
-          Nuestro asesor inteligente te ayuda a encontrar el colchón perfecto para tus necesidades 
+          Nuestro asesor inteligente te ayuda a encontrar el colchón perfecto para tus necesidades
           en solo 30 segundos. Respondé 3 preguntas simples y descubrí cuál es tu colchón ideal.
+        </p>
+        <h3>Packs y Combos de Colchones</h3>
+        <p>
+          Armamos packs completos con colchón, protector, almohadas y sábanas con hasta 13%
+          de descuento adicional vs comprar por separado. Combos desde $629.900.
         </p>
         <h3>Contacto y Horarios</h3>
         <address>
@@ -162,7 +185,7 @@ export default function Home() {
         </address>
         <h3>Garantía y Servicio Post-Venta</h3>
         <p>
-          Todos nuestros colchones PIERO incluyen garantía oficial de fábrica. 
+          Todos nuestros colchones PIERO incluyen garantía oficial de fábrica.
           Asesoramiento personalizado antes y después de tu compra.
         </p>
       </section>
