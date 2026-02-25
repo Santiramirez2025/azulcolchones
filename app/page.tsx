@@ -138,8 +138,8 @@ export default function Home() {
               },
             ],
             sameAs: [
-              // 'https://www.facebook.com/azulcolchones',
-              // 'https://www.instagram.com/azulcolchones',
+              // 'https://www.facebook.com/azulcolchoneria',
+              // 'https://www.instagram.com/azulcolchones1991/',
             ],
             priceRange: '$$',
             paymentAccepted: 'Cash, Credit Card, Debit Card, Bank Transfer',

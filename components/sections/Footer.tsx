@@ -218,7 +218,7 @@ export default function Footer() {
 
               <div className="flex items-center gap-3">
                 <a
-                  href="https://www.instagram.com/azulcolchones"
+                  href="https://www.instagram.com/azulcolchones1991/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-lg bg-zinc-800/50 hover:bg-zinc-700 border border-zinc-700/50 hover:border-zinc-600 flex items-center justify-center transition-all hover:scale-105"
@@ -227,7 +227,7 @@ export default function Footer() {
                   <Instagram className="w-4 h-4 text-zinc-400" />
                 </a>
                 <a
-                  href="https://www.facebook.com/azulcolchones"
+                  href="https://www.facebook.com/azulcolchoneria"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-lg bg-zinc-800/50 hover:bg-zinc-700 border border-zinc-700/50 hover:border-zinc-600 flex items-center justify-center transition-all hover:scale-105"
