@@ -1298,39 +1298,48 @@ const accesorios: Producto[] = [
     imagen: '/images/almohada-fibra-confort-80.jpg'
   },
 
-  // ========== SÁBANAS ==========
-  {
-    id: 'sabanas-140',
-    nombre: 'Sábanas Bamboo Piero 600 Hilos',
-    tamaño: '140x190 cm',
-    precioPublico: 94900,
-    categoria: 'accesorio',
-    stock: 'disponible',
-    tipo: 'sabanas',
-    imagen: '/images/sabanas-140.jpg'
-  },
-  {
-    id: 'sabanas-160',
-    nombre: 'Sábanas Bamboo Piero 600 Hilos',
-    tamaño: '160x200 cm (Queen)',
-    precioPublico: 124900,
-    categoria: 'accesorio',
-    stock: 'disponible',
-    tipo: 'sabanas',
-    imagen: '/images/sabanas-160.jpg'
-  },
-  {
-    id: 'sabanas-200',
-    nombre: 'Sábanas Bamboo Piero 600 Hilos',
-    tamaño: '200x200 cm (King)',
-    precioPublico: 149900,
-    categoria: 'accesorio',
-    stock: 'disponible',
-    tipo: 'sabanas',
-    imagen: '/images/sabanas-200.jpg'
-  }
-]
-
+// ========== SÁBANAS ==========
+{
+  id: 'sabanas-100',
+  nombre: 'Sábanas Piero Classic Lisa Percal 144 Hilos',
+  tamaño: 'Twin (hasta 100 cm)',
+  precioPublico: 84488,
+  categoria: 'accesorio',
+  stock: 'disponible',
+  tipo: 'sabanas',
+  imagen: '/images/sabanas-100.jpg'
+},
+{
+  id: 'sabanas-140',
+  nombre: 'Sábanas Piero Classic Lisa Percal 144 Hilos',
+  tamaño: '140x190 cm (Full)',
+  precioPublico: 100052,
+  categoria: 'accesorio',
+  stock: 'disponible',
+  tipo: 'sabanas',
+  imagen: '/images/sabanas-140.jpg'
+},
+{
+  id: 'sabanas-160',
+  nombre: 'Sábanas Piero Classic Lisa Percal 144 Hilos',
+  tamaño: '160x200 cm (Queen)',
+  precioPublico: 108945,
+  categoria: 'accesorio',
+  stock: 'disponible',
+  tipo: 'sabanas',
+  imagen: '/images/sabanas-160.jpg'
+},
+{
+  id: 'sabanas-200',
+  nombre: 'Sábanas Piero Classic Lisa Percal 144 Hilos',
+  tamaño: '200x200 cm (King)',
+  precioPublico: 124509,
+  categoria: 'accesorio',
+  stock: 'disponible',
+  tipo: 'sabanas',
+  imagen: '/images/sabanas-200.jpg'
+},
+] 
 // ============================================================================
 // EXPORTACIÓN PRINCIPAL
 // ============================================================================
