@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { trackWhatsAppClick, trackViewContent } from '@/lib/pixel'
 import type { Producto } from '@/data/productos'
 import { formatPrecio, extraerMedidaCorta } from './product-helpers'
@@ -293,9 +294,9 @@ function Breadcrumb({ modelo }: { modelo: string }) {
   return (
     <nav aria-label="Breadcrumb" className="mb-6">
       <ol className="flex items-center gap-1.5 text-xs text-zinc-500">
-        <li><a href="/" className="hover:text-zinc-300 transition-colors">Inicio</a></li>
+        <li><Link href="/" className="hover:text-zinc-300 transition-colors">Inicio</Link></li>
         <li aria-hidden="true"><svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg></li>
-        <li><a href="/piero-fabrica" className="hover:text-zinc-300 transition-colors">Catálogo PIERO</a></li>
+        <li><Link href="/piero-fabrica" className="hover:text-zinc-300 transition-colors">Catálogo PIERO</Link></li>
         <li aria-hidden="true"><svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg></li>
         <li><span className="text-zinc-400 font-medium">{modelo}</span></li>
       </ol>
