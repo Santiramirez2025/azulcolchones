@@ -188,7 +188,7 @@ const nirvana: Producto[] = [
     id: 'nirvana-140',
     nombre: 'Colchón Piero Nirvana',
     tamaño: '190x140 (2 plazas)',
-    precioPublico: 549000,       // 580000 * 1.03
+    precioPublico: 597000,       // 580000 * 1.03
     precioMercadoLibre: 709900,
     categoria: 'ancla',
     stock: 'disponible',
