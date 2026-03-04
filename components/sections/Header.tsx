@@ -46,6 +46,13 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
+  // ── NUEVO: ícono lista de precios ──────────────────────────────
+  PriceList: ({ className = "w-4 h-4" }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+    </svg>
+  ),
 }
 
 const CONFIG = {
@@ -67,11 +74,6 @@ const NAVIGATION_ITEMS = [
 
 const yearsOfExperience = new Date().getFullYear() - CONFIG.foundedYear
 
-// ─────────────────────────────────────────────────────────────
-// FIX CLAVE: Logo a 56px (desktop) / 48px (mobile)
-// Sin texto duplicado — el nombre va solo al lado del isotipo
-// Archivo requerido: /public/logo-azul-colchones.png
-// ─────────────────────────────────────────────────────────────
 const BrandLogo = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) => {
   const isDesktop = variant === 'desktop'
   const size = isDesktop ? 56 : 48
@@ -79,8 +81,6 @@ const BrandLogo = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) 
   return (
     <Link href="/" className="flex-shrink-0 group" aria-label="Azul Colchones — Inicio">
       <div className="flex items-center gap-3.5">
-
-        {/* ISOTIPO — tamaño correcto para que luna y texto del logo se lean */}
         <div className="relative flex-shrink-0">
           <div
             className="relative rounded-full overflow-hidden
@@ -98,15 +98,12 @@ const BrandLogo = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) 
               priority
             />
           </div>
-          {/* Glow sutil */}
           <div
             className="absolute inset-0 rounded-full pointer-events-none
                         bg-blue-400/0 blur-lg group-hover:bg-blue-400/20
                         transition-all duration-500 scale-125"
           />
         </div>
-
-        {/* WORDMARK — solo el nombre, sin repetir lo del logo */}
         <div className="flex flex-col leading-none">
           <span
             className={`font-black text-white tracking-tight ${
@@ -125,7 +122,6 @@ const BrandLogo = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) 
             </span>
           </div>
         </div>
-
       </div>
     </Link>
   )
@@ -157,7 +153,6 @@ const OfficialBadge = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile'
       </div>
     )
   }
-  // menu variant
   return (
     <div className="flex items-center gap-3 px-4 py-3.5 bg-gradient-to-r from-amber-950/50 via-orange-950/50 to-amber-950/50 border border-amber-500/30 rounded-xl">
       <Icons.Verified className="w-6 h-6 text-amber-400 flex-shrink-0" />
@@ -228,6 +223,48 @@ const DesktopInfoDropdown = () => {
     </div>
   )
 }
+
+// ── NUEVO: botón Lista de Precios ──────────────────────────────────────────────
+const PriceListButton = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) => {
+  if (variant === 'desktop') {
+    return (
+      <a
+        href="/lista-precios-azul.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all
+                   text-zinc-300 hover:text-white hover:bg-zinc-800/60"
+        title="Ver lista completa de precios"
+      >
+        <Icons.PriceList className="w-4 h-4" />
+        <span>Lista de Precios</span>
+      </a>
+    )
+  }
+
+  // mobile: fila completa dentro del menú
+  return (
+    <a
+      href="/lista-precios-azul.html"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center justify-between px-4 py-4 rounded-xl transition-all active:scale-[0.98]
+                 bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800/60"
+    >
+      <div className="flex items-center gap-3">
+        <Icons.PriceList className="w-5 h-5" />
+        <div>
+          <span className="font-bold text-base block">Lista de Precios</span>
+          <span className="text-sm font-medium text-zinc-500 mt-0.5 block">
+            Todos los productos y medidas
+          </span>
+        </div>
+      </div>
+      <Icons.ChevronRight className="w-5 h-5 text-zinc-500" />
+    </a>
+  )
+}
+// ──────────────────────────────────────────────────────────────────────────────
 
 export default function Header() {
   const pathname = usePathname()
@@ -301,6 +338,9 @@ export default function Header() {
                   49% OFF
                 </span>
               </Link>
+
+              {/* ── Lista de Precios (desktop) ── */}
+              <PriceListButton variant="desktop" />
 
               <DesktopInfoDropdown />
             </div>
@@ -389,6 +429,9 @@ export default function Header() {
                 </div>
                 <Icons.ChevronRight className="w-5 h-5 text-zinc-500" />
               </Link>
+
+              {/* ── Lista de Precios (mobile menu) ── */}
+              <PriceListButton variant="mobile" />
 
               <div className="border-t border-zinc-800/80" />
 
