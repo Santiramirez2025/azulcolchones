@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 // ============================================================================
 // CONFIG
@@ -165,7 +166,7 @@ export default function HeroSection() {
                 </p>
 
                 {/* CTA Principal - Piero Fábrica */}
-                <a 
+                <Link 
                   href="/piero-fabrica"
                   className="group block bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 rounded-xl p-5 transition-all active:scale-[0.98] shadow-lg shadow-emerald-500/25"
                 >
@@ -184,7 +185,7 @@ export default function HeroSection() {
                   <p className="text-emerald-50 text-xs text-left">
                     Directo de fábrica • 7-10 días de espera • Sin intermediarios
                   </p>
-                </a>
+                </Link>
               </div>
 
               {/* WhatsApp CTA */}
@@ -254,7 +255,7 @@ export default function HeroSection() {
                 </div>
 
                 {/* CTA Principal - Piero Fábrica */}
-                <a 
+                <Link 
                   href="/piero-fabrica"
                   className="group block bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 rounded-xl p-6 transition-all hover:scale-[1.01] shadow-lg shadow-emerald-500/25"
                 >
@@ -273,7 +274,7 @@ export default function HeroSection() {
                   <p className="text-emerald-50 text-sm">
                     Directo de fábrica • 7-10 días de espera • Sin intermediarios • Garantía oficial
                   </p>
-                </a>
+                </Link>
 
                 {/* WhatsApp CTA */}
                 <a 

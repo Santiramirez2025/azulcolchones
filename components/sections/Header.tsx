@@ -228,26 +228,22 @@ const DesktopInfoDropdown = () => {
 const PriceListButton = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) => {
   if (variant === 'desktop') {
     return (
-      <a
-        href="/lista-precios-azul.html"
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href="/lista-precios"
         className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all
                    text-zinc-300 hover:text-white hover:bg-zinc-800/60"
         title="Ver lista completa de precios"
       >
         <Icons.PriceList className="w-4 h-4" />
         <span>Lista de Precios</span>
-      </a>
+      </Link>
     )
   }
 
   // mobile: fila completa dentro del menú
   return (
-    <a
-      href="/lista-precios-azul.html"
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link
+      href="/lista-precios"
       className="flex items-center justify-between px-4 py-4 rounded-xl transition-all active:scale-[0.98]
                  bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800/60"
     >
@@ -261,7 +257,7 @@ const PriceListButton = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobil
         </div>
       </div>
       <Icons.ChevronRight className="w-5 h-5 text-zinc-500" />
-    </a>
+    </Link>
   )
 }
 // ──────────────────────────────────────────────────────────────────────────────
