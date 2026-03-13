@@ -253,7 +253,7 @@ export default function ListaPrecios() {
           <div className="lp-header-right">
             <div className="lp-dist-badge">Distribuidor Oficial</div>
             <div className="lp-piero">PIERO</div>
-            <div className="lp-fecha">Lista actualizada: Febrero 2026</div>
+            <div className="lp-fecha">Lista actualizada: Marzo 2026</div>
           </div>
         </div>
 
@@ -688,7 +688,7 @@ export default function ListaPrecios() {
         <div className="lp-footer">
           <div className="lp-footer-nota">
             <strong>Azul Colchones · Distribuidores Oficiales Piero</strong><br />
-            Precios vigentes en pesos argentinos · Lista actualizada Febrero 2026<br />
+            Precios vigentes en pesos argentinos · Lista actualizada Marzo 2026<br />
             Los precios pueden variar sin previo aviso. Consultá financiación en el local.
           </div>
           <div className="lp-footer-contacto">

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 const Icons = {
   Menu: ({ className = "w-5 h-5" }: { className?: string }) => (
@@ -46,7 +46,6 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
-  // ── NUEVO: ícono lista de precios ──────────────────────────────
   PriceList: ({ className = "w-4 h-4" }: { className?: string }) => (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -224,8 +223,8 @@ const DesktopInfoDropdown = () => {
   )
 }
 
-// ── NUEVO: botón Lista de Precios ──────────────────────────────────────────────
-const PriceListButton = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobile' }) => {
+// ── PriceListButton — ahora acepta onNavigate para cerrar el menú mobile ──
+const PriceListButton = ({ variant = 'desktop', onNavigate }: { variant?: 'desktop' | 'mobile'; onNavigate?: () => void }) => {
   if (variant === 'desktop') {
     return (
       <Link
@@ -240,10 +239,10 @@ const PriceListButton = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobil
     )
   }
 
-  // mobile: fila completa dentro del menú
   return (
     <Link
       href="/lista-precios"
+      onClick={onNavigate}
       className="flex items-center justify-between px-4 py-4 rounded-xl transition-all active:scale-[0.98]
                  bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800/60"
     >
@@ -260,13 +259,19 @@ const PriceListButton = ({ variant = 'desktop' }: { variant?: 'desktop' | 'mobil
     </Link>
   )
 }
-// ──────────────────────────────────────────────────────────────────────────────
 
 export default function Header() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+
+  const closeMenu = useCallback(() => setIsMenuOpen(false), [])
+
+  // ── Cerrar menú automáticamente al cambiar de ruta ──
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024)
@@ -335,9 +340,7 @@ export default function Header() {
                 </span>
               </Link>
 
-              {/* ── Lista de Precios (desktop) ── */}
               <PriceListButton variant="desktop" />
-
               <DesktopInfoDropdown />
             </div>
 
@@ -397,7 +400,7 @@ export default function Header() {
       {isMenuOpen && (
         <>
           <div
-            onClick={() => setIsMenuOpen(false)}
+            onClick={closeMenu}
             className="fixed inset-0 bg-black/75 backdrop-blur-sm lg:hidden z-[60]"
           />
           <div className="fixed inset-x-0 top-[72px] bottom-0 lg:hidden z-[70] bg-zinc-950 overflow-y-auto">
@@ -407,7 +410,7 @@ export default function Header() {
 
               <Link
                 href="/piero-fabrica"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={closeMenu}
                 className={`flex items-center justify-between px-4 py-4 rounded-xl transition-all active:scale-[0.98] ${
                   isActivePieroFabrica
                     ? 'bg-blue-600/80 text-white'
@@ -426,8 +429,8 @@ export default function Header() {
                 <Icons.ChevronRight className="w-5 h-5 text-zinc-500" />
               </Link>
 
-              {/* ── Lista de Precios (mobile menu) ── */}
-              <PriceListButton variant="mobile" />
+              {/* Lista de Precios — ahora cierra el menú */}
+              <PriceListButton variant="mobile" onNavigate={closeMenu} />
 
               <div className="border-t border-zinc-800/80" />
 
@@ -438,7 +441,7 @@ export default function Header() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={closeMenu}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all active:scale-[0.98] ${
                         isActive
                           ? 'bg-zinc-800 text-white'
