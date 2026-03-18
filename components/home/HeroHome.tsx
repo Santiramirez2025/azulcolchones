@@ -72,7 +72,7 @@ export default function HeroHome() {
           {/* CTA Piero Fábrica - Mejorado visualmente */}
           <div className="max-w-xl mx-auto px-4 mb-12 md:mb-14">
             <Link 
-              href="/piero-fabrica"
+              href="/lista-precios"
               className="group relative block overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 border border-emerald-400/30 rounded-2xl transition-all hover:scale-[1.02] hover:shadow-2xl hover:shadow-emerald-500/30 shadow-xl shadow-emerald-500/20"
             >
               {/* Shine effect on hover */}
