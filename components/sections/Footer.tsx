@@ -144,7 +144,7 @@ export default function Footer() {
               <h3 className="text-white font-black text-sm uppercase tracking-wider mb-5">Comprar</h3>
               <nav className="space-y-3">
                 <Link
-                  href="/piero-fabrica"
+                  href="/lista-precios"
                   className="group flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-sm"
                 >
                   <span className="text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
