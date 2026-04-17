@@ -27,6 +27,12 @@ export default function ListaPrecios() {
           min-height: 100vh;
         }
 
+        /* ===== SCROLL OFFSET para que el ancla no quede pegada al header ===== */
+        .lp-seccion {
+          scroll-margin-top: 100px;
+          margin-bottom: 48px;
+        }
+
         /* ===== HEADER ===== */
         .lp-header {
           background: var(--azul);
@@ -138,7 +144,6 @@ export default function ListaPrecios() {
         }
 
         /* ===== SECCIÓN ===== */
-        .lp-seccion { margin-bottom: 48px; }
         .lp-seccion-header {
           display: flex;
           align-items: center;
@@ -146,6 +151,7 @@ export default function ListaPrecios() {
           margin-bottom: 20px;
           padding-bottom: 14px;
           border-bottom: 2px solid var(--azul);
+          transition: background 1.5s ease;
         }
         .lp-seccion-icono {
           width: 44px; height: 44px;
@@ -170,6 +176,15 @@ export default function ListaPrecios() {
         .lp-badge-equil    { background: #e8f0fe; color: #1a56db; }
         .lp-badge-premium  { background: #fef3e2; color: #92400e; }
         .lp-badge-accesorio{ background: #ecfdf5; color: #1a6b3c; }
+
+        /* ===== DESTACAR sección cuando llegás desde un ancla ===== */
+        .lp-seccion:target .lp-seccion-header {
+          animation: lp-highlight 2.5s ease-out;
+        }
+        @keyframes lp-highlight {
+          0%   { background: rgba(200, 169, 110, 0.35); box-shadow: 0 0 0 8px rgba(200, 169, 110, 0.2); }
+          100% { background: transparent; box-shadow: none; }
+        }
 
         /* ===== TABLA ===== */
         .lp-tabla-wrapper {
@@ -229,13 +244,6 @@ export default function ListaPrecios() {
           font-size: 11px;
           font-weight: 800;
           margin-right: 2px;
-        }
-        .lp-cuotas-badge-text {
-          font-size: 10px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          font-weight: 700;
-          color: var(--gris-texto);
         }
         .lp-star {
           display: inline-block; background: var(--oro); color: white;
@@ -336,17 +344,15 @@ export default function ListaPrecios() {
           .lp-footer-contacto { text-align: left; }
           .lp-tabla-wrapper td, .lp-tabla-wrapper thead th { padding: 10px 12px; }
           .lp-th-cuotas, .lp-col-cuotas { display: none; }
-          .lp-cuotas-badge-inline {
-            display: inline-flex !important;
-            margin-top: 4px;
-          }
+          .lp-seccion { scroll-margin-top: 80px; }
         }
-        .lp-cuotas-badge-inline { display: none; }
 
         @media print {
           .lp-aviso { display: none; }
           .lp-seccion { page-break-inside: avoid; }
         }
+
+        html { scroll-behavior: smooth; }
       `}</style>
 
       <div className="lp-body">
@@ -364,7 +370,7 @@ export default function ListaPrecios() {
           </div>
         </div>
 
-        {/* BANNER CUOTAS — destacado y visible */}
+        {/* BANNER CUOTAS */}
         <div className="lp-banner-cuotas">
           <div className="lp-banner-cuotas-icon">%</div>
           <div className="lp-banner-cuotas-text">
@@ -383,7 +389,7 @@ export default function ListaPrecios() {
         <div className="lp-container">
 
           {/* ── MEDITARE EUROPILLOW ── */}
-          <div className="lp-seccion">
+          <div id="meditare" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#fde8e8' }}>🛏️</div>
               <div>
@@ -407,7 +413,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── SONNO EUROPILLOW ── */}
-          <div className="lp-seccion">
+          <div id="sonno" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#fde8e8' }}>🛏️</div>
               <div>
@@ -432,7 +438,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── NIRVANA ── */}
-          <div className="lp-seccion">
+          <div id="nirvana" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#e8f0fe' }}>🛏️</div>
               <div>
@@ -459,7 +465,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── NAMASTE / NAMASTE PILLOW TOP ── */}
-          <div className="lp-seccion">
+          <div id="namaste" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#e8f0fe' }}>🛏️</div>
               <div>
@@ -490,7 +496,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── REGNO / REGNO PILLOW TOP ── */}
-          <div className="lp-seccion">
+          <div id="regno" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#e8f0fe' }}>🛏️</div>
               <div>
@@ -521,7 +527,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── GRAVITA ── */}
-          <div className="lp-seccion">
+          <div id="gravita" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#e8f0fe' }}>🛏️</div>
               <div>
@@ -544,7 +550,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── MONTREAUX / MONTREAUX PILLOW TOP ── */}
-          <div className="lp-seccion">
+          <div id="montreaux" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#fef3e2' }}>🛏️</div>
               <div>
@@ -573,7 +579,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── DREAM FIT ── */}
-          <div className="lp-seccion">
+          <div id="dreamfit" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#fef3e2' }}>🛏️</div>
               <div>
@@ -600,7 +606,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── SOMMIERS ── */}
-          <div className="lp-seccion">
+          <div id="sommiers" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#ecfdf5' }}>📦</div>
               <div>
@@ -692,7 +698,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── PROTECTORES ── */}
-          <div className="lp-seccion">
+          <div id="protectores" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#ecfdf5' }}>🛡️</div>
               <div>
@@ -738,7 +744,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── ALMOHADAS ── */}
-          <div className="lp-seccion">
+          <div id="almohadas" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#ecfdf5' }}>💤</div>
               <div>
@@ -771,7 +777,7 @@ export default function ListaPrecios() {
           </div>
 
           {/* ── SÁBANAS ── */}
-          <div className="lp-seccion">
+          <div id="sabanas" className="lp-seccion">
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#ecfdf5' }}>✨</div>
               <div>

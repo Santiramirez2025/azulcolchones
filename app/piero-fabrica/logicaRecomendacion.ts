@@ -1,536 +1,408 @@
-// app/piero-fabrica/logicaRecomendacion.ts
-// Lógica de recomendación de colchones PIERO
-// Basada en postura de sueño, peso y medida seleccionada
+// ============================================================================
+// LÓGICA DE RECOMENDACIÓN - ASESOR DE COLCHONES
+// Actualizada: Abril 2026 · Precios Azul Colchones · Piero
+// ============================================================================
+
+export type Medida = 'plaza' | 'plaza-media' | 'queen' | 'king'
+export type Postura = 'lado' | 'boca-arriba' | 'boca-abajo' | 'cambia'
+export type Peso = 'menos-60' | '60-80' | '80-100' | 'mas-100'
 
 export interface Respuestas {
-    medida: 'plaza' | 'plaza-media' | 'queen' | 'king' | null
-    postura: 'lado' | 'boca-arriba' | 'boca-abajo' | 'cambia' | null
-    peso: 'menos-60' | '60-80' | '80-100' | 'mas-100' | null
-    acompanado?: boolean
-  }
-  
-  export interface Recomendacion {
-    modelo: string
-    medida: string
-    medidaDisplay: string
-    precio: number
-    precioML?: number
-    razonamiento: string
-    caracteristicas: string[]
-    imagen?: string
-    ancla?: string // Para scroll al producto
-  }
-  
-  type FirmezaNivel = 'suave-medio' | 'medio' | 'medio-firme' | 'firme'
-  type Segmento = 'ancla' | 'equilibrio' | 'premium'
-  
-  // ============================================================================
-  // MATRIZ DE FIRMEZA POR POSTURA
-  // ============================================================================
-  
-  const FIRMEZA_POR_POSTURA: Record<NonNullable<Respuestas['postura']>, FirmezaNivel> = {
-    'lado': 'medio', // Necesita adaptabilidad en hombros/cadera
-    'boca-arriba': 'medio-firme', // Buen soporte lumbar
-    'boca-abajo': 'firme', // Evitar hundimiento excesivo
-    'cambia': 'medio' // Equilibrio para todas las posturas
-  }
-  
-  // ============================================================================
-  // MATRIZ DE FIRMEZA POR PESO
-  // ============================================================================
-  
-  const FIRMEZA_POR_PESO: Record<NonNullable<Respuestas['peso']>, FirmezaNivel> = {
-    'menos-60': 'suave-medio',
-    '60-80': 'medio',
-    '80-100': 'medio-firme',
-    'mas-100': 'firme'
-  }
-  
-  // ============================================================================
-  // SEGMENTO COMERCIAL POR PESO (Budget routing)
-  // ============================================================================
-  
-  const SEGMENTO_POR_PESO: Record<NonNullable<Respuestas['peso']>, Segmento> = {
-    'menos-60': 'ancla', // Precio accesible
-    '60-80': 'equilibrio', // Mayor volumen
-    '80-100': 'equilibrio', // Necesita calidad
-    'mas-100': 'premium' // Requiere máximo soporte
-  }
-  
-  // ============================================================================
-  // CATÁLOGO DE PRODUCTOS POR PERFIL
-  // ============================================================================
-  
-  interface ModeloBase {
-    nombre: string
-    preciosPorMedida: {
-      plaza?: number
-      'plaza-media'?: number
-      queen?: number
-      king?: number
-    }
-    preciosMLPorMedida?: {
-      plaza?: number
-      'plaza-media'?: number
-      queen?: number
-      king?: number
-    }
-    caracteristicas: string[]
-    razonamiento: {
-      'lado'?: string
-      'boca-arriba'?: string
-      'boca-abajo'?: string
-      'cambia'?: string
-      default: string
-    }
-  }
-  
-  const MODELOS: Record<FirmezaNivel, Record<Segmento, ModeloBase>> = {
-    'suave-medio': {
-      ancla: {
-        nombre: 'Colchón Piero Meditare EuroPillow',
-        preciosPorMedida: {
-          plaza: 234900,
-          'plaza-media': 354900,
-          queen: 354900,
-          king: 354900
-        },
-        preciosMLPorMedida: {
-          plaza: 279900,
-          'plaza-media': 399900,
-          queen: 399900,
-          king: 399900
-        },
-        caracteristicas: [
-          'EuroPillow integrado para mayor confort',
-          'Firmeza suave-media ideal para peso ligero',
-          'Garantía oficial PIERO 5 años'
-        ],
-        razonamiento: {
-          'lado': 'Al dormir de lado con peso ligero, este colchón ofrece la adaptabilidad necesaria en hombros y cadera sin comprometer el soporte.',
-          default: 'Con firmeza suave-media, es ideal para tu peso, proporcionando confort sin perder soporte estructural.'
-        }
-      },
-      equilibrio: {
-        nombre: 'Colchón Piero Sonno EuroPillow',
-        preciosPorMedida: {
-          plaza: 314900,
-          'plaza-media': 469900,
-          queen: 514900,
-          king: 514900
-        },
-        preciosMLPorMedida: {
-          plaza: 369900,
-          'plaza-media': 679900,
-          queen: 579900,
-          king: 579900
-        },
-        caracteristicas: [
-          'EuroPillow de alta densidad',
-          'Equilibrio perfecto confort-soporte',
-          'Garantía oficial PIERO 8 años'
-        ],
-        razonamiento: {
-          default: 'El Sonno EuroPillow ofrece un equilibrio superior entre adaptabilidad y soporte, ideal para tu perfil.'
-        }
-      },
-      premium: {
-        nombre: 'Colchón Piero Namaste',
-        preciosPorMedida: {
-          'plaza-media': 424900,
-          queen: 539900,
-          king: 649900
-        },
-        preciosMLPorMedida: {
-          'plaza-media': 449900,
-          queen: 579900,
-          king: 699900
-        },
-        caracteristicas: [
-          'Tecnología premium de adaptación',
-          'Sistema de confort multicapa',
-          'Garantía oficial PIERO 10 años'
-        ],
-        razonamiento: {
-          default: 'El Namaste combina tecnología premium con adaptabilidad superior, perfecto para descanso de alta calidad.'
-        }
-      }
+  medida: Medida | null
+  postura: Postura | null
+  peso: Peso | null
+}
+
+export interface Recomendacion {
+  modelo: string
+  linea: 'Entrada' | 'Media' | 'Media Alta' | 'Alta Gama' | 'Premium' | 'Ultra Premium'
+  medidaDisplay: string
+  precio: number
+  cuotas: number
+  razonamiento: string
+  caracteristicas: string[]
+  ancla: string
+  slug: string
+}
+
+export interface ResultadoRecomendacion {
+  principal: Recomendacion
+  alternativa: Recomendacion | null
+}
+
+// ============================================================================
+// CATÁLOGO DE PRECIOS - Abril 2026
+// Clave: slug_modelo → { medidas: { plaza|plaza-media|queen|king: precio } }
+// ============================================================================
+
+const CATALOGO = {
+  meditare: {
+    nombre: 'Meditare EuroPillow',
+    linea: 'Entrada' as const,
+    cuotas: 2,
+    ancla: '#meditare',
+    medidas: {
+      'plaza':       { precio: 361000, display: '190×90 · 1 plaza' },
+      'plaza-media': { precio: 545000, display: '190×140 · 2 plazas' },
+      'queen':       null, // No hay medida queen en esta línea
+      'king':        null,
     },
-  
-    'medio': {
-      ancla: {
-        nombre: 'Colchón Piero Nirvana',
-        preciosPorMedida: {
-          plaza: 359900,
-          'plaza-media': 549900,
-          queen: 769900,
-          king: 829900
-        },
-        preciosMLPorMedida: {
-          plaza: 519900,
-          'plaza-media': 709900,
-          queen: 1099900,
-          king: 1019900
-        },
-        caracteristicas: [
-          'Firmeza media balanceada',
-          'Excelente relación calidad-precio',
-          'Garantía oficial PIERO 8 años'
-        ],
-        razonamiento: {
-          'lado': 'Por tu forma de dormir de lado, el Nirvana ofrece la firmeza media ideal: se adapta a tus curvas sin perder soporte.',
-          'cambia': 'Como cambiás mucho de posición, necesitás un colchón versátil. El Nirvana tiene firmeza media equilibrada para todas las posturas.',
-          default: 'El Nirvana ofrece firmeza media perfectamente balanceada, ideal para tu peso y forma de dormir.'
-        }
-      },
-      equilibrio: {
-        nombre: 'Colchón Piero Regno',
-        preciosPorMedida: {
-          plaza: 324900,
-          'plaza-media': 459900,
-          queen: 544900,
-          king: 669900
-        },
-        preciosMLPorMedida: {
-          plaza: 449900,
-          'plaza-media': 729900,
-          queen: 979900,
-          king: 899900
-        },
-        caracteristicas: [
-          'Firmeza media de alta calidad',
-          'Sistema anti-transferencia de movimiento',
-          'Garantía oficial PIERO 10 años'
-        ],
-        razonamiento: {
-          'lado': 'Al dormir de lado, el Regno proporciona el balance perfecto: firmeza media que sostiene tu columna y se adapta a hombros y cadera.',
-          default: 'El Regno combina firmeza media con tecnología que minimiza la transferencia de movimiento, ideal para tu perfil.'
-        }
-      },
-      premium: {
-        nombre: 'Colchón Piero Montreaux',
-        preciosPorMedida: {
-          'plaza-media': 789900,
-          queen: 989900,
-          king: 1119900
-        },
-        preciosMLPorMedida: {
-          'plaza-media': 1369900,
-          queen: 1699900,
-          king: 1929900
-        },
-        caracteristicas: [
-          'Firmeza media premium',
-          'Tecnología de última generación',
-          'Garantía oficial PIERO 10 años'
-        ],
-        razonamiento: {
-          default: 'El Montreaux es nuestro tope de gama en firmeza media, con tecnología premium para descanso superior.'
-        }
-      }
+    caracteristicas: [
+      'Diseño EuroPillow para mayor confort superficial',
+      'Mejor relación precio-calidad del catálogo',
+      'Garantía oficial Piero',
+    ],
+  },
+  sonno: {
+    nombre: 'Sonno EuroPillow',
+    linea: 'Entrada' as const,
+    cuotas: 2,
+    ancla: '#sonno',
+    medidas: {
+      'plaza':       { precio: 469000, display: '190×90 · 1 plaza' },
+      'plaza-media': { precio: 699000, display: '190×140 · 2 plazas' },
+      'queen':       { precio: 763000, display: '190×160 · 2 plazas' },
+      'king':        null,
     },
-  
-    'medio-firme': {
-      ancla: {
-        nombre: 'Colchón Piero Nirvana',
-        preciosPorMedida: {
-          plaza: 359900,
-          'plaza-media': 549900,
-          queen: 769900,
-          king: 829900
-        },
-        preciosMLPorMedida: {
-          plaza: 519900,
-          'plaza-media': 709900,
-          queen: 1099900,
-          king: 1019900
-        },
-        caracteristicas: [
-          'Soporte firme sin sacrificar confort',
-          'Ideal para peso medio-alto',
-          'Garantía oficial PIERO 8 años'
-        ],
-        razonamiento: {
-          'boca-arriba': 'Al dormir boca arriba, necesitás buen soporte lumbar. El Nirvana ofrece firmeza media-alta que mantiene tu columna alineada.',
-          default: 'Por tu peso, necesitás soporte consistente. El Nirvana ofrece firmeza media-alta sin ser excesivamente duro.'
-        }
-      },
-      equilibrio: {
-        nombre: 'Colchón Piero Gravita',
-        preciosPorMedida: {
-          'plaza-media': 749900,
-          queen: 924900,
-          king: 1049900
-        },
-        preciosMLPorMedida: {
-          'plaza-media': 999900,
-          queen: 1109900,
-          king: 1319900
-        },
-        caracteristicas: [
-          'Tecnología Gravita de soporte progresivo',
-          'Firmeza media-alta de larga duración',
-          'Garantía oficial PIERO 10 años'
-        ],
-        razonamiento: {
-          'boca-arriba': 'El Gravita tiene soporte progresivo ideal para tu postura: firme en zona lumbar, adaptable en el resto del cuerpo.',
-          default: 'La tecnología Gravita proporciona soporte firme y duradero, perfecto para tu peso y forma de dormir.'
-        }
-      },
-      premium: {
-        nombre: 'Colchón Piero Montreaux Pillow Top',
-        preciosPorMedida: {
-          'plaza-media': 989900,
-          queen: 1199900,
-          king: 1369900
-        },
-        preciosMLPorMedida: {
-          'plaza-media': 1529900,
-          queen: 2079900,
-          king: 2679900
-        },
-        caracteristicas: [
-          'Pillow Top premium sobre base firme',
-          'Soporte firme con capa de confort superior',
-          'Garantía oficial PIERO 10 años'
-        ],
-        razonamiento: {
-          default: 'El Montreaux Pillow Top combina base firme con capa superior de confort: soporte máximo sin sacrificar comodidad.'
-        }
-      }
+    caracteristicas: [
+      'Modelo más vendido de la línea Entrada',
+      'EuroPillow de densidad media-firme',
+      'Excelente durabilidad en uso diario',
+    ],
+  },
+  nirvana: {
+    nombre: 'Nirvana',
+    linea: 'Media' as const,
+    cuotas: 3,
+    ancla: '#nirvana',
+    medidas: {
+      'plaza':       { precio: 606000,  display: '190×90 · 1 plaza' },
+      'plaza-media': { precio: 922000,  display: '190×140 · 2 plazas' },
+      'queen':       { precio: 1175000, display: '200×160 · Queen' },
+      'king':        { precio: 1395000, display: '200×200 · King' },
     },
+    caracteristicas: [
+      'Confort superior con soporte equilibrado',
+      'Ideal para uso diario prolongado',
+      'Firmeza media · Apto la mayoría de pesos',
+    ],
+  },
+  namaste: {
+    nombre: 'Namaste',
+    linea: 'Media' as const,
+    cuotas: 3,
+    ancla: '#namaste',
+    medidas: {
+      'plaza':       { precio: 470000,  display: '190×90 · 1 plaza' },
+      'plaza-media': { precio: 711000,  display: '190×140 · 2 plazas' },
+      'queen':       { precio: 907000,  display: '200×160 · Queen' },
+      'king':        { precio: 1088000, display: '200×200 · King' },
+    },
+    caracteristicas: [
+      'Ergonomía diseñada para descanso profundo',
+      'Firmeza media-firme · Buen soporte lumbar',
+      'Ideal para quienes duermen boca arriba',
+    ],
+  },
+  'namaste-pt': {
+    nombre: 'Namaste Pillow Top',
+    linea: 'Media' as const,
+    cuotas: 3,
+    ancla: '#namaste',
+    medidas: {
+      'plaza':       { precio: 647000,  display: '190×100 · 1 plaza' },
+      'plaza-media': { precio: 933000,  display: '190×140 · 2 plazas' },
+      'queen':       { precio: 1067000, display: '200×160 · Queen' },
+      'king':        { precio: 1309000, display: '200×200 · King' },
+    },
+    caracteristicas: [
+      'Capa Pillow Top superior para mayor suavidad',
+      'Soporte firme + confort acolchado arriba',
+      'Recomendado para dormir de lado',
+    ],
+  },
+  regno: {
+    nombre: 'Regno',
+    linea: 'Media Alta' as const,
+    cuotas: 3,
+    ancla: '#regno',
+    medidas: {
+      'plaza':       { precio: 521000,  display: '190×90 · 1 plaza' },
+      'plaza-media': { precio: 743000,  display: '190×140 · 2 plazas' },
+      'queen':       { precio: 877000,  display: '200×160 · Queen' },
+      'king':        { precio: 1079000, display: '200×200 · King' },
+    },
+    caracteristicas: [
+      'Tecnología avanzada de resortes',
+      'Firmeza superior · Excelente para pesos medios-altos',
+      'Independencia de movimiento',
+    ],
+  },
+  'regno-pt': {
+    nombre: 'Regno Pillow Top',
+    linea: 'Media Alta' as const,
+    cuotas: 3,
+    ancla: '#regno',
+    medidas: {
+      'plaza':       null,
+      'plaza-media': { precio: 961000,  display: '190×140 · 2 plazas' },
+      'queen':       { precio: 1102000, display: '200×160 · Queen' },
+      'king':        { precio: 1341000, display: '200×200 · King' },
+    },
+    caracteristicas: [
+      'Pillow Top premium con excelente acolchado',
+      'Firmeza adaptativa · Soporte sin dureza',
+      'Ideal para dormir de lado con peso alto',
+    ],
+  },
+  gravita: {
+    nombre: 'Gravita',
+    linea: 'Alta Gama' as const,
+    cuotas: 3,
+    ancla: '#gravita',
+    medidas: {
+      'plaza':       null,
+      'plaza-media': { precio: 1259000, display: '190×140 · 2 plazas' },
+      'queen':       { precio: 1549000, display: '200×160 · Queen' },
+      'king':        { precio: 1763000, display: '200×200 · King' },
+    },
+    caracteristicas: [
+      'Tecnología de punta · Máxima ergonomía',
+      'Soporte zonificado para columna',
+      'Alta durabilidad y confort prolongado',
+    ],
+  },
+  montreaux: {
+    nombre: 'Montreaux',
+    linea: 'Premium' as const,
+    cuotas: 6,
+    ancla: '#montreaux',
+    medidas: {
+      'plaza':       null,
+      'plaza-media': { precio: 1394000, display: '190×140 · 2 plazas' },
+      'queen':       { precio: 1749000, display: '200×160 · Queen' },
+      'king':        { precio: 1982000, display: '200×200 · King' },
+    },
+    caracteristicas: [
+      'Línea Premium · Lujo y confort superior',
+      'Firmeza media-alta · Soporte prolongado',
+      'Materiales de alta gama',
+    ],
+  },
+  'montreaux-pt': {
+    nombre: 'Montreaux Pillow Top',
+    linea: 'Premium' as const,
+    cuotas: 6,
+    ancla: '#montreaux',
+    medidas: {
+      'plaza':       null,
+      'plaza-media': { precio: 1751000, display: '190×140 · 2 plazas' },
+      'queen':       { precio: 2133000, display: '200×160 · Queen' },
+      'king':        { precio: 2428000, display: '200×200 · King' },
+    },
+    caracteristicas: [
+      'Pillow Top premium con máximo confort',
+      'Soporte firme con superficie acolchada',
+      'Ideal para el descanso más exigente',
+    ],
+  },
+} as const
+
+type SlugModelo = keyof typeof CATALOGO
+
+// ============================================================================
+// SISTEMA DE SCORING - Asigna puntaje a cada modelo según respuestas
+// ============================================================================
+
+function scoringModelo(
+  slug: SlugModelo,
+  medida: Medida,
+  postura: Postura,
+  peso: Peso
+): number {
+  const modelo = CATALOGO[slug]
   
-    'firme': {
-      ancla: {
-        nombre: 'Colchón Piero Nirvana',
-        preciosPorMedida: {
-          plaza: 359900,
-          'plaza-media': 549900,
-          queen: 769900,
-          king: 829900
-        },
-        preciosMLPorMedida: {
-          plaza: 519900,
-          'plaza-media': 709900,
-          queen: 1099900,
-          king: 1019900
-        },
-        caracteristicas: [
-          'Firmeza alta para soporte máximo',
-          'Previene hundimiento excesivo',
-          'Garantía oficial PIERO 8 años'
-        ],
-        razonamiento: {
-          'boca-abajo': 'Al dormir boca abajo, necesitás firmeza alta para evitar que tu cadera se hunda. El Nirvana proporciona el soporte necesario.',
-          default: 'Por tu peso, necesitás soporte firme y duradero. El Nirvana ofrece la firmeza necesaria sin comprometer calidad.'
-        }
-      },
-      equilibrio: {
-        nombre: 'Colchón Piero Regno Pillow Top',
-        preciosPorMedida: {
-          'plaza-media': 574900,
-          queen: 659900,
-          king: 799900
-        },
-        preciosMLPorMedida: {
-          'plaza-media': 629900,
-          queen: 799900,
-          king: 1079900
-        },
-        caracteristicas: [
-          'Base firme con Pillow Top de confort',
-          'Soporte extra para peso elevado',
-          'Garantía oficial PIERO 10 años'
-        ],
-        razonamiento: {
-          'boca-abajo': 'El Regno Pillow Top combina base firme (ideal para boca abajo) con capa superior que evita presión excesiva en pecho y pelvis.',
-          default: 'Base firme de alta resistencia con Pillow Top que añade confort sin comprometer soporte.'
-        }
-      },
-      premium: {
-        nombre: 'Colchón Piero Dream Fit Pocket',
-        preciosPorMedida: {
-          'plaza-media': 1949900,
-          queen: 2249900,
-          king: 2549900
-        },
-        preciosMLPorMedida: {
-          'plaza-media': 2099900,
-          queen: 2399900,
-          king: 2749900
-        },
-        caracteristicas: [
-          'Resortes pocket individuales de alta densidad',
-          'Soporte firme ultra-premium',
-          'Garantía oficial PIERO 10 años'
-        ],
-        razonamiento: {
-          default: 'El Dream Fit Pocket es nuestra tecnología más avanzada en soporte firme, con resortes independientes de máxima calidad.'
-        }
-      }
+  // Si no existe la medida en este modelo, descartar
+  if (!modelo.medidas[medida]) return -1
+
+  let score = 0
+
+  // ---- FACTOR 1: Peso → Firmeza necesaria ----
+  // Más peso requiere más firmeza/soporte
+  const esFirmeza = {
+    meditare:       1, // Más blando
+    sonno:          2,
+    nirvana:        3, // Media
+    namaste:        3,
+    'namaste-pt':   3,
+    regno:          4, // Firme
+    'regno-pt':     4,
+    gravita:        5, // Muy firme
+    montreaux:      5,
+    'montreaux-pt': 4, // Firme con acolchado
+  }[slug]
+
+  if (peso === 'menos-60') {
+    // Persona liviana: prefiere firmeza baja-media (1-3)
+    score += esFirmeza <= 3 ? 20 : esFirmeza === 4 ? 10 : 0
+  } else if (peso === '60-80') {
+    // Peso medio: firmeza media (2-4)
+    score += esFirmeza >= 2 && esFirmeza <= 4 ? 20 : 10
+  } else if (peso === '80-100') {
+    // Peso medio-alto: firmeza media-alta (3-5)
+    score += esFirmeza >= 3 ? 20 : 5
+  } else if (peso === 'mas-100') {
+    // Peso alto: firmeza alta obligatoria (4-5)
+    score += esFirmeza >= 4 ? 25 : esFirmeza === 3 ? 10 : -10
+  }
+
+  // ---- FACTOR 2: Postura → Tipo de superficie ----
+  const tienePillowTop = slug.includes('-pt')
+
+  if (postura === 'lado') {
+    // De lado: Pillow Top ideal (alivia hombros y caderas)
+    score += tienePillowTop ? 15 : 5
+  } else if (postura === 'boca-arriba') {
+    // Boca arriba: firmeza media-firme sin mucho acolchado
+    score += tienePillowTop ? 8 : 15
+  } else if (postura === 'boca-abajo') {
+    // Boca abajo: firme sin pillow top (evita curvar columna)
+    score += tienePillowTop ? 0 : 15
+    score += esFirmeza >= 3 ? 5 : -5
+  } else if (postura === 'cambia') {
+    // Cambia mucho: equilibrio medio, pillow top ok
+    score += esFirmeza >= 2 && esFirmeza <= 4 ? 12 : 5
+    if (tienePillowTop) score += 3
+  }
+
+  // ---- FACTOR 3: Medida → Preferencia de línea por tamaño ----
+  // En king/queen se recomienda línea más alta (la gente invierte más)
+  if (medida === 'king' || medida === 'queen') {
+    if (modelo.linea === 'Media' || modelo.linea === 'Media Alta') score += 8
+    if (modelo.linea === 'Alta Gama' || modelo.linea === 'Premium') score += 5
+    if (modelo.linea === 'Entrada') score -= 5
+  } else if (medida === 'plaza') {
+    // 1 plaza: más probable que sea cuarto de invitados o niño
+    if (modelo.linea === 'Entrada' || modelo.linea === 'Media') score += 10
+    if (modelo.linea === 'Premium') score -= 10
+  }
+
+  return score
+}
+
+// ============================================================================
+// FUNCIÓN PRINCIPAL
+// ============================================================================
+
+export function calcularRecomendacion(respuestas: Respuestas): ResultadoRecomendacion {
+  if (!respuestas.medida || !respuestas.postura || !respuestas.peso) {
+    throw new Error('Respuestas incompletas')
+  }
+
+  const { medida, postura, peso } = respuestas
+
+  // Scoring de todos los modelos
+  const ranking = (Object.keys(CATALOGO) as SlugModelo[])
+    .map(slug => ({ slug, score: scoringModelo(slug, medida, postura, peso) }))
+    .filter(r => r.score > 0)
+    .sort((a, b) => b.score - a.score)
+
+  if (ranking.length === 0) {
+    // Fallback: si no hay match, devolvemos Sonno 2 plazas
+    return {
+      principal: construirRecomendacion('sonno', 'plaza-media', postura, peso),
+      alternativa: null,
     }
   }
+
+  const principal = construirRecomendacion(ranking[0].slug, medida, postura, peso)
+
+  // Alternativa premium: buscar un modelo de línea superior a la principal
+  const lineasOrden = ['Entrada', 'Media', 'Media Alta', 'Alta Gama', 'Premium', 'Ultra Premium']
+  const idxLineaPrincipal = lineasOrden.indexOf(principal.linea)
   
-  // ============================================================================
-  // MAPEO DE MEDIDAS A DISPLAY
-  // ============================================================================
-  
-  const MEDIDAS_DISPLAY: Record<string, Record<NonNullable<Respuestas['medida']>, string>> = {
-    general: {
-      plaza: '190x90 cm (1 plaza)',
-      'plaza-media': '190x140 cm (2 plazas)',
-      queen: '200x160 cm (Queen)',
-      king: '200x200 cm (King)'
-    }
+  const alternativaSlug = ranking.slice(1).find(r => {
+    const lineaAlt = CATALOGO[r.slug].linea
+    return lineasOrden.indexOf(lineaAlt) > idxLineaPrincipal
+  })
+
+  const alternativa = alternativaSlug
+    ? construirRecomendacion(alternativaSlug.slug, medida, postura, peso)
+    : null
+
+  return { principal, alternativa }
+}
+
+// ============================================================================
+// CONSTRUCTOR DE RECOMENDACIÓN
+// ============================================================================
+
+function construirRecomendacion(
+  slug: SlugModelo,
+  medida: Medida,
+  postura: Postura,
+  peso: Peso
+): Recomendacion {
+  const modelo = CATALOGO[slug]
+  const medidaData = modelo.medidas[medida]
+
+  // Si no existe esa medida, buscar la más cercana
+  if (!medidaData) {
+    const fallbackMedida = (['plaza-media', 'queen', 'king', 'plaza'] as Medida[])
+      .find(m => modelo.medidas[m]) as Medida
+    return construirRecomendacion(slug, fallbackMedida, postura, peso)
   }
-  
-  // ============================================================================
-  // FUNCIÓN PRINCIPAL: COMBINAR FIRMEZA
-  // ============================================================================
-  
-  function combinarFirmeza(
-    firmezaPostura: FirmezaNivel,
-    firmezaPeso: FirmezaNivel
-  ): FirmezaNivel {
-    // El peso tiene más influencia (60%) que la postura (40%)
-    const niveles: FirmezaNivel[] = ['suave-medio', 'medio', 'medio-firme', 'firme']
-    
-    const idxPostura = niveles.indexOf(firmezaPostura)
-    const idxPeso = niveles.indexOf(firmezaPeso)
-    
-    // Promedio ponderado: peso 60%, postura 40%
-    const idxFinal = Math.round((idxPeso * 0.6) + (idxPostura * 0.4))
-    
-    return niveles[Math.min(idxFinal, niveles.length - 1)]
+
+  return {
+    modelo: modelo.nombre,
+    linea: modelo.linea,
+    medidaDisplay: medidaData.display,
+    precio: medidaData.precio,
+    cuotas: modelo.cuotas,
+    razonamiento: generarRazonamiento(slug, postura, peso),
+    caracteristicas: [...modelo.caracteristicas],
+    ancla: modelo.ancla,
+    slug,
   }
-  
-  // ============================================================================
-  // FUNCIÓN: BUSCAR ALTERNATIVA
-  // ============================================================================
-  
-  function buscarAlternativa(
-    firmeza: FirmezaNivel,
-    segmentoActual: Segmento,
-    medida: NonNullable<Respuestas['medida']>
-  ): ModeloBase | null {
-    // Buscar en segmento superior
-    const segmentos: Segmento[] = ['ancla', 'equilibrio', 'premium']
-    const idxActual = segmentos.indexOf(segmentoActual)
-    
-    if (idxActual < segmentos.length - 1) {
-      const segmentoSuperior = segmentos[idxActual + 1]
-      const modelo = MODELOS[firmeza][segmentoSuperior]
-      
-      // Verificar que el modelo tenga la medida disponible
-      if (modelo.preciosPorMedida[medida]) {
-        return modelo
-      }
-    }
-    
-    return null
+}
+
+// ============================================================================
+// RAZONAMIENTO NATURAL (ES-AR)
+// ============================================================================
+
+function generarRazonamiento(slug: SlugModelo, postura: Postura, peso: Peso): string {
+  const modelo = CATALOGO[slug]
+  const tienePT = slug.includes('-pt')
+
+  const posturaTexto = {
+    'lado': 'dormís de lado',
+    'boca-arriba': 'dormís boca arriba',
+    'boca-abajo': 'dormís boca abajo',
+    'cambia': 'cambiás de postura durante la noche',
+  }[postura]
+
+  const pesoTexto = {
+    'menos-60': 'contextura liviana',
+    '60-80': 'peso medio',
+    '80-100': 'peso medio-alto',
+    'mas-100': 'peso alto',
+  }[peso]
+
+  let razon = `Como ${posturaTexto} y tenés ${pesoTexto}, el ${modelo.nombre} es ideal. `
+
+  if (tienePT) {
+    razon += 'Su capa Pillow Top te va a dar el acolchado que necesitás sin perder soporte. '
   }
-  
-  // ============================================================================
-  // FUNCIÓN: GENERAR RAZONAMIENTO
-  // ============================================================================
-  
-  function generarRazonamiento(
-    modelo: ModeloBase,
-    respuestas: Respuestas
-  ): string {
-    const postura = respuestas.postura!
-    
-    // Usar razonamiento específico por postura si existe
-    if (modelo.razonamiento[postura]) {
-      return modelo.razonamiento[postura]!
-    }
-    
-    return modelo.razonamiento.default
+
+  if (modelo.linea === 'Entrada') {
+    razon += 'Una excelente opción para entrar a la marca Piero con calidad garantizada.'
+  } else if (modelo.linea === 'Media' || modelo.linea === 'Media Alta') {
+    razon += 'Línea media con el mejor equilibrio entre confort y durabilidad.'
+  } else if (modelo.linea === 'Alta Gama') {
+    razon += 'Alta gama con tecnología superior para un descanso prolongado.'
+  } else {
+    razon += 'Línea Premium con los mejores materiales del catálogo Piero.'
   }
-  
-  // ============================================================================
-  // FUNCIÓN PÚBLICA: CALCULAR RECOMENDACIÓN
-  // ============================================================================
-  
-  export function calcularRecomendacion(respuestas: Respuestas): {
-    principal: Recomendacion
-    alternativa: Recomendacion | null
-  } {
-    // Validación
-    if (!respuestas.medida || !respuestas.postura || !respuestas.peso) {
-      throw new Error('Faltan respuestas obligatorias')
-    }
-  
-    // 1. Determinar firmeza necesaria
-    const firmezaPorPostura = FIRMEZA_POR_POSTURA[respuestas.postura]
-    const firmezaPorPeso = FIRMEZA_POR_PESO[respuestas.peso]
-    const firmezaFinal = combinarFirmeza(firmezaPorPostura, firmezaPorPeso)
-  
-    // 2. Determinar segmento comercial
-    const segmento = SEGMENTO_POR_PESO[respuestas.peso]
-  
-    // 3. Obtener modelo recomendado
-    const modeloPrincipal = MODELOS[firmezaFinal][segmento]
-    const precio = modeloPrincipal.preciosPorMedida[respuestas.medida]
-    const precioML = modeloPrincipal.preciosMLPorMedida?.[respuestas.medida]
-  
-    // Si el modelo no tiene esa medida, buscar en el mismo nivel de firmeza
-    if (!precio) {
-      // Fallback: buscar en otro segmento con esa medida
-      for (const seg of ['equilibrio', 'premium', 'ancla'] as Segmento[]) {
-        const modeloFallback = MODELOS[firmezaFinal][seg]
-        if (modeloFallback.preciosPorMedida[respuestas.medida]) {
-          const precioFallback = modeloFallback.preciosPorMedida[respuestas.medida]!
-          const precioMLFallback = modeloFallback.preciosMLPorMedida?.[respuestas.medida]
-  
-          const principal: Recomendacion = {
-            modelo: modeloFallback.nombre,
-            medida: respuestas.medida,
-            medidaDisplay: MEDIDAS_DISPLAY.general[respuestas.medida],
-            precio: precioFallback,
-            precioML: precioMLFallback,
-            razonamiento: generarRazonamiento(modeloFallback, respuestas),
-            caracteristicas: modeloFallback.caracteristicas,
-            ancla: '#productos'
-          }
-  
-          return { principal, alternativa: null }
-        }
-      }
-    }
-  
-    const principal: Recomendacion = {
-      modelo: modeloPrincipal.nombre,
-      medida: respuestas.medida,
-      medidaDisplay: MEDIDAS_DISPLAY.general[respuestas.medida],
-      precio: precio!,
-      precioML: precioML,
-      razonamiento: generarRazonamiento(modeloPrincipal, respuestas),
-      caracteristicas: modeloPrincipal.caracteristicas,
-      ancla: '#productos'
-    }
-  
-    // 4. Buscar alternativa
-    const modeloAlternativa = buscarAlternativa(firmezaFinal, segmento, respuestas.medida)
-    
-    let alternativa: Recomendacion | null = null
-    if (modeloAlternativa) {
-      const precioAlt = modeloAlternativa.preciosPorMedida[respuestas.medida]
-      const precioMLAlt = modeloAlternativa.preciosMLPorMedida?.[respuestas.medida]
-      
-      if (precioAlt) {
-        alternativa = {
-          modelo: modeloAlternativa.nombre,
-          medida: respuestas.medida,
-          medidaDisplay: MEDIDAS_DISPLAY.general[respuestas.medida],
-          precio: precioAlt,
-          precioML: precioMLAlt,
-          razonamiento: 'Opción premium con tecnología superior y mayor durabilidad.',
-          caracteristicas: modeloAlternativa.caracteristicas,
-          ancla: '#productos'
-        }
-      }
-    }
-  
-    return { principal, alternativa }
-  }
+
+  return razon
+}
