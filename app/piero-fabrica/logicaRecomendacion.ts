@@ -1,9 +1,11 @@
 // ============================================================================
 // LÓGICA DE RECOMENDACIÓN - ASESOR DE COLCHONES
 // Actualizada: Abril 2026 · Precios Azul Colchones · Piero
+// Medidas: 1 plaza 80×190 · 1½ plaza 100×190 · 2 plazas 140×190 · 
+//          Queen 160×200 · King 180×200 y 200×200
 // ============================================================================
 
-export type Medida = 'plaza' | 'plaza-media' | 'queen' | 'king'
+export type Medida = 'plaza' | 'plaza-media' | 'dos-plazas' | 'queen' | 'king'
 export type Postura = 'lado' | 'boca-arriba' | 'boca-abajo' | 'cambia'
 export type Peso = 'menos-60' | '60-80' | '80-100' | 'mas-100'
 
@@ -32,7 +34,6 @@ export interface ResultadoRecomendacion {
 
 // ============================================================================
 // CATÁLOGO DE PRECIOS - Abril 2026
-// Clave: slug_modelo → { medidas: { plaza|plaza-media|queen|king: precio } }
 // ============================================================================
 
 const CATALOGO = {
@@ -42,9 +43,10 @@ const CATALOGO = {
     cuotas: 2,
     ancla: '#meditare',
     medidas: {
-      'plaza':       { precio: 361000, display: '190×90 · 1 plaza' },
-      'plaza-media': { precio: 545000, display: '190×140 · 2 plazas' },
-      'queen':       null, // No hay medida queen en esta línea
+      'plaza':       { precio: 325000, display: '80×190 · 1 plaza' },
+      'plaza-media': { precio: 398000, display: '100×190 · 1½ plaza' },
+      'dos-plazas':  { precio: 545000, display: '140×190 · 2 plazas' },
+      'queen':       null,
       'king':        null,
     },
     caracteristicas: [
@@ -59,9 +61,10 @@ const CATALOGO = {
     cuotas: 2,
     ancla: '#sonno',
     medidas: {
-      'plaza':       { precio: 469000, display: '190×90 · 1 plaza' },
-      'plaza-media': { precio: 699000, display: '190×140 · 2 plazas' },
-      'queen':       { precio: 763000, display: '190×160 · 2 plazas' },
+      'plaza':       { precio: 430000, display: '80×190 · 1 plaza' },
+      'plaza-media': { precio: 509000, display: '100×190 · 1½ plaza' },
+      'dos-plazas':  { precio: 699000, display: '140×190 · 2 plazas' },
+      'queen':       null,
       'king':        null,
     },
     caracteristicas: [
@@ -76,9 +79,10 @@ const CATALOGO = {
     cuotas: 3,
     ancla: '#nirvana',
     medidas: {
-      'plaza':       { precio: 606000,  display: '190×90 · 1 plaza' },
-      'plaza-media': { precio: 922000,  display: '190×140 · 2 plazas' },
-      'queen':       { precio: 1175000, display: '200×160 · Queen' },
+      'plaza':       { precio: 544000,  display: '80×190 · 1 plaza' },
+      'plaza-media': { precio: 689000,  display: '100×190 · 1½ plaza' },
+      'dos-plazas':  { precio: 922000,  display: '140×190 · 2 plazas' },
+      'queen':       { precio: 1175000, display: '160×200 · Queen' },
       'king':        { precio: 1395000, display: '200×200 · King' },
     },
     caracteristicas: [
@@ -93,9 +97,10 @@ const CATALOGO = {
     cuotas: 3,
     ancla: '#namaste',
     medidas: {
-      'plaza':       { precio: 470000,  display: '190×90 · 1 plaza' },
-      'plaza-media': { precio: 711000,  display: '190×140 · 2 plazas' },
-      'queen':       { precio: 907000,  display: '200×160 · Queen' },
+      'plaza':       { precio: 422000,  display: '80×190 · 1 plaza' },
+      'plaza-media': { precio: 519000,  display: '100×190 · 1½ plaza' },
+      'dos-plazas':  { precio: 711000,  display: '140×190 · 2 plazas' },
+      'queen':       { precio: 907000,  display: '160×200 · Queen' },
       'king':        { precio: 1088000, display: '200×200 · King' },
     },
     caracteristicas: [
@@ -110,9 +115,10 @@ const CATALOGO = {
     cuotas: 3,
     ancla: '#namaste',
     medidas: {
-      'plaza':       { precio: 647000,  display: '190×100 · 1 plaza' },
-      'plaza-media': { precio: 933000,  display: '190×140 · 2 plazas' },
-      'queen':       { precio: 1067000, display: '200×160 · Queen' },
+      'plaza':       null,
+      'plaza-media': { precio: 647000,  display: '100×190 · 1½ plaza' },
+      'dos-plazas':  { precio: 933000,  display: '140×190 · 2 plazas' },
+      'queen':       { precio: 1067000, display: '160×200 · Queen' },
       'king':        { precio: 1309000, display: '200×200 · King' },
     },
     caracteristicas: [
@@ -127,9 +133,10 @@ const CATALOGO = {
     cuotas: 3,
     ancla: '#regno',
     medidas: {
-      'plaza':       { precio: 521000,  display: '190×90 · 1 plaza' },
-      'plaza-media': { precio: 743000,  display: '190×140 · 2 plazas' },
-      'queen':       { precio: 877000,  display: '200×160 · Queen' },
+      'plaza':       { precio: 482000,  display: '80×190 · 1 plaza' },
+      'plaza-media': { precio: 568000,  display: '100×190 · 1½ plaza' },
+      'dos-plazas':  { precio: 743000,  display: '140×190 · 2 plazas' },
+      'queen':       { precio: 877000,  display: '160×200 · Queen' },
       'king':        { precio: 1079000, display: '200×200 · King' },
     },
     caracteristicas: [
@@ -145,8 +152,9 @@ const CATALOGO = {
     ancla: '#regno',
     medidas: {
       'plaza':       null,
-      'plaza-media': { precio: 961000,  display: '190×140 · 2 plazas' },
-      'queen':       { precio: 1102000, display: '200×160 · Queen' },
+      'plaza-media': null,
+      'dos-plazas':  { precio: 961000,  display: '140×190 · 2 plazas' },
+      'queen':       { precio: 1102000, display: '160×200 · Queen' },
       'king':        { precio: 1341000, display: '200×200 · King' },
     },
     caracteristicas: [
@@ -162,8 +170,9 @@ const CATALOGO = {
     ancla: '#gravita',
     medidas: {
       'plaza':       null,
-      'plaza-media': { precio: 1259000, display: '190×140 · 2 plazas' },
-      'queen':       { precio: 1549000, display: '200×160 · Queen' },
+      'plaza-media': null,
+      'dos-plazas':  { precio: 1259000, display: '140×190 · 2 plazas' },
+      'queen':       { precio: 1549000, display: '160×200 · Queen' },
       'king':        { precio: 1763000, display: '200×200 · King' },
     },
     caracteristicas: [
@@ -179,8 +188,9 @@ const CATALOGO = {
     ancla: '#montreaux',
     medidas: {
       'plaza':       null,
-      'plaza-media': { precio: 1394000, display: '190×140 · 2 plazas' },
-      'queen':       { precio: 1749000, display: '200×160 · Queen' },
+      'plaza-media': null,
+      'dos-plazas':  { precio: 1394000, display: '140×190 · 2 plazas' },
+      'queen':       { precio: 1749000, display: '160×200 · Queen' },
       'king':        { precio: 1982000, display: '200×200 · King' },
     },
     caracteristicas: [
@@ -196,8 +206,9 @@ const CATALOGO = {
     ancla: '#montreaux',
     medidas: {
       'plaza':       null,
-      'plaza-media': { precio: 1751000, display: '190×140 · 2 plazas' },
-      'queen':       { precio: 2133000, display: '200×160 · Queen' },
+      'plaza-media': null,
+      'dos-plazas':  { precio: 1751000, display: '140×190 · 2 plazas' },
+      'queen':       { precio: 2133000, display: '160×200 · Queen' },
       'king':        { precio: 2428000, display: '200×200 · King' },
     },
     caracteristicas: [
@@ -211,7 +222,7 @@ const CATALOGO = {
 type SlugModelo = keyof typeof CATALOGO
 
 // ============================================================================
-// SISTEMA DE SCORING - Asigna puntaje a cada modelo según respuestas
+// SISTEMA DE SCORING
 // ============================================================================
 
 function scoringModelo(
@@ -222,69 +233,63 @@ function scoringModelo(
 ): number {
   const modelo = CATALOGO[slug]
   
-  // Si no existe la medida en este modelo, descartar
   if (!modelo.medidas[medida]) return -1
 
   let score = 0
 
-  // ---- FACTOR 1: Peso → Firmeza necesaria ----
-  // Más peso requiere más firmeza/soporte
+  // ---- FACTOR 1: Peso → Firmeza ----
   const esFirmeza = {
-    meditare:       1, // Más blando
+    meditare:       1,
     sonno:          2,
-    nirvana:        3, // Media
+    nirvana:        3,
     namaste:        3,
     'namaste-pt':   3,
-    regno:          4, // Firme
+    regno:          4,
     'regno-pt':     4,
-    gravita:        5, // Muy firme
+    gravita:        5,
     montreaux:      5,
-    'montreaux-pt': 4, // Firme con acolchado
+    'montreaux-pt': 4,
   }[slug]
 
   if (peso === 'menos-60') {
-    // Persona liviana: prefiere firmeza baja-media (1-3)
     score += esFirmeza <= 3 ? 20 : esFirmeza === 4 ? 10 : 0
   } else if (peso === '60-80') {
-    // Peso medio: firmeza media (2-4)
     score += esFirmeza >= 2 && esFirmeza <= 4 ? 20 : 10
   } else if (peso === '80-100') {
-    // Peso medio-alto: firmeza media-alta (3-5)
     score += esFirmeza >= 3 ? 20 : 5
   } else if (peso === 'mas-100') {
-    // Peso alto: firmeza alta obligatoria (4-5)
     score += esFirmeza >= 4 ? 25 : esFirmeza === 3 ? 10 : -10
   }
 
-  // ---- FACTOR 2: Postura → Tipo de superficie ----
+  // ---- FACTOR 2: Postura → Superficie ----
   const tienePillowTop = slug.includes('-pt')
 
   if (postura === 'lado') {
-    // De lado: Pillow Top ideal (alivia hombros y caderas)
     score += tienePillowTop ? 15 : 5
   } else if (postura === 'boca-arriba') {
-    // Boca arriba: firmeza media-firme sin mucho acolchado
     score += tienePillowTop ? 8 : 15
   } else if (postura === 'boca-abajo') {
-    // Boca abajo: firme sin pillow top (evita curvar columna)
     score += tienePillowTop ? 0 : 15
     score += esFirmeza >= 3 ? 5 : -5
   } else if (postura === 'cambia') {
-    // Cambia mucho: equilibrio medio, pillow top ok
     score += esFirmeza >= 2 && esFirmeza <= 4 ? 12 : 5
     if (tienePillowTop) score += 3
   }
 
-  // ---- FACTOR 3: Medida → Preferencia de línea por tamaño ----
-  // En king/queen se recomienda línea más alta (la gente invierte más)
+  // ---- FACTOR 3: Medida → Línea ----
   if (medida === 'king' || medida === 'queen') {
     if (modelo.linea === 'Media' || modelo.linea === 'Media Alta') score += 8
     if (modelo.linea === 'Alta Gama' || modelo.linea === 'Premium') score += 5
     if (modelo.linea === 'Entrada') score -= 5
   } else if (medida === 'plaza') {
-    // 1 plaza: más probable que sea cuarto de invitados o niño
     if (modelo.linea === 'Entrada' || modelo.linea === 'Media') score += 10
     if (modelo.linea === 'Premium') score -= 10
+  } else if (medida === 'plaza-media') {
+    if (modelo.linea === 'Entrada' || modelo.linea === 'Media' || modelo.linea === 'Media Alta') score += 8
+    if (modelo.linea === 'Premium') score -= 5
+  } else if (medida === 'dos-plazas') {
+    if (modelo.linea === 'Media' || modelo.linea === 'Media Alta' || modelo.linea === 'Alta Gama') score += 8
+    if (modelo.linea === 'Entrada') score += 2
   }
 
   return score
@@ -301,23 +306,20 @@ export function calcularRecomendacion(respuestas: Respuestas): ResultadoRecomend
 
   const { medida, postura, peso } = respuestas
 
-  // Scoring de todos los modelos
   const ranking = (Object.keys(CATALOGO) as SlugModelo[])
     .map(slug => ({ slug, score: scoringModelo(slug, medida, postura, peso) }))
     .filter(r => r.score > 0)
     .sort((a, b) => b.score - a.score)
 
   if (ranking.length === 0) {
-    // Fallback: si no hay match, devolvemos Sonno 2 plazas
     return {
-      principal: construirRecomendacion('sonno', 'plaza-media', postura, peso),
+      principal: construirRecomendacion('sonno', 'dos-plazas', postura, peso),
       alternativa: null,
     }
   }
 
   const principal = construirRecomendacion(ranking[0].slug, medida, postura, peso)
 
-  // Alternativa premium: buscar un modelo de línea superior a la principal
   const lineasOrden = ['Entrada', 'Media', 'Media Alta', 'Alta Gama', 'Premium', 'Ultra Premium']
   const idxLineaPrincipal = lineasOrden.indexOf(principal.linea)
   
@@ -346,9 +348,8 @@ function construirRecomendacion(
   const modelo = CATALOGO[slug]
   const medidaData = modelo.medidas[medida]
 
-  // Si no existe esa medida, buscar la más cercana
   if (!medidaData) {
-    const fallbackMedida = (['plaza-media', 'queen', 'king', 'plaza'] as Medida[])
+    const fallbackMedida = (['dos-plazas', 'queen', 'king', 'plaza-media', 'plaza'] as Medida[])
       .find(m => modelo.medidas[m]) as Medida
     return construirRecomendacion(slug, fallbackMedida, postura, peso)
   }
@@ -367,7 +368,7 @@ function construirRecomendacion(
 }
 
 // ============================================================================
-// RAZONAMIENTO NATURAL (ES-AR)
+// RAZONAMIENTO
 // ============================================================================
 
 function generarRazonamiento(slug: SlugModelo, postura: Postura, peso: Peso): string {

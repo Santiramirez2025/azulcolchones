@@ -9,7 +9,7 @@ import {
 } from './logicaRecomendacion'
 
 // ============================================================================
-// DATOS ESTÁTICOS - PREGUNTAS
+// PREGUNTAS - 5 medidas reales
 // ============================================================================
 
 const PREGUNTAS = [
@@ -18,10 +18,11 @@ const PREGUNTAS = [
     titulo: '¿Qué medida necesitás?',
     subtitulo: 'Elegí según el espacio disponible',
     opciones: [
-      { valor: 'plaza', label: '1 plaza', helper: '80-100 cm', icono: '📏' },
-      { valor: 'plaza-media', label: '1½ - 2 plazas', helper: '130-140 cm', icono: '📐' },
-      { valor: 'queen', label: 'Queen', helper: '160-180 cm', icono: '🛏️' },
-      { valor: 'king', label: 'King', helper: '200 cm', icono: '👑' }
+      { valor: 'plaza', label: '1 plaza', helper: '80 × 190 cm', icono: '📏' },
+      { valor: 'plaza-media', label: '1½ plaza', helper: '100 × 190 cm', icono: '📐' },
+      { valor: 'dos-plazas', label: '2 plazas', helper: '140 × 190 cm', icono: '🛏️' },
+      { valor: 'queen', label: 'Queen', helper: '160 × 200 cm', icono: '👑' },
+      { valor: 'king', label: 'King', helper: '180 × 200 · 200 × 200 cm', icono: '🏰' }
     ]
   },
   {
@@ -185,7 +186,6 @@ export default function AsesorColchon() {
 
   return (
     <div className="bg-gradient-to-br from-zinc-900/90 to-blue-950/20 backdrop-blur-sm border-2 border-blue-500/20 rounded-2xl p-5 md:p-8 shadow-xl">
-      {/* Progreso */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
@@ -214,7 +214,6 @@ export default function AsesorColchon() {
         </div>
       </div>
 
-      {/* Pregunta */}
       <div className="mb-6">
         <h3 className="text-xl md:text-2xl font-bold text-white mb-2 leading-tight">
           {preguntaActual.titulo}
@@ -224,7 +223,6 @@ export default function AsesorColchon() {
         </p>
       </div>
 
-      {/* Opciones */}
       <div className="grid grid-cols-1 gap-3 mb-6">
         {preguntaActual.opciones.map((opcion) => {
           const campo = preguntaActual.id as keyof Respuestas
@@ -286,7 +284,6 @@ export default function AsesorColchon() {
         </p>
       )}
 
-      {/* Navegación */}
       <div className="flex items-center gap-3">
         {pasoActual > 0 && (
           <button
@@ -328,7 +325,7 @@ export default function AsesorColchon() {
 }
 
 // ============================================================================
-// COMPONENTE DE RESULTADO
+// RESULTADO
 // ============================================================================
 
 function ResultadoRecomendacion({ 
@@ -373,7 +370,6 @@ function ResultadoRecomendacion({
     })
   }
 
-  // Cuota aproximada (solo informativa)
   const valorCuota = Math.round(principal.precio / principal.cuotas)
 
   return (
@@ -382,7 +378,6 @@ function ResultadoRecomendacion({
       className="space-y-6 animate-[fadeIn_0.5s_ease-out]" 
       id="resultado-asesor"
     >
-      {/* Header */}
       <div className="text-center">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full text-green-400 text-sm font-bold mb-4 animate-[pulse_2s_ease-in-out_infinite]">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -395,12 +390,10 @@ function ResultadoRecomendacion({
         </h3>
       </div>
 
-      {/* Card principal */}
       <div className="relative bg-gradient-to-br from-blue-950/60 to-blue-900/40 border-2 border-blue-500/40 rounded-2xl p-6 md:p-8 shadow-2xl shadow-blue-500/20">
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/10 to-transparent opacity-50 pointer-events-none"></div>
         
         <div className="relative">
-          {/* Badge de línea */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/20 border border-blue-400/40 rounded-full text-blue-300 text-xs font-bold uppercase tracking-wider mb-3">
             <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -427,7 +420,6 @@ function ResultadoRecomendacion({
             </div>
           </div>
 
-          {/* Banner de cuotas sin interés - PROMINENTE */}
           <div className="bg-gradient-to-r from-amber-900/40 to-amber-800/30 border-2 border-amber-500/50 rounded-xl p-4 md:p-5 mb-5 shadow-lg shadow-amber-500/10">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
@@ -458,7 +450,6 @@ function ResultadoRecomendacion({
             {principal.razonamiento}
           </p>
 
-          {/* Características */}
           <div className="space-y-3 mb-6">
             {principal.caracteristicas.map((caract, i) => (
               <div key={i} className="flex items-start gap-3 text-sm md:text-base text-zinc-400">
@@ -470,7 +461,6 @@ function ResultadoRecomendacion({
             ))}
           </div>
 
-          {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-3">
             <a
               href={`/lista-precios${principal.ancla}`}
@@ -495,7 +485,6 @@ function ResultadoRecomendacion({
         </div>
       </div>
 
-      {/* Alternativa premium */}
       {alternativa && (
         <details className="group">
           <summary className="flex items-center justify-between cursor-pointer list-none px-5 py-4 bg-zinc-800/60 hover:bg-zinc-800 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-950">
@@ -563,7 +552,6 @@ function ResultadoRecomendacion({
         </details>
       )}
 
-      {/* Reiniciar */}
       <button
         onClick={onReiniciar}
         className="w-full px-4 py-3 text-zinc-500 hover:text-white text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-950 flex items-center justify-center gap-2"
