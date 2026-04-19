@@ -490,7 +490,7 @@ export default function ProductDetailPage({ modelo, variantes, varianteInicial }
   const ahorroPorcentaje = selected.precioMercadoLibre ? Math.round((ahorro / selected.precioMercadoLibre) * 100) : 0
 
   const mensajeWA = `Hola! Vi el *Piero ${modelo} ${selected.tamaño}* a $${formatPrecio(selected.precioPublico)} en la web. ¿Tienen disponibilidad?`
-  const urlWA = `https://wa.me/5493534017332?text=${encodeURIComponent(mensajeWA)}`
+  const urlWA = `https://wa.me/5493534096566?text=${encodeURIComponent(mensajeWA)}`
 
   useEffect(() => {
     if (!hasTrackedView.current && selected) {

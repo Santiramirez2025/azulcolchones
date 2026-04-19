@@ -205,7 +205,7 @@ function PackCard({ pack, index }: { pack: PackComercial; index: number }) {
   const ahorroPack       = pack.precioTotal - pack.precioPack
   const ahorroPorcentaje = Math.round((ahorroPack / pack.precioTotal) * 100)
   const msgWA            = `Hola! Me interesa el *${pack.nombre}* a $${pack.precioPack.toLocaleString('es-AR')}. ¿Tienen disponibilidad?`
-  const urlWA            = `https://wa.me/5493534017332?text=${encodeURIComponent(msgWA)}`
+  const urlWA            = `https://wa.me/5493534096566?text=${encodeURIComponent(msgWA)}`
 
   return (
     <div
@@ -462,7 +462,7 @@ export default function PacksComerciales() {
               <p className="text-xs text-zinc-400">Armamos combos personalizados según tu presupuesto</p>
             </div>
             <a
-              href="https://wa.me/5493534017332?text=Hola!%20Quiero%20armar%20un%20pack%20personalizado%20de%20colchones%20Piero"
+              href="https://wa.me/5493534096566?text=Hola!%20Quiero%20armar%20un%20pack%20personalizado%20de%20colchones%20Piero"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-shrink-0 flex items-center justify-center gap-2 min-h-[44px] px-5 py-2.5

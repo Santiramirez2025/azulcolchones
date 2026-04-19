@@ -88,7 +88,7 @@ export default function AsesorPage() {
               ¿Necesitás ayuda personalizada?
             </p>
             <a
-              href="https://wa.me/5493534017332?text=Hola!%20Quiero%20asesoramiento%20personalizado%20para%20elegir%20un%20colch%C3%B3n"
+              href="https://wa.me/5493534096566?text=Hola!%20Quiero%20asesoramiento%20personalizado%20para%20elegir%20un%20colch%C3%B3n"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 text-sm font-bold transition-colors"

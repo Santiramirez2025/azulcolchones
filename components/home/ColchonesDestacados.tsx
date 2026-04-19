@@ -162,7 +162,7 @@ function ColchonCard({ colchon, index }: { colchon: ColchonDestacado; index: num
   const ahorroPesos = colchon.precioML - colchon.precioPublico
   const ahorroPorc  = Math.round((ahorroPesos / colchon.precioML) * 100)
   const msgWA       = `Hola! Me interesa el *${colchon.nombre}* en ${colchon.tamaño} a $${colchon.precioPublico.toLocaleString('es-AR')}. ¿Tienen disponibilidad?`
-  const urlWA       = `https://wa.me/5493534017332?text=${encodeURIComponent(msgWA)}`
+  const urlWA       = `https://wa.me/5493534096566?text=${encodeURIComponent(msgWA)}`
 
   return (
     <div
@@ -449,7 +449,7 @@ export default function ColchonesDestacados() {
           </a>
 
           <a
-            href="https://wa.me/5493534017332?text=Hola!%20Necesito%20asesoramiento%20para%20elegir%20mi%20colch%C3%B3n%20ideal."
+            href="https://wa.me/5493534096566?text=Hola!%20Necesito%20asesoramiento%20para%20elegir%20mi%20colch%C3%B3n%20ideal."
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 min-h-[48px] px-5 py-3

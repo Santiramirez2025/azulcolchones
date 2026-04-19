@@ -470,7 +470,7 @@ function ResultadoRecomendacion({
               Ver en Lista de Precios
             </a>
             <a
-              href={`https://wa.me/5493534017332?text=${encodeURIComponent(`Hola! Me interesa el ${principal.modelo} ${principal.medidaDisplay} ($${principal.precio.toLocaleString('es-AR')} · ${principal.cuotas} cuotas sin interés). Vine del asesor de la web.`)}`}
+              href={`https://wa.me/5493534096566?text=${encodeURIComponent(`Hola! Me interesa el ${principal.modelo} ${principal.medidaDisplay} ($${principal.precio.toLocaleString('es-AR')} · ${principal.cuotas} cuotas sin interés). Vine del asesor de la web.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleConsultar}
@@ -532,7 +532,7 @@ function ResultadoRecomendacion({
                 Ver en catálogo
               </a>
               <a
-                href={`https://wa.me/5493534017332?text=${encodeURIComponent(`Hola! Me interesa el ${alternativa.modelo} ${alternativa.medidaDisplay}`)}`}
+                href={`https://wa.me/5493534096566?text=${encodeURIComponent(`Hola! Me interesa el ${alternativa.modelo} ${alternativa.medidaDisplay}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => {

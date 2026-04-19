@@ -19,7 +19,7 @@ export default function ProductCTA() {
         Consultanos por cualquier producto PIERO en cualquier medida al precio de fábrica
       </p>
       <a
-        href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20por%20productos%20Piero%20Fábrica"
+        href="https://wa.me/5493534096566?text=Hola!%20Quiero%20consultar%20por%20productos%20Piero%20Fábrica"
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleCtaClick}

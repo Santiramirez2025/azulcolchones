@@ -25,7 +25,7 @@ interface WhatsAppCTAProps {
 export default function WhatsAppCTA({
   texto = 'Consultar Ahora',
   mensaje = 'Hola! Quiero consultar por Piero Fábrica',
-  telefono = '5493534017332',
+  telefono = '5493534096566',
   producto = 'Consulta General',
   categoria = 'piero-fabrica',
   precio,

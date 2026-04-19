@@ -18,7 +18,7 @@ export default function CTAFinal() {
           ¿Tenés dudas? Consultanos por WhatsApp, sin compromiso.
         </p>
         <a
-          href="https://wa.me/5493534017332?text=Hola!%20Quiero%20consultar%20por%20colchones%20PIERO%20Fabrica"
+          href="https://wa.me/5493534096566?text=Hola!%20Quiero%20consultar%20por%20colchones%20PIERO%20Fabrica"
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}

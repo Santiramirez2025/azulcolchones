@@ -66,7 +66,7 @@ function PackCard({ pack }: { pack: PackComercial }) {
   const ahorroPorcentaje = Math.round((ahorroPack / pack.precioTotal) * 100)
 
   const mensajeWhatsApp = `Hola! Me interesa el *${pack.nombre}* a $${pack.precioPack.toLocaleString('es-AR')}. ¿Tienen disponibilidad?`
-  const urlWhatsApp = `https://wa.me/5493534017332?text=${encodeURIComponent(mensajeWhatsApp)}`
+  const urlWhatsApp = `https://wa.me/5493534096566?text=${encodeURIComponent(mensajeWhatsApp)}`
 
   const handleWhatsAppClick = () => {
     trackWhatsAppClick({
@@ -431,7 +431,7 @@ export default function PacksComerciales() {
               <p className="text-sm text-zinc-400">Armamos combos personalizados según tu presupuesto</p>
             </div>
             <a
-              href="https://wa.me/5493534017332?text=Hola!%20Quiero%20armar%20un%20pack%20personalizado%20de%20colchones%20Piero"
+              href="https://wa.me/5493534096566?text=Hola!%20Quiero%20armar%20un%20pack%20personalizado%20de%20colchones%20Piero"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-zinc-700 hover:bg-zinc-600 text-white font-bold text-sm rounded-xl transition-all duration-300 hover:scale-[1.02]"
