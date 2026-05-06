@@ -26,18 +26,17 @@ export default function UrgencyTimer({
   const [isExpired, setIsExpired] = useState(false)
 
   useEffect(() => {
-    if (!endTime && type !== 'low-stock') {
-      // Default: 6 hours from now if no endTime provided
-      const defaultEnd = new Date()
-      defaultEnd.setHours(defaultEnd.getHours() + 6)
-      endTime = defaultEnd
+    let effectiveEnd: Date | undefined = endTime
+    if (!effectiveEnd && type !== 'low-stock') {
+      effectiveEnd = new Date()
+      effectiveEnd.setHours(effectiveEnd.getHours() + 6)
     }
 
     const calculateTimeLeft = () => {
-      if (!endTime || type === 'low-stock') return
+      if (!effectiveEnd || type === 'low-stock') return
 
       const now = new Date().getTime()
-      const end = new Date(endTime).getTime()
+      const end = new Date(effectiveEnd).getTime()
       const difference = end - now
 
       if (difference <= 0) {

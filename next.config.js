@@ -1,3 +1,5 @@
+const path = require('path')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // ============================================================================
@@ -6,6 +8,8 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   output: 'standalone',
+  // Evita que Next infiera mal la raíz cuando hay otro lockfile en $HOME.
+  outputFileTracingRoot: path.join(__dirname),
   
   // ============================================================================
   // COMPILER OPTIMIZATIONS
@@ -56,11 +60,10 @@ const nextConfig = {
     // Cache 1 año
     minimumCacheTTL: 60 * 60 * 24 * 365,
     
-    // SVG handling
-    dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    
+    // SVG handling: SVGs vienen solo de /public, nunca remotos.
+    // Si se necesita SVG remoto, validar MIME y volver a habilitar con CSP.
+    dangerouslyAllowSVG: false,
+
     // Dev sin optimización (más rápido)
     unoptimized: process.env.NODE_ENV === 'development',
   },
@@ -75,17 +78,37 @@ const nextConfig = {
         source: '/:path*',
         headers: [
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
-          { 
-            key: 'Strict-Transport-Security', 
-            value: 'max-age=63072000; includeSubDomains; preload' 
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
           },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-XSS-Protection', value: '1; mode=block' },
-          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
-          { 
-            key: 'Permissions-Policy', 
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()' 
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+          },
+          {
+            // CSP enforced. 'unsafe-inline' / 'unsafe-eval' siguen porque
+            // GA/Meta Pixel/Vercel Analytics inyectan scripts inline y eval.
+            // Etapa 6: pasar a nonces server-side y sacar ambos.
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://connect.facebook.net https://va.vercel-scripts.com https://analytics.tiktok.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.facebook.com https://www.facebook.com https://va.vercel-scripts.com https://*.vercel.app https://analytics.tiktok.com https://*.supabase.co",
+              "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+              "frame-ancestors 'self'",
+              "form-action 'self'",
+              "base-uri 'self'",
+              "object-src 'none'",
+              'upgrade-insecure-requests',
+            ].join('; '),
           },
         ],
       },

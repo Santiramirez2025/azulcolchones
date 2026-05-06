@@ -222,6 +222,12 @@ const FloatingNotification = memo(({
 })
 FloatingNotification.displayName = 'FloatingNotification'
 
+const LOCATIONS = [
+  'Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Bilbao',
+  'Málaga', 'Zaragoza', 'Murcia', 'Palma', 'Las Palmas',
+  'Alicante', 'Córdoba', 'Valladolid', 'Vigo', 'Gijón',
+] as const
+
 export default function SocialProof({
   productId,
   productName,
@@ -233,16 +239,10 @@ export default function SocialProof({
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [showStats, setShowStats] = useState(true)
 
-  const locations = [
-    'Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Bilbao',
-    'Málaga', 'Zaragoza', 'Murcia', 'Palma', 'Las Palmas',
-    'Alicante', 'Córdoba', 'Valladolid', 'Vigo', 'Gijón'
-  ]
-
   const generateNotification = useCallback((): Notification => {
     const types: Notification['type'][] = ['view', 'purchase', 'trending', 'stock', 'delivery']
     const type = types[Math.floor(Math.random() * types.length)]
-    const location = locations[Math.floor(Math.random() * locations.length)]
+    const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)]
     
     const messageTemplates = {
       view: [
@@ -292,7 +292,7 @@ export default function SocialProof({
       timestamp: new Date(),
       priority
     }
-  }, [stockQuantity, locations])
+  }, [stockQuantity])
 
   useEffect(() => {
     const showNotification = () => {

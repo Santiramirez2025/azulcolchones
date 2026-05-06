@@ -114,7 +114,7 @@ export default function CatalogoClient({
     }
     
     return products
-  }, [initialProducts, totalProducts])
+  }, [initialProducts])
   
   // ============================================================================
   // ESTADOS

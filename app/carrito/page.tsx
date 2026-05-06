@@ -145,19 +145,20 @@ export default function CarritoPage() {
     getDiscount,
     getShipping,
     getTotal,
-    getItemCount
+    getItemCount,
   } = useCartStore()
-  
+
   useEffect(() => {
     setMounted(true)
   }, [])
-  
-  // ✅ MEMOIZED CALCULATIONS (performance crítica)
-  const subtotal = useMemo(() => getSubtotal(), [items])
-  const discount = useMemo(() => getDiscount(), [coupon, subtotal])
-  const shipping = useMemo(() => getShipping(), [subtotal])
-  const baseTotal = useMemo(() => getTotal(), [subtotal, discount, shipping])
-  const itemCount = useMemo(() => getItemCount(), [items])
+
+  // Los getters del store leen items/coupon internamente; el componente
+  // ya re-renderiza ante cambios del store por desestructurar el state.
+  const subtotal = getSubtotal()
+  const discount = getDiscount()
+  const shipping = getShipping()
+  const baseTotal = getTotal()
+  const itemCount = getItemCount()
   
   // ✅ CALCULAR CUOTAS DEL TOTAL
   const mejorCuota = useMemo(() => getMejorCuota(baseTotal), [baseTotal])

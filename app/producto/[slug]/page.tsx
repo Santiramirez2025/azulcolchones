@@ -16,11 +16,13 @@ import ProductClient from './product-client'
 type Params = Promise<{ slug: string }>
 
 // ============================================================================
-// PERFORMANCE CONFIGURATION - ISR OPTIMIZADO
+// PERFORMANCE CONFIGURATION - ISR
 // ============================================================================
-export const revalidate = 3600 // ISR cada 1 hora - balance perfecto
-export const dynamic = 'force-dynamic' // Evita errores de DB en build
-export const dynamicParams = true // Permite rutas dinámicas
+// ISR cada 1 hora. Páginas se generan on-demand y se cachean en CDN.
+// dynamicParams permite slugs no pre-generados (no usamos generateStaticParams
+// para evitar dependencia de DB en build).
+export const revalidate = 3600
+export const dynamicParams = true
 
 // ============================================================================
 // HELPER: PRICE CONVERSION

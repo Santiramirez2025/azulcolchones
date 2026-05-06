@@ -13,7 +13,6 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useCartStore } from '@/lib/store/cart-store'
-import { useAuth } from '@/lib/firebase/context/AuthContext'
 import { formatARS } from '@/lib/utils/currency'
 import { CheckoutSteps, TrustBadges } from './CartComponents'
 
@@ -146,8 +145,6 @@ export default function CheckoutForm({ step, total, onBack, onNext }: CheckoutFo
 // ============================================================================
 
 function ShippingForm({ onNext }: { onNext: () => void }) {
-  const { user } = useAuth()
-  
   const validationRules = useMemo(() => ({
     firstName: (value: string) => !value?.trim() ? 'Nombre requerido' : value.length < 2 ? 'Muy corto' : null,
     lastName: (value: string) => !value?.trim() ? 'Apellido requerido' : value.length < 2 ? 'Muy corto' : null,
@@ -159,12 +156,12 @@ function ShippingForm({ onNext }: { onNext: () => void }) {
   }), [])
 
   const { values: formData, errors, touched, handleChange, handleBlur, validateAll } = useFormValidation({
-    firstName: user?.name?.split(' ')[0] || '',
-    lastName: user?.name?.split(' ').slice(1).join(' ') || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    address: user?.address || '',
-    city: user?.city || 'Villa María',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: 'Villa María',
     notes: ''
   }, validationRules)
 

@@ -10,7 +10,6 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import Header from '../components/sections/Header'
 import Footer from '../components/sections/Footer'
-import { AuthProvider } from '@/lib/context/AuthContext'
 import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from '@next/third-parties/google'
 import MetaPixel from '@/components/MetaPixel'
@@ -540,8 +539,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://www.mercadopago.com" />
-        
+
         <link 
           rel="preload" 
           href="/images/hero-colchon.webp" 
@@ -644,20 +642,18 @@ export default function RootLayout({
           Saltar al contenido principal
         </a>
 
-        <AuthProvider>
-          <Header />
-          
-          <main 
-            id="main-content" 
-            className="flex-1 w-full bg-zinc-950 scroll-mt-20"
-            role="main"
-            aria-label="Contenido principal"
-          >
-            {children}
-          </main>
-          
-          <Footer />
-        </AuthProvider>
+        <Header />
+
+        <main
+          id="main-content"
+          className="flex-1 w-full bg-zinc-950 scroll-mt-20"
+          role="main"
+          aria-label="Contenido principal"
+        >
+          {children}
+        </main>
+
+        <Footer />
 
         <Analytics />
         <GoogleAnalytics gaId="G-BTPV00LG0N" />
