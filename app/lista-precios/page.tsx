@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Lista de Precios — Azul Colchones',
-  description: 'Lista completa de precios de colchones, sommiers y accesorios Piero. Distribuidor oficial exclusivo en Villa María, Córdoba.',
+  title: 'HOT SALE — Lista de Precios Azul Colchones',
+  description: 'HOT SALE Azul Colchones: precios especiales en colchones, sommiers y accesorios Piero. Distribuidor oficial exclusivo en Villa María, Córdoba.',
 }
 
 export default function ListaPrecios() {
@@ -18,6 +18,9 @@ export default function ListaPrecios() {
           --gris-suave: #f0eff0;
           --gris-texto: #5a5a6e;
           --blanco: #ffffff;
+          --hot-rojo: #e11d48;
+          --hot-naranja: #f97316;
+          --hot-amarillo: #fbbf24;
         }
 
         .lp-body {
@@ -86,6 +89,40 @@ export default function ListaPrecios() {
         }
         .lp-header-right { text-align: right; }
 
+        /* ===== HOT SALE BANNER ===== */
+        .lp-hotsale-banner {
+          background: linear-gradient(90deg, var(--hot-rojo) 0%, var(--hot-naranja) 50%, var(--hot-rojo) 100%);
+          background-size: 200% 100%;
+          animation: lp-hot-shimmer 4s linear infinite;
+          color: white;
+          text-align: center;
+          padding: 18px 24px;
+          font-family: sans-serif;
+          position: relative;
+          overflow: hidden;
+        }
+        .lp-hotsale-titulo {
+          font-size: 32px;
+          font-weight: 900;
+          letter-spacing: 6px;
+          text-transform: uppercase;
+          text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+          line-height: 1;
+        }
+        .lp-hotsale-fire { font-size: 28px; vertical-align: middle; margin: 0 8px; }
+        .lp-hotsale-sub {
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          margin-top: 6px;
+          opacity: 0.95;
+        }
+        @keyframes lp-hot-shimmer {
+          0%   { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+
         /* ===== AVISO BAR ===== */
         .lp-aviso {
           background: var(--azul-medio);
@@ -101,6 +138,7 @@ export default function ListaPrecios() {
         }
         .lp-aviso span { display: flex; align-items: center; gap: 6px; }
         .lp-dot { width: 6px; height: 6px; background: var(--oro); border-radius: 50%; flex-shrink: 0; }
+        .lp-dot-hot { background: var(--hot-amarillo); }
 
         /* ===== CONTAINER ===== */
         .lp-container {
@@ -142,6 +180,11 @@ export default function ListaPrecios() {
         .lp-badge-equil    { background: #e8f0fe; color: #1a56db; }
         .lp-badge-premium  { background: #fef3e2; color: #92400e; }
         .lp-badge-accesorio{ background: #ecfdf5; color: #1a6b3c; }
+        .lp-badge-hot {
+          background: linear-gradient(90deg, var(--hot-rojo), var(--hot-naranja));
+          color: white;
+          box-shadow: 0 2px 8px rgba(225, 29, 72, 0.35);
+        }
 
         /* ===== DESTACAR sección cuando llegás desde un ancla ===== */
         .lp-seccion:target .lp-seccion-header {
@@ -168,7 +211,7 @@ export default function ListaPrecios() {
         .lp-tabla-wrapper thead th:last-child { text-align: right; }
         .lp-tabla-wrapper tbody tr { border-bottom: 1px solid #f0f0f5; }
         .lp-tabla-wrapper tbody tr:last-child { border-bottom: none; }
-        .lp-tabla-wrapper tbody tr:hover { background: #f8f9ff; }
+        .lp-tabla-wrapper tbody tr:hover { background: #fff7ed; }
         .lp-tabla-wrapper tbody tr.lp-destacado { background: #fffdf5; }
         .lp-tabla-wrapper td {
           padding: 13px 18px; font-size: 14px; color: #333; vertical-align: middle;
@@ -178,11 +221,18 @@ export default function ListaPrecios() {
         .lp-col-medida { color: var(--gris-texto); font-size: 13px; }
         .lp-col-precio {
           text-align: right; font-size: 17px; font-weight: 700;
-          color: var(--azul); white-space: nowrap;
+          color: var(--hot-rojo); white-space: nowrap;
         }
         .lp-star {
           display: inline-block; background: var(--oro); color: white;
           font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 10px;
+          margin-left: 6px; letter-spacing: 0.5px; text-transform: uppercase; vertical-align: middle;
+        }
+        .lp-hot-tag {
+          display: inline-block;
+          background: linear-gradient(90deg, var(--hot-rojo), var(--hot-naranja));
+          color: white;
+          font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px;
           margin-left: 6px; letter-spacing: 0.5px; text-transform: uppercase; vertical-align: middle;
         }
         .lp-consultar {
@@ -235,6 +285,7 @@ export default function ListaPrecios() {
         }
         .lp-footer-nota { font-size: 12px; line-height: 1.6; }
         .lp-footer-nota strong { color: var(--oro); }
+        .lp-footer-nota .lp-hot-text { color: var(--hot-amarillo); font-weight: 700; }
         .lp-footer-contacto { text-align: right; font-size: 13px; }
         .lp-footer-contacto strong { color: white; display: block; font-size: 15px; margin-bottom: 4px; }
 
@@ -245,6 +296,9 @@ export default function ListaPrecios() {
           .lp-container { padding: 24px 16px; }
           .lp-grid-2 { grid-template-columns: 1fr; }
           .lp-aviso { gap: 12px; padding: 10px 16px; }
+          .lp-hotsale-titulo { font-size: 22px; letter-spacing: 3px; }
+          .lp-hotsale-fire { font-size: 20px; }
+          .lp-hotsale-sub { font-size: 11px; letter-spacing: 2px; }
           .lp-footer { padding: 20px; flex-direction: column; }
           .lp-footer-contacto { text-align: left; }
           .lp-tabla-wrapper td, .lp-tabla-wrapper thead th { padding: 10px 12px; }
@@ -252,7 +306,7 @@ export default function ListaPrecios() {
         }
 
         @media print {
-          .lp-aviso { display: none; }
+          .lp-aviso, .lp-hotsale-banner { display: none; }
           .lp-seccion { page-break-inside: avoid; }
         }
 
@@ -270,13 +324,23 @@ export default function ListaPrecios() {
           <div className="lp-header-right">
             <div className="lp-dist-badge">Distribuidor Exclusivo</div>
             <div className="lp-piero">PIERO</div>
-            <div className="lp-fecha">Lista actualizada: Abril 2026</div>
+            <div className="lp-fecha">Lista HOT SALE · Mayo 2026</div>
           </div>
+        </div>
+
+        {/* HOT SALE BANNER */}
+        <div className="lp-hotsale-banner">
+          <div className="lp-hotsale-titulo">
+            <span className="lp-hotsale-fire">🔥</span>
+            HOT SALE
+            <span className="lp-hotsale-fire">🔥</span>
+          </div>
+          <div className="lp-hotsale-sub">Precios Especiales · Por Tiempo Limitado</div>
         </div>
 
         {/* AVISO */}
         <div className="lp-aviso">
-          <span><span className="lp-dot" />Precios en pesos argentinos</span>
+          <span><span className="lp-dot lp-dot-hot" />Precios HOT SALE vigentes</span>
           <span><span className="lp-dot" />Garantía oficial Piero</span>
           <span><span className="lp-dot" />Delivery a Villa María y zona</span>
         </div>
@@ -291,17 +355,17 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Meditare EuroPillow</div>
                 <div className="lp-seccion-subtitulo">Línea Entrada · Mejor Precio</div>
               </div>
-              <span className="lp-badge lp-badge-ancla">Mejor Precio</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
-                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$325.000</td></tr>
-                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$361.000</td></tr>
-                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$398.000</td></tr>
-                  <tr><td className="lp-col-medida">190×130 · 1½ plaza</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$506.000</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$545.000</td></tr>
+                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$264.046</td></tr>
+                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$293.505</td></tr>
+                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$323.195</td></tr>
+                  <tr><td className="lp-col-medida">190×130 · 1½ plaza</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$411.530</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Meditare EuroPillow</td><td className="lp-col-precio">$442.821</td></tr>
                 </tbody>
               </table>
             </div>
@@ -315,18 +379,18 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Sonno EuroPillow</div>
                 <div className="lp-seccion-subtitulo">Línea Entrada · Más Vendido</div>
               </div>
-              <span className="lp-badge lp-badge-ancla">Más Vendido</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
-                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$430.000</td></tr>
-                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$469.000</td></tr>
-                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$509.000</td></tr>
-                  <tr><td className="lp-col-medida">190×130 · 1½ plaza</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$644.000</td></tr>
-                  <tr className="lp-destacado"><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Sonno EuroPillow <span className="lp-star">⭐ Destacado</span></td><td className="lp-col-precio">$699.000</td></tr>
-                  <tr><td className="lp-col-medida">190×160 · 2 plazas</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$763.000</td></tr>
+                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$349.453</td></tr>
+                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$381.302</td></tr>
+                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$413.507</td></tr>
+                  <tr><td className="lp-col-medida">190×130 · 1½ plaza</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$523.453</td></tr>
+                  <tr className="lp-destacado"><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Sonno EuroPillow <span className="lp-star">⭐ Destacado</span></td><td className="lp-col-precio">$568.256</td></tr>
+                  <tr><td className="lp-col-medida">190×160 · 2 plazas</td><td>Colchón Piero Sonno EuroPillow</td><td className="lp-col-precio">$619.966</td></tr>
                 </tbody>
               </table>
             </div>
@@ -337,23 +401,23 @@ export default function ListaPrecios() {
             <div className="lp-seccion-header">
               <div className="lp-seccion-icono" style={{ background: '#e8f0fe' }}>🛏️</div>
               <div>
-                <div className="lp-seccion-titulo">Nirvana</div>
+                <div className="lp-seccion-titulo">Nirvana 2.0</div>
                 <div className="lp-seccion-subtitulo">Línea Media · Confort Superior</div>
               </div>
-              <span className="lp-badge lp-badge-equil">Más Vendido</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
-                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Nirvana</td><td className="lp-col-precio">$544.000</td></tr>
-                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Nirvana</td><td className="lp-col-precio">$606.000</td></tr>
-                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Nirvana</td><td className="lp-col-precio">$689.000</td></tr>
-                  <tr><td className="lp-col-medida">190×130 · 1½ plaza</td><td>Colchón Piero Nirvana</td><td className="lp-col-precio">$861.000</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Nirvana</td><td className="lp-col-precio">$922.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Nirvana</td><td className="lp-col-precio">$1.175.000</td></tr>
-                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Nirvana</td><td className="lp-col-precio">$1.292.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Nirvana</td><td className="lp-col-precio">$1.395.000</td></tr>
+                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Nirvana 2.0</td><td className="lp-col-precio">$408.070</td></tr>
+                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Nirvana 2.0</td><td className="lp-col-precio">$454.786</td></tr>
+                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Nirvana 2.0</td><td className="lp-col-precio">$516.744</td></tr>
+                  <tr><td className="lp-col-medida">190×130 · 1½ plaza</td><td>Colchón Piero Nirvana 2.0</td><td className="lp-col-precio">$645.684</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Nirvana 2.0</td><td className="lp-col-precio">$691.187</td></tr>
+                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Nirvana 2.0</td><td className="lp-col-precio">$880.957</td></tr>
+                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Nirvana 2.0</td><td className="lp-col-precio">$969.053</td></tr>
+                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Nirvana 2.0</td><td className="lp-col-precio">$1.046.592</td></tr>
                 </tbody>
               </table>
             </div>
@@ -367,24 +431,24 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Namaste / Namaste Pillow Top</div>
                 <div className="lp-seccion-subtitulo">Línea Media · Ergonomía y Descanso</div>
               </div>
-              <span className="lp-badge lp-badge-equil">Más Vendido</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Namaste</td></tr>
-                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$422.000</td></tr>
-                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$470.000</td></tr>
-                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$519.000</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$711.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$907.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$1.088.000</td></tr>
+                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$316.661</td></tr>
+                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$352.785</td></tr>
+                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$388.981</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$533.396</td></tr>
+                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$680.297</td></tr>
+                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Namaste</td><td className="lp-col-precio">$816.358</td></tr>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Namaste Pillow Top</td></tr>
-                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Namaste Pillow Top</td><td className="lp-col-precio">$647.000</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Namaste Pillow Top</td><td className="lp-col-precio">$933.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Namaste Pillow Top</td><td className="lp-col-precio">$1.067.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Namaste Pillow Top</td><td className="lp-col-precio">$1.309.000</td></tr>
+                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Namaste Pillow Top</td><td className="lp-col-precio">$469.270</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Namaste Pillow Top</td><td className="lp-col-precio">$676.571</td></tr>
+                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Namaste Pillow Top</td><td className="lp-col-precio">$773.793</td></tr>
+                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Namaste Pillow Top</td><td className="lp-col-precio">$948.865</td></tr>
                 </tbody>
               </table>
             </div>
@@ -398,24 +462,24 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Regno / Regno Pillow Top</div>
                 <div className="lp-seccion-subtitulo">Línea Media Alta · Tecnología Avanzada</div>
               </div>
-              <span className="lp-badge lp-badge-equil">Más Vendido</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Regno</td></tr>
-                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$482.000</td></tr>
-                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$521.000</td></tr>
-                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$568.000</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$743.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$877.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$1.079.000</td></tr>
+                  <tr><td className="lp-col-medida">190×80 · 1 plaza</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$361.473</td></tr>
+                  <tr><td className="lp-col-medida">190×90 · 1 plaza</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$391.033</td></tr>
+                  <tr><td className="lp-col-medida">190×100 · 1 plaza</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$425.963</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$557.080</td></tr>
+                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$657.512</td></tr>
+                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Regno</td><td className="lp-col-precio">$809.331</td></tr>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Regno Pillow Top</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Regno Pillow Top</td><td className="lp-col-precio">$961.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Regno Pillow Top</td><td className="lp-col-precio">$1.102.000</td></tr>
-                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Regno Pillow Top</td><td className="lp-col-precio">$1.222.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Regno Pillow Top</td><td className="lp-col-precio">$1.341.000</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Regno Pillow Top</td><td className="lp-col-precio">$696.534</td></tr>
+                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Regno Pillow Top</td><td className="lp-col-precio">$799.053</td></tr>
+                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Regno Pillow Top</td><td className="lp-col-precio">$886.043</td></tr>
+                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Regno Pillow Top</td><td className="lp-col-precio">$972.219</td></tr>
                 </tbody>
               </table>
             </div>
@@ -429,16 +493,16 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Gravita</div>
                 <div className="lp-seccion-subtitulo">Línea Alta Gama · Tecnología de Punta</div>
               </div>
-              <span className="lp-badge lp-badge-equil">Más Vendido</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Gravita</td><td className="lp-col-precio">$1.259.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Gravita</td><td className="lp-col-precio">$1.549.000</td></tr>
-                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Gravita</td><td className="lp-col-precio">$1.658.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Gravita</td><td className="lp-col-precio">$1.763.000</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Gravita</td><td className="lp-col-precio">$912.857</td></tr>
+                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Gravita</td><td className="lp-col-precio">$1.122.763</td></tr>
+                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Gravita</td><td className="lp-col-precio">$1.201.832</td></tr>
+                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Gravita</td><td className="lp-col-precio">$1.278.166</td></tr>
                 </tbody>
               </table>
             </div>
@@ -452,22 +516,22 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Montreaux / Montreaux Pillow Top</div>
                 <div className="lp-seccion-subtitulo">Línea Premium · Lujo y Confort</div>
               </div>
-              <span className="lp-badge lp-badge-premium">Premium</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Montreaux</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Montreaux</td><td className="lp-col-precio">$1.394.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Montreaux</td><td className="lp-col-precio">$1.749.000</td></tr>
-                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Montreaux</td><td className="lp-col-precio">$1.870.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Montreaux</td><td className="lp-col-precio">$1.982.000</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Montreaux</td><td className="lp-col-precio">$958.131</td></tr>
+                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Montreaux</td><td className="lp-col-precio">$1.202.123</td></tr>
+                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Montreaux</td><td className="lp-col-precio">$1.285.829</td></tr>
+                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Montreaux</td><td className="lp-col-precio">$1.362.776</td></tr>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Montreaux Pillow Top</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Montreaux Pillow Top</td><td className="lp-col-precio">$1.751.000</td></tr>
-                  <tr className="lp-destacado"><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Montreaux Pillow Top <span className="lp-star">⭐ Destacado</span></td><td className="lp-col-precio">$2.133.000</td></tr>
-                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Montreaux Pillow Top</td><td className="lp-col-precio">$2.289.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Montreaux Pillow Top</td><td className="lp-col-precio">$2.428.000</td></tr>
+                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Montreaux Pillow Top</td><td className="lp-col-precio">$1.203.638</td></tr>
+                  <tr className="lp-destacado"><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Montreaux Pillow Top <span className="lp-star">⭐ Destacado</span></td><td className="lp-col-precio">$1.466.724</td></tr>
+                  <tr><td className="lp-col-medida">200×180 · Queen XL</td><td>Colchón Piero Montreaux Pillow Top</td><td className="lp-col-precio">$1.573.676</td></tr>
+                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Montreaux Pillow Top</td><td className="lp-col-precio">$1.669.116</td></tr>
                 </tbody>
               </table>
             </div>
@@ -481,20 +545,20 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Dream Fit Pocket / Dream Fit Foam</div>
                 <div className="lp-seccion-subtitulo">Línea Ultra Premium · Alta Tecnología · Bajo Pedido</div>
               </div>
-              <span className="lp-badge lp-badge-premium">Ultra Premium</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Dream Fit Pocket</td></tr>
-                  <tr><td className="lp-col-medida">190×140 · 2 plazas</td><td>Colchón Piero Dream Fit Pocket <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$2.910.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160 · Queen</td><td>Colchón Piero Dream Fit Pocket <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$3.351.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 · King</td><td>Colchón Piero Dream Fit Pocket <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$3.814.000</td></tr>
+                  <tr><td className="lp-col-medida">190×140×32 · 2 plazas</td><td>Colchón Piero Dream Fit Pocket <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$1.891.824</td></tr>
+                  <tr><td className="lp-col-medida">200×160×32 · Queen</td><td>Colchón Piero Dream Fit Pocket <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$2.178.455</td></tr>
+                  <tr><td className="lp-col-medida">200×200×32 · King</td><td>Colchón Piero Dream Fit Pocket <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$2.479.059</td></tr>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Dream Fit Foam</td></tr>
-                  <tr><td className="lp-col-medida">190×140×32 · 2 plazas</td><td>Colchón Piero Dream Fit Foam <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$2.746.000</td></tr>
-                  <tr><td className="lp-col-medida">200×160×32 · Queen</td><td>Colchón Piero Dream Fit Foam <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$3.252.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200×32 · King</td><td>Colchón Piero Dream Fit Foam <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$3.701.000</td></tr>
+                  <tr><td className="lp-col-medida">190×140×32 · 2 plazas</td><td>Colchón Piero Dream Fit Foam <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$1.784.829</td></tr>
+                  <tr><td className="lp-col-medida">200×160×32 · Queen</td><td>Colchón Piero Dream Fit Foam <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$2.113.968</td></tr>
+                  <tr><td className="lp-col-medida">200×200×32 · King</td><td>Colchón Piero Dream Fit Foam <span className="lp-consultar">Consultar stock</span></td><td className="lp-col-precio">$2.405.672</td></tr>
                 </tbody>
               </table>
             </div>
@@ -508,7 +572,7 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Sommiers Piero</div>
                 <div className="lp-seccion-subtitulo">Bases y Somieres · Todas las Líneas</div>
               </div>
-              <span className="lp-badge lp-badge-accesorio">Complemento</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-grid-2">
               <div>
@@ -518,14 +582,14 @@ export default function ListaPrecios() {
                   </div>
                   <table><thead><tr><th>Medida</th><th>Precio</th></tr></thead>
                   <tbody>
-                    <tr><td>190×80</td><td className="lp-col-precio">$221.000</td></tr>
-                    <tr><td>190×90</td><td className="lp-col-precio">$237.000</td></tr>
-                    <tr><td>190×100</td><td className="lp-col-precio">$260.000</td></tr>
-                    <tr><td>190×130</td><td className="lp-col-precio">$289.000</td></tr>
-                    <tr><td>190×140</td><td className="lp-col-precio">$293.000</td></tr>
-                    <tr><td>200×160</td><td className="lp-col-precio">$471.000</td></tr>
-                    <tr><td>200×180</td><td className="lp-col-precio">$489.000</td></tr>
-                    <tr><td>200×200</td><td className="lp-col-precio">$521.000</td></tr>
+                    <tr><td>190×80</td><td className="lp-col-precio">$166.005</td></tr>
+                    <tr><td>190×90</td><td className="lp-col-precio">$177.622</td></tr>
+                    <tr><td>190×100</td><td className="lp-col-precio">$194.785</td></tr>
+                    <tr><td>190×130</td><td className="lp-col-precio">$217.005</td></tr>
+                    <tr><td>190×140</td><td className="lp-col-precio">$220.082</td></tr>
+                    <tr><td>200×160</td><td className="lp-col-precio">$353.155</td></tr>
+                    <tr><td>200×180</td><td className="lp-col-precio">$367.078</td></tr>
+                    <tr><td>200×200</td><td className="lp-col-precio">$390.497</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -536,10 +600,10 @@ export default function ListaPrecios() {
                   </div>
                   <table><thead><tr><th>Medida</th><th>Precio</th></tr></thead>
                   <tbody>
-                    <tr><td>190×140</td><td className="lp-col-precio">$331.000</td></tr>
-                    <tr><td>200×160</td><td className="lp-col-precio">$556.000</td></tr>
-                    <tr><td>200×180</td><td className="lp-col-precio">$563.000</td></tr>
-                    <tr><td>200×200</td><td className="lp-col-precio">$579.000</td></tr>
+                    <tr><td>190×140</td><td className="lp-col-precio">$248.133</td></tr>
+                    <tr><td>200×160</td><td className="lp-col-precio">$417.346</td></tr>
+                    <tr><td>200×180</td><td className="lp-col-precio">$422.510</td></tr>
+                    <tr><td>200×200</td><td className="lp-col-precio">$434.039</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -550,12 +614,12 @@ export default function ListaPrecios() {
                   </div>
                   <table><thead><tr><th>Medida</th><th>Precio</th></tr></thead>
                   <tbody>
-                    <tr><td>190×80</td><td className="lp-col-precio">$238.000</td></tr>
-                    <tr><td>190×90</td><td className="lp-col-precio">$250.000</td></tr>
-                    <tr><td>190×100</td><td className="lp-col-precio">$270.000</td></tr>
-                    <tr><td>190×130</td><td className="lp-col-precio">$293.000</td></tr>
-                    <tr><td>190×140</td><td className="lp-col-precio">$316.000</td></tr>
-                    <tr><td>190×160</td><td className="lp-col-precio">$477.000</td></tr>
+                    <tr><td>190×80</td><td className="lp-col-precio">$178.759</td></tr>
+                    <tr><td>190×90</td><td className="lp-col-precio">$187.551</td></tr>
+                    <tr><td>190×100</td><td className="lp-col-precio">$202.205</td></tr>
+                    <tr><td>190×130</td><td className="lp-col-precio">$219.786</td></tr>
+                    <tr><td>190×140</td><td className="lp-col-precio">$237.370</td></tr>
+                    <tr><td>190×160</td><td className="lp-col-precio">$357.520</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -566,10 +630,10 @@ export default function ListaPrecios() {
                   </div>
                   <table><thead><tr><th>Medida</th><th>Precio</th></tr></thead>
                   <tbody>
-                    <tr><td>190×140</td><td className="lp-col-precio">$288.000</td></tr>
-                    <tr><td>200×160</td><td className="lp-col-precio">$497.000</td></tr>
-                    <tr><td>200×180</td><td className="lp-col-precio">$509.000</td></tr>
-                    <tr><td>200×200</td><td className="lp-col-precio">$565.000</td></tr>
+                    <tr><td>190×140</td><td className="lp-col-precio">$216.230</td></tr>
+                    <tr><td>200×160</td><td className="lp-col-precio">$372.477</td></tr>
+                    <tr><td>200×180</td><td className="lp-col-precio">$381.899</td></tr>
+                    <tr><td>200×200</td><td className="lp-col-precio">$423.828</td></tr>
                   </tbody></table>
                 </div>
                 <div className="lp-tabla-wrapper compact">
@@ -578,9 +642,9 @@ export default function ListaPrecios() {
                   </div>
                   <table><thead><tr><th>Medida</th><th>Precio</th></tr></thead>
                   <tbody>
-                    <tr><td>190×140</td><td className="lp-col-precio">$696.000</td></tr>
-                    <tr><td>200×160</td><td className="lp-col-precio">$1.199.000</td></tr>
-                    <tr><td>200×200</td><td className="lp-col-precio">$1.260.000</td></tr>
+                    <tr><td>190×140</td><td className="lp-col-precio">$522.013</td></tr>
+                    <tr><td>200×160</td><td className="lp-col-precio">$899.215</td></tr>
+                    <tr><td>200×200</td><td className="lp-col-precio">$945.146</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -595,7 +659,7 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Protectores de Colchón</div>
                 <div className="lp-seccion-subtitulo">Cubre Colchón Procol · Impermeables</div>
               </div>
-              <span className="lp-badge lp-badge-accesorio">Complemento</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-grid-2">
               <div className="lp-tabla-wrapper compact">
@@ -604,13 +668,13 @@ export default function ListaPrecios() {
                 </div>
                 <table><thead><tr><th>Medida</th><th>Precio</th></tr></thead>
                 <tbody>
-                  <tr><td>190×80</td><td className="lp-col-precio">$22.000</td></tr>
-                  <tr><td>190×90</td><td className="lp-col-precio">$24.000</td></tr>
-                  <tr><td>190×100</td><td className="lp-col-precio">$26.000</td></tr>
-                  <tr><td>190×140</td><td className="lp-col-precio">$31.000</td></tr>
-                  <tr><td>200×160 Queen</td><td className="lp-col-precio">$39.000</td></tr>
-                  <tr><td>200×180</td><td className="lp-col-precio">$41.000</td></tr>
-                  <tr><td>200×200 King</td><td className="lp-col-precio">$46.000</td></tr>
+                  <tr><td>190×80</td><td className="lp-col-precio">$14.047</td></tr>
+                  <tr><td>190×90</td><td className="lp-col-precio">$15.084</td></tr>
+                  <tr><td>190×100</td><td className="lp-col-precio">$16.182</td></tr>
+                  <tr><td>190×140</td><td className="lp-col-precio">$19.430</td></tr>
+                  <tr><td>200×160 Queen</td><td className="lp-col-precio">$24.070</td></tr>
+                  <tr><td>200×180</td><td className="lp-col-precio">$25.761</td></tr>
+                  <tr><td>200×200 King</td><td className="lp-col-precio">$28.703</td></tr>
                 </tbody></table>
               </div>
               <div className="lp-tabla-wrapper compact">
@@ -619,13 +683,13 @@ export default function ListaPrecios() {
                 </div>
                 <table><thead><tr><th>Medida</th><th>Precio</th></tr></thead>
                 <tbody>
-                  <tr><td>190×80</td><td className="lp-col-precio">$44.000</td></tr>
-                  <tr><td>190×90</td><td className="lp-col-precio">$45.000</td></tr>
-                  <tr><td>190×100</td><td className="lp-col-precio">$46.000</td></tr>
-                  <tr><td>190×140</td><td className="lp-col-precio">$53.000</td></tr>
-                  <tr><td>200×160 Queen</td><td className="lp-col-precio">$84.000</td></tr>
-                  <tr><td>200×180</td><td className="lp-col-precio">$90.000</td></tr>
-                  <tr><td>200×200 King</td><td className="lp-col-precio">$109.000</td></tr>
+                  <tr><td>190×80</td><td className="lp-col-precio">$27.248</td></tr>
+                  <tr><td>190×90</td><td className="lp-col-precio">$28.016</td></tr>
+                  <tr><td>190×100</td><td className="lp-col-precio">$28.964</td></tr>
+                  <tr><td>190×140</td><td className="lp-col-precio">$33.410</td></tr>
+                  <tr><td>200×160 Queen</td><td className="lp-col-precio">$52.517</td></tr>
+                  <tr><td>200×180</td><td className="lp-col-precio">$56.502</td></tr>
+                  <tr><td>200×200 King</td><td className="lp-col-precio">$68.111</td></tr>
                 </tbody></table>
               </div>
             </div>
@@ -639,26 +703,27 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Almohadas Piero</div>
                 <div className="lp-seccion-subtitulo">Línea Completa · Visco, Micro y Fibra</div>
               </div>
-              <span className="lp-badge lp-badge-accesorio">Complemento</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Modelo</th><th>Medida</th><th>Precio</th></tr></thead>
                 <tbody>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Visco Dream Fit</td></tr>
-                  <tr><td>Visco Dream Fit Clásica</td><td className="lp-col-medida">62×40 cm</td><td className="lp-col-precio">$256.000</td></tr>
-                  <tr><td>Visco Dream Fit Cervical</td><td className="lp-col-medida">57×37 cm</td><td className="lp-col-precio">$246.000</td></tr>
-                  <tr><td>Visco Dream Tech</td><td className="lp-col-medida">70×40 cm</td><td className="lp-col-precio">$221.000</td></tr>
+                  <tr><td>Visco Dream Fit Clásica</td><td className="lp-col-medida">62×40 cm</td><td className="lp-col-precio">$144.099</td></tr>
+                  <tr><td>Visco Dream Fit Cervical</td><td className="lp-col-medida">57×37 cm</td><td className="lp-col-precio">$138.569</td></tr>
+                  <tr><td>Visco Dream Tech</td><td className="lp-col-medida">70×40 cm</td><td className="lp-col-precio">$124.550</td></tr>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Micro Max Tech</td></tr>
-                  <tr><td>Micro Max Tech Rollo</td><td className="lp-col-medida">70×50 cm</td><td className="lp-col-precio">$157.000</td></tr>
-                  <tr><td>Micro Max Tech Rollo</td><td className="lp-col-medida">80×50 cm</td><td className="lp-col-precio">$161.000</td></tr>
-                  <tr><td>Micro Max Tech Rollo</td><td className="lp-col-medida">90×50 cm</td><td className="lp-col-precio">$169.000</td></tr>
-                  <tr><td>Micro Max Tech Núcleo</td><td className="lp-col-medida">70×40 cm</td><td className="lp-col-precio">$211.000</td></tr>
+                  <tr><td>Micro Max Tech Rollo</td><td className="lp-col-medida">70×50 cm</td><td className="lp-col-precio">$88.071</td></tr>
+                  <tr><td>Micro Max Tech Rollo</td><td className="lp-col-medida">80×50 cm</td><td className="lp-col-precio">$90.700</td></tr>
+                  <tr><td>Micro Max Tech Rollo</td><td className="lp-col-medida">90×50 cm</td><td className="lp-col-precio">$94.790</td></tr>
+                  <tr><td>Micro Max Tech Núcleo</td><td className="lp-col-medida">70×40 cm</td><td className="lp-col-precio">$118.792</td></tr>
                   <tr className="lp-tr-grupo"><td colSpan={3}>Fibra Smart Tech</td></tr>
-                  <tr><td>Fibra Smart Tech Plus</td><td className="lp-col-medida">70×50 cm</td><td className="lp-col-precio">$82.000</td></tr>
-                  <tr><td>Fibra Smart Tech Plus</td><td className="lp-col-medida">80×50 cm</td><td className="lp-col-precio">$91.000</td></tr>
-                  <tr><td>Fibra Smart Tech Confort</td><td className="lp-col-medida">70×40 cm</td><td className="lp-col-precio">$32.000</td></tr>
-                  <tr><td>Fibra Smart Tech Confort</td><td className="lp-col-medida">80×40 cm</td><td className="lp-col-precio">$35.000</td></tr>
+                  <tr><td>Fibra Smart Tech Plus</td><td className="lp-col-medida">70×50 cm</td><td className="lp-col-precio">$46.348</td></tr>
+                  <tr><td>Fibra Smart Tech Plus</td><td className="lp-col-medida">80×50 cm</td><td className="lp-col-precio">$51.033</td></tr>
+                  <tr><td>Fibra Smart Tech Confort</td><td className="lp-col-medida">70×40 cm</td><td className="lp-col-precio">$17.841</td></tr>
+                  <tr><td>Fibra Smart Tech Confort</td><td className="lp-col-medida">80×40 cm</td><td className="lp-col-precio">$19.467</td></tr>
+                  <tr><td>Fibra Smart Tech Confort</td><td className="lp-col-medida">90×40 cm</td><td className="lp-col-precio">$18.499</td></tr>
                 </tbody>
               </table>
             </div>
@@ -672,16 +737,16 @@ export default function ListaPrecios() {
                 <div className="lp-seccion-titulo">Sábanas Piero Classic Lisa</div>
                 <div className="lp-seccion-subtitulo">Percal 144 Hilos · Colores a consultar</div>
               </div>
-              <span className="lp-badge lp-badge-accesorio">Complemento</span>
+              <span className="lp-badge lp-badge-hot">🔥 Hot Sale</span>
             </div>
             <div className="lp-tabla-wrapper">
               <table>
                 <thead><tr><th>Medida</th><th>Descripción</th><th>Precio</th></tr></thead>
                 <tbody>
-                  <tr><td className="lp-col-medida">Twin (hasta 100 cm)</td><td>Sábanas Piero Classic Lisa Percal 144 Hilos</td><td className="lp-col-precio">$204.000</td></tr>
-                  <tr><td className="lp-col-medida">140×190 cm · Full</td><td>Sábanas Piero Classic Lisa Percal 144 Hilos</td><td className="lp-col-precio">$242.000</td></tr>
-                  <tr><td className="lp-col-medida">160×200 cm · Queen</td><td>Sábanas Piero Classic Lisa Percal 144 Hilos</td><td className="lp-col-precio">$263.000</td></tr>
-                  <tr><td className="lp-col-medida">200×200 cm · King</td><td>Sábanas Piero Classic Lisa Percal 144 Hilos</td><td className="lp-col-precio">$301.000</td></tr>
+                  <tr><td className="lp-col-medida">Twin (hasta 100 cm)</td><td>Sábanas Piero Classic Lisa Percal 144 Hilos</td><td className="lp-col-precio">$127.582</td></tr>
+                  <tr><td className="lp-col-medida">140×190 cm · Full</td><td>Sábanas Piero Classic Lisa Percal 144 Hilos</td><td className="lp-col-precio">$151.085</td></tr>
+                  <tr><td className="lp-col-medida">160×200 cm · Queen</td><td>Sábanas Piero Classic Lisa Percal 144 Hilos</td><td className="lp-col-precio">$164.516</td></tr>
+                  <tr><td className="lp-col-medida">200×200 cm · King</td><td>Sábanas Piero Classic Lisa Percal 144 Hilos</td><td className="lp-col-precio">$188.017</td></tr>
                 </tbody>
               </table>
             </div>
@@ -691,6 +756,7 @@ export default function ListaPrecios() {
           <div className="lp-leyenda">
             <div className="lp-leyenda-item"><span className="lp-consultar">Consultar stock</span>&nbsp;Producto bajo pedido</div>
             <div className="lp-leyenda-item"><span className="lp-star">⭐ Destacado</span>&nbsp;Producto más recomendado en su línea</div>
+            <div className="lp-leyenda-item"><span className="lp-hot-tag">🔥 Hot Sale</span>&nbsp;Precios especiales por tiempo limitado</div>
           </div>
 
         </div>
@@ -699,8 +765,8 @@ export default function ListaPrecios() {
         <div className="lp-footer">
           <div className="lp-footer-nota">
             <strong>Azul Colchones · Distribuidor Oficial Exclusivo Piero</strong><br />
-            Precios vigentes en pesos argentinos · Lista actualizada Abril 2026<br />
-            Los precios pueden variar sin previo aviso.
+            <span className="lp-hot-text">🔥 PRECIOS HOT SALE VIGENTES 🔥</span> · Lista actualizada Mayo 2026<br />
+            Precios en pesos argentinos · Los precios pueden variar sin previo aviso.
           </div>
           <div className="lp-footer-contacto">
             <strong>Azul Colchones</strong>
