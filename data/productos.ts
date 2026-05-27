@@ -1397,3 +1397,25 @@ export const COLECCIONES = {
   sommiers,
   accesorios
 }
+
+// ============================================================================
+// HIGHLIGHTS POR MODELO
+// Mini taglines para badges / subtítulos. Una ventaja concreta por línea.
+// ============================================================================
+
+export const HIGHLIGHTS_POR_MODELO: Record<string, string> = {
+  meditare:  'Doble Euro Pillow · Hasta 90 kg',
+  namaste:   'Soporte Firme · Hasta 100 kg',
+  nirvana:   'Máxima Densidad · Hasta 120 kg',
+  regno:     'Ultra Coil · Soporte Superior',
+  gravita:   'Resortes Independientes · Cero Transferencia',
+  montreaux: 'Línea Premium · Pocket Spring',
+}
+
+export function getHighlightPorModelo(nombre: string): string | null {
+  const key = nombre.toLowerCase()
+  for (const slug of Object.keys(HIGHLIGHTS_POR_MODELO)) {
+    if (key.includes(slug)) return HIGHLIGHTS_POR_MODELO[slug]
+  }
+  return null
+}

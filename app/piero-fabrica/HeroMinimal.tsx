@@ -1,6 +1,6 @@
 'use client'
 
-import AsesorColchon from './AsesorColchon'
+import AsesorColchon from '@/components/asesor/AsesorColchon'
 
 // ============================================================================
 // HERO PIERO FÁBRICA - OPTIMIZADO PROFESIONALMENTE

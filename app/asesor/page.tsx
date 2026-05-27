@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import AsesorColchon from '@/app/piero-fabrica/AsesorColchon'
+import AsesorColchon from '@/components/asesor/AsesorColchon'
 
 export const metadata: Metadata = {
   title: 'Asesor Personal de Colchones — Azul Colchones Villa María',

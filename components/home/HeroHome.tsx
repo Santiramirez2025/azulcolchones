@@ -1,6 +1,6 @@
 'use client'
 
-import AsesorColchon from '@/app/piero-fabrica/AsesorColchon'
+import AsesorColchon from '@/components/asesor/AsesorColchon'
 import Link from 'next/link'
 
 // ============================================================================

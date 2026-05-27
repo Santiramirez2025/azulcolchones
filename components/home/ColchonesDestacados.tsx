@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { trackWhatsAppClick, trackViewContent } from '@/lib/pixel'
+import { HIGHLIGHTS_POR_MODELO } from '@/data/productos'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TIPOS
@@ -12,6 +13,7 @@ interface ColchonDestacado {
   id: string
   nombre: string
   subtitulo: string
+  highlight: string
   tamaño: string
   dimensiones: string
   plaza: string
@@ -46,6 +48,7 @@ const COLCHONES: ColchonDestacado[] = [
     id: 'meditare-ep-80',
     nombre: 'Piero Meditare EuroPillow',
     subtitulo: 'Colchón 1 Plaza',
+    highlight: HIGHLIGHTS_POR_MODELO.meditare,
     tamaño: '190 × 80 cm',
     dimensiones: '190x80',
     plaza: '1 Plaza',
@@ -70,6 +73,7 @@ const COLCHONES: ColchonDestacado[] = [
     id: 'nirvana-140',
     nombre: 'Piero Nirvana',
     subtitulo: 'Colchón 2 Plazas',
+    highlight: HIGHLIGHTS_POR_MODELO.nirvana,
     tamaño: '190 × 140 cm',
     dimensiones: '190x140',
     plaza: '2 Plazas',
@@ -94,6 +98,7 @@ const COLCHONES: ColchonDestacado[] = [
     id: 'montreaux-pillow-200',
     nombre: 'Piero Montreaux Pillow',
     subtitulo: 'Colchón King Size',
+    highlight: HIGHLIGHTS_POR_MODELO.montreaux,
     tamaño: '200 × 200 cm',
     dimensiones: '200x200',
     plaza: 'King',
@@ -236,6 +241,10 @@ function ColchonCard({ colchon, index }: { colchon: ColchonDestacado; index: num
 
             <h3 className="text-sm font-black text-white leading-tight">{colchon.nombre}</h3>
 
+            <p className={`text-[10px] font-semibold ${colchon.acento.colorText} leading-tight`}>
+              {colchon.highlight}
+            </p>
+
             <span className={`text-[10px] font-mono font-semibold ${colchon.acento.colorText}`}>
               {colchon.tamaño}
             </span>
@@ -322,6 +331,9 @@ function ColchonCard({ colchon, index }: { colchon: ColchonDestacado; index: num
                 {colchon.subtitulo}
               </p>
               <h3 className="text-xl font-black text-white leading-tight">{colchon.nombre}</h3>
+              <p className={`text-[11px] font-semibold ${colchon.acento.colorText} mt-1.5 tracking-wide`}>
+                {colchon.highlight}
+              </p>
               <p className="text-sm text-zinc-400 mt-1.5 leading-relaxed">{colchon.descripcion}</p>
             </div>
 
