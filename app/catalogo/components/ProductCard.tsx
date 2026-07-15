@@ -614,7 +614,7 @@ export default function ProductCard({
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-[10px] text-blue-600 font-semibold mb-0.5">
-                          Hasta {mejorCuota.cuotas} cuotas
+                          {mejorCuota.cuotas} cuotas de
                         </div>
                         <div className="text-sm font-black text-gray-900">
                           {mejorCuota.formatted.precioCuota}
