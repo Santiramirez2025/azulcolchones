@@ -7,9 +7,9 @@ import { formatARS } from './currency'
  */
 export const CUOTAS_CONFIG = {
   3: { recargo: 0.18, label: '3 cuotas' },   // +18% sobre el contado
-  6: { recargo: 0.31, label: '6 cuotas' },   // +31%
-  9: { recargo: 0.44, label: '9 cuotas' },   // +44%
-  12: { recargo: 0.60, label: '12 cuotas' }, // +60%
+  6: { recargo: 0.27, label: '6 cuotas' },   // +27%
+  9: { recargo: 0.38, label: '9 cuotas' },   // +38%
+  12: { recargo: 0.52, label: '12 cuotas' }, // +52%
 } as const
 
 export type CuotasOption = keyof typeof CUOTAS_CONFIG

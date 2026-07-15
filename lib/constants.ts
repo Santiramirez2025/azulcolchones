@@ -123,10 +123,10 @@ export const PAYMENT_METHODS = {
     description: 'Hasta 12 cuotas',
     fees: {
       1: 0,
-      3: 0,
-      6: 0.31,
-      9: 0.44,
-      12: 0.60
+      3: 0.18,
+      6: 0.27,
+      9: 0.38,
+      12: 0.52
     }
   },
   transfer: {

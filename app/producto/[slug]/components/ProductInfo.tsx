@@ -529,7 +529,7 @@ export default function ProductInfo({
           <PaymentOption
             icon="🔢"
             label="6 cuotas"
-            sublabel={cuota6.recargo === 0 ? 'Sin interés' : 'Con interés'}
+            sublabel={cuota6.recargo === 0 ? 'Sin recargo' : `+${cuota6.recargoPercentage}`}
             price={cuota6.formatted.precioCuota}
             selected={selectedCuotas === 6}
             onClick={() => onCuotasChange(6)}

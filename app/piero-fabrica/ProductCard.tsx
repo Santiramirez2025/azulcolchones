@@ -266,9 +266,9 @@ export default function ProductCard({ producto }: ProductCardProps) {
                 <div className="space-y-1.5 text-xs">
                   {[
                     { cuotas: '3 cuotas', recargo: '+18%' },
-                    { cuotas: '6 cuotas', recargo: '+25%' },
-                    { cuotas: '9 cuotas', recargo: '+35%' },
-                    { cuotas: '12 cuotas', recargo: '+47%' }
+                    { cuotas: '6 cuotas', recargo: '+27%' },
+                    { cuotas: '9 cuotas', recargo: '+38%' },
+                    { cuotas: '12 cuotas', recargo: '+52%' }
                   ].map((item) => (
                     <div
                       key={item.cuotas}

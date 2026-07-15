@@ -151,7 +151,7 @@ export default function PriceSelector({
           <Percent className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-blue-300">
             <span className="font-semibold">Tip:</span> Pagando en efectivo/transferencia ahorrás hasta{' '}
-            <span className="font-bold">{formatPrecioContado(precioBase * 0.60)}</span> vs 12 cuotas
+            <span className="font-bold">{formatPrecioContado(precioBase * 0.52)}</span> vs 12 cuotas
           </div>
         </div>
       </div>
