@@ -87,8 +87,8 @@ export default function HeroHome() {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-white font-black text-2xl mb-0.5 tracking-tight">Piero Fábrica</h3>
-                      <p className="text-emerald-50 text-base font-bold">Hasta 49% OFF</p>
+                      <h3 className="text-white font-black text-2xl mb-0.5 tracking-tight">Piero directo de fábrica</h3>
+                      <p className="text-emerald-50 text-base font-bold">Ahorrá 23% vs precio sugerido</p>
                     </div>
                   </div>
                   <svg className="w-7 h-7 text-white/90 group-hover:translate-x-1.5 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@ export default function HeroHome() {
                   </svg>
                 </div>
                 <p className="text-sm md:text-base text-emerald-50/90 font-medium">
-                  Directo de fábrica • 7-10 días de espera • Garantía oficial
+                  Directo de fábrica • Entrega 24-72 hs • Garantía oficial Piero
                 </p>
               </div>
             </Link>

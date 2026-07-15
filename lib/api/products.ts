@@ -533,6 +533,60 @@ export async function getSimilarProducts(
 }
 
 /**
+ * Catálogo completo (DB-driven) con variantes y categoría.
+ * Devuelve los objetos Prisma crudos (incluye line, springType, plaza, measure,
+ * bajoPedido, etc.) para que la página los normalice. Precios en CENTAVOS.
+ */
+export async function getCatalogProducts() {
+  try {
+    return await prisma.product.findMany({
+      where: { isActive: true },
+      orderBy: [
+        { isBestSeller: 'desc' },
+        { isFeatured: 'desc' },
+        { price: 'asc' },
+      ],
+      include: {
+        categoryRel: true,
+        variants: {
+          where: { isActive: true },
+          orderBy: [{ isDefault: 'desc' }, { price: 'asc' }],
+        },
+      },
+    })
+  } catch (error) {
+    console.error('❌ Error fetching catalog products:', error)
+    return []
+  }
+}
+
+/**
+ * Cross-sell: sommier oficial recomendado para un colchón (ComboSuggestion).
+ * Nunca cruza combos: devuelve solo el sommier asociado oficialmente. Centavos.
+ */
+export async function getOfficialSommier(mattressId: string) {
+  try {
+    const combo = await prisma.comboSuggestion.findFirst({
+      where: { mattressId },
+      include: {
+        sommier: {
+          include: {
+            variants: {
+              where: { isActive: true },
+              orderBy: [{ isDefault: 'desc' }, { price: 'asc' }],
+            },
+          },
+        },
+      },
+    })
+    return combo?.sommier ?? null
+  } catch (error) {
+    console.error('❌ Error fetching official sommier:', error)
+    return null
+  }
+}
+
+/**
  * Obtener estadísticas de productos
  */
 export async function getProductStats() {

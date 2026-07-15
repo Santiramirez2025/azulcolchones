@@ -20,15 +20,16 @@
   /* ========================================
      FIX: Scroll infinito en mobile
      ======================================== */
+  /* overflow-x: clip previene el scroll horizontal SIN convertir <html> en
+     contenedor de scroll (eso rompía la rueda/scrollbar en desktop). Sin
+     height:100% → scroll estándar del viewport. */
   html {
-    height: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
     @apply bg-zinc-950 text-white antialiased;
-    min-height: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -271,12 +272,9 @@
   will-change: transform, opacity;
 }
 
-/* Smooth scrolling nativo */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
+/* NOTA: scroll-behavior: smooth global se removió a propósito.
+ * Hacía que el scroll con la rueda del mouse se sintiera lento/trabado
+ * (Chrome anima cada tick de rueda). El scroll con rueda ahora es instantáneo. */
 
 /* Reducir animaciones para usuarios que lo prefieran */
 @media (prefers-reduced-motion: reduce) {

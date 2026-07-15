@@ -14,7 +14,7 @@ import type { ProductVariant } from '@prisma/client'
 // ============================================================================
 // CONFIGURACIÓN WHATSAPP
 // ============================================================================
-const WHATSAPP_NUMBER = '+54 9 3534 09-6566' // Tu número de WhatsApp con código de país
+const WHATSAPP_NUMBER = '5493534096566' // Solo dígitos para la API de wa.me
 
 function generateWhatsAppMessage(product: {
   name: string
@@ -32,7 +32,7 @@ function generateWhatsAppMessage(product: {
     ? `\n💳 Forma de pago: *${product.selectedPayment}*`
     : ''
   
-  const message = `¡Hola! 👋 Quiero reservar:
+  const message = `¡Hola! 👋 Quiero consultar por:
 
 🛏️ *${product.name}*
 ${product.subtitle ? `📝 ${product.subtitle}\n` : ''}📏 Medida: *${product.variant || 'A confirmar'}*
@@ -41,7 +41,7 @@ ${product.subtitle ? `📝 ${product.subtitle}\n` : ''}📏 Medida: *${product.v
 
 🔗 ${productUrl}
 
-¿Está disponible para entrega inmediata?`
+¿Me confirmás disponibilidad y plazo de entrega?`
 
   return encodeURIComponent(message)
 }
@@ -354,7 +354,6 @@ export default function ProductInfo({
   const [showAllFeatures, setShowAllFeatures] = useState(false)
   
   const currentStock = selectedVariant?.stock ?? stockInfo.quantity ?? 0
-  const isLowStock = currentStock > 0 && currentStock <= 5
   
   // Opciones principales (3 cuotas + contado)
   const mejorCuotaSinRecargo = useMemo(() => {
@@ -512,13 +511,16 @@ export default function ProductInfo({
             highlight={true}
           />
           
-          {/* 3 CUOTAS SIN INTERÉS */}
+          {/* 3 CUOTAS (con recargo) */}
           <PaymentOption
             icon="💳"
             label="3 cuotas"
-            sublabel="Sin interés"
+            sublabel={
+              mejorCuotaSinRecargo.recargo === 0
+                ? 'Sin recargo'
+                : `+${mejorCuotaSinRecargo.recargoPercentage}`
+            }
             price={mejorCuotaSinRecargo.formatted.precioCuota}
-            tag="SIN INTERÉS"
             selected={selectedCuotas === 3}
             onClick={() => onCuotasChange(3)}
           />
@@ -540,7 +542,7 @@ export default function ProductInfo({
             onClick={() => setShowAllPlans(true)}
             className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 underline transition-colors inline-flex items-center gap-1"
           >
-            Ver hasta 12 cuotas sin interés →
+            Ver todos los planes de cuotas →
           </button>
         </div>
 
@@ -566,20 +568,6 @@ export default function ProductInfo({
           </div>
         </div>
       </div>
-
-      {/* Stock Status */}
-      {!isOutOfStock && isLowStock && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-orange-500/10 border border-orange-500/20 rounded-lg sm:rounded-xl"
-        >
-          <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-          <span className="text-xs sm:text-sm font-semibold text-orange-400">
-            ¡Solo quedan {currentStock} unidades!
-          </span>
-        </motion.div>
-      )}
 
       {/* Variants (Tamaños) */}
       {variants && variants.length > 0 && (

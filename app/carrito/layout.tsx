@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Carrito de Compras | Azul Colchones Villa María',
-  description: 'Finalizá tu compra de colchones premium con envío gratis a Villa María, hasta 12 cuotas sin interés y garantía de 100 noches de prueba.',
+  description: 'Finalizá tu compra de colchones premium con envío gratis a Villa María, hasta 3 cuotas y garantía de 100 noches de prueba.',
   robots: {
     index: false, // ✅ CRÍTICO: No indexar carritos
     follow: false,

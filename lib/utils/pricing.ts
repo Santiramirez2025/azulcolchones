@@ -6,7 +6,7 @@ import { formatARS } from './currency'
  * Estos porcentajes se pueden cambiar fácilmente
  */
 export const CUOTAS_CONFIG = {
-  3: { recargo: 0.00, label: '3 cuotas' },   // ✅ SIN RECARGO (0%)
+  3: { recargo: 0.18, label: '3 cuotas' },   // +18% sobre el contado
   6: { recargo: 0.31, label: '6 cuotas' },   // +31%
   9: { recargo: 0.44, label: '9 cuotas' },   // +44%
   12: { recargo: 0.60, label: '12 cuotas' }, // +60%
@@ -74,23 +74,23 @@ export function calcularTodasLasCuotas(precioBase: number): CuotaCalculation[] {
 }
 
 /**
- * Obtiene la mejor opción (3 cuotas sin recargo para destacar)
+ * Opción a destacar: 3 cuotas (con 18% de recargo sobre el contado).
  */
 export function getMejorCuota(precioBase: number): CuotaCalculation {
-  return calcularPrecioCuotas(precioBase, 3) // ✅ 3 cuotas sin recargo
+  return calcularPrecioCuotas(precioBase, 3)
 }
 
 /**
- * Formatea precio de contado (sin recargo)
+ * Formatea el precio de contado (el precio base, de cuotas).
  */
 export function formatPrecioContado(precio: number): string {
   return formatARS(precio)
 }
 
 /**
- * Genera texto promocional
+ * Texto promocional. El monto ya incluye el recargo de las 3 cuotas.
  */
 export function getTextoPromocional(precioBase: number): string {
   const mejor = getMejorCuota(precioBase)
-  return `Hasta 3 cuotas sin recargo de ${mejor.formatted.precioCuota}`
+  return `3 cuotas de ${mejor.formatted.precioCuota}`
 }

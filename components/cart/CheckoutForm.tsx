@@ -3,13 +3,14 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  ArrowLeft, 
-  CheckCircle2, 
-  Loader2, 
-  AlertCircle, 
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Loader2,
+  AlertCircle,
   MessageCircle,
-  ExternalLink
+  ExternalLink,
+  CreditCard
 } from 'lucide-react'
 import Link from 'next/link'
 import { useCartStore } from '@/lib/store/cart-store'
@@ -333,122 +334,69 @@ function ReservaForm({ total }: { total: number }) {
   
   const { trackStep } = useCheckoutAnalytics()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    console.log('🚀 [RESERVA] Iniciando proceso...')
-    console.log('📦 [RESERVA] Items en carrito:', items.length)
-    console.log('💰 [RESERVA] Total:', total)
-    
     setIsProcessing(true)
     setErrorMessage('')
-    setShowManualLink(false)
 
     try {
       const shippingData = sessionStorage.getItem('shippingData')
-      console.log('📋 [RESERVA] Datos de envío encontrados:', !!shippingData)
-      
       const shipping = shippingData ? JSON.parse(shippingData) : null
-      
       if (!shipping) {
-        console.error('❌ [RESERVA] No hay datos de envío')
-        setErrorMessage('Datos de envío no encontrados')
+        setErrorMessage('No encontramos tus datos de envío. Volvé al paso anterior.')
         setIsProcessing(false)
         return
       }
-      
-      const orderId = `RES-${Date.now()}`
-      console.log('🆔 [RESERVA] Order ID generado:', orderId)
-      
-      const productList = items.map((item: any) => 
-        `• ${item.name} (${item.size}) x${item.quantity} - $${(item.price * item.quantity).toLocaleString('es-AR')}`
-      ).join('\n')
 
-      const whatsappMessage = `🛏️ *NUEVA RESERVA - Azul Colchones*
+      // Re-pricing real ocurre en el server por SKU; acá solo mandamos sku + cantidad.
+      const checkoutItems = (items as any[])
+        .map((it) => ({ sku: it.sku, quantity: it.quantity }))
+        .filter((it) => Boolean(it.sku))
 
-📋 *Pedido:* #${orderId}
-
-👤 *Mis datos:*
-Nombre: ${shipping.firstName} ${shipping.lastName}
-Email: ${shipping.email}
-Teléfono: ${shipping.phone}
-
-📦 *Productos:*
-${productList}
-
-💰 *Total: $${total.toLocaleString('es-AR')}*
-
-📍 *Dirección de entrega:*
-${shipping.address}
-${shipping.city}${shipping.notes ? `\nNotas: ${shipping.notes}` : ''}
-
-✅ Quiero confirmar esta reserva y coordinar la entrega.`
-
-      const phoneNumber = '+54 9 3534 09-6566'
-      const encodedMessage = encodeURIComponent(whatsappMessage)
-      const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
-      
-      console.log('💬 [RESERVA] URL generada (primeros 100 chars):', url.substring(0, 100) + '...')
-      console.log('📏 [RESERVA] Longitud total de la URL:', url.length)
-      setWhatsappURL(url)
-
-      // Guardar orden
-      sessionStorage.setItem('lastOrder', JSON.stringify({
-        orderId,
-        paymentMethod: 'reserva_whatsapp',
-        amount: total,
-        shipping,
-        items,
-        date: new Date().toISOString()
-      }))
-      console.log('💾 [RESERVA] Orden guardada')
-
-      trackStep(3, {
-        payment_method: 'reserva_whatsapp',
-        value: total,
-        items_count: items.length
-      })
-      console.log('📊 [RESERVA] Analytics tracked')
-
-      // Limpiar carrito
-      clearCart()
-      sessionStorage.removeItem('shippingData')
-      console.log('🧹 [RESERVA] Carrito limpiado')
-
-      // INTENTAR ABRIR WHATSAPP
-      console.log('🔄 [RESERVA] Intentando abrir WhatsApp...')
-      
-      // Estrategia 1: window.open
-      console.log('🪟 [RESERVA] Método 1: window.open()')
-      const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
-      
-      if (newWindow && !newWindow.closed) {
-        console.log('✅ [RESERVA] window.open EXITOSO - WhatsApp abierto')
-        setTimeout(() => {
-          setIsProcessing(false)
-          setShowManualLink(true)
-          console.log('🎯 [RESERVA] Mostrando enlaces manuales como backup')
-        }, 1500)
-      } else {
-        console.log('⚠️ [RESERVA] window.open BLOQUEADO - Intentando redirección...')
-        
-        // Estrategia 2: location.href
-        console.log('🌐 [RESERVA] Método 2: location.href')
-        window.location.href = url
-        
-        setTimeout(() => {
-          setIsProcessing(false)
-          setShowManualLink(true)
-          console.log('🔗 [RESERVA] Redirección ejecutada, mostrando backup')
-        }, 2000)
+      if (checkoutItems.length === 0) {
+        setErrorMessage('Tu carrito no tiene productos válidos. Volvé a agregarlos al carrito.')
+        setIsProcessing(false)
+        return
       }
 
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: checkoutItems,
+          customer: {
+            firstName: shipping.firstName,
+            lastName: shipping.lastName,
+            email: shipping.email,
+            phone: shipping.phone,
+          },
+          shipping: {
+            address: shipping.address,
+            city: shipping.city,
+            notes: shipping.notes,
+          },
+        }),
+      })
+
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok || !data.init_point) {
+        setErrorMessage(data.error || 'No se pudo iniciar el pago. Probá de nuevo.')
+        setIsProcessing(false)
+        return
+      }
+
+      trackStep(3, {
+        payment_method: 'mercadopago',
+        value: total,
+        items_count: items.length,
+      })
+
+      // Redirigir a Mercado Pago (Checkout Pro). El carrito se limpia al volver con pago aprobado.
+      window.location.href = data.init_point
     } catch (err) {
-      console.error('❌ [RESERVA] ERROR CRÍTICO:', err)
-      console.error('📍 [RESERVA] Stack trace:', (err as Error).stack)
-      setErrorMessage('Error al procesar. Por favor, contactanos directamente.')
+      setErrorMessage('Error al procesar el pago. Probá de nuevo en unos segundos.')
       setIsProcessing(false)
-      setShowManualLink(true)
     }
   }
 
@@ -482,8 +430,8 @@ ${shipping.city}${shipping.notes ? `\nNotas: ${shipping.notes}` : ''}
           <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
             <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
           </div>
-          <h3 className="text-xl sm:text-2xl font-black text-white mb-1 sm:mb-2">Reservar por WhatsApp</h3>
-          <p className="text-sm sm:text-base text-zinc-400">Se abrirá WhatsApp con tu pedido completo</p>
+          <h3 className="text-xl sm:text-2xl font-black text-white mb-1 sm:mb-2">Pagar con Mercado Pago</h3>
+          <p className="text-sm sm:text-base text-zinc-400">Vas a ser redirigido a Mercado Pago para pagar de forma segura</p>
         </div>
 
         {/* Cómo funciona */}
@@ -493,10 +441,10 @@ ${shipping.city}${shipping.notes ? `\nNotas: ${shipping.notes}` : ''}
             ¿Cómo funciona?
           </p>
           <ol className="text-xs sm:text-sm text-zinc-300 space-y-1.5 sm:space-y-2 list-decimal list-inside leading-tight">
-            <li>Confirmás tu reserva</li>
-            <li>Se abre WhatsApp automáticamente</li>
-            <li>Enviás el mensaje</li>
-            <li>Coordinamos entrega y pago</li>
+            <li>Confirmás tu pedido</li>
+            <li>Te llevamos a Mercado Pago</li>
+            <li>Pagás con tarjeta, débito o efectivo</li>
+            <li>Coordinamos la entrega por WhatsApp</li>
           </ol>
         </div>
 
@@ -563,12 +511,12 @@ ${shipping.city}${shipping.notes ? `\nNotas: ${shipping.notes}` : ''}
           {isProcessing ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span>Abriendo WhatsApp...</span>
+              <span>Redirigiendo a Mercado Pago...</span>
             </>
           ) : (
             <>
-              <MessageCircle className="w-5 h-5" />
-              <span>Enviar por WhatsApp</span>
+              <CreditCard className="w-5 h-5" />
+              <span>Pagar con Mercado Pago</span>
             </>
           )}
         </motion.button>

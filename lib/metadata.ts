@@ -46,7 +46,7 @@ const KEYWORDS_STRATEGY = {
   // Purchase intent - Alto valor de conversión (ready to buy)
   intent: [
     'colchones en cuotas villa maría',
-    'colchones 12 cuotas sin interés',
+    'colchones 12 cuotas',
     'colchones mercado pago villa maría',
     'colchones baratos villa maría',
     'colchones con garantía córdoba',
@@ -86,7 +86,7 @@ export const homeMetadata: Metadata = {
   },
   
   // ✅ DESCRIPTION OPTIMIZADA: 158 caracteres + CTR optimizado
-  description: 'Colchonería en Villa María, Córdoba | Envío GRATIS 24-48hs | 12 cuotas sin interés | Garantía extendida | ⭐ 4.9/5 | Showroom Balerdi 855 | Tu colchonería de confianza',
+  description: 'Colchonería en Villa María, Córdoba | Envío GRATIS 24-48hs | 12 cuotas | Garantía extendida | ⭐ 4.9/5 | Showroom Balerdi 855 | Tu colchonería de confianza',
   
   // ❌ KEYWORDS ELIMINADOS (Google no los usa, contamina código)
   // keywords: [...] → REMOVED
@@ -423,7 +423,7 @@ export const structuredData = {
         itemOffered: {
           '@type': 'Product',
           name: 'Colchones y Sommiers Premium',
-          description: 'Colchones premium de todas las medidas con envío gratis y 12 cuotas sin interés',
+          description: 'Colchones premium de todas las medidas con envío gratis y 12 cuotas',
         },
         availability: 'https://schema.org/InStock',
         price: '350000', // ✅ ACTUALIZAR: Precio "desde" más económico
@@ -505,7 +505,7 @@ export const structuredData = {
       isPartOf: { '@id': `${SITE_CONFIG.url}/#website` },
       about: { '@id': `${SITE_CONFIG.url}/#organization` },
       primaryImageOfPage: { '@id': `${SITE_CONFIG.url}/#logo` },
-      description: 'Colchonería en Villa María con envío gratis 24-48hs, 12 cuotas sin interés y garantía extendida. 35+ años de experiencia.',
+      description: 'Colchonería en Villa María con envío gratis 24-48hs, 12 cuotas y garantía extendida. 35+ años de experiencia.',
       inLanguage: 'es-AR',
       
       // ✅ SPEAKABLE (Voice Search)
@@ -540,10 +540,10 @@ export const structuredData = {
         },
         {
           '@type': 'Question',
-          name: '¿Puedo pagar en cuotas sin interés?',
+          name: '¿Puedo pagar en cuotas?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Sí, ofrecemos financiación en hasta 12 cuotas sin interés con Mercado Pago y tarjetas de crédito habilitadas. También aceptamos transferencia bancaria con 10% de descuento adicional y efectivo con 15% de descuento.',
+            text: 'Sí, ofrecemos financiación en hasta 12 cuotas con Mercado Pago y tarjetas de crédito habilitadas. También aceptamos transferencia bancaria con 10% de descuento adicional y efectivo con 15% de descuento.',
           },
         },
         {
@@ -551,7 +551,7 @@ export const structuredData = {
           name: '¿Aceptan Mercado Pago?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Sí, aceptamos Mercado Pago con hasta 12 cuotas sin interés en tarjetas habilitadas. Podés pagar con código QR en el showroom, link de pago online, o directamente desde la app de Mercado Pago.',
+            text: 'Sí, aceptamos Mercado Pago con hasta 12 cuotas en tarjetas habilitadas. Podés pagar con código QR en el showroom, link de pago online, o directamente desde la app de Mercado Pago.',
           },
         },
         {
@@ -583,7 +583,7 @@ export const structuredData = {
           name: '¿Cuánto sale un colchón queen en Villa María?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Los colchones queen (160x200cm) en Azul Colchones arrancan desde $350.000 con 12 cuotas sin interés. Tenemos modelos premium de hasta $650.000 según materiales (resortes pocket, viscoelástico, memory foam). Todos incluyen envío gratis en Villa María.',
+            text: 'Los colchones queen (160x200cm) en Azul Colchones arrancan desde $350.000 con 12 cuotas. Tenemos modelos premium de hasta $650.000 según materiales (resortes pocket, viscoelástico, memory foam). Todos incluyen envío gratis en Villa María.',
           },
         },
         {
@@ -655,7 +655,7 @@ export function generateProductMetadata(product: {
 
   return {
     title: `${product.name} ${formattedPrice} | Envío GRATIS Villa María | 12 Cuotas`,
-    description: `Comprá ${product.name} en Villa María. ${product.description} Precio: ${formattedPrice}. Envío GRATIS 24-48hs | 12 cuotas sin interés | Garantía extendida.`,
+    description: `Comprá ${product.name} en Villa María. ${product.description} Precio: ${formattedPrice}. Envío GRATIS 24-48hs | 12 cuotas | Garantía extendida.`,
     
     openGraph: {
       title: `${product.name} - ${formattedPrice}`,
@@ -700,7 +700,7 @@ export function generateCategoryMetadata(category: {
 
   return {
     title: `${category.name} en Villa María | Envío GRATIS 24-48hs | 12 Cuotas`,
-    description: `${category.description} Envío GRATIS Villa María 24-48hs | 12 cuotas sin interés | Garantía extendida | Los mejores ${category.name.toLowerCase()} de Córdoba.`,
+    description: `${category.description} Envío GRATIS Villa María 24-48hs | 12 cuotas | Garantía extendida | Los mejores ${category.name.toLowerCase()} de Córdoba.`,
     
     openGraph: {
       title: `${category.name} - Azul Colchones Villa María`,

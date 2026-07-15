@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, Maximize2, Grid3x3 } from 'lucide-react'
 import Image from 'next/image'
+import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock'
 
 interface ImageModalProps {
   isOpen: boolean
@@ -110,15 +111,10 @@ export default function ImageModal({
     if (isOpen) {
       setCurrentSlide(currentIndex)
       setIsZoomed(false)
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-
-    return () => {
-      document.body.style.overflow = ''
     }
   }, [isOpen, currentIndex])
+
+  useBodyScrollLock(isOpen)
 
   // ============================================================================
   // ✅ KEYBOARD NAVIGATION

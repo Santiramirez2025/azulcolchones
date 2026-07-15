@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     images: ['/og-opiniones.jpg'],
   },
   alternates: {
-    canonical: 'https://azulcolchones.com.ar/opiniones',
+    canonical: 'https://azulcolchones.com/opiniones',
   },
 }
 
@@ -77,7 +77,7 @@ export default function OpinionesPage() {
   const reviewsSchema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    '@id': 'https://azulcolchones.com.ar',
+    '@id': 'https://azulcolchones.com',
     name: 'Azul Colchones',
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -172,13 +172,13 @@ export default function OpinionesPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Inicio',
-        item: 'https://azulcolchones.com.ar',
+        item: 'https://azulcolchones.com',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Opiniones',
-        item: 'https://azulcolchones.com.ar/opiniones',
+        item: 'https://azulcolchones.com/opiniones',
       },
     ],
   }

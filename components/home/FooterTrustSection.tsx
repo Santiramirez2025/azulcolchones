@@ -22,7 +22,7 @@ const TRUST_FOOTER = [
   },
   {
     icon: CreditCard,
-    title: '6 Cuotas sin Interés',
+    title: '6 Cuotas',
     description: 'Con Mercado Pago'
   }
 ]

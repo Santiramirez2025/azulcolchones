@@ -27,7 +27,7 @@ const TRUST_ITEMS = [
   {
     icon: CreditCard,
     text: '12 Cuotas',
-    highlight: 'Sin Interés',
+    highlight: 'Con tarjeta',
   },
   {
     icon: Shield,

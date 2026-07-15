@@ -777,7 +777,7 @@ export const PaymentMethods = memo(function PaymentMethods({
         nameShort: 'Efectivo',
         icon: '💵',
         description: 'Pagás al recibir',
-        badge: 'Sin recargo',
+        badge: 'Con tarjeta',
         available: true
       }
     ]

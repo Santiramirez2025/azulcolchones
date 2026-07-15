@@ -235,7 +235,7 @@ export default function BlogPage() {
         }}
       />
       
-      <div className="min-h-screen w-full bg-zinc-950 overflow-x-hidden scroll-smooth antialiased">
+      <div className="min-h-screen w-full bg-zinc-950 overflow-x-hidden antialiased">
         {/* Hero */}
         <section ref={heroRef} className="w-full border-b border-zinc-800/50">
           <motion.div style={{ y: heroY, opacity: heroOpacity }}>

@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { trackCustomEvent, trackWhatsAppClick } from '@/lib/pixel'
-import { 
-  calcularRecomendacion, 
-  type Respuestas, 
-  type Recomendacion 
+import {
+  calcularRecomendacion,
+  type Respuestas,
+  type Recomendacion,
+  type PreciosAsesor,
 } from './logicaRecomendacion'
 
 // ============================================================================
@@ -53,7 +54,20 @@ const PREGUNTAS = [
 // COMPONENTE PRINCIPAL
 // ============================================================================
 
-export default function AsesorColchon() {
+export default function AsesorColchon({
+  precios: preciosProp,
+}: { precios?: PreciosAsesor } = {}) {
+  // Si no llegan por prop (embeds client-side), se cargan de la API.
+  const [precios, setPrecios] = useState<PreciosAsesor>(preciosProp ?? {})
+
+  useEffect(() => {
+    if (preciosProp && Object.keys(preciosProp).length > 0) return
+    fetch('/api/asesor/precios')
+      .then((r) => r.json())
+      .then((d) => setPrecios(d || {}))
+      .catch(() => {})
+  }, [preciosProp])
+
   const [activo, setActivo] = useState(false)
   const [pasoActual, setPasoActual] = useState(0)
   const [respuestas, setRespuestas] = useState<Respuestas>({
@@ -104,7 +118,7 @@ export default function AsesorColchon() {
       setCargando(true)
       setTimeout(() => {
         try {
-          const recomendacion = calcularRecomendacion(respuestas)
+          const recomendacion = calcularRecomendacion(respuestas, precios)
           setResultado(recomendacion)
           setCargando(false)
         } catch (error) {
@@ -280,7 +294,7 @@ export default function AsesorColchon() {
           <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
           </svg>
-          Tus datos no se guardan ni se comparten
+          Usamos tus respuestas solo para recomendarte el colchón ideal. Sin compromiso.
         </p>
       )}
 
@@ -338,14 +352,38 @@ function ResultadoRecomendacion({
   onReiniciar: () => void
 }) {
   const resultadoRef = useRef<HTMLDivElement>(null)
+  const [telefono, setTelefono] = useState('')
+
+  // Payload de la recomendación para el Lead (remarketing)
+  const recommendation = {
+    modelo: principal.modelo,
+    linea: principal.linea,
+    medida: principal.medidaDisplay,
+    precio: principal.precio,
+    slugDb: principal.slugDb,
+  }
+
+  const enviarLead = (phone?: string) => {
+    // Best-effort: no bloquea la UI si falla.
+    fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: 'asesor',
+        phone: phone?.trim() || null,
+        recommendation,
+      }),
+      keepalive: true,
+    }).catch(() => {})
+  }
 
   useEffect(() => {
     if (resultadoRef.current) {
-      resultadoRef.current.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'nearest'
-      })
+      resultadoRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     }
+    // Guardar el lead con la recomendación apenas se muestra (sin contacto).
+    enviarLead()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleVerProducto = () => {
@@ -356,13 +394,13 @@ function ResultadoRecomendacion({
   }
 
   const handleConsultar = () => {
+    if (telefono.trim()) enviarLead(telefono)
     trackWhatsAppClick({
       producto: principal.modelo,
       tamaño: principal.medidaDisplay,
       precio: principal.precio,
       categoria: 'piero',
     })
-    
     trackCustomEvent('asesor_consultar_whatsapp', {
       modelo: principal.modelo,
       precio: principal.precio,
@@ -411,12 +449,24 @@ function ResultadoRecomendacion({
               </p>
             </div>
             <div className="text-left sm:text-right">
+              {principal.precioLista && principal.precioLista > principal.precio && (
+                <p className="text-sm text-zinc-500 line-through tabular-nums">
+                  ${principal.precioLista.toLocaleString('es-AR')}
+                </p>
+              )}
               <p className="text-3xl md:text-4xl font-black text-white tabular-nums">
                 ${principal.precio.toLocaleString('es-AR')}
               </p>
-              <p className="text-xs text-zinc-400 mt-1 uppercase tracking-wide font-semibold">
-                Precio contado
-              </p>
+              {principal.precioLista && principal.precioLista > principal.precio ? (
+                <p className="text-xs text-emerald-400 mt-1 font-bold">
+                  Ahorrás ${(principal.precioLista - principal.precio).toLocaleString('es-AR')} (
+                  {Math.round((1 - principal.precio / principal.precioLista) * 100)}%)
+                </p>
+              ) : (
+                <p className="text-xs text-zinc-400 mt-1 uppercase tracking-wide font-semibold">
+                  Precio contado
+                </p>
+              )}
             </div>
           </div>
 
@@ -428,7 +478,7 @@ function ResultadoRecomendacion({
                 </div>
                 <div>
                   <p className="text-amber-300 font-black text-base md:text-lg leading-tight">
-                    {principal.cuotas} cuotas sin interés
+                    {principal.cuotas} cuotas
                   </p>
                   <p className="text-amber-400/70 text-xs md:text-sm mt-0.5">
                     con tarjetas participantes
@@ -461,16 +511,32 @@ function ResultadoRecomendacion({
             ))}
           </div>
 
+          {/* Input opcional de contacto (para que te escriban / remarketing) */}
+          <div className="mb-4">
+            <label htmlFor="asesor-tel" className="block text-xs text-zinc-400 mb-1.5">
+              Dejanos tu WhatsApp (opcional) y te asesoramos
+            </label>
+            <input
+              id="asesor-tel"
+              type="tel"
+              inputMode="tel"
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+              placeholder="Ej: 3534 09-6566"
+              className="w-full px-4 py-3 bg-zinc-900/70 border border-zinc-700 rounded-xl text-white text-sm placeholder:text-zinc-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            />
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-3">
             <a
-              href={`/lista-precios${principal.ancla}`}
+              href={`/producto/${principal.slugDb}`}
               onClick={handleVerProducto}
               className="flex-1 px-6 py-4 bg-blue-600 hover:bg-blue-500 text-white text-center text-base font-bold rounded-xl transition-all shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/40 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-950 active:scale-100"
             >
-              Ver en Lista de Precios
+              Ver producto y comprar
             </a>
             <a
-              href={`https://wa.me/5493534096566?text=${encodeURIComponent(`Hola! Me interesa el ${principal.modelo} ${principal.medidaDisplay} ($${principal.precio.toLocaleString('es-AR')} · ${principal.cuotas} cuotas sin interés). Vine del asesor de la web.`)}`}
+              href={`https://wa.me/5493534096566?text=${encodeURIComponent(`Hola! Me interesa el ${principal.modelo} ${principal.medidaDisplay} ($${principal.precio.toLocaleString('es-AR')} · 3 cuotas). Vine del asesor de la web.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleConsultar}
@@ -519,17 +585,17 @@ function ResultadoRecomendacion({
                   ${alternativa.precio.toLocaleString('es-AR')}
                 </p>
                 <p className="text-xs text-amber-400 font-bold mt-0.5">
-                  {alternativa.cuotas} cuotas sin interés
+                  {alternativa.cuotas} cuotas
                 </p>
               </div>
             </div>
             <p className="text-sm text-zinc-500 mb-4 leading-relaxed">{alternativa.razonamiento}</p>
             <div className="flex flex-col sm:flex-row gap-2">
               <a
-                href={`/lista-precios${alternativa.ancla}`}
+                href={`/producto/${alternativa.slugDb}`}
                 className="flex-1 px-4 py-2.5 bg-zinc-700 hover:bg-zinc-600 text-white text-center text-sm font-bold rounded-lg transition-colors"
               >
-                Ver en catálogo
+                Ver producto
               </a>
               <a
                 href={`https://wa.me/5493534096566?text=${encodeURIComponent(`Hola! Me interesa el ${alternativa.modelo} ${alternativa.medidaDisplay}`)}`}

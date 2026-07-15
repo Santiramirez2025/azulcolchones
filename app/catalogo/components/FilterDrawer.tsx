@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useCallback, useMemo, useRef } fro
 import { X, Filter, Check, Star } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { formatARS } from '@/lib/utils/currency'
+import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock'
 
 export interface FilterDrawerProps {
   isOpen: boolean
@@ -17,6 +18,16 @@ export interface FilterDrawerProps {
   onMinRatingChange: Dispatch<SetStateAction<number>>
   availableCategories: string[]
   onClearFilters: () => void
+  // ── Filtros catálogo Piero ──
+  tipoOptions?: readonly { id: string; name: string }[]
+  selectedTipos?: string[]
+  onTiposChange?: Dispatch<SetStateAction<string[]>>
+  lineaOptions?: readonly { id: string; name: string }[]
+  selectedLineas?: string[]
+  onLineasChange?: Dispatch<SetStateAction<string[]>>
+  plazaOptions?: readonly string[]
+  selectedPlazas?: string[]
+  onPlazasChange?: Dispatch<SetStateAction<string[]>>
 }
 
 const ratingOptions = [
@@ -45,9 +56,29 @@ export default function FilterDrawer({
   onMinRatingChange,
   availableCategories,
   onClearFilters,
+  tipoOptions = [],
+  selectedTipos = [],
+  onTiposChange,
+  lineaOptions = [],
+  selectedLineas = [],
+  onLineasChange,
+  plazaOptions = [],
+  selectedPlazas = [],
+  onPlazasChange,
 }: FilterDrawerProps) {
-  
+
   const drawerRef = useRef<HTMLDivElement>(null)
+
+  // Toggle genérico para grupos de chips multi-select
+  const toggleIn = useCallback(
+    (setter: Dispatch<SetStateAction<string[]>> | undefined, value: string) => {
+      if (!setter) return
+      setter((prev) =>
+        prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
+      )
+    },
+    [],
+  )
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   
   // 🎯 Focus trap
@@ -75,18 +106,8 @@ export default function FilterDrawer({
     return () => document.removeEventListener('keydown', handleEscape)
   }, [isOpen, onClose])
   
-  // 🔒 Prevenir scroll del body
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [isOpen])
+  // 🔒 Prevenir scroll del body (con conteo de referencias compartido)
+  useBodyScrollLock(isOpen)
   
   // 📊 Conteo de filtros activos
   const activeFiltersCount = useMemo(() => {
@@ -97,8 +118,9 @@ export default function FilterDrawer({
     if (minRating > 0) {
       count++
     }
+    count += selectedTipos.length + selectedLineas.length + selectedPlazas.length
     return count
-  }, [selectedCategories.length, priceRange, minRating])
+  }, [selectedCategories.length, priceRange, minRating, selectedTipos.length, selectedLineas.length, selectedPlazas.length])
   
   // 🎯 Toggle category
   const toggleCategory = useCallback((category: string) => {
@@ -332,6 +354,96 @@ export default function FilterDrawer({
                   </div>
                 </div>
               </fieldset>
+
+              {/* Tipo de colchón */}
+              {tipoOptions.length > 0 && (
+                <fieldset className="space-y-3">
+                  <legend className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <span role="img" aria-label="Tipo">🧱</span>
+                    Tipo
+                  </legend>
+                  <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por tipo">
+                    {tipoOptions.map((opt) => {
+                      const isSelected = selectedTipos.includes(opt.id)
+                      return (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => toggleIn(onTiposChange, opt.id)}
+                          aria-pressed={isSelected}
+                          className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all min-h-[44px] focus:outline-none focus:ring-2 focus:ring-violet-500 ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg'
+                              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                          }`}
+                        >
+                          {opt.name}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </fieldset>
+              )}
+
+              {/* Línea */}
+              {lineaOptions.length > 0 && (
+                <fieldset className="space-y-3">
+                  <legend className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <span role="img" aria-label="Línea">✨</span>
+                    Línea
+                  </legend>
+                  <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por línea">
+                    {lineaOptions.map((opt) => {
+                      const isSelected = selectedLineas.includes(opt.id)
+                      return (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => toggleIn(onLineasChange, opt.id)}
+                          aria-pressed={isSelected}
+                          className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all min-h-[44px] focus:outline-none focus:ring-2 focus:ring-violet-500 ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg'
+                              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                          }`}
+                        >
+                          {opt.name}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </fieldset>
+              )}
+
+              {/* Plaza / medida */}
+              {plazaOptions.length > 0 && (
+                <fieldset className="space-y-3">
+                  <legend className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <span role="img" aria-label="Plaza">📐</span>
+                    Plaza
+                  </legend>
+                  <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por plaza">
+                    {plazaOptions.map((pl) => {
+                      const isSelected = selectedPlazas.includes(pl)
+                      return (
+                        <button
+                          key={pl}
+                          type="button"
+                          onClick={() => toggleIn(onPlazasChange, pl)}
+                          aria-pressed={isSelected}
+                          className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all min-h-[44px] focus:outline-none focus:ring-2 focus:ring-violet-500 ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg'
+                              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                          }`}
+                        >
+                          {pl}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </fieldset>
+              )}
 
               {/* Valoración */}
               <fieldset className="space-y-3 sm:space-y-4">

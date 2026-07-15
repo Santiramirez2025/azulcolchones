@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     images: ['/og-sobre-nosotros.jpg'],
   },
   alternates: {
-    canonical: 'https://azulcolchones.com.ar/sobre-nosotros',
+    canonical: 'https://azulcolchones.com/sobre-nosotros',
   },
 }
 
@@ -59,11 +59,11 @@ export default function SobreNosotrosPage() {
   const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    '@id': 'https://azulcolchones.com.ar',
+    '@id': 'https://azulcolchones.com',
     name: 'Azul Colchones',
     description: 'Tienda familiar de colchones con más de 35 años de experiencia en Villa María, Córdoba',
-    image: 'https://azulcolchones.com.ar/logo-azul-colchones.jpg',
-    url: 'https://azulcolchones.com.ar',
+    image: 'https://azulcolchones.com/logo-azul-colchones.jpg',
+    url: 'https://azulcolchones.com',
     telephone: '+54-353-123-4567',
     priceRange: '$$',
     address: {
@@ -112,10 +112,10 @@ export default function SobreNosotrosPage() {
     '@type': 'AboutPage',
     name: 'Sobre Nosotros - Azul Colchones',
     description: 'Historia y valores de Azul Colchones, tienda familiar con 35 años de experiencia',
-    url: 'https://azulcolchones.com.ar/sobre-nosotros',
+    url: 'https://azulcolchones.com/sobre-nosotros',
     mainEntity: {
       '@type': 'Organization',
-      '@id': 'https://azulcolchones.com.ar',
+      '@id': 'https://azulcolchones.com',
       name: 'Azul Colchones',
       foundingDate: '1989',
       founders: [
@@ -136,13 +136,13 @@ export default function SobreNosotrosPage() {
           '@type': 'ListItem',
           position: 1,
           name: 'Inicio',
-          item: 'https://azulcolchones.com.ar',
+          item: 'https://azulcolchones.com',
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Sobre Nosotros',
-          item: 'https://azulcolchones.com.ar/sobre-nosotros',
+          item: 'https://azulcolchones.com/sobre-nosotros',
         },
       ],
     },

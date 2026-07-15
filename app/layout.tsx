@@ -63,11 +63,11 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://azulcolchones.com'),
   
   title: {
-    default: 'Azul Colchones Villa María | Outlet 60% + Piero Fábrica 40% | Envío Gratis',
+    default: 'Azul Colchones Villa María | Distribuidor Oficial Piero | Envío Gratis',
     template: '%s | Azul Colchones Villa María'
   },
-  
-  description: 'Colchones Piero en Villa María: Outlet (60% OFF, hoy) o Piero Fábrica (40% OFF, 7-10 días). Envío gratis, 12 cuotas. 35+ años experiencia. Showroom Balerdi 855.',
+
+  description: 'Colchones y sommiers Piero directo de fábrica en Villa María. Distribuidor oficial exclusivo, 35+ años. Envío gratis, entrega inmediata con stock, 3 cuotas. Showroom Balerdi 855.',
   
   applicationName: 'Azul Colchones',
   
@@ -86,14 +86,14 @@ export const metadata: Metadata = {
     locale: 'es_AR',
     url: 'https://azulcolchones.com',
     siteName: 'Azul Colchones Villa María',
-    title: 'Azul Colchones | Outlet 60% + Piero Fábrica 40% | Villa María',
-    description: 'Outlet con entrega HOY (60% OFF) o Piero Fábrica directo (40% OFF, 7-10 días). Envío gratis, 12 cuotas. ¡Vos elegís!',
+    title: 'Azul Colchones | Distribuidor Oficial Piero | Villa María',
+    description: 'Colchones y sommiers Piero directo de fábrica. Distribuidor oficial exclusivo en Villa María. Envío gratis, entrega inmediata con stock, 3 cuotas.',
     images: [
       {
         url: '/og-image-home.jpg',
         width: 1200,
         height: 630,
-        alt: 'Azul Colchones - Outlet y Piero Fábrica Villa María',
+        alt: 'Azul Colchones - Distribuidor oficial Piero en Villa María',
         type: 'image/jpeg',
       },
       {
@@ -110,8 +110,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@azulcolchones',
     creator: '@azulcolchones',
-    title: 'Azul Colchones | Outlet 60% + Fábrica 40% | Villa María',
-    description: '35+ años | Outlet (hoy) o Fábrica (7-10 días) | Envío gratis | 12 cuotas',
+    title: 'Azul Colchones | Distribuidor Oficial Piero | Villa María',
+    description: '35+ años · Distribuidor oficial Piero · directo de fábrica · envío gratis · 3 cuotas',
     images: {
       url: '/twitter-image.jpg',
       alt: 'Azul Colchones Villa María',
@@ -133,19 +133,17 @@ export const metadata: Metadata = {
   },
   
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || 'ACTUALIZAR_CON_TU_CODIGO',
+    // Solo se emite si hay código real en la env var (sin placeholder falso).
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : {}),
     other: {
       'facebook-domain-verification': '5nuiyy6kxib0j2xvithgxjish0uger',
     },
   },
-  
-  alternates: {
-    canonical: 'https://azulcolchones.com',
-    languages: {
-      'es-AR': 'https://azulcolchones.com',
-      'es': 'https://azulcolchones.com',
-    },
-  },
+
+  // NOTA: sin canonical global. Cada página define su canonical propia
+  // (antes esto forzaba TODAS las páginas a canonizar a la home — bug SEO).
   
   icons: {
     icon: [
@@ -231,7 +229,7 @@ const jsonLd = {
         'https://azulcolchones.com/showroom-interior.jpg',
       ],
       
-      description: 'Colchones Piero en Villa María con dos modalidades: Outlet (60% OFF, entrega inmediata) y Piero Fábrica (30-40% OFF, directo de fábrica en 7-10 días). 35+ años de experiencia.',
+      description: 'Distribuidor oficial exclusivo de Piero en Villa María. Colchones y sommiers directo de fábrica, con entrega inmediata con stock (Villa María y Villa Nueva) o 24-72 hs. 35+ años de experiencia.',
       
       telephone: '+54 9 3534 09-6566',
       email: 'info@azulcolchones.com',
@@ -322,31 +320,19 @@ const jsonLd = {
       
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
-        name: 'Colchones Piero - Outlet y Fábrica',
+        name: 'Colchones y sommiers Piero',
         itemListElement: [
           {
             '@type': 'Offer',
-            name: 'Outlet Colchones Premium',
-            description: 'Stock limitado con hasta 60% de descuento y entrega inmediata',
+            name: 'Colchones Piero directo de fábrica',
+            description: 'Distribuidor oficial Piero. Precio directo de fábrica. Entrega inmediata con stock en Villa María y Villa Nueva; sin stock, 24-72 hs.',
             itemOffered: {
               '@type': 'Product',
-              name: 'Colchones Premium Outlet',
-              description: 'Colchones Piero en stock con entrega HOY'
+              name: 'Colchones Piero',
+              description: 'Colchones y sommiers Piero, distribuidor oficial exclusivo en Villa María.'
             },
-            availability: 'https://schema.org/LimitedAvailability',
+            availability: 'https://schema.org/InStock',
             url: 'https://azulcolchones.com/catalogo'
-          },
-          {
-            '@type': 'Offer',
-            name: 'Piero Fábrica Directo',
-            description: 'Colchones directos de fábrica con 30-40% OFF, entrega en 7-10 días',
-            itemOffered: {
-              '@type': 'Product',
-              name: 'Colchones Piero Fábrica',
-              description: 'Pedidos directos de fábrica sin intermediarios'
-            },
-            availability: 'https://schema.org/PreOrder',
-            url: 'https://azulcolchones.com/piero-fabrica'
           }
         ]
       },
@@ -356,7 +342,7 @@ const jsonLd = {
         itemOffered: {
           '@type': 'Product',
           name: 'Colchones Piero Premium',
-          description: 'Colchones premium Piero con dos modalidades de compra: Outlet o Fábrica'
+          description: 'Colchones y sommiers Piero directo de fábrica — distribuidor oficial en Villa María'
         },
         availability: 'https://schema.org/InStock',
         price: '220000',
@@ -409,7 +395,7 @@ const jsonLd = {
       '@id': 'https://azulcolchones.com/#website',
       url: 'https://azulcolchones.com',
       name: 'Azul Colchones Villa María',
-      description: 'Colchones Piero: Outlet (60% OFF) o Fábrica (40% OFF). Envío gratis, 12 cuotas.',
+      description: 'Colchones y sommiers Piero directo de fábrica. Distribuidor oficial en Villa María. Envío gratis, 3 cuotas.',
       publisher: { '@id': 'https://azulcolchones.com/#organization' },
       inLanguage: 'es-AR',
       
@@ -427,11 +413,11 @@ const jsonLd = {
       '@type': 'WebPage',
       '@id': 'https://azulcolchones.com/#webpage',
       url: 'https://azulcolchones.com',
-      name: 'Azul Colchones | Outlet 60% + Piero Fábrica 40% | Villa María',
+      name: 'Azul Colchones | Distribuidor Oficial Piero | Villa María',
       isPartOf: { '@id': 'https://azulcolchones.com/#website' },
       about: { '@id': 'https://azulcolchones.com/#organization' },
       primaryImageOfPage: { '@id': 'https://azulcolchones.com/#logo' },
-      description: 'Colchones Piero en Villa María: Outlet (hoy, 60% OFF) o Fábrica (7-10 días, 40% OFF). Envío gratis, 12 cuotas.',
+      description: 'Colchones y sommiers Piero directo de fábrica en Villa María. Distribuidor oficial. Envío gratis, 3 cuotas.',
       inLanguage: 'es-AR',
       
       speakable: {
@@ -448,58 +434,58 @@ const faqJsonLd = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: '¿Cuál es la diferencia entre Outlet y Piero Fábrica?',
+      name: '¿Cuánto tarda la entrega?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Outlet son colchones Piero en stock con hasta 60% de descuento y entrega inmediata (hoy mismo en Villa María). Piero Fábrica son pedidos directos de fábrica con 30-40% de descuento pero entregas en 7-10 días. Ambas opciones incluyen envío gratis en Villa María y 12 cuotas sin interés. Vos elegís según tu urgencia y presupuesto.'
+        text: 'Con stock, la entrega es inmediata en Villa María y Villa Nueva. Si el producto no está en stock, el pedido demora entre 24 y 72 horas. Coordinamos día y horario por WhatsApp: +54 9 3534 09-6566.'
       }
     },
     {
       '@type': 'Question',
-      name: '¿Vale la pena esperar 7-10 días por Piero Fábrica?',
+      name: '¿Por qué comprar en Azul Colchones?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, si podés esperar 7-10 días, Piero Fábrica te ahorra entre $100.000 y $400.000 comparado con los precios de mercado. Es el mismo colchón Piero, con la misma garantía oficial, pero comprás directo de fábrica sin intermediarios. Ideal si estás planificando con tiempo y querés el mejor precio posible.'
+        text: 'Somos distribuidor oficial exclusivo de Piero en Villa María y zona, con más de 35 años de trayectoria. Comprás directo de fábrica, con asesoramiento personalizado y garantía oficial Piero.'
       }
     },
     {
       '@type': 'Question',
-      name: '¿El envío es gratis en ambas modalidades (Outlet y Fábrica)?',
+      name: '¿El envío es gratis?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, el envío es GRATIS en Villa María tanto para compras en Outlet (entrega en 24-48hs) como en Piero Fábrica (entrega en 7-10 días). Para otras ciudades de Córdoba y Argentina también tenemos envío sin cargo adicional. Coordinamos día y horario por WhatsApp: +54 9 3534 09-6566.'
+        text: 'Sí, el envío es gratis en Villa María y Villa Nueva con delivery propio. Para otras zonas coordinamos el envío por WhatsApp: +54 9 3534 09-6566.'
       }
     },
     {
       '@type': 'Question',
-      name: '¿Puedo pagar en 12 cuotas sin interés?',
+      name: '¿Puedo pagar en 3 cuotas?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, ofrecemos hasta 12 cuotas sin interés tanto en Outlet como en Piero Fábrica, con Mercado Pago y tarjetas de crédito habilitadas. También aceptamos transferencia bancaria con 10% de descuento adicional, efectivo en showroom con 15% de descuento, y todas las tarjetas de débito.'
+        text: 'Sí. Ofrecemos 3 cuotas y hasta 12 cuotas con tarjeta a través de Mercado Pago. También podés pagar con débito, transferencia o efectivo en el showroom.'
       }
     },
     {
       '@type': 'Question',
-      name: '¿La garantía es la misma en Outlet y Piero Fábrica?',
+      name: '¿Qué garantía tienen los colchones?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, todos los colchones Piero tienen la misma garantía oficial de fábrica (5-10 años según modelo), ya sea que los compres en Outlet o por Piero Fábrica. La garantía cubre defectos de fabricación, deformaciones y roturas de resortes. Además cumplimos con la Ley de Defensa del Consumidor Argentina.'
+        text: 'Todos los colchones Piero tienen garantía oficial de fábrica de 5 años, que cubre defectos de fabricación. Cumplimos con la Ley de Defensa del Consumidor de Argentina.'
       }
     },
     {
       '@type': 'Question',
-      name: '¿Puedo ver los colchones del Outlet en el showroom?',
+      name: '¿Puedo ver y probar los colchones en el showroom?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sí, visitá nuestro showroom en Balerdi 855, Villa María para ver y probar los colchones disponibles en Outlet. También te mostramos catálogos de todos los modelos Piero que podés pedir directo de Fábrica. Atendemos lunes a viernes 9-19hs, sábados 9-13hs. WhatsApp: +54 9 3534 09-6566.'
+        text: 'Sí, visitá nuestro showroom en Balerdi 855, Villa María, para ver y probar los colchones Piero. Atendemos lunes a viernes 9-19hs y sábados 9-13hs. WhatsApp: +54 9 3534 09-6566.'
       }
     },
     {
       '@type': 'Question',
-      name: '¿Cómo sé si hay stock en Outlet del colchón que quiero?',
+      name: '¿Cómo sé si hay stock del colchón que quiero?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Nuestro stock de Outlet se actualiza en tiempo real en la web (azulcolchones.com/catalogo). También podés consultarnos por WhatsApp (+54 9 3534 09-6566) para verificar disponibilidad inmediata. Si el modelo que querés no está en Outlet, te ofrecemos comprarlo por Piero Fábrica con mejor precio y entrega en 7-10 días.'
+        text: 'Consultanos por WhatsApp (+54 9 3534 09-6566) y verificamos la disponibilidad al instante. Con stock, la entrega es inmediata en Villa María y Villa Nueva; sin stock, el pedido llega en 24-72 hs.'
       }
     },
   ]
@@ -530,7 +516,7 @@ export default function RootLayout({
   return (
     <html 
       lang="es-AR" 
-      className={`scroll-smooth bg-zinc-950 ${inter.variable} ${plusJakarta.variable}`}
+      className={`bg-zinc-950 ${inter.variable} ${plusJakarta.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -556,9 +542,9 @@ export default function RootLayout({
   let currentIcon = 0;
   const icons = [
     { emoji: '🔵', title: 'Azul Colchones Villa María' },
-    { emoji: '⚡', title: 'Outlet 60% OFF | Azul Colchones' },
-    { emoji: '🏭', title: 'Piero Fábrica 40% | Azul Colchones' },
-    { emoji: '💙', title: 'Envío Gratis | Azul Colchones' }
+    { emoji: '🛏️', title: 'Distribuidor Oficial Piero | Azul Colchones' },
+    { emoji: '🏭', title: 'Directo de Fábrica | Azul Colchones' },
+    { emoji: '💙', title: 'Envío Gratis Villa María | Azul Colchones' }
   ];
   
   function updateFavicon() {
@@ -626,7 +612,7 @@ export default function RootLayout({
       </head>
       
       <body 
-        className={`${inter.className} font-sans antialiased bg-zinc-950 text-white min-h-screen flex flex-col overflow-x-hidden`}
+        className={`${inter.className} font-sans antialiased bg-zinc-950 text-white min-h-screen flex flex-col [overflow-x:clip]`}
         style={{ 
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',

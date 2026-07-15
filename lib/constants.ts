@@ -9,7 +9,7 @@ export const SITE_CONFIG = {
   displayName: 'Azul Colchones Villa María',
   legalName: 'Azul Colchones', // TODO: Razón social legal completa
   domain: 'azulcolchones.com.ar',
-  url: 'https://azulcolchones.com.ar',
+  url: 'https://azulcolchones.com',
   
   // Location - NAP (Name, Address, Phone) CONSISTENCY IS CRITICAL
   location: {
@@ -55,7 +55,7 @@ export const SITE_CONFIG = {
   // Branding & Messaging
   tagline: 'Tu colchonería de confianza en Villa María',
   slogan: '35+ años cuidando tu descanso', // UPDATED: Más credibilidad
-  description: 'Colchonería familiar en Villa María, Córdoba con 35+ años de experiencia. Colchones premium Piero, sommiers y almohadas. Envío GRATIS en Villa María, 12 cuotas sin interés, garantía de 3 años.',
+  description: 'Colchonería familiar en Villa María, Córdoba con 35+ años de experiencia. Colchones premium Piero, sommiers y almohadas. Envío GRATIS en Villa María, 12 cuotas, garantía de 3 años.',
   
   // Brand Values - Para About page
   values: [
@@ -91,9 +91,9 @@ export const TRUST_BAR_ITEMS = [
   { 
     icon: 'CreditCard', 
     text: '12 Cuotas',
-    highlight: 'Sin Interés',
+    highlight: 'Con tarjeta',
     description: 'Mercado Pago y tarjetas',
-    seoText: 'Hasta 12 cuotas sin interés con todas las tarjetas'
+    seoText: 'Hasta 12 cuotas con todas las tarjetas'
   },
   { 
     icon: 'Shield', 
@@ -120,7 +120,7 @@ export const PAYMENT_METHODS = {
     installments: [1, 3, 6, 9, 12],
     maxInstallments: 12,
     icon: '/icons/mercadopago.svg',
-    description: 'Hasta 12 cuotas sin interés',
+    description: 'Hasta 12 cuotas',
     fees: {
       1: 0,
       3: 0,
@@ -249,7 +249,7 @@ export const SEO_DEFAULTS = {
   // Home defaults
   title: 'Azul Colchones Villa María | Colchonería Premium en Córdoba - 35 Años',
   titleTemplate: '%s | Azul Colchones Villa María',
-  description: 'Colchonería premium en Villa María, Córdoba con 35+ años de experiencia familiar. ✓ Colchones Piero ✓ Envío GRATIS ✓ 12 cuotas sin interés ✓ Garantía 3 años ✓ Showroom Balerdi 855',
+  description: 'Colchonería premium en Villa María, Córdoba con 35+ años de experiencia familiar. ✓ Colchones Piero ✓ Envío GRATIS ✓ 12 cuotas ✓ Garantía 3 años ✓ Showroom Balerdi 855',
   
   // Keywords - Ordenadas por prioridad SEO
   keywords: [
@@ -288,7 +288,7 @@ export const SEO_DEFAULTS = {
     'colchones san francisco',
     
     // Beneficios
-    '12 cuotas sin interés colchones',
+    '12 cuotas colchones',
     'garantía colchones villa maría',
     'colchones con garantía córdoba',
     
@@ -305,7 +305,7 @@ export const SEO_DEFAULTS = {
   twitterCard: 'summary_large_image',
   
   // Canonical
-  canonicalBase: 'https://azulcolchones.com.ar'
+  canonicalBase: 'https://azulcolchones.com'
 }
 
 // ============================================================================
@@ -382,7 +382,7 @@ export const PRODUCT_CATEGORIES = [
     name: 'Sommiers',
     pluralName: 'Sommiers',
     description: 'Sommiers completos con base reforzada y colchón incluido',
-    metaDescription: 'Sommiers de 1 y 2 plazas con colchón. Base reforzada, alta durabilidad. 12 cuotas sin interés.',
+    metaDescription: 'Sommiers de 1 y 2 plazas con colchón. Base reforzada, alta durabilidad. 12 cuotas.',
     icon: 'Box',
     priority: 2
   },
@@ -415,7 +415,7 @@ export const WHATSAPP_MESSAGES = {
   quote: 'Hola, me gustaría recibir una cotización personalizada',
   showroom: '¡Hola! Quiero visitar el showroom en Balerdi 855, Villa María. ¿Cuál es el horario?',
   delivery: 'Hola, quisiera consultar sobre tiempos y costos de envío a mi zona',
-  financing: '¡Hola! Quiero consultar sobre opciones de financiación y cuotas sin interés',
+  financing: '¡Hola! Quiero consultar sobre opciones de financiación y cuotas',
   warranty: 'Hola, quisiera información sobre la garantía de los colchones'
 }
 

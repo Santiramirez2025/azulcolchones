@@ -26,7 +26,7 @@ export function PriceDisplay({
           <span className="text-lg text-zinc-400">/mes</span>
         </div>
         <p className="text-xs text-emerald-400 font-semibold mt-1">
-          Financiación 0% · Sin intereses · {months} meses
+          Financiación en cuotas · {months} meses
         </p>
       </div>
       <div className="hidden sm:block h-10 w-px bg-white/10" />

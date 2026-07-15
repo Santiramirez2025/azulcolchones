@@ -69,7 +69,7 @@ export default function GuiaCompraPage() {
       color: 'from-amber-500 to-orange-500',
       details: [
         'Completá tus datos de contacto y dirección de envío',
-        'Elegí método de pago: Mercado Pago (cuotas sin interés), transferencia, débito o efectivo',
+        'Elegí método de pago: Mercado Pago (cuotas), transferencia, débito o efectivo',
         'Revisá el resumen completo de tu pedido',
         'Aceptá términos y condiciones de compra'
       ],
@@ -136,7 +136,7 @@ export default function GuiaCompraPage() {
     },
     {
       question: '¿Qué métodos de pago aceptan?',
-      answer: 'Aceptamos Mercado Pago (con cuotas sin interés), transferencia bancaria, tarjeta de débito y efectivo.'
+      answer: 'Aceptamos Mercado Pago (con cuotas), transferencia bancaria, tarjeta de débito y efectivo.'
     },
     {
       question: '¿Cuánto demora el envío a mi zona?',

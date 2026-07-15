@@ -2,6 +2,12 @@
 import type { Metadata } from 'next'
 import HeroHome from '@/components/home/HeroHome'
 import { ScrollProgressBar } from '@/components/ScrollProgressBar'
+import QuickAccess from '@/components/home/QuickAccess'
+import FeaturedGrid from '@/components/home/FeaturedGrid'
+import ComboPromo from '@/components/home/ComboPromo'
+import Combos5en1 from '@/components/home/Combos5en1'
+import { getCatalogProducts } from '@/lib/api/products'
+import { normalizeProduct } from '@/lib/catalog/normalize'
 
 // ============================================================================
 // METADATA SEO OPTIMIZADO
@@ -11,7 +17,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://azulcolchones.com'
 
 export const metadata: Metadata = {
   title: 'Azul Colchones Villa María | Encontrá Tu Colchón Ideal en 30 Segundos',
-  description: 'Asesor inteligente que te ayuda a elegir tu colchón PIERO perfecto. Hasta 49% OFF comprando directo de fábrica. Más de 35 años de experiencia en Villa María, Córdoba.',
+  description: 'Colchones y sommiers Piero directo de fábrica en Villa María. Distribuidor oficial, 35+ años. Catálogo online, asesor inteligente, envío gratis y 3 cuotas.',
   
   keywords: [
     'colchones Villa María',
@@ -32,8 +38,8 @@ export const metadata: Metadata = {
     type: 'website',
     url: siteUrl,
     siteName: 'Azul Colchones',
-    title: 'Encontrá Tu Colchón Ideal en 30 Segundos | Azul Colchones Villa María',
-    description: 'Asesor inteligente + Hasta 49% OFF directo de fábrica. PIERO oficial en Villa María.',
+    title: 'Encontrá Tu Colchón Ideal | Azul Colchones Villa María',
+    description: 'Catálogo Piero directo de fábrica + asesor inteligente. Distribuidor oficial en Villa María.',
     images: [
       {
         url: `${siteUrl}/og-home-hero.jpg`,
@@ -48,7 +54,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Encontrá Tu Colchón Ideal | Azul Colchones',
-    description: 'Asesor inteligente + Hasta 49% OFF directo de fábrica',
+    description: 'Catálogo Piero directo de fábrica + asesor inteligente en Villa María',
     images: [`${siteUrl}/og-home-hero.jpg`],
   },
   
@@ -79,13 +85,33 @@ export const revalidate = 43200 // 12 hours
 // Los productos y packs se acceden desde /lista-precios
 // ============================================================================
 
-export default function Home() {
+export default async function Home() {
+  // Destacados para la home: colchones (best sellers / featured primero), máx 6.
+  const productsRaw = await getCatalogProducts()
+  const allNorm = productsRaw.map(normalizeProduct)
+  const combos = allNorm.filter((p) => p.category === 'Combos')
+  const featured = allNorm.filter((p) => p.category === 'Colchones').slice(0, 6)
+  const avgPrice =
+    featured.length > 0 ? featured.reduce((s, p) => s + p.price, 0) / featured.length : 300000
+
   return (
     <>
       <ScrollProgressBar />
 
-      {/* Hero — Asesor como protagonista, sin distracciones */}
+      {/* Hero — Asesor como protagonista */}
       <HeroHome />
+
+      {/* Combos 5 en 1 — PROTAGONISTA, apenas debajo del hero */}
+      <Combos5en1 combos={combos} />
+
+      {/* Accesos rápidos: menos fricción para llegar a catálogo / combo / asesor */}
+      <QuickAccess />
+
+      {/* Más elegidos — productos reales con tachado + ahorro */}
+      <FeaturedGrid products={featured} avgPrice={avgPrice} />
+
+      {/* Banner Armá tu combo */}
+      <ComboPromo />
 
       {/* Structured Data JSON-LD para SEO */}
       <script
@@ -148,7 +174,7 @@ export default function Home() {
         <h3>Lista de Precios PIERO Fábrica</h3>
         <p>
           Consultá nuestra lista de precios completa con todos los colchones PIERO disponibles
-          directo de fábrica con hasta 49% de descuento. Precios actualizados, sin intermediarios.
+          directo de fábrica, con precio directo de fábrica. Precios actualizados, sin intermediarios.
         </p>
         <h3>Asesor Inteligente de Colchones</h3>
         <p>

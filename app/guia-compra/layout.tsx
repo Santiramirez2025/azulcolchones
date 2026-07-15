@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     'prueba colchones',
     
     // === PAGO ===
-    'cuotas sin interés',
+    'cuotas',
     'mercado pago colchones',
     'financiación colchones',
     'formas pago colchones',

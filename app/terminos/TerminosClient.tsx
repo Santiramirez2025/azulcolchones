@@ -238,8 +238,8 @@ export function TerminosClient() {
       items: [
         'Efectivo (solo en compras presenciales)',
         'Transferencia bancaria (CBU/CVU)',
-        'Mercado Pago (hasta 12 cuotas sin interés)',
-        'Tarjetas de crédito (hasta 12 cuotas sin interés)',
+        'Mercado Pago (hasta 3 cuotas)',
+        'Tarjetas de crédito (hasta 3 cuotas)',
         'Tarjetas de débito',
         'Los pagos se procesan de forma segura',
         'Emitimos factura A o B según corresponda'

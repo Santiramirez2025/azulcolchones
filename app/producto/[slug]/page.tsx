@@ -2,12 +2,14 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { 
-  getProductBySlug, 
-  getRelatedProducts, 
-  getSimilarProducts, 
-  getPopularProducts 
+import {
+  getProductBySlug,
+  getRelatedProducts,
+  getSimilarProducts,
+  getPopularProducts,
+  getOfficialSommier
 } from '@/lib/api/products'
+import CompletaTuDescanso from './components/CompletaTuDescanso'
 import { trackProductView } from '@/lib/analytics'
 import { centavosToARS, formatARS } from '@/lib/utils/currency'
 import { getMejorCuota } from '@/lib/utils/pricing'
@@ -78,9 +80,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       ? `${formatARS(pricePesos)} (${savingsPercentage}% OFF)`
       : formatARS(pricePesos)
     
-    const financingText = `${mejorCuota.cuotas} cuotas sin interés de ${formatARS(mejorCuota.precioCuota)}`
+    const financingText = `${mejorCuota.cuotas} cuotas de ${formatARS(mejorCuota.precioCuota)}`
     const warrantyText = product.warranty ? `${product.warranty} años garantía` : '3 años garantía'
-    const ratingText = product.rating ? `⭐ ${product.rating}/5` : '⭐ 4.9/5'
+    // Solo mostramos rating si hay reseñas reales (sin inventar estrellas).
+    const ratingText = product.reviewCount > 0 && product.rating ? `⭐ ${product.rating}/5` : null
 
     // Images
     const images = Array.isArray(product.images) && product.images.length > 0 
@@ -117,9 +120,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       'tienda colchones Córdoba',
       
       // Beneficios
-      'envío gratis',
-      '12 cuotas sin interés',
-      'garantía extendida',
+      'envío gratis Villa María',
+      '3 cuotas',
+      'garantía oficial Piero',
     ].filter(Boolean).join(', ')
 
     // Meta description ultra optimizada (155 chars max)
@@ -144,7 +147,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       openGraph: {
         title: `${product.name} - ${priceText}`,
         description: metaDescription,
-        url: `https://azulcolchones.com.ar/producto/${slug}`,
+        url: `https://azulcolchones.com/producto/${slug}`,
         siteName: 'Azul Colchones',
         locale: 'es_AR',
         type: 'website',
@@ -172,7 +175,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       },
       
       alternates: { 
-        canonical: `https://azulcolchones.com.ar/producto/${slug}`,
+        canonical: `https://azulcolchones.com/producto/${slug}`,
       },
 
       other: {
@@ -213,7 +216,7 @@ function generateProductSchema(product: any) {
     brand: {
       '@type': 'Brand',
       name: 'Piero',
-      logo: 'https://azulcolchones.com.ar/logo-piero.png',
+      logo: 'https://azulcolchones.com/logo-piero.png',
     },
     manufacturer: {
       '@type': 'Organization',
@@ -221,7 +224,7 @@ function generateProductSchema(product: any) {
     },
     offers: {
       '@type': 'Offer',
-      url: `https://azulcolchones.com.ar/producto/${product.slug}`,
+      url: `https://azulcolchones.com/producto/${product.slug}`,
       priceCurrency: 'ARS',
       price: pricePesos.toFixed(2),
       priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -231,9 +234,9 @@ function generateProductSchema(product: any) {
       itemCondition: 'https://schema.org/NewCondition',
       seller: {
         '@type': 'LocalBusiness',
-        '@id': 'https://azulcolchones.com.ar',
+        '@id': 'https://azulcolchones.com',
         name: 'Azul Colchones',
-        image: 'https://azulcolchones.com.ar/logo.png',
+        image: 'https://azulcolchones.com/logo.png',
         telephone: '+54 9 3534 09-6566',
         address: {
           '@type': 'PostalAddress',
@@ -285,19 +288,18 @@ function generateProductSchema(product: any) {
         returnFees: 'https://schema.org/FreeReturn'
       },
     },
-    aggregateRating: product.reviewCount > 0 ? {
-      '@type': 'AggregateRating',
-      ratingValue: product.rating || 4.9,
-      reviewCount: product.reviewCount || 1847,
-      bestRating: 5,
-      worstRating: 1,
-    } : {
-      '@type': 'AggregateRating',
-      ratingValue: 4.9,
-      reviewCount: 1847,
-      bestRating: 5,
-      worstRating: 1,
-    },
+    // AggregateRating SOLO si hay reseñas reales (schema.org honesto).
+    ...(product.reviewCount > 0
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: product.rating,
+            reviewCount: product.reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
     ...(originalPricePesos && originalPricePesos > pricePesos ? {
       offers: {
         ...arguments[0].offers,
@@ -322,25 +324,25 @@ function generateBreadcrumbSchema(product: any) {
         '@type': 'ListItem', 
         position: 1, 
         name: 'Inicio', 
-        item: 'https://azulcolchones.com.ar' 
+        item: 'https://azulcolchones.com' 
       },
       { 
         '@type': 'ListItem', 
         position: 2, 
         name: 'Catálogo', 
-        item: 'https://azulcolchones.com.ar/productos' 
+        item: 'https://azulcolchones.com/productos' 
       },
       { 
         '@type': 'ListItem', 
         position: 3, 
         name: product.category || 'Colchones', 
-        item: `https://azulcolchones.com.ar/productos?categoria=${encodeURIComponent(product.category || 'colchones')}` 
+        item: `https://azulcolchones.com/productos?categoria=${encodeURIComponent(product.category || 'colchones')}` 
       },
       { 
         '@type': 'ListItem', 
         position: 4, 
         name: product.name, 
-        item: `https://azulcolchones.com.ar/producto/${product.slug}` 
+        item: `https://azulcolchones.com/producto/${product.slug}` 
       }
     ]
   }
@@ -350,10 +352,10 @@ function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    '@id': 'https://azulcolchones.com.ar',
+    '@id': 'https://azulcolchones.com',
     name: 'Azul Colchones',
-    image: 'https://azulcolchones.com.ar/logo.png',
-    url: 'https://azulcolchones.com.ar',
+    image: 'https://azulcolchones.com/logo.png',
+    url: 'https://azulcolchones.com',
     telephone: '+54 9 3534 09-6566',
     email: 'ventas@azulcolchones.com.ar',
     address: {
@@ -473,6 +475,24 @@ export default async function ProductPage({ params }: { params: Params }) {
     const relatedProducts = relatedProductsRaw.map(convertirPreciosProducto).filter(Boolean)
     const similarProducts = similarProductsRaw.map(convertirPreciosProducto).filter(Boolean)
 
+    // Cross-sell: sommier oficial (ComboSuggestion). Precio "desde" en pesos.
+    const sommierRaw = await getOfficialSommier(product.id)
+    const officialSommier = sommierRaw
+      ? {
+          name: sommierRaw.name,
+          slug: sommierRaw.slug,
+          image: sommierRaw.image || sommierRaw.images?.[0] || null,
+          price: centavosToARS(
+            Math.min(
+              ...(sommierRaw.variants?.length
+                ? sommierRaw.variants.map((v) => v.price)
+                : [sommierRaw.price]),
+            ),
+          ),
+          bajoPedido: sommierRaw.bajoPedido,
+        }
+      : null
+
     // Stock information
     const stockInfo = {
       available: product.inStock ?? false,
@@ -525,6 +545,9 @@ export default async function ProductPage({ params }: { params: Params }) {
             breadcrumbs={breadcrumbs}
           />
         </Suspense>
+
+        {/* Cross-sell sommier oficial (solo si el combo existe) */}
+        {officialSommier && <CompletaTuDescanso sommier={officialSommier} />}
       </>
     )
   } catch (error) {

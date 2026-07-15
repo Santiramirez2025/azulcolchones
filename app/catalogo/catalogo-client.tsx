@@ -22,14 +22,29 @@ const PRICE_RANGE_MIN = 0
 
 const CATEGORY_CONFIG = [
   { id: 'todos', name: 'Todos', icon: '🏠' },
+  { id: 'Combos', name: 'Combos 5 en 1', icon: '🎁' },
   { id: 'Colchones', name: 'Colchones', icon: '🛏️' },
   { id: 'Sommiers', name: 'Sommiers', icon: '📦' },
-  { id: 'Bases', name: 'Bases', icon: '🔲' },
+  { id: 'Protectores', name: 'Protectores', icon: '🛡️' },
   { id: 'Almohadas', name: 'Almohadas', icon: '🛌' },
-  { id: 'Blanquería', name: 'Blanquería', icon: '🧵' },
-  { id: 'Cunas', name: 'Cunas', icon: '👶' },
-  { id: 'Outlet', name: 'Outlet', icon: '🏷️' },
+  { id: 'Sábanas', name: 'Sábanas', icon: '✨' },
 ] as const
+
+// Opciones de filtros reales (alineadas al catálogo Piero)
+const TIPO_OPTIONS = [
+  { id: 'espuma', name: 'Espuma' },
+  { id: 'resorte-continuo', name: 'Resorte continuo' },
+  { id: 'pocket', name: 'Pocket' },
+] as const
+
+const LINEA_OPTIONS = [
+  { id: 'entrada', name: 'Entrada' },
+  { id: 'media', name: 'Media' },
+  { id: 'premium', name: 'Premium' },
+  { id: 'ultra', name: 'Ultra premium' },
+] as const
+
+const PLAZA_OPTIONS = ['1pl', '1½', '2pl', 'Queen', 'Queen XL', 'King'] as const
 
 // ============================================================================
 // ✅ FUNCIÓN DE ORDENAMIENTO INTELIGENTE - MEJORES PRODUCTOS PRIMERO
@@ -96,9 +111,10 @@ function sortProducts(products: NormalizedProduct[], sortBy: string): Normalized
 // MAIN COMPONENT - ✅ OPTIMIZADO MOBILE-FIRST
 // ============================================================================
 
-export default function CatalogoClient({ 
+export default function CatalogoClient({
   initialProducts,
-  totalProducts = 0 
+  totalProducts = 0,
+  initialCategory = 'todos',
 }: CatalogoClientProps) {
   
   // ============================================================================
@@ -123,10 +139,15 @@ export default function CatalogoClient({
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('featured') // ✅ Por defecto: mejores productos
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [activeCategory, setActiveCategory] = useState('todos')
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    initialCategory !== 'todos' ? [initialCategory] : [],
+  )
+  const [activeCategory, setActiveCategory] = useState(initialCategory)
   const [priceRange, setPriceRange] = useState<[number, number]>([PRICE_RANGE_MIN, PRICE_RANGE_MAX])
   const [minRating, setMinRating] = useState(0)
+  const [selectedTipos, setSelectedTipos] = useState<string[]>([])
+  const [selectedLineas, setSelectedLineas] = useState<string[]>([])
+  const [selectedPlazas, setSelectedPlazas] = useState<string[]>([])
   
   // ============================================================================
   // REFS Y FRAMER MOTION
@@ -178,6 +199,9 @@ export default function CatalogoClient({
     setActiveCategory('todos')
     setPriceRange([PRICE_RANGE_MIN, PRICE_RANGE_MAX])
     setMinRating(0)
+    setSelectedTipos([])
+    setSelectedLineas([])
+    setSelectedPlazas([])
   }, [])
 
   const scrollToProducts = useCallback(() => {
@@ -255,14 +279,30 @@ export default function CatalogoClient({
         const matchesRating = (product.rating || 0) >= minRating
         if (!matchesRating) return false
       }
-      
+
+      // Tipo (espuma / resorte continuo / pocket)
+      if (selectedTipos.length > 0) {
+        if (!product.springType || !selectedTipos.includes(product.springType)) return false
+      }
+
+      // Línea (entrada / media / premium / ultra)
+      if (selectedLineas.length > 0) {
+        if (!product.line || !selectedLineas.includes(product.line)) return false
+      }
+
+      // Plaza (alguna variante disponible en la plaza elegida)
+      if (selectedPlazas.length > 0) {
+        const plazas = product.plazas || []
+        if (!selectedPlazas.some((pl) => plazas.includes(pl))) return false
+      }
+
       return true
     })
-    
+
     // PASO 2: ORDENAR CON ALGORITMO MEJORADO
     return sortProducts(filtered, sortBy)
-    
-  }, [productsToFilter, activeCategory, selectedCategories, searchTerm, sortBy, priceRange, minRating])
+
+  }, [productsToFilter, activeCategory, selectedCategories, searchTerm, sortBy, priceRange, minRating, selectedTipos, selectedLineas, selectedPlazas])
 
   // ============================================================================
   // CÁLCULOS DERIVADOS
@@ -282,8 +322,9 @@ export default function CatalogoClient({
     if (priceRange[0] > PRICE_RANGE_MIN || priceRange[1] < PRICE_RANGE_MAX) count++
     if (minRating > 0) count++
     if (searchTerm) count++
+    count += selectedTipos.length + selectedLineas.length + selectedPlazas.length
     return count
-  }, [activeCategory, selectedCategories, priceRange, minRating, searchTerm])
+  }, [activeCategory, selectedCategories, priceRange, minRating, searchTerm, selectedTipos, selectedLineas, selectedPlazas])
 
   // ============================================================================
   // EARLY RETURN - NO HAY PRODUCTOS
@@ -365,6 +406,15 @@ export default function CatalogoClient({
         onMinRatingChange={setMinRating}
         availableCategories={availableCategories}
         onClearFilters={clearFilters}
+        tipoOptions={TIPO_OPTIONS}
+        selectedTipos={selectedTipos}
+        onTiposChange={setSelectedTipos}
+        lineaOptions={LINEA_OPTIONS}
+        selectedLineas={selectedLineas}
+        onLineasChange={setSelectedLineas}
+        plazaOptions={PLAZA_OPTIONS}
+        selectedPlazas={selectedPlazas}
+        onPlazasChange={setSelectedPlazas}
       />
 
       {/* Grid de productos - MOBILE OPTIMIZADO */}

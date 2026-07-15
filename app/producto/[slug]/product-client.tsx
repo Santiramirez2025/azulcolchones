@@ -135,9 +135,7 @@ export default function ProductClient({
   const [showStickyBar, setShowStickyBar] = useState(false)
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const [isAddingToCart, setIsAddingToCart] = useState(false)
-  const [recentViewers, setRecentViewers] = useState(0)
-  const [showLowStockWarning, setShowLowStockWarning] = useState(false)
-  
+
   const [toast, setToast] = useState<ToastState>({
     show: false,
     type: 'success',
@@ -177,8 +175,7 @@ export default function ProductClient({
   
   const currentStock = selectedVariant?.stock ?? stockInfo.quantity ?? 0
   const isOutOfStock = !product.inStock || currentStock === 0
-  const isLowStock = currentStock > 0 && currentStock <= LOW_STOCK_THRESHOLD
-  
+
   const currentImage = images.length > 0 
     ? images[imageIndex] 
     : product.images[0] || PLACEHOLDER_IMAGE
@@ -283,9 +280,6 @@ export default function ProductClient({
       
       impressionTracked.current = true
     }
-    
-    // Social proof simulation
-    setRecentViewers(Math.floor(Math.random() * 15) + 5)
   }, [product.id, product.slug, product.name, product.category, basePrice, savings])
   
   // ✅ PERFORMANCE - Throttled scroll detection for sticky bar
@@ -300,21 +294,6 @@ export default function ProductClient({
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-  
-  // ✅ UX - Low stock warning
-  useEffect(() => {
-    if (isLowStock && !showLowStockWarning) {
-      const timer = setTimeout(() => {
-        setShowLowStockWarning(true)
-        showToast(
-          'info',
-          '⚡ Stock limitado',
-          `Solo quedan ${currentStock} unidades disponibles`
-        )
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [isLowStock, showLowStockWarning, currentStock, showToast])
   
   // Cleanup
   useEffect(() => {
@@ -537,7 +516,7 @@ export default function ProductClient({
   // ============================================================================
   
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 overflow-x-hidden scroll-smooth antialiased">
+    <div className="min-h-screen w-full bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 overflow-x-hidden antialiased">
       {/* Background effects - SOLO DESKTOP */}
       <div className="hidden md:block fixed inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
       <div className="hidden md:block fixed inset-0 bg-[linear-gradient(rgba(59,130,246,.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(59,130,246,.02)_1.5px,transparent_1.5px)] bg-[size:64px_64px] pointer-events-none" aria-hidden="true" />
@@ -613,27 +592,31 @@ export default function ProductClient({
         className="max-w-screen-2xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12 relative z-10" 
         ref={productRef}
       >
-        {/* ✅ SOCIAL PROOF BANNER - MOBILE OPTIMIZED */}
-        {(recentViewers > 0 || isLowStock) && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 sm:mb-6 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 justify-center"
-          >
-            {recentViewers > 0 && (
-              <div className="bg-blue-600/10 border border-blue-500/20 text-blue-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2">
-                <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
-                <span>{recentViewers} personas viendo este producto</span>
-              </div>
-            )}
-            {isLowStock && (
-              <div className="bg-orange-600/10 border border-orange-500/20 text-orange-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 animate-pulse">
-                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
-                <span>¡Solo quedan {currentStock} unidades!</span>
-              </div>
-            )}
-          </motion.div>
-        )}
+        {/* TRUST BANNER HONESTO — sin escasez falsa ni "viewers" inventados */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 sm:mb-6 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 justify-center"
+        >
+          <div className="bg-blue-600/10 border border-blue-500/20 text-blue-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2">
+            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
+            <span>Distribuidor oficial Piero</span>
+          </div>
+          <div className="bg-zinc-600/10 border border-zinc-500/20 text-zinc-300 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2">
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
+            <span>
+              {(product as any).bajoPedido
+                ? 'Bajo pedido · consultá stock y plazo'
+                : 'Entrega 24-72 hs · inmediata con stock en Villa María y Villa Nueva'}
+            </span>
+          </div>
+          {product.warranty ? (
+            <div className="bg-emerald-600/10 border border-emerald-500/20 text-emerald-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2">
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
+              <span>Garantía oficial {product.warranty} años</span>
+            </div>
+          ) : null}
+        </motion.div>
 
         {/* Main Grid - MOBILE OPTIMIZED */}
         <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16 md:mb-24">
@@ -723,7 +706,7 @@ export default function ProductClient({
               <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-zinc-400 mb-6 sm:mb-8 px-4">
                 <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg w-full sm:w-auto justify-center">
                   <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />
-                  <span>Hasta 12 cuotas sin interés</span>
+                  <span>3 cuotas · hasta 12 con tarjeta</span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg w-full sm:w-auto justify-center">
                   <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" aria-hidden="true" />

@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     description: 'Guía completa sobre colchones - Respondemos todas tus dudas',
   },
   alternates: {
-    canonical: 'https://azulcolchones.com.ar/preguntas-frecuentes',
+    canonical: 'https://azulcolchones.com/preguntas-frecuentes',
   },
 }
 
@@ -196,7 +196,7 @@ export default function PreguntasFrecuentesPage() {
         name: '¿Qué formas de pago aceptan?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Aceptamos efectivo, transferencia bancaria, Mercado Pago y todas las tarjetas de crédito con hasta 12 cuotas sin interés. También tarjeta de débito. Para compras en el local, aceptamos todos los medios de pago habituales en Villa María.',
+          text: 'Aceptamos efectivo, transferencia bancaria, Mercado Pago y todas las tarjetas de crédito con hasta 3 cuotas. También tarjeta de débito. Para compras en el local, aceptamos todos los medios de pago habituales en Villa María.',
         },
       },
     ],
@@ -211,13 +211,13 @@ export default function PreguntasFrecuentesPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Inicio',
-        item: 'https://azulcolchones.com.ar',
+        item: 'https://azulcolchones.com',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Preguntas Frecuentes',
-        item: 'https://azulcolchones.com.ar/preguntas-frecuentes',
+        item: 'https://azulcolchones.com/preguntas-frecuentes',
       },
     ],
   }
@@ -387,14 +387,14 @@ export default function PreguntasFrecuentesPage() {
         <h3>¿Qué formas de pago aceptan?</h3>
         <p>
           Aceptamos múltiples formas de pago: efectivo, transferencia bancaria, Mercado Pago,
-          todas las tarjetas de crédito con hasta 12 cuotas sin interés, tarjetas de débito.
+          todas las tarjetas de crédito con hasta 3 cuotas, tarjetas de débito.
           Para compras presenciales en nuestro showroom de Villa María, aceptamos todos los
           medios de pago habituales incluyendo QR y billeteras virtuales.
         </p>
 
         <h3>¿Tienen financiación en cuotas?</h3>
         <p>
-          Sí, ofrecemos hasta 12 cuotas sin interés con todas las tarjetas de crédito a través
+          Sí, ofrecemos hasta 3 cuotas con todas las tarjetas de crédito a través
           de Mercado Pago y terminales propias. Esta promoción está disponible tanto para compras
           online como en nuestro showroom de Balerdi 855, Villa María.
         </p>

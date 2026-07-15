@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: 'https://azulcolchones.com.ar/terminos',
+    canonical: 'https://azulcolchones.com/terminos',
   },
 }
 
@@ -48,11 +48,11 @@ export default function TerminosPage() {
     '@type': 'WebPage',
     name: 'Términos y Condiciones - Azul Colchones',
     description: 'Términos y condiciones de compra, garantías y derechos del consumidor',
-    url: 'https://azulcolchones.com.ar/terminos',
+    url: 'https://azulcolchones.com/terminos',
     isPartOf: {
       '@type': 'WebSite',
       name: 'Azul Colchones',
-      url: 'https://azulcolchones.com.ar',
+      url: 'https://azulcolchones.com',
     },
     about: {
       '@type': 'Thing',
@@ -67,8 +67,8 @@ export default function TerminosPage() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Azul Colchones',
-    url: 'https://azulcolchones.com.ar',
-    logo: 'https://azulcolchones.com.ar/logo.png',
+    url: 'https://azulcolchones.com',
+    logo: 'https://azulcolchones.com/logo.png',
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: '+54 9 3534 09-6566',
@@ -232,8 +232,8 @@ export default function TerminosPage() {
         <h2>Formas de Pago Disponibles</h2>
         <h3>Pagos en Línea</h3>
         <ul>
-          <li>Mercado Pago: hasta 12 cuotas sin interés</li>
-          <li>Tarjetas de crédito: hasta 12 cuotas sin interés</li>
+          <li>Mercado Pago: hasta 3 cuotas</li>
+          <li>Tarjetas de crédito: hasta 3 cuotas</li>
           <li>Tarjetas de débito: pago en un solo pago</li>
           <li>Transferencia bancaria: CBU/CVU disponible al finalizar compra</li>
         </ul>

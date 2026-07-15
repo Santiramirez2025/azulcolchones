@@ -2,11 +2,16 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { Instagram, Facebook, MapPin, Clock } from 'lucide-react'
 
 export default function Footer() {
+  const pathname = usePathname()
   const currentYear = new Date().getFullYear()
   const yearsOfExperience = currentYear - 1991
+
+  // El panel /admin tiene su propio layout, sin el footer del sitio.
+  if (pathname?.startsWith('/admin')) return null
 
   return (
     <footer className="relative bg-zinc-950 border-t border-zinc-800/50">
@@ -55,7 +60,7 @@ export default function Footer() {
                 </div>
                 <div>
                   <h3 className="text-white font-bold text-base mb-1">12 Cuotas</h3>
-                  <p className="text-zinc-400 text-sm">Sin interés</p>
+                  <p className="text-zinc-400 text-sm">Con tarjeta</p>
                 </div>
               </div>
 
@@ -116,8 +121,8 @@ export default function Footer() {
 
               {/* Description */}
               <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                Colchones PIERO directo de fábrica con hasta{' '}
-                <strong className="text-zinc-300">49% OFF</strong>. Tu mejor descanso al mejor precio.
+                Colchones PIERO directo de fábrica.{' '}
+                <strong className="text-zinc-300">Distribuidor oficial en Villa María.</strong> Tu mejor descanso al mejor precio.
               </p>
 
               {/* WhatsApp CTA */}
@@ -148,9 +153,9 @@ export default function Footer() {
                   className="group flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-sm"
                 >
                   <span className="text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                  <span>Piero Fábrica</span>
+                  <span>Lista de precios</span>
                   <span className="text-xs px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-md border border-emerald-500/30 font-semibold">
-                    49% OFF
+                    Fábrica
                   </span>
                 </Link>
               </nav>

@@ -5,13 +5,14 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { Star, Heart, TrendingUp, Sparkles, Zap, Package, AlertCircle, MessageCircle } from 'lucide-react'
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { formatARS } from '@/lib/utils/currency'
 import { getMejorCuota } from '@/lib/utils/pricing'
 
 // ============================================================================
 // CONFIGURACIÓN WHATSAPP
 // ============================================================================
-const WHATSAPP_NUMBER = '+54 9 3534 09-6566' // Tu número de WhatsApp con código de país
+const WHATSAPP_NUMBER = '5493534096566' // Solo dígitos para la API de wa.me
 
 function generateWhatsAppMessage(product: {
   name: string
@@ -22,7 +23,7 @@ function generateWhatsAppMessage(product: {
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://azulcolchones.com'
   const productUrl = `${baseUrl}/producto/${product.slug}`
   
-  const message = `¡Hola! 👋 Quiero reservar:
+  const message = `¡Hola! 👋 Quiero consultar por:
 
 🛏️ *${product.name}*
 📏 Medida: *${product.variant || 'A confirmar'}*
@@ -30,7 +31,7 @@ function generateWhatsAppMessage(product: {
 
 🔗 ${productUrl}
 
-¿Está disponible para entrega inmediata?`
+¿Me confirmás disponibilidad y plazo de entrega?`
 
   return encodeURIComponent(message)
 }
@@ -513,14 +514,15 @@ export default function ProductCard({
                 <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-gray-200 via-gray-100 to-gray-200" />
               )}
               
-              <img
+              <Image
                 src={productImage}
-                alt={`${product.name} - Colchón premium Villa María`}
-                loading="lazy"
-                decoding="async"
+                alt={`${product.name} - Colchón Piero en Villa María`}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                priority={(index ?? 99) < 3}
                 onLoad={() => setImageLoaded(true)}
                 onError={handleImageError}
-                className={`w-full h-full object-cover transition-all duration-500 ${
+                className={`object-cover transition-all duration-500 ${
                   imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
                 } ${hasStock ? 'group-hover:scale-110' : ''}`}
               />
@@ -612,7 +614,7 @@ export default function ProductCard({
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-[10px] text-blue-600 font-semibold mb-0.5">
-                          Hasta {mejorCuota.cuotas} cuotas sin interés
+                          Hasta {mejorCuota.cuotas} cuotas
                         </div>
                         <div className="text-sm font-black text-gray-900">
                           {mejorCuota.formatted.precioCuota}
@@ -650,7 +652,7 @@ export default function ProductCard({
                   >
                     <span className="flex items-center justify-center gap-1.5">
                       <MessageCircle className="w-4 h-4" />
-                      <span>Reservar</span>
+                      <span>Consultar</span>
                     </span>
                   </motion.button>
                 )}

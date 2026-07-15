@@ -183,7 +183,7 @@ export default function HeroSection() {
                     <Icons.ArrowRight className="w-6 h-6 text-white" />
                   </div>
                   <p className="text-emerald-50 text-xs text-left">
-                    Directo de fábrica • 7-10 días de espera • Sin intermediarios
+                    Directo de fábrica • Entrega inmediata con stock • Sin intermediarios
                   </p>
                 </Link>
               </div>
@@ -207,7 +207,7 @@ export default function HeroSection() {
                 </div>
                 <div className="py-3">
                   <Icons.CreditCard className="w-5 h-5 text-blue-400 mx-auto mb-1.5" />
-                  <p className="text-[11px] text-zinc-400 font-medium">12 Cuotas<br />Sin Interés</p>
+                  <p className="text-[11px] text-zinc-400 font-medium">12 Cuotas<br />Con tarjeta</p>
                 </div>
                 <div className="py-3">
                   <Icons.Shield className="w-5 h-5 text-blue-400 mx-auto mb-1.5" />
@@ -272,7 +272,7 @@ export default function HeroSection() {
                     <Icons.ArrowRight className="w-7 h-7 text-white group-hover:translate-x-1 transition-transform" />
                   </div>
                   <p className="text-emerald-50 text-sm">
-                    Directo de fábrica • 7-10 días de espera • Sin intermediarios • Garantía oficial
+                    Directo de fábrica • Entrega 24-72 hs • Sin intermediarios • Garantía oficial Piero
                   </p>
                 </Link>
 
@@ -295,7 +295,7 @@ export default function HeroSection() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Icons.CreditCard className="w-5 h-5 text-blue-400" />
-                    <span>12 cuotas sin interés</span>
+                    <span>3 cuotas</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Icons.Shield className="w-5 h-5 text-blue-400" />

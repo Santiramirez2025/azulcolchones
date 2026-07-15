@@ -10,7 +10,7 @@ const faqs = [
   },
   {
     question: '¿Puedo pagar en cuotas?',
-    answer: 'Sí, aceptamos hasta 12 cuotas sin interés con Mercado Pago y tarjetas habilitadas. También transferencia con 10% OFF.'
+    answer: 'Sí, aceptamos hasta 3 cuotas con Mercado Pago y tarjetas habilitadas. También transferencia con 10% OFF.'
   },
   {
     question: '¿Qué garantía tienen los colchones?',

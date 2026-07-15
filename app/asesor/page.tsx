@@ -1,22 +1,25 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import AsesorColchon from '@/components/asesor/AsesorColchon'
+import { getPreciosAsesor } from '@/lib/asesor/precios'
+
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Asesor Personal de Colchones — Azul Colchones Villa María',
-  description: 'Encontrá tu colchón Piero ideal en 30 segundos. Respondé 3 preguntas y te recomendamos el modelo perfecto según tu peso, postura y medida. Cuotas sin interés.',
+  description:
+    'Encontrá tu colchón Piero ideal en 30 segundos. Respondé 3 preguntas y te recomendamos el modelo perfecto según tu peso, postura y medida. 3 cuotas.',
+  alternates: { canonical: 'https://azulcolchones.com/asesor' },
   openGraph: {
     title: 'Asesor Personal de Colchones — Azul Colchones',
     description: 'Encontrá tu colchón Piero ideal en 30 segundos. 3 preguntas, recomendación personalizada.',
     type: 'website',
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 }
 
-export default function AsesorPage() {
+export default async function AsesorPage() {
+  const precios = await getPreciosAsesor()
   return (
     <main className="min-h-screen bg-gradient-to-b from-zinc-950 via-blue-950/30 to-zinc-950">
       {/* Decoración de fondo */}
@@ -79,7 +82,7 @@ export default function AsesorPage() {
         </header>
 
         {/* Asesor */}
-        <AsesorColchon />
+        <AsesorColchon precios={precios} />
 
         {/* Footer info */}
         <footer className="mt-12 md:mt-16 text-center">

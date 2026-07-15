@@ -95,6 +95,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'daily',
         priority: 0.9,
       },
+      {
+        url: `${BASE_URL}/asesor`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.85,
+      },
+      {
+        url: `${BASE_URL}/arma-tu-combo`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.85,
+      },
 
       // ================================================================
       // 3. CATEGORIES - Dinámicas desde DB

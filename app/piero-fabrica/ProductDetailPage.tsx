@@ -308,7 +308,7 @@ function TrustStrip() {
   const items = [
     { icon: '🏭', text: 'Directo de fábrica' },
     { icon: '🛡️', text: 'Garantía oficial' },
-    { icon: '🚚', text: '7-10 días hábiles' },
+    { icon: '🚚', text: '24-72 hs' },
     { icon: '💳', text: 'Todas las tarjetas' },
   ]
   return (
@@ -349,7 +349,7 @@ function BloquePrecios({ precio, precioML, ahorro, ahorroPorcentaje }: { precio:
 }
 
 function TrustMicrocopys() {
-  const items = ['Mismo producto que en MercadoLibre', 'Garantía oficial PIERO', 'Entrega 7-10 días hábiles', 'Directo de fábrica, sin intermediarios']
+  const items = ['Mismo producto que en MercadoLibre', 'Garantía oficial PIERO', 'Entrega 24-72 hs', 'Directo de fábrica, sin intermediarios']
   return (
     <ul className="space-y-2">
       {items.map((item) => (
@@ -393,7 +393,7 @@ function ProcesoCompra() {
   const pasos = [
     { numero: '1', titulo: 'Consultá', desc: 'Escribinos por WhatsApp con el modelo que te interesa. Te asesoramos sin compromiso.' },
     { numero: '2', titulo: 'Confirmá', desc: 'Elegí forma de pago (transferencia, tarjeta, efectivo). Coordinamos la entrega.' },
-    { numero: '3', titulo: 'Recibí', desc: 'Tu colchón PIERO llega a domicilio en 7-10 días hábiles, directo de fábrica.' },
+    { numero: '3', titulo: 'Recibí', desc: 'Tu colchón PIERO llega a domicilio en 24-72 hs, directo de fábrica.' },
   ]
   return (
     <div>
@@ -441,7 +441,7 @@ function FAQProducto() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const faqs = [
     { q: '¿Es exactamente el mismo colchón que venden en MercadoLibre?', a: 'Sí, es el mismo producto PIERO con la misma garantía oficial de fábrica. La diferencia de precio es porque no pagás comisiones de marketplace ni intermediarios.' },
-    { q: '¿Cuánto tarda en llegar?', a: 'El colchón sale directo de fábrica PIERO y llega a tu domicilio en 7 a 10 días hábiles. Te avisamos el día exacto de entrega.' },
+    { q: '¿Cuánto tarda en llegar?', a: 'El colchón sale directo de fábrica PIERO y llega a tu domicilio en 24 a 72 hs. Te avisamos el día exacto de entrega.' },
     { q: '¿Qué formas de pago aceptan?', a: 'Transferencia bancaria, efectivo, y todas las tarjetas de crédito y débito. Consultanos por cuotas vigentes, las actualizamos cada semana.' },
     { q: '¿Hacen envíos fuera de Villa María?', a: 'Sí, hacemos envíos a toda la provincia de Córdoba y zonas cercanas. Consultanos por tu localidad y te pasamos el costo de envío.' },
     { q: '¿Puedo probarlo antes de comprarlo?', a: 'Podés venir a nuestro local en Balerdi 855, Villa María, para probar los modelos disponibles en exhibición. De lunes a viernes de 9 a 19hs, sábados de 9 a 13hs.' },

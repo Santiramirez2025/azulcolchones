@@ -7,7 +7,7 @@ export default function FAQSection() {
     },
     {
       q: '¿Cuánto demora la entrega?',
-      a: '7 a 10 días hábiles desde Villa María hasta tu domicilio. Te enviamos el tracking con cada paso.'
+      a: '24 a 72 hs desde Villa María hasta tu domicilio. Te enviamos el tracking con cada paso.'
     },
     {
       q: '¿Cuáles son los métodos de pago?',

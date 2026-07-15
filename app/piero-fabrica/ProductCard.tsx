@@ -254,7 +254,7 @@ export default function ProductCard({ producto }: ProductCardProps) {
                       />
                     </svg>
                     <span className="text-xs font-bold text-green-400 uppercase tracking-wide">
-                      Sin Recargo
+                      Con tarjeta
                     </span>
                   </div>
                   <div className="space-y-1 text-xs text-green-300/80">
@@ -302,7 +302,7 @@ export default function ProductCard({ producto }: ProductCardProps) {
           ) : (
             <div className="flex items-center gap-2.5 text-blue-400">
               <span className="w-2.5 h-2.5 bg-blue-500 rounded-full" aria-hidden="true"></span>
-              <span className="text-sm font-bold">Bajo pedido • 7-10 días</span>
+              <span className="text-sm font-bold">Bajo pedido • 24-72 hs</span>
             </div>
           )}
         </div>

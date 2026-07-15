@@ -207,7 +207,7 @@ const QuickTips = memo(() => (
     </div>
     <div className="bg-zinc-900 border border-white/10 rounded-xl p-6">
       <MessageCircle className="w-8 h-8 text-violet-400 mb-3" aria-hidden="true" />
-      <h3 className="font-bold text-white mb-2">12 cuotas sin interés</h3>
+      <h3 className="font-bold text-white mb-2">3 cuotas</h3>
       <p className="text-sm text-zinc-400">Todas las tarjetas - Mercado Pago</p>
     </div>
   </section>
@@ -336,7 +336,7 @@ export function PreguntasFrecuentesClient() {
     {
       category: 'garantia',
       question: '¿Qué formas de pago aceptan?',
-      answer: 'Aceptamos efectivo, transferencia bancaria, Mercado Pago y todas las tarjetas de crédito con hasta 12 cuotas sin interés. También podés pagar con tarjeta de débito. Para compras en el local, aceptamos todos los medios de pago habituales en Villa María.'
+      answer: 'Aceptamos efectivo, transferencia bancaria, Mercado Pago y todas las tarjetas de crédito con hasta 3 cuotas. También podés pagar con tarjeta de débito. Para compras en el local, aceptamos todos los medios de pago habituales en Villa María.'
     }
   ], [])
 

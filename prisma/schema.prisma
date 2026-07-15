@@ -7,106 +7,121 @@ generator client {
 }
 
 datasource db {
-  provider   = "postgresql"
-  url        = env("DATABASE_URL")
-  directUrl  = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
+
 // ============================================================================
 // PRODUCT MODEL
 // ============================================================================
 model Product {
-  id              String            @id @default(cuid())
-  name            String
-  slug            String            @unique
-  subtitle        String
-  description     String
-  
+  id          String @id @default(cuid())
+  name        String
+  slug        String @unique
+  subtitle    String
+  description String
+
   // Pricing (en centavos)
-  price           Int
-  originalPrice   Int?
-  compareAtPrice  Int?
-  discount        Int?
-  
+  price          Int
+  originalPrice  Int?
+  compareAtPrice Int?
+  discount       Int?
+
   // Inventory
-  stock           Int               @default(0)
-  inStock         Boolean           @default(true)
-  lowStockAlert   Int               @default(5)
-  
+  stock         Int     @default(0)
+  inStock       Boolean @default(true)
+  lowStockAlert Int     @default(5)
+
   // Categorization
-  category        String
-  subcategory     String?
-  tags            String[]
-  
+  category    String // legacy string (deprecado; usar categoryRel)
+  subcategory String?
+  tags        String[]
+
+  // ── Catálogo Azul Colchones (DB-driven) ──
+  categoryId  String?
+  categoryRel Category? @relation(fields: [categoryId], references: [id])
+  line        String? // "entrada" | "media" | "premium" | "ultra"
+  bajoPedido  Boolean   @default(false) // Dream Fit → "Consultar stock"
+  springType  String? // "espuma" | "resorte-continuo" | "pocket"
+  densityKgM3 Int? // densidad de espuma (kg/m³)
+  supportKg   Int? // soporte máximo recomendado (kg)
+  brand       String    @default("Piero")
+
   // Media
-  images          String[]
-  image           String?
-  
+  images String[]
+  image  String?
+
   // Specifications
-  firmness        String?
-  firmnessValue   Int               @default(70)
-  height          Int               @default(25)
-  weight          Int?
-  
+  firmness      String?
+  firmnessValue Int     @default(70)
+  height        Int     @default(25)
+  weight        Int?
+
   // Commercial terms
-  warranty        Int               @default(5)
-  trialNights     Int               @default(100)
-  
+  warranty    Int @default(5)
+  trialNights Int @default(100)
+
   // Features
-  features        String[]
-  techFeatures    String[]
-  highlights      String[]
-  materials       String[]
-  layers          Json?
-  certifications  String[]
-  story           String?
-  
+  features       String[]
+  techFeatures   String[]
+  highlights     String[]
+  materials      String[]
+  layers         Json?
+  certifications String[]
+  story          String?
+
   // Attributes
-  cooling         Boolean           @default(false)
-  isEco           Boolean           @default(false)
-  hypoallergenic  Boolean           @default(true)
-  washable        Boolean           @default(false)
-  includesBase    Boolean           @default(false)
-  isPremium       Boolean           @default(false)
-  antiMite        Boolean           @default(false)
-  pillowTop       Boolean           @default(false)
-  
+  cooling        Boolean @default(false)
+  isEco          Boolean @default(false)
+  hypoallergenic Boolean @default(true)
+  washable       Boolean @default(false)
+  includesBase   Boolean @default(false)
+  isPremium      Boolean @default(false)
+  antiMite       Boolean @default(false)
+  pillowTop      Boolean @default(false)
+
   // Ratings
-  transpirability Int               @default(80)
-  satisfaction    Int               @default(95)
-  rating          Float             @default(4.8)
-  reviewCount     Int               @default(0)
-  
+  transpirability Int   @default(80)
+  satisfaction    Int   @default(95)
+  rating          Float @default(4.8)
+  reviewCount     Int   @default(0)
+
   // Status
-  isActive        Boolean           @default(true)
-  isFeatured      Boolean           @default(false)
-  isBestSeller    Boolean           @default(false)
-  isNew           Boolean           @default(false)
-  badge           String?
-  
+  isActive     Boolean @default(true)
+  isFeatured   Boolean @default(false)
+  isBestSeller Boolean @default(false)
+  isNew        Boolean @default(false)
+  badge        String?
+
   // Logistics
-  shippingCost    Int               @default(0)
-  sku             String?           @unique
-  
+  shippingCost Int     @default(0)
+  sku          String? @unique
+
   // Display
-  mainColor       String?           @default("#3b82f6")
-  gradient        String?
-  
+  mainColor String? @default("#3b82f6")
+  gradient  String?
+
   // SEO
   metaTitle       String?
   metaDescription String?
   metaKeywords    String[]
-  
+
   // Timestamps
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
   cartItems       CartItem[]
   orderItems      OrderItem[]
   reviews         Review[]
   variants        ProductVariant[]
+  comboAsMattress ComboSuggestion[] @relation("ComboMattress")
+  comboAsSommier  ComboSuggestion[] @relation("ComboSommier")
 
   @@index([slug])
+  @@index([categoryId])
+  @@index([line])
   @@index([category])
   @@index([isActive])
   @@index([isBestSeller])
@@ -119,42 +134,49 @@ model Product {
 // PRODUCT VARIANT MODEL - ✅ CORREGIDO
 // ============================================================================
 model ProductVariant {
-  id            String   @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   // Relación
-  productId     String
-  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
   // Identificación
-  sku           String   @unique
-  
+  sku String @unique
+
   // Medidas
-  size          String
-  dimensions    String
-  width         Int
-  length        Int
-  height        Int
-  weight        Int?
-  
-  // Pricing (en centavos)
+  size       String
+  dimensions String
+  width      Int
+  length     Int
+  height     Int
+  weight     Int?
+
+  // ── Catálogo Azul Colchones ──
+  plaza     String? // "1pl" | "1½" | "2pl" | "Queen" | "Queen XL" | "King"
+  measure   String? // display, ej "190×140"
+  available Boolean @default(true)
+
+  // Pricing (en centavos). priceList = precio de lista honesto (tachado),
+  // null si no hay PVP defendible → se muestra solo "directo de fábrica".
   price         Int
+  priceList     Int?
   originalPrice Int?
-  
+
   // Stock
-  stock         Int      @default(0)
-  inStock       Boolean  @default(true)
-  
+  stock   Int     @default(0)
+  inStock Boolean @default(true)
+
   // Control
-  isActive      Boolean  @default(true)
-  isDefault     Boolean  @default(false)
-  
+  isActive  Boolean @default(true)
+  isDefault Boolean @default(false)
+
   // Timestamps
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  cartItems     CartItem[]
-  orderItems    OrderItem[]
+  cartItems  CartItem[]
+  orderItems OrderItem[]
 
   // ✅ CORREGIDO: Solo un unique constraint
   @@unique([productId, dimensions])
@@ -194,28 +216,32 @@ model User {
 // ORDER MODEL
 // ============================================================================
 model Order {
-  id              String      @id @default(cuid())
-  orderNumber     String      @unique
-  userId          String
-  customerName    String
-  customerEmail   String
-  customerPhone   String?
-  shippingAddress Json
-  paymentMethod   String
-  paymentStatus   String      @default("pending")
-  paymentId       String?
-  subtotal        Int
-  discount        Int         @default(0)
-  shipping        Int         @default(0)
-  total           Int
-  status          String      @default("pending")
-  trackingNumber  String?
-  carrier         String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  deliveredAt     DateTime?
-  user            User        @relation(fields: [userId], references: [id])
-  items           OrderItem[]
+  id                String      @id @default(cuid())
+  orderNumber       String      @unique
+  userId            String? // null = checkout invitado (MP)
+  customerName      String
+  customerEmail     String
+  customerPhone     String?
+  shippingAddress   Json
+  paymentMethod     String
+  paymentStatus     String      @default("pending")
+  paymentId         String?
+  // ── Mercado Pago (Checkout Pro) ──
+  preferenceId      String?
+  externalReference String?     @unique // idempotencia webhook
+  deliveryMethod    String      @default("piero-fabrica")
+  subtotal          Int
+  discount          Int         @default(0)
+  shipping          Int         @default(0)
+  total             Int
+  status            String      @default("pending")
+  trackingNumber    String?
+  carrier           String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  deliveredAt       DateTime?
+  user              User?       @relation(fields: [userId], references: [id])
+  items             OrderItem[]
 
   @@index([userId])
   @@index([orderNumber])
@@ -227,17 +253,17 @@ model Order {
 // ORDER ITEM MODEL
 // ============================================================================
 model OrderItem {
-  id         String          @id @default(cuid())
-  orderId    String
-  productId  String
-  variantId  String?
-  quantity   Int
-  price      Int
-  size       String?
-  color      String?
-  order      Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product    Product         @relation(fields: [productId], references: [id])
-  variant    ProductVariant? @relation(fields: [variantId], references: [id])
+  id        String          @id @default(cuid())
+  orderId   String
+  productId String
+  variantId String?
+  quantity  Int
+  price     Int
+  size      String?
+  color     String?
+  order     Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product         @relation(fields: [productId], references: [id])
+  variant   ProductVariant? @relation(fields: [variantId], references: [id])
 
   @@index([orderId])
   @@index([productId])
@@ -336,4 +362,59 @@ model Newsletter {
   createdAt DateTime @default(now())
 
   @@index([email])
+}
+
+// ============================================================================
+// SETTING MODEL — configuración editable desde el panel (ej. credenciales MP)
+// ============================================================================
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================================
+// CATEGORY MODEL — colchones, sommiers, protectores, almohadas, sábanas
+// ============================================================================
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  emoji    String?
+  order    Int       @default(0)
+  products Product[]
+
+  @@index([slug])
+}
+
+// ============================================================================
+// COMBO SUGGESTION — cross-sell oficial colchón → sommier (NUNCA cruzar combos)
+// ============================================================================
+model ComboSuggestion {
+  id         String  @id @default(cuid())
+  mattressId String
+  sommierId  String
+  note       String?
+  mattress   Product @relation("ComboMattress", fields: [mattressId], references: [id], onDelete: Cascade)
+  sommier    Product @relation("ComboSommier", fields: [sommierId], references: [id])
+
+  @@unique([mattressId, sommierId])
+  @@index([mattressId])
+  @@index([sommierId])
+}
+
+// ============================================================================
+// LEAD MODEL — asesor / quiz / armá tu combo que NO compró → remarketing
+// ============================================================================
+model Lead {
+  id             String   @id @default(cuid())
+  name           String?
+  phone          String?
+  email          String?
+  source         String // "asesor" | "combo" | "quiz"
+  recommendation Json? // modelo / medida / presupuesto sugeridos
+  createdAt      DateTime @default(now())
+
+  @@index([source])
+  @@index([createdAt])
 }

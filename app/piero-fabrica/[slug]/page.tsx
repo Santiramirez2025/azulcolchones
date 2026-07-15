@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const maxAhorro = ahorros.length > 0 ? Math.max(...ahorros) : 0
 
   const title = `Colchón Piero ${modelo} | ${precioRango} | Azul Colchones`
-  const description = `Colchón Piero ${modelo}. Precio fábrica ${precioRango}${maxAhorro > 0 ? ` (ahorrás hasta ${maxAhorro}% vs MercadoLibre)` : ''}. Garantía oficial PIERO. Entrega 7-10 días. Villa María, Córdoba.`
+  const description = `Colchón Piero ${modelo}. Precio fábrica ${precioRango}${maxAhorro > 0 ? ` (ahorrás hasta ${maxAhorro}% vs MercadoLibre)` : ''}. Garantía oficial PIERO. Entrega 24-72 hs. Villa María, Córdoba.`
 
   return {
     title,

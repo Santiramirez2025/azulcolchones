@@ -117,6 +117,16 @@ export const trackWhatsAppClick = (params?: {
     }, { eventID: eventId })
 
     // =========================================================================
+    // EVENTO CONTACT - click a WhatsApp (contacto directo)
+    // =========================================================================
+    window.fbq('track', 'Contact', {
+      content_name: params?.producto || 'Consulta WhatsApp',
+      content_category: params?.categoria || 'whatsapp',
+      value: params?.precio || 0,
+      currency: 'ARS',
+    }, { eventID: `${eventId}-contact` })
+
+    // =========================================================================
     // También disparar InitiateCheckout (señal adicional de intención)
     // =========================================================================
     if (params?.precio && params.precio > 0) {
@@ -167,6 +177,32 @@ export const trackAddToCart = (params: {
         item_price: params.precio
       }]
     }, { eventID: eventId })
+  }
+}
+
+// ============================================================================
+// PURCHASE - Compra confirmada (pago aprobado en /checkout/exito)
+// ============================================================================
+export const trackPurchase = (params: {
+  value: number
+  orderId: string
+  contents?: { id: string; quantity: number; item_price: number }[]
+  numItems?: number
+}) => {
+  if (typeof window !== 'undefined' && window.fbq) {
+    window.fbq(
+      'track',
+      'Purchase',
+      {
+        value: params.value,
+        currency: 'ARS',
+        content_type: 'product',
+        contents: params.contents ?? [],
+        num_items: params.numItems ?? params.contents?.length ?? 1,
+        order_id: params.orderId,
+      },
+      { eventID: `purchase-${params.orderId}` }, // dedup por orden
+    )
   }
 }
 

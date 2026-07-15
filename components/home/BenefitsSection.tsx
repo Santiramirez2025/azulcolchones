@@ -9,7 +9,7 @@ const paymentPlans = [
     title: 'Efectivo',
     subtitle: 'Transferencia o Contado',
     percentage: '0%',
-    description: 'Sin recargos',
+    description: 'Con tarjeta',
     example: '$220.000',
     icon: Banknote,
     color: 'emerald',
@@ -23,7 +23,7 @@ const paymentPlans = [
   {
     id: 2,
     title: '3 Cuotas',
-    subtitle: 'Sin interés',
+    subtitle: 'Con tarjeta',
     percentage: '+20%',
     description: 'Con tarjeta',
     example: '$88.000/mes',
@@ -39,7 +39,7 @@ const paymentPlans = [
   {
     id: 3,
     title: '6 Cuotas',
-    subtitle: 'Sin interés',
+    subtitle: 'Con tarjeta',
     percentage: '+31%',
     description: 'Con tarjeta',
     example: '$47.855/mes',
@@ -54,11 +54,11 @@ const paymentPlans = [
   },
   {
     id: 4,
-    title: '12 Cuotas',
-    subtitle: 'Sin interés',
-    percentage: '+60%',
-    description: 'Con tarjeta',
-    example: '$29.333/mes',
+    title: '3 Cuotas',
+    subtitle: 'Con tarjeta',
+    percentage: null,
+    description: 'o hasta 12 con tarjeta',
+    example: 'Con Mercado Pago',
     icon: Percent,
     color: 'fuchsia',
     bgGradient: 'from-fuchsia-500/10 to-fuchsia-600/5',
@@ -112,7 +112,7 @@ export function BenefitsSection() {
           </h2>
           
           <p className="text-zinc-400 text-sm sm:text-base md:text-lg leading-relaxed">
-            Contado con descuento o cuotas sin interés
+            Contado con descuento o cuotas
           </p>
         </motion.div>
 
@@ -242,7 +242,7 @@ export function BenefitsSection() {
                 </h4>
                 <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-zinc-400 leading-relaxed">
                   <p>
-                    • <span className="text-emerald-400 font-semibold">Efectivo/Transferencia:</span> Precio de lista sin recargos
+                    • <span className="text-emerald-400 font-semibold">Efectivo/Transferencia:</span> Precio de listas
                   </p>
                   <p>
                     • <span className="text-blue-400 font-semibold">Cuotas con tarjeta:</span> Incluyen recargo financiero según cantidad de cuotas

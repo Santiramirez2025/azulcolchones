@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: 'https://azulcolchones.com.ar/privacidad',
+    canonical: 'https://azulcolchones.com/privacidad',
   },
 }
 
@@ -47,11 +47,11 @@ export default function PrivacidadPage() {
     '@type': 'WebPage',
     name: 'Política de Privacidad - Azul Colchones',
     description: 'Política de privacidad y protección de datos personales',
-    url: 'https://azulcolchones.com.ar/privacidad',
+    url: 'https://azulcolchones.com/privacidad',
     isPartOf: {
       '@type': 'WebSite',
       name: 'Azul Colchones',
-      url: 'https://azulcolchones.com.ar',
+      url: 'https://azulcolchones.com',
     },
     about: {
       '@type': 'Thing',
@@ -66,8 +66,8 @@ export default function PrivacidadPage() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Azul Colchones',
-    url: 'https://azulcolchones.com.ar',
-    logo: 'https://azulcolchones.com.ar/logo.png',
+    url: 'https://azulcolchones.com',
+    logo: 'https://azulcolchones.com/logo.png',
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: '+54 9 3534 09-6566',

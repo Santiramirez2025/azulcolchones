@@ -101,7 +101,7 @@ const conditionsStructuredData = {
     {
       '@type': 'Thing',
       name: 'Métodos de Pago',
-      description: 'Hasta 12 cuotas sin interés'
+      description: 'Hasta 3 cuotas'
     }
   ],
   publisher: {

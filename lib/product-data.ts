@@ -44,7 +44,7 @@ export const HERO_PRODUCT: HeroProduct = {
     },
     { 
       icon: CreditCard, 
-      text: '12 cuotas sin interés Mercado Pago', 
+      text: '12 cuotas Mercado Pago', 
       color: 'text-cyan-400' 
     },
     { 
@@ -111,7 +111,7 @@ export const SOCIAL_PROOF: SocialProofType = {
       rating: 5,
       name: 'Carlos Rodríguez',
       location: 'Córdoba Capital',
-      text: 'Los 1.200 resortes se notan. Mi espalda mejoró muchísimo. Lo pagué en 12 cuotas sin interés, impecable.',
+      text: 'Los 1.200 resortes se notan. Mi espalda mejoró muchísimo. Lo pagué en 12 cuotas, impecable.',
       verified: true
     },
     {
@@ -240,8 +240,8 @@ export const BENEFITS: Benefit[] = [
   },
   {
     icon: CreditCard,
-    title: '12 Cuotas Sin Interés',
-    description: 'Financiación con Mercado Pago hasta 12 cuotas sin interés. También aceptamos transferencia (10% off) y efectivo (15% off).',
+    title: '12 Cuotas Con tarjeta',
+    description: 'Financiación con Mercado Pago hasta 12 cuotas. También aceptamos transferencia (10% off) y efectivo (15% off).',
     gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
     link: '#financiacion',
     cta: 'Ver opciones'
@@ -274,7 +274,7 @@ export const COMPETITIVE_ADVANTAGES = [
   },
   {
     title: 'Financiación Accesible',
-    description: '12 cuotas sin interés o hasta 15% off en efectivo',
+    description: '12 cuotas o hasta 15% off en efectivo',
     icon: CreditCard
   },
   {
@@ -302,7 +302,7 @@ export const QUICK_FAQ = [
   },
   {
     question: '¿Puedo pagar en cuotas?',
-    answer: 'Sí, hasta 12 cuotas sin interés con Mercado Pago. También 10% off en transferencia.'
+    answer: 'Sí, hasta 12 cuotas con Mercado Pago. También 10% off en transferencia.'
   },
   {
     question: '¿El colchón es adecuado para mí?',
@@ -375,7 +375,7 @@ export const PAYMENT_HIGHLIGHTS = [
   {
     icon: CreditCard,
     title: 'Mercado Pago',
-    description: '12 cuotas sin interés',
+    description: '12 cuotas',
     badge: 'Más elegido',
     color: 'text-blue-400'
   },

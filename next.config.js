@@ -49,6 +49,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.supabase.co',
       },
+      {
+        // Imágenes subidas desde el panel admin a Vercel Blob
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+      },
     ],
     
     // AVIF primero (mejor compresión)
@@ -107,7 +112,9 @@ const nextConfig = {
               "form-action 'self'",
               "base-uri 'self'",
               "object-src 'none'",
-              'upgrade-insecure-requests',
+              // Solo en producción (HTTPS). En dev sobre HTTP (ej. IP de LAN)
+              // rompería la carga de CSS/imágenes al forzar HTTPS.
+              ...(process.env.NODE_ENV === 'production' ? ['upgrade-insecure-requests'] : []),
             ].join('; '),
           },
         ],
@@ -206,8 +213,9 @@ const nextConfig = {
       'date-fns',
     ],
     
-    // CSS optimization
-    optimizeCss: true,
+    // CSS optimization — DESACTIVADO: critters puede romper la entrega de CSS
+    // (páginas sin estilos en prod). El beneficio es marginal y el riesgo alto.
+    optimizeCss: false,
     
     // Server actions
     serverActions: {

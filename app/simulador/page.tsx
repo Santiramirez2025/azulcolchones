@@ -12,7 +12,7 @@ import { Brain, Sparkles, AlertTriangle } from 'lucide-react'
 // ============================================================================
 export const metadata: Metadata = {
   title: 'Simulador IA de Colchones | Encontrá tu Colchón Perfecto en 2 Min | Azul Colchones Villa María',
-  description: 'Test inteligente de sueño en 2 minutos. Nuestro algoritmo de IA analiza tu perfil (peso, postura, dolor) y te recomienda el colchón ideal. Envío gratis Villa María, Córdoba. 12 cuotas sin interés.',
+  description: 'Test inteligente de sueño en 2 minutos. Nuestro algoritmo de IA analiza tu perfil (peso, postura, dolor) y te recomienda el colchón ideal. Envío gratis Villa María, Córdoba. 3 cuotas.',
   keywords: [
     'simulador colchones IA',
     'test colchón perfecto',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     images: ['/og-simulador.jpg'],
   },
   alternates: {
-    canonical: 'https://azulcolchones.com.ar/simulador',
+    canonical: 'https://azulcolchones.com/simulador',
   },
   robots: {
     index: true,
@@ -372,11 +372,11 @@ function generateSimulatorSchemas() {
     '@type': 'WebPage',
     name: 'Simulador IA de Colchones',
     description: 'Test inteligente para encontrar tu colchón perfecto en 2 minutos',
-    url: 'https://azulcolchones.com.ar/simulador',
+    url: 'https://azulcolchones.com/simulador',
     isPartOf: {
       '@type': 'WebSite',
       name: 'Azul Colchones',
-      url: 'https://azulcolchones.com.ar',
+      url: 'https://azulcolchones.com',
     },
     about: {
       '@type': 'Thing',
@@ -420,13 +420,13 @@ function generateSimulatorSchemas() {
         '@type': 'ListItem',
         position: 1,
         name: 'Inicio',
-        item: 'https://azulcolchones.com.ar',
+        item: 'https://azulcolchones.com',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Simulador IA',
-        item: 'https://azulcolchones.com.ar/simulador',
+        item: 'https://azulcolchones.com/simulador',
       },
     ],
   }

@@ -5,7 +5,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://azulcolchones.com'
 
 export const metadata: Metadata = {
   title: 'Carrito de Compras | Azul Colchones Villa María | Hasta 12 Cuotas',
-  description: '🛒 Tu carrito en Azul Colchones. ✅ Envío GRATIS Villa María 24-48hs ✅ Hasta 12 cuotas sin interés ✅ Pago 100% seguro ✅ Devolución gratuita 100 noches. Finalizá tu compra ahora.',
+  description: '🛒 Tu carrito en Azul Colchones. ✅ Envío GRATIS Villa María 24-48hs ✅ Hasta 3 cuotas ✅ Pago 100% seguro ✅ Devolución gratuita 100 noches. Finalizá tu compra ahora.',
   
   keywords: [
     // Core
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     // Payment
     'pago colchones cuotas',
     'mercado pago colchones',
-    '12 cuotas sin interés',
+    '3 cuotas',
     'financiación colchones',
     
     // Shipping

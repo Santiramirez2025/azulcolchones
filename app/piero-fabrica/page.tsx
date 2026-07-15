@@ -14,7 +14,7 @@ import Footer from '@/components/productos/Footer'
 export const metadata: Metadata = {
   title: 'Colchones PIERO Fábrica | Hasta 49% OFF vs MercadoLibre | Villa María',
   description:
-    'Comprá colchones PIERO directo de fábrica. Mismo producto, misma garantía, hasta 49% menos que MercadoLibre. Entrega 7-10 días. Distribuidor oficial en Villa María.',
+    'Comprá colchones PIERO directo de fábrica. Mismo producto, misma garantía, hasta 49% menos que MercadoLibre. Entrega 24-72 hs. Distribuidor oficial en Villa María.',
 
   keywords: [
     'colchones PIERO fábrica',

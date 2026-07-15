@@ -4,6 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import CartButton from '@/components/cart/CartButton'
+import { useBodyScrollLock } from '@/lib/hooks/useBodyScrollLock'
 
 const Icons = {
   Menu: ({ className = "w-5 h-5" }: { className?: string }) => (
@@ -57,6 +59,9 @@ const CONFIG = {
 } as const
 
 const NAVIGATION_ITEMS = [
+  { href: '/catalogo', label: 'Catálogo', icon: '🛏️' },
+  { href: '/asesor', label: 'Asesor', icon: '🧭' },
+  { href: '/arma-tu-combo', label: 'Armá tu combo', icon: '🧩' },
   { href: '/nosotros', label: 'Nosotros', icon: '👥' },
   { href: '/preguntas-frecuentes', label: 'Preguntas Frecuentes', icon: '❓' },
   { href: '/envios', label: 'Envíos', icon: '🚚' },
@@ -289,10 +294,7 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [handleScroll])
 
-  useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset'
-    return () => { document.body.style.overflow = 'unset' }
-  }, [isMenuOpen])
+  useBodyScrollLock(isMenuOpen)
 
   if (pathname?.startsWith('/admin')) return null
 
@@ -322,6 +324,7 @@ export default function Header() {
 
             {/* DESKTOP CTA */}
             <div className="hidden lg:flex items-center">
+              <CartButton variant="desktop" />
               <a
                 href={whatsappUrl}
                 target="_blank"
@@ -341,7 +344,7 @@ export default function Header() {
 
             {/* MOBILE ACTIONS */}
             <div className="flex lg:hidden items-center gap-2">
-              <OfficialBadge variant="mobile" />
+              <CartButton variant="mobile" />
               <a
                 href={whatsappUrl}
                 target="_blank"

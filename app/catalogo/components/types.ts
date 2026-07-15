@@ -17,7 +17,7 @@ export type NormalizedProduct = {
   story: string
   isNew?: boolean | null
   isBestSeller?: boolean | null
-  images: string
+  images: string | string[]
   features: string
   techFeatures: string // JSON/string multilinea
   certifications: string // JSON/string multilinea
@@ -27,12 +27,34 @@ export type NormalizedProduct = {
   specifications?: string
   isActive?: boolean
   category?: string
+  // ── Catálogo Azul Colchones (DB-driven) ──
+  image?: string | null
+  line?: string | null            // "entrada" | "media" | "premium" | "ultra"
+  springType?: string | null      // "espuma" | "resorte-continuo" | "pocket"
+  bajoPedido?: boolean
+  isPremium?: boolean | null
+  mainColor?: string | null
+  plazas?: string[]               // plazas disponibles (de las variantes)
+  variants?: Array<{
+    id: string
+    productId: string
+    size: string
+    dimensions: string
+    plaza?: string | null
+    measure?: string | null
+    price: number
+    originalPrice?: number | null
+    stock: number
+    sku: string | null
+    isActive: boolean
+  }>
 }
 
 // Interfaz para las props del componente principal
 export interface CatalogoClientProps {
   initialProducts: NormalizedProduct[]
   totalProducts?: number
+  initialCategory?: string
 }
 
 // Props para ProductCard
