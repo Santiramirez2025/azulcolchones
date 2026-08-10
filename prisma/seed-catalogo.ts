@@ -615,13 +615,12 @@ const ALMOHADAS: ProductSeed[] = [
 // ============================================================================
 const COMBO_DESC =
   'Combo 5 en 1: colchón + sommier + almohada + respaldo + protector. Todo el descanso en un solo pack, al mejor precio.'
+// Solo 3 combos activos. Los demás (Merit 1/2 plazas, Merit Queen, Oxford) se
+// eliminaron: el seed borra de la DB todo lo que no esté en esta lista.
 const COMBOS_5EN1: ProductSeed[] = [
-  { name: 'Combo Merit 1 plaza', category: 'combos', subtitle: '5 productos en 1 · 1 plaza', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, highlights: ['Colchón + sommier + almohada + respaldo + protector'], rows: [['190×100', 575000]] },
-  { name: 'Combo Foam 1 plaza', category: 'combos', subtitle: '5 productos en 1 · 1 plaza', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, highlights: ['Colchón + sommier + almohada + respaldo + protector'], rows: [['190×100', 510000]] },
-  { name: 'Combo Merit 2 plazas', category: 'combos', subtitle: '5 productos en 1 · 2 plazas', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, isBestSeller: true, highlights: ['Colchón + sommier + almohada + respaldo + protector'], rows: [['190×140', 730000]] },
-  { name: 'Combo Foam 2 plazas', category: 'combos', subtitle: '5 productos en 1 · 2 plazas', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, highlights: ['Colchón + sommier + almohada + respaldo + protector'], rows: [['190×140', 650000]] },
-  { name: 'Combo Merit Queen', category: 'combos', subtitle: '5 productos en 1 · Queen', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, highlights: ['Colchón + sommier + almohada + respaldo + protector'], rows: [['200×160', 915000]] },
-  { name: 'Combo Oxford Queen', category: 'combos', subtitle: '5 productos en 1 · Queen premium', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, highlights: ['Colchón + sommier + almohada + respaldo + protector'], rows: [['200×160', 1375000]] },
+  { name: 'Combo Foam 1 plaza', category: 'combos', subtitle: '5 productos en 1 · 1 plaza', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, highlights: ['Colchón + sommier + almohada + respaldo + protector'], rows: [['190×80', 549000]] },
+  { name: 'Combo Foam 2 plazas', category: 'combos', subtitle: '5 productos en 1 · 2 plazas', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, highlights: ['Colchón + sommier + almohada + respaldo + protector'], rows: [['190×140', 749000]] },
+  { name: 'Combo Smart Tech Queen', category: 'combos', subtitle: '5 productos en 1 · Queen', description: COMBO_DESC, height: 25, badge: '5 EN 1', isFeatured: true, highlights: ['Colchón Smart Tech Resortes + sommier + almohada + respaldo + protector'], rows: [['200×160', 1099000]] },
 ]
 
 // ============================================================================
@@ -655,8 +654,23 @@ async function upsertProduct(p: ProductSeed, categoryId: string) {
   const slug = p.slug ?? slugify(p.name)
   const minArs = Math.min(...p.rows.map((r) => r[1]))
   const warranty = p.warranty ?? 5
-  const images = imagesForSlug(slug)
   const isCombo = p.category === 'combos'
+
+  // Imágenes: si el producto YA tiene imagen cargada (p. ej. subida por el panel
+  // admin a Vercel Blob), SIEMPRE se respeta y nunca se pisa. Solo si no tiene
+  // ninguna se enriquece desde public/images (por slug). Así el admin es la fuente
+  // de verdad de las imágenes y un reseed no borra lo cargado a mano.
+  const existing = await prisma.product.findUnique({
+    where: { slug },
+    select: { images: true, image: true },
+  })
+  const existingImages = existing?.images?.length
+    ? existing.images
+    : existing?.image
+      ? [existing.image]
+      : []
+  const images = existingImages.length > 0 ? existingImages : imagesForSlug(slug)
+  const image = images[0] ?? null
 
   const data = {
     name: p.name,
@@ -684,7 +698,7 @@ async function upsertProduct(p: ProductSeed, categoryId: string) {
     badge: p.badge ?? null,
     highlights: p.highlights ?? [],
     images,
-    image: images[0] ?? null,
+    image,
     sku: slug,
     inStock: !p.bajoPedido,
     metaTitle: `${p.name} Piero — Azul Colchones`,
